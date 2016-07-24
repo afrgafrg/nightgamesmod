@@ -1,19 +1,21 @@
 package nightgames.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import nightgames.combat.Combat;
 import nightgames.skills.Skill;
 
-public class SubSkillButton extends KeyableButton {
+import java.awt.*;
+
+public class SubSkillButton extends CommandButton {
+    /**
+     * 
+     */
     private static final long serialVersionUID = -3177604366435328960L;
     protected Skill action;
     private String choice;
 
     public SubSkillButton(final Skill action, final String choice, Combat c) {
-        super(choice);
-        this.choice = choice;        
+        super(choice, true);    // can unblock
+        this.choice = choice;
         getButton().setOpaque(true);
         getButton().setBorderPainted(false);
         getButton().setFont(new Font("Baskerville Old Face", Font.PLAIN, 18));

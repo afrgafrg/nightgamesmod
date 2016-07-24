@@ -4,7 +4,11 @@ import nightgames.actions.Action;
 import nightgames.characters.Character;
 import nightgames.global.Global;
 
-public class ActionButton extends RunnableButton {
+import javax.swing.*;
+import java.awt.*;
+
+// TODO: Consider making this a RunnableButton.
+public class ActionButton extends CommandButton {
     /**
      * 
      */
@@ -13,11 +17,14 @@ public class ActionButton extends RunnableButton {
     protected Character user;
 
     public ActionButton(Action action, Character user) {
-        super(action.toString(), () -> {
-            Global.gui().clearText();
-            action.execute(user);
-            if (!action.freeAction()) {
-                Global.getMatch().resume();
+        super(action.toString(), true); // can unblock
+        this.action = action;
+        this.user = user;
+        addActionListener(() -> {
+            Global.global.gui().clearText();
+            this.action.execute(this.user);
+            if (!this.action.freeAction()) {
+                Global.global.getMatch().resume();
             }
         });
     }

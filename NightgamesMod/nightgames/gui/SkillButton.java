@@ -14,9 +14,12 @@ public class SkillButton extends KeyableButton {
     private static final long serialVersionUID = -1253735466299929203L;
     protected Skill action;
     protected Combat combat;
+    private CommandButton button;
 
     public SkillButton(Combat c, final Skill action, Character target) {
         super(action.getLabel(c));
+        boolean hasSubSkills = action.subChoices().size() > 0;
+        setButton(new CommandButton(action.getLabel(c), !hasSubSkills)); // can unblock if no subskills
         getButton().setBorderPainted(false);
         getButton().setOpaque(true);
         getButton().setFont(fontForStage(action.getStage()));
@@ -50,20 +53,31 @@ public class SkillButton extends KeyableButton {
         getButton().setToolTipText(text);
         combat = c;
         getButton().addActionListener(arg0 -> {
-            if (action.subChoices(c)
-                      .size() == 0) {
-                combat.act(SkillButton.this.action.user(), SkillButton.this.action, "");
-            } else {
+            if (hasSubSkills) {
                 Global.global.gui().commandPanel.reset();
                 for (String choice : action.subChoices(c)) {
                     Global.global.gui().commandPanel.add(new SubSkillButton(action, choice, combat));
                 }
                 Global.global.gui().commandPanel.refresh();
+            } else {
+                combat.act(SkillButton.this.action.user(), SkillButton.this.action, "");
             }
         });
         setLayout(new BorderLayout());
         setMaximumSize(new Dimension(500, 20));
         add(getButton());
+    }
+
+    public CommandButton getButton() {
+        return button;
+    }
+
+    public void setButton(CommandButton button) {
+        this.button = button;
+    }
+
+    public void addIndex(int idx) {
+        button.setText(button.getText() + " [" + idx + "]");
     }
 
     private static Color foregroundColor(Color bgColor) {

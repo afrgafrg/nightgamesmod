@@ -1,19 +1,22 @@
 package nightgames.global;
 
 import nightgames.characters.Character;
-import nightgames.gui.KeyableButton;
+import nightgames.characters.Player;
+import nightgames.gui.CommandButton;
 import nightgames.gui.SceneButton;
+import nightgames.status.addiction.Addiction;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Postmatch implements Scene {
 
-    private Character player;
-    private ArrayList<Character> combatants;
+    private Player player;
+    private Collection<Character> combatants;
     private boolean normal;
 
-    public Postmatch(Character player, ArrayList<Character> combatants) {
+    public Postmatch(Player player, Collection<Character> combatants) {
         this.player = player;
         this.combatants = combatants;
         normal = true;
@@ -25,12 +28,12 @@ public class Postmatch implements Scene {
                 }
             }
         }
+        player.getAddictions().forEach(Addiction::endNight);
 
         events();
         if (normal) {
             normal();
         }
-        Global.global.endNight();
     }
 
     @Override
@@ -42,7 +45,7 @@ public class Postmatch implements Scene {
 
     private void events() {
         String message = "";
-        List<KeyableButton> choice = new ArrayList<KeyableButton>();
+        ArrayList<CommandButton> choice = new ArrayList<>();
         if (Global.global.checkFlag(Flag.metLilly) && !Global.global.checkFlag(Flag.challengeAccepted)
                         && Global.global.random(10) >= 7) {
             message = message

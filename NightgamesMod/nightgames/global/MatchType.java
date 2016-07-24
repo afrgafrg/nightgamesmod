@@ -23,7 +23,7 @@ public enum MatchType {
         }
     }
 
-    public Scene buildPrematch(Player player) {
+    public Prematch buildPrematch(Player player) {
         switch (this) {
             case FTC:
                 return new FTCPrematch(player);

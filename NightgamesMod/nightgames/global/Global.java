@@ -77,12 +77,15 @@ public class Global {
     private Time time;
     private Date jdate;
     private TraitTree traitRequirements;
-    public Scene current;
+    public Scene currentScene;
     public int debugSimulation = 0;
     public double moneyRate = 1.0;
     public double xpRate = 1.0;
     public ContextFactory factory;
     public Context cx;
+
+    // Exits running game loop when false
+    private boolean run;
 
     public final Path COMBAT_LOG_DIR = new File("combatlogs").toPath();
 
@@ -92,6 +95,7 @@ public class Global {
 
     public Global(boolean headless) {
         global = this;
+        run = true;
         rng = new Random();
         flags = new HashSet<>();
         players = new HashSet<>();
@@ -133,7 +137,7 @@ public class Global {
 
 
         setTraitRequirements(new TraitTree(ResourceLoader.getFileResourceAsStream("data/TraitRequirements.xml")));
-        current = null;
+        currentScene = null;
         factory = new ContextFactory();
         cx = factory.enterContext();
         buildParser();
@@ -143,11 +147,7 @@ public class Global {
         buildModifierPool();
         flag(Flag.AiriEnabled);
         human = new Player("Dummy");
-        gui = makeGUI(headless);
-    }
-
-    protected GUI makeGUI(boolean headless) {
-        return headless ? new HeadlessGui() : new GUI();
+        gui = GUI.gui;
     }
 
     public boolean meetsRequirements(Character c, Trait t) {
@@ -182,9 +182,40 @@ public class Global {
         Map<String, Boolean> configurationFlags = JsonUtils.mapFromJson(JsonUtils.rootJson(new InputStreamReader(ResourceLoader.getFileResourceAsStream("data/globalflags.json"))).getAsJsonObject(), String.class, Boolean.class);
         configurationFlags.forEach((flag, val) -> Global.setFlag(flag, val));
         time = Time.NIGHT;
-        setCharacterDisabledFlag(getNPCByType("Yui"));
-        setFlag(Flag.systemMessages, true);
+        // TODO: Make sure system messages are on by default'????????????????????/
         saveWithDialog();
+    }
+
+    public void gameLoop() {
+        while (run) {
+            // Nighttime
+            if (time == Time.NIGHT) {
+                // set up match
+                Set<Character> lineup = pickCharacters(players, Collections.singleton(human), 4);
+                Prematch prematch = decideMatchType().buildPrematch(human);
+                Modifier modifier = prematch.getModifier();
+                match = setUpMatch(modifier);
+                // start match
+                gui.startMatch();
+                match.round();
+                // end match
+                new Postmatch(human, lineup);
+                processCharactersAfterMatch();
+                date++;
+                time = Time.DAY;
+                autoSave();
+                gui().endNight();
+                match = null;
+            }
+            // Daytime
+            if (time == Time.DAY) {
+                day = new Daytime(human);
+                day.plan();
+                day = null;
+                time = Time.NIGHT;
+                autoSave();
+            }
+        }
     }
 
     public int random(int start, int end) {
@@ -599,13 +630,11 @@ public class Global {
         return day;
     }
 
-    public void startDay() {
-        match = null;
-        day = new Daytime(human);
-        day.plan();
-    }
-
-    public void endNight() {
+    /**
+     * Resets character stats, replaces clothes, and handles XP for resting characters.
+     */
+    public void processCharactersAfterMatch() {
+        // TODO: This method handles too many things. Break it up.
         double level = 0;
         int maxLevelTracker = 0;
 
@@ -637,12 +666,6 @@ public class Global {
         for (Character rested : resting) {
             rested.gainXP(100 + Math.max(0, (int) Math.round(10 * (level - rested.getLevel()))));
         }
-        date++;
-        time = Time.DAY;
-        if (Global.global.checkFlag(Flag.autosave)) {
-            Global.global.autoSave();
-        }
-        Global.global.gui().endMatch();
     }
 
     private Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
@@ -657,20 +680,7 @@ public class Global {
         return results;
     }
 
-    public void endDay() {
-        day = null;
-        time = Time.NIGHT;
-        if (checkFlag(Flag.autosave)) {
-            autoSave();
-        }
-        startNight();
-    }
-
-    public void startNight() {
-        decideMatchType().buildPrematch(human);
-    }
-
-    public void setUpMatch(Modifier matchmod) {
+    private Match setUpMatch(Modifier matchmod) {
         assert day == null;
         Set<Character> lineup = new HashSet<>(debugChars);
         Character lover = null;
@@ -726,7 +736,7 @@ public class Global {
             maya.gain(Item.Onahole2);
             maya.gain(Item.Dildo2);
             maya.gain(Item.Strapon2);
-            match = new Match(lineup, matchmod);
+            return new Match(lineup, matchmod);
         } else if (matchmod.name().equals("ftc")) {
             Character prey = ((FTCModifier) matchmod).getPrey();
             if (!prey.human()) {
@@ -735,16 +745,15 @@ public class Global {
             lineup = pickCharacters(participants, lineup, 5);
             resting = new HashSet<>(players);
             resting.removeAll(lineup);
-            match = buildMatch(lineup, matchmod);
+            return buildMatch(lineup, matchmod);
         } else if (participants.size() > 5) {
             lineup = pickCharacters(participants, lineup, 5);
             resting = new HashSet<>(players);
             resting.removeAll(lineup);
-            match = buildMatch(lineup, matchmod);
+            return buildMatch(lineup, matchmod);
         } else {
-            match = buildMatch(participants, matchmod);
+            return buildMatch(participants, matchmod);
         }
-        startMatch();
     }
 
     public void startMatch() {
@@ -1002,8 +1011,10 @@ public class Global {
         counters.put(f.name(), val);
     }
 
-    public void autoSave() {
-        save(new File("./auto.ngs"));
+    private void autoSave() {
+        if (checkFlag(Flag.autosave)) {
+            save(new File("./auto.ngs"));
+        }
     }
 
     public void saveWithDialog() {
@@ -1114,11 +1125,6 @@ public class Global {
         SaveData data = new SaveData(object);
         loadData(data);
         gui.populatePlayer(human);
-        if (time == Time.DAY) {
-            startDay();
-        } else {
-            startNight();
-        }
     }
 
     /**
@@ -1236,6 +1242,10 @@ public class Global {
 
     public int getDate() {
         return date;
+    }
+
+    public void exit() {
+        run = false;
     }
 
     interface MatchAction {
@@ -1578,6 +1588,7 @@ public class Global {
                 // pass
             }
         }
-        global = new Global();
+        new GUI();
+        new Global();
     }
 }

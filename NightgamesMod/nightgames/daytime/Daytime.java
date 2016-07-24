@@ -34,27 +34,28 @@ public class Daytime {
         if (Global.global.checkFlag(Flag.YuiUnlocking)) {
             Global.global.unflag(Flag.YuiUnlocking);
         }
-        
-        Global.unflag(Flag.threesome);
+
+        Global.global.unflag(Flag.threesome);
         time = 10;
         // do NPC day length
         if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
-            daylength = 10;
+            dayLength = 10;
         } else {
-            daylength = 7;
+            dayLength = 7;
         }
     }
 
     private boolean morning() {
         Global.global.gui()
               .clearText();
-        Global.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        Global.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(s -> Global.global.gui().message(s));
+        Global.global.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
+        Global.global.getPlayer().getAddictions().stream().map(Addiction::describeMorning)
+                        .forEach(s -> Global.global.gui().message(s));
         if (eventMgr.playMorningScene()) {
             time = 12;
             return true;
         } else if (player.getLevel() >= 10 && player.getRank() == 0) {
-            Global.gui()
+            Global.global.gui()
                   .message("The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
                                   + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
                                   + player.name() + ", and "
@@ -66,28 +67,28 @@ public class Daytime {
             player.rankup();
         } else if (player.getLevel() >= 20 && player.getRank() == 1) {
             Global.global.gui()
-                  .message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
-                                  + player.name()
-                                  + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
-                                  + "all quickly adapting to what most people would consider an extraordinary situation. If you are taking advantage of the people and services available "
-                                  + "to you, you could probably use more money. Therefore, I am authorizing another pay increase. Congratulations.\"</i> This is the mysterious Benefactor "
-                                  + "everyone keeps referring to, right? Is he ever planning to show himself in person? What is he getting out of all this? <i>\"Your curiosity is admirable. "
-                                  + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>");
+                            .message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
+                                            + player.name()
+                                            + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
+                                            + "all quickly adapting to what most people would consider an extraordinary situation. If you are taking advantage of the people and services available "
+                                            + "to you, you could probably use more money. Therefore, I am authorizing another pay increase. Congratulations.\"</i> This is the mysterious Benefactor "
+                                            + "everyone keeps referring to, right? Is he ever planning to show himself in person? What is he getting out of all this? <i>\"Your curiosity is admirable. "
+                                            + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>");
             player.rankup();
             time = 15;
         } else if (player.getLevel() >= 30 && player.getRank() == 2) {
             Global.global.gui()
-                  .message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
-                                  + player.name() + ". Have you been keeping busy? You've been putting "
-                                  + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
-                                  + "That's an odd question since it depends on whether or not he has become more willing to talk. Who else is going to fill you in about this "
-                                  + "apparently clandestine organization. <i>\"Oh don't become lazy now. I chose you for this Game, in part, for your drive and initiative. Are "
-                                  + "you limited to just the information that has been handed to you? Just because Aesop does not have the answers for sale does not mean there "
-                                  + "are no clues. Will you simply give up?\"</i><br/><br/>"
-                                  + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
-                                  + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
-                                  + "already justifying your new rank, which is what I am calling you about, incidently. Perhaps you can put your increased pay rate or the trust "
-                                  + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
+                            .message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
+                                            + player.name() + ". Have you been keeping busy? You've been putting "
+                                            + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
+                                            + "That's an odd question since it depends on whether or not he has become more willing to talk. Who else is going to fill you in about this "
+                                            + "apparently clandestine organization. <i>\"Oh don't become lazy now. I chose you for this Game, in part, for your drive and initiative. Are "
+                                            + "you limited to just the information that has been handed to you? Just because Aesop does not have the answers for sale does not mean there "
+                                            + "are no clues. Will you simply give up?\"</i><br/><br/>"
+                                            + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
+                                            + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
+                                            + "already justifying your new rank, which is what I am calling you about, incidentally. Perhaps you can put your increased pay rate or the trust "
+                                            + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
             player.rankup();
             time = 15;
         } else if (player.getLevel() / 10 > player.getRank()) {
@@ -95,11 +96,11 @@ public class Daytime {
             time = 15;
         } else if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
             Global.global.gui()
-                  .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
+                            .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
             time = 12;
         } else {
             Global.global.gui()
-                  .message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
+                            .message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
             time = 15;
         }
         return false;
@@ -114,12 +115,9 @@ public class Daytime {
             }
         }
         if (time < 22) {
-            Global.global.gui()
-                  .message("It is currently " + displayTime() + ". Your next match starts at 10:00pm.");
-            Global.global.gui()
-                  .refresh();
-            Global.global.gui()
-                  .clearCommand();
+            Global.global.gui().message("It is currently " + displayTime() + ". Your next match starts at 10:00pm.");
+            Global.global.gui().refresh();
+            Global.global.gui().clearCommand();
             if (eventMgr.playRegularScene())
                 return;
             for (Activity act : activities) {
@@ -128,29 +126,20 @@ public class Daytime {
                           .addActivity(act);
                 }
             }
+            activities.stream().filter(act -> act.known() && act.time() + time <= 22)
+                            .forEachOrdered(act -> Global.global.gui().addActivity(act));
         } else {
-            for (Character npc : Global.global.everyone()) {
-                if (!npc.human() && npc instanceof NPC) {
-                    if (npc.getLevel() / 10 > npc.getRank()) {
-                        npc.rankup();
-                    }
-                    ((NPC) npc).daytime(daylength);
+            Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC).forEach(npc -> {
+                if (npc.getLevel() / 10 > npc.getRank()) {
+                    npc.rankup();
                 }
-            }
-            Global.global.endDay();
-
-            /*
-            if (Global.global.checkFlag(Flag.autosave)) {
-                Global.global.autoSave();
-            }
-            Global.global.decideMatchType()
-                  .buildPrematch(player);
-            */
+                ((NPC) npc).daytime(dayLength);
+            });
         }
     }
 
-    public void buildActivities() {
-        activities = new ArrayList<Activity>();
+    private void buildActivities() {
+        activities = new ArrayList<>();
         activities.add(new Exercise(player));
         activities.add(new Porn(player));
         activities.add(new VideoGames(player));
@@ -208,23 +197,20 @@ public class Daytime {
         if (Global.global.random(100) >= a) {
             one.mod(att, 1);
             if (one.human()) {
-                Global.global.gui()
-                      .message("<b>Your " + att + " has improved.</b>");
+                Global.global.gui().message("<b>Your " + att + " has improved.</b>");
             }
         }
         if (Global.global.random(100) >= b) {
             two.mod(att, 1);
             if (two.human()) {
-                Global.global.gui()
-                      .message("<b>Your " + att + " has improved.</b>");
+                Global.global.gui().message("<b>Your " + att + " has improved.</b>");
             }
         }
     }
 
     public void visit(String name, Character npc, int budget) {
         for (Activity a : activities) {
-            if (a.toString()
-                 .equalsIgnoreCase(name)) {
+            if (a.toString().equalsIgnoreCase(name)) {
                 a.shop(npc, budget);
                 break;
             }

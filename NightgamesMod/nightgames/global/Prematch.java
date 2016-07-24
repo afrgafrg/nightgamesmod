@@ -2,34 +2,36 @@ package nightgames.global;
 
 import nightgames.characters.Airi;
 import nightgames.characters.Player;
-import nightgames.gui.KeyableButton;
-import nightgames.gui.SaveButton;
-import nightgames.gui.SceneButton;
+import nightgames.gui.*;
 import nightgames.modifier.Modifier;
 import nightgames.modifier.standard.MayaModifier;
 import nightgames.modifier.standard.NoModifier;
 import nightgames.modifier.standard.UnderwearOnlyModifier;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Prematch implements Scene {
-    private Modifier type;
+    protected Modifier modifier;
+
+    public Modifier getModifier() {
+        return modifier;
+    }
+
+    protected Prematch() {
+    }
 
     public Prematch(Player player) {
-        Global.global.current = this;
+        Global.global.currentScene = this;
         Global.global.unflag(Flag.victory);
-        List<KeyableButton> choice = new ArrayList<KeyableButton>();
+        player.getAddictions().forEach(addiction -> addiction.startNight().ifPresent(player::add));
+        List<CommandButton> choice = new ArrayList<>();
         String message = "";
         if (player.getLevel() < 5) {
             message += "You arrive at the student union a few minutes before the start of the match. "
                             + "You have enough time to check in and make idle chat with your opponents before "
                             + "you head to your assigned starting point and wait. At exactly 10:00, the match is on.";
-            type = new NoModifier();
-            choice.add(new SceneButton("Start The Match"));
+            modifier = new NoModifier();
+            choice.add(new ContinueButton.MatchButton());
         } else if (!Global.global.checkFlag(Flag.metLilly)) {
             message += "You get to the student union a little earlier than usual. Cassie and Jewel are there already and you spend a few minutes talking with them while "
                             + "you wait for the other girls to show up. A few people are still rushing around making preparations, but it's not clear exactly what they're doing. "
@@ -50,7 +52,7 @@ public class Prematch implements Scene {
                             + "tonight's match, you're only allowed to wear your underwear. Even when you come back here for a change of clothes, you'll only get your underwear. If you "
                             + "agree to this, I'll throw an extra $" + new UnderwearOnlyModifier().bonus()
                             + " on top of your normal prize for each point you score. Interested?\"</i>";
-            type = new UnderwearOnlyModifier();
+            modifier = new UnderwearOnlyModifier();
             Global.global.flag(Flag.metLilly);
             choice.add(new SceneButton("Do it"));
             choice.add(new SceneButton("Not interested"));
@@ -78,7 +80,7 @@ public class Prematch implements Scene {
                             + " consider this a learning opportunity and a chance to experience an "
                             + "orgasm at the hands of a master.\"</i><br/><br/>\n\n";
 
-            type = new MayaModifier();
+            modifier = new MayaModifier();
             choice.add(new SceneButton("Start The Match"));
         } else {
             message += "You arrive at the student union with about 10 minutes to spare before the start of the match. You greet each of the girls and make some idle chatter with "
@@ -90,9 +92,9 @@ public class Prematch implements Scene {
                 Global.global.newChallenger(new Airi());
                 Global.global.flag(Flag.Airi);
             }
-            type = offer(player);
-            message += type.intro();
-            if (type.name().equals("normal")) {
+            modifier = offer(player);
+            message += modifier.intro();
+            if (modifier.name().equals("normal")) {
                 choice.add(new SceneButton("Start The Match"));
             } else {
                 choice.add(new SceneButton("Do it"));
@@ -116,16 +118,11 @@ public class Prematch implements Scene {
     @Override
     public void respond(String response) {
         String message = "";
-        List<KeyableButton> choice = new ArrayList<KeyableButton>();
-        if (response.startsWith("Start")) {
-            Global.global.setUpMatch(type);
-        } else if (response.startsWith("Not")) {
-            type = new NoModifier();
-            Global.global.setUpMatch(type);
-        } else if (response.startsWith("Do")) {
-            message += type.acceptance();
-            choice.add(new SceneButton("Start The Match"));
-            Global.global.gui().prompt(message, choice);
+        if (response.startsWith("Not interested")) {
+            modifier = new NoModifier();
+        } else if (response.startsWith("Do it")) {
+            message += modifier.acceptance();
+            Global.global.gui().prompt(message, Collections.singletonList(new ContinueButton.MatchButton()));
         }
     }
 }

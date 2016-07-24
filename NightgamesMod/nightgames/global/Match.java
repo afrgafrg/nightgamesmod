@@ -220,8 +220,6 @@ public class Match {
                 character.add(Trait.masterheels);
             }
         }
-        Global.global.getPlayer().getAddictions().forEach(Addiction::endNight);
-        new Postmatch(Global.global.getPlayer(), combatants);
     }
 
     public int getHour() {
@@ -298,7 +296,7 @@ public class Match {
         Character human = Global.global.getPlayer();
         if (human.state == State.combat) {
             if (human.location().fight.getCombat() != null) {
-                human.location().fight.getCombat().forfeit(human);
+                human.location().fight.getCombat().forfeit();
             }
             human.location().endEncounter();
         }

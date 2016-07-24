@@ -15,7 +15,6 @@ import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
-import nightgames.modifier.standard.NoModifier;
 import nightgames.skills.Skill;
 import nightgames.skills.TacticGroup;
 import nightgames.skills.Tactics;
@@ -44,6 +43,8 @@ import java.util.stream.Collectors;
 import static nightgames.requirements.RequirementShortcuts.item;
 
 public class GUI extends JFrame implements Observer {
+    public static GUI gui;
+
     private static final long serialVersionUID = 451431916952047183L;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
@@ -112,6 +113,7 @@ public class GUI extends JFrame implements Observer {
     private static final String USE_CLOSET_UI = "CLOSET";
 
     public GUI() {
+        gui = this;
 
         // frame title
         setTitle("NightGames Mod");
@@ -157,6 +159,7 @@ public class GUI extends JFrame implements Observer {
                                 "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
+                    Global.global.exit();
                     new Global();
                 }
             }
@@ -548,7 +551,7 @@ public class GUI extends JFrame implements Observer {
         clothesPanel.setBackground(new Color(25, 25, 50));
         centerPanel.add(clothesPanel, USE_CLOSET_UI);
 
-        JButton debug = new JButton("Debug");
+        CommandButton debug = new CommandButton("Debug", true);
         debug.addActionListener(arg0 -> Global.global.getMatch().resume());
 
         // commandPanel - visible, contains the player's command buttons
@@ -1030,27 +1033,39 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void addActivity(Activity act) {
-        commandPanel.add(activityButton(act));
+        commandPanel.add(new ActivityButton(act));
         commandPanel.refresh();
     }
 
     public void next(Combat combat) {
         refresh();
         clearCommand();
-        commandPanel.add(nextButton(combat));
+        ContinueButton.NextButton next = new ContinueButton.NextButton();
+        commandPanel.add(next);
         Global.global.getMatch().pause();
         commandPanel.refresh();
+        new BlockingPrompt().block(next);
+        clearCommand();
+        if (combat.phase == 0) {
+            combat.clear();
+            clearText();
+            combat.turn();
+        } else if (combat.phase == 2) {
+            if (!combat.end()) {
+                endCombat();
+            }
+        }
     }
 
     public void next(Activity event) {
         event.next();
         clearCommand();
-        commandPanel.add(eventButton(event, "Next", null));
+        commandPanel.add(new EventButton(event, "Next", null));
         commandPanel.refresh();
     }
 
     public void choose(Combat c, Character npc, String message, CombatSceneChoice choice) {
-        commandPanel.add(combatSceneButton(message, c, npc, choice));
+        commandPanel.add(new CombatSceneButton(message, c, npc, choice));
         commandPanel.refresh();
     }
 
@@ -1060,31 +1075,31 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void choose(Activity event, String choice) {
-        commandPanel.add(eventButton(event, choice, null));
+        commandPanel.add(new EventButton(event, choice, null));
         commandPanel.refresh();
     }
 
     public void choose(Activity event, String choice, String tooltip) {
-        commandPanel.add(eventButton(event, choice, tooltip));
+        commandPanel.add(new EventButton(event, choice, tooltip));
         commandPanel.refresh();
     }
 
     public void choose(Action event, String choice, Character self) {
-        commandPanel.add(locatorButton(event, choice, self));
+        commandPanel.add(new LocatorButton(event, choice, self));
         commandPanel.refresh();
     }
 
     public void sale(Store shop, Loot i) {
-        commandPanel.add(itemButton(shop, i));
+        commandPanel.add(new ItemButton(shop, i));
         commandPanel.refresh();
     }
 
     public void promptFF(IEncounter enc, Character target) {
         clearCommand();
-        commandPanel.add(encounterButton("Fight", enc, target, Encs.fight));
-        commandPanel.add(encounterButton("Flee", enc, target, Encs.flee));
+        commandPanel.add(new EncounterButton("Fight", enc, target, Encs.fight));
+        commandPanel.add(new EncounterButton("Flee", enc, target, Encs.flee));
         if (item(Item.SmokeBomb, 1).meets(null, Global.global.human, null)) {
-            commandPanel.add(encounterButton("Smoke Bomb", enc, target, Encs.smoke));
+            commandPanel.add(new EncounterButton("Smoke Bomb", enc, target, Encs.smoke));
         }
         Global.global.getMatch().pause();
         commandPanel.refresh();
@@ -1092,25 +1107,25 @@ public class GUI extends JFrame implements Observer {
 
     public void promptAmbush(IEncounter enc, Character target) {
         clearCommand();
-        commandPanel.add(encounterButton("Attack " + target.name(), enc, target, Encs.ambush));
-        commandPanel.add(encounterButton("Wait", enc, target, Encs.wait));
+        commandPanel.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.ambush));
+        commandPanel.add(new EncounterButton("Wait", enc, target, Encs.wait));
         Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
     public void promptOpportunity(IEncounter enc, Character target, Trap trap) {
         clearCommand();
-        commandPanel.add(encounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
-        commandPanel.add(encounterButton("Wait", enc, target, Encs.wait));
+        commandPanel.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
+        commandPanel.add(new EncounterButton("Wait", enc, target, Encs.wait));
         Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
     public void promptShower(IEncounter encounter, Character target) {
         clearCommand();
-        commandPanel.add(encounterButton("Suprise Her", encounter, target, Encs.showerattack));
+        commandPanel.add(new EncounterButton("Suprise Her", encounter, target, Encs.showerattack));
         if (!target.mostlyNude()) {
-            commandPanel.add(encounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
+            commandPanel.add(new EncounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
         }
         if (Global.global.human.has(Item.Aphrodisiac)) {
             commandPanel.add(new EncounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
@@ -1128,14 +1143,13 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void prompt(String message, List<KeyableButton> choices) {
+    public void prompt(String message, List<CommandButton> choices) {
         clearText();
         clearCommand();
         message(message);
-        for (KeyableButton button : choices) {
-            commandPanel.add(button);
-        }
+        choices.forEach(commandPanel::add);
         commandPanel.refresh();
+        new BlockingPrompt().block(choices);
     }
 
     public void ding() {
@@ -1204,16 +1218,18 @@ public class GUI extends JFrame implements Observer {
         showMap();
     }
 
-    public void endMatch() {
+    public void endNight() {
         if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
-            System.out.println("Match end");
+            System.out.println("Night End");
         }
         clearCommand();
         showNone();
         mntmQuitMatch.setEnabled(false);
-        commandPanel.add(new SleepButton());
+        SleepButton sleepButton = new SleepButton();
+        commandPanel.add(sleepButton);
         commandPanel.add(new SaveButton());
         commandPanel.refresh();
+        new BlockingPrompt().block(sleepButton);
     }
 
     public void refresh() {
@@ -1400,35 +1416,11 @@ public class GUI extends JFrame implements Observer {
                 return;
             }
         }
+        Global.global.exit();
         new Global().load(file);
+        Global.global.gameLoop();
     }
 
-    // TODO: Make these buttons keyable
-    private class NextButton extends JButton {
-
-        private static final long serialVersionUID = 6773730244369679822L;
-        private Combat combat;
-
-        public NextButton(Combat combat) {
-            super();
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.combat = combat;
-            setText("Next");
-            addActionListener(arg0 -> {
-                clearCommand();
-                if (GUI.NextButton.this.combat.phase == 0) {
-                    GUI.NextButton.this.combat.clear();
-                    clearText();
-                    GUI.NextButton.this.combat.turn();
-                } else if (GUI.NextButton.this.combat.phase == 2) {
-                    clearCommand();
-                    if (!GUI.NextButton.this.combat.end()) {
-                        endCombat();
-                    }
-                }
-            });
-        }
-    }
     /*
     private KeyableButton nextButton(Combat combat) {
         return new RunnableButton("Next", () -> {
@@ -1438,23 +1430,24 @@ public class GUI extends JFrame implements Observer {
     }
     */
 
-    private class EventButton extends JButton {
+    // TODO: Make these buttons keyable
+    private class EventButton extends CommandButton {
 
         private static final long serialVersionUID = 7130158464211753531L;
         protected Activity event;
         protected String choice;
 
         public EventButton(Activity event, String choice) {
-            super();
+            super(true);    // Can unblock
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.event = event;
             this.choice = choice;
             setText(choice);
-            addActionListener(arg0 -> GUI.EventButton.this.event.visit(GUI.EventButton.this.choice));
+            addActionListener(arg0 -> EventButton.this.event.visit(EventButton.this.choice));
         }
     }
 
-    private class ItemButton extends GUI.EventButton {
+    private class ItemButton extends EventButton {
 
         private static final long serialVersionUID = 3200753975433797292L;
 
@@ -1471,7 +1464,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class AttributeButton extends JButton {
+    private class AttributeButton extends CommandButton {
         /**
          * 
          */
@@ -1479,7 +1472,7 @@ public class GUI extends JFrame implements Observer {
         private Attribute att;
 
         public AttributeButton(Attribute att) {
-            super();
+            super(); // does not unblock
             Player player = Global.global.human;
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.att = att;
@@ -1494,7 +1487,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class FeatButton extends JButton {
+    private class FeatButton extends CommandButton {
         /**
          * 
          */
@@ -1502,7 +1495,7 @@ public class GUI extends JFrame implements Observer {
         private Trait feat;
 
         public FeatButton(Trait feat) {
-            super();
+            super();    // does not unblock
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.feat = feat;
             setText(feat.toString());
@@ -1520,14 +1513,14 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class SkipFeatButton extends JButton {
+    private class SkipFeatButton extends CommandButton {
         /**
          * 
          */
         private static final long serialVersionUID = -4949332486895844480L;
 
         public SkipFeatButton() {
-            super();
+            super();    // does not unblock
             setFont(new Font("Baskerville Old Face", 0, 18));
             setText("Skip");
             setToolTipText("Save the trait point for later.");
@@ -1539,7 +1532,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class InterveneButton extends JButton {
+    private class InterveneButton extends CommandButton {
         /**
          * 
          */
@@ -1548,7 +1541,7 @@ public class GUI extends JFrame implements Observer {
         private Character assist;
 
         public InterveneButton(IEncounter enc2, Character assist) {
-            super();
+            super(true);
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.enc = enc2;
             this.assist = assist;
@@ -1560,7 +1553,7 @@ public class GUI extends JFrame implements Observer {
 
      // TODO: Need a "Watch them fight" button
 
-    private class ActivityButton extends JButton {
+    private class ActivityButton extends CommandButton {
         /**
          * 
          */
@@ -1568,7 +1561,7 @@ public class GUI extends JFrame implements Observer {
         private Activity act;
 
         public ActivityButton(Activity act) {
-            super();
+            super(true);    // can unblock
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.act = act;
             setText(act.toString());
@@ -1576,38 +1569,21 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class SleepButton extends JButton {
-
+    private class SleepButton extends CommandButton {
         /**
          * 
          */
         private static final long serialVersionUID = 1669023447753258615L;
 
-        public SleepButton() {
-            super();
+        SleepButton() {
+            super(true);
             setFont(new Font("Baskerville Old Face", 0, 18));
             setText("Go to sleep");
-            addActionListener(arg0 -> Global.global.startDay());
         }
     }
 
 
-    @SuppressWarnings("unused") private class MatchButton extends JButton {
-
-        /**
-         *
-         */
-        private static final long serialVersionUID = 3899760251122030064L;
-
-        public MatchButton() {
-            super();
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setText("Start the match");
-            addActionListener(arg0 -> Global.global.setUpMatch(new NoModifier()));
-        }
-    }
-
-    private class LocatorButton extends JButton {
+    private class LocatorButton extends CommandButton {
 
         /**
          * 
@@ -1622,7 +1598,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private class PageButton extends JButton {
+    private class PageButton extends CommandButton {
         /**
          * 
          */

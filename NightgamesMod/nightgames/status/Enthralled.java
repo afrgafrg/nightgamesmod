@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -101,7 +100,7 @@ public class Enthralled extends DurationStatus {
                                             + " like a lens snapped into focus. You don't really remember why"
                                             + " you were heading in the direction you were...");
         } else if (affected.human()) {
-            Global.gui().message("Everything around you suddenly seems much clearer,"
+            Global.global.gui().message("Everything around you suddenly seems much clearer,"
                             + " like a lens snapped into focus. You don't really remember why"
                             + " you were heading in the direction you were...");
         }
@@ -117,7 +116,7 @@ public class Enthralled extends DurationStatus {
     public void tick(Combat c) {
         if (affected.check(Attribute.Cunning, master.get(Attribute.Seduction) / 2 + master.get(Attribute.Arcane) / 2
                         + master.get(Attribute.Dark) / 2 + 10 + 10 * (getDuration() - timesRefreshed))) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println("Escaped from Enthralled");
             }
             setDuration(0);

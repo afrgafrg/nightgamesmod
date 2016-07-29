@@ -1,10 +1,5 @@
 package nightgames.global;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import nightgames.characters.Airi;
 import nightgames.characters.Player;
 import nightgames.gui.KeyableButton;
@@ -15,12 +10,18 @@ import nightgames.modifier.standard.MayaModifier;
 import nightgames.modifier.standard.NoModifier;
 import nightgames.modifier.standard.UnderwearOnlyModifier;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Prematch implements Scene {
     private Modifier type;
 
     public Prematch(Player player) {
-        Global.current = this;
-        Global.unflag(Flag.victory);
+        Global.global.current = this;
+        Global.global.unflag(Flag.victory);
         List<KeyableButton> choice = new ArrayList<KeyableButton>();
         String message = "";
         if (player.getLevel() < 5) {
@@ -29,7 +30,7 @@ public class Prematch implements Scene {
                             + "you head to your assigned starting point and wait. At exactly 10:00, the match is on.";
             type = new NoModifier();
             choice.add(new SceneButton("Start The Match"));
-        } else if (!Global.checkFlag(Flag.metLilly)) {
+        } else if (!Global.global.checkFlag(Flag.metLilly)) {
             message += "You get to the student union a little earlier than usual. Cassie and Jewel are there already and you spend a few minutes talking with them while "
                             + "you wait for the other girls to show up. A few people are still rushing around making preparations, but it's not clear exactly what they're doing. "
                             + "Other than making sure there are enough spare clothes to change into, there shouldn't be too much setup required. Maybe they're responsible for "
@@ -50,10 +51,10 @@ public class Prematch implements Scene {
                             + "agree to this, I'll throw an extra $" + new UnderwearOnlyModifier().bonus()
                             + " on top of your normal prize for each point you score. Interested?\"</i>";
             type = new UnderwearOnlyModifier();
-            Global.flag(Flag.metLilly);
+            Global.global.flag(Flag.metLilly);
             choice.add(new SceneButton("Do it"));
             choice.add(new SceneButton("Not interested"));
-        } else if (player.getRank() > 0 && Global.getDate() % 30 == 0) {
+        } else if (player.getRank() > 0 && Global.global.getDate() % 30 == 0) {
             message = message + "When you arrive at the student union, you notice the girls have all "
                             + "gathered around Lilly. As you get closer, you notice Maya, the recruiter"
                             + ", standing next to her. She isn't usually present during a match, or at"
@@ -82,12 +83,12 @@ public class Prematch implements Scene {
         } else {
             message += "You arrive at the student union with about 10 minutes to spare before the start of the match. You greet each of the girls and make some idle chatter with "
                             + "them before you check in with Lilly to see if she has any custom rules for you.<br/><br/>";
-            if (player.getRank() > 0 && !Global.checkFlag(Flag.AiriDisabled) && !Global.characterTypeInGame("Airi")) {
+            if (player.getRank() > 0 && !Global.global.checkFlag(Flag.AiriDisabled) && !Global.global.characterTypeInGame("Airi")) {
                 message += "Before you have a chance to ask though, Lilly mentions to you that there is a new competitor. However, when you ask her for details, she only mentions that her "
                                 + "name is Airi, and that she's a Biology student, while holding a visible smirk. Your instincts tells you something is wrong, but you decide to ignore it for now.<br/><br/>"
                                 + "<b>Airi has entered the games.</b><br/><br/>";
-                Global.newChallenger(new Airi());
-                Global.flag(Flag.Airi);
+                Global.global.newChallenger(new Airi());
+                Global.global.flag(Flag.Airi);
             }
             type = offer(player);
             message += type.intro();
@@ -100,16 +101,16 @@ public class Prematch implements Scene {
         }
 
         choice.add(new SaveButton());
-        Global.gui().prompt(message, choice);
+        Global.global.gui().prompt(message, choice);
     }
 
     private Modifier offer(Player player) {
-        if (Global.random(10) > 4) {
+        if (Global.global.random(10) > 4) {
             return new NoModifier();
         }
-        Set<Modifier> modifiers = new HashSet<>(Global.getModifierPool());
+        Set<Modifier> modifiers = new HashSet<>(Global.global.getModifierPool());
         modifiers.removeIf(mod -> !mod.isApplicable() || mod.name().equals("normal"));
-        return Global.pickRandom(modifiers.toArray(new Modifier[] {})).get();
+        return Global.global.pickRandom(modifiers.toArray(new Modifier[] {})).get();
     }
 
     @Override
@@ -117,14 +118,14 @@ public class Prematch implements Scene {
         String message = "";
         List<KeyableButton> choice = new ArrayList<KeyableButton>();
         if (response.startsWith("Start")) {
-            Global.setUpMatch(type);
+            Global.global.setUpMatch(type);
         } else if (response.startsWith("Not")) {
             type = new NoModifier();
-            Global.setUpMatch(type);
+            Global.global.setUpMatch(type);
         } else if (response.startsWith("Do")) {
             message += type.acceptance();
             choice.add(new SceneButton("Start The Match"));
-            Global.gui().prompt(message, choice);
+            Global.global.gui().prompt(message, choice);
         }
     }
 }

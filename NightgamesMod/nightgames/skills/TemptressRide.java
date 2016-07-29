@@ -53,7 +53,7 @@ public class TemptressRide extends Thrust {
         if (c.getStance().anallyPenetrated(c, getSelf())) {
             return super.resolve(c, target);
         }
-        int targetDmg = 10 + Global.random(Math.max(10, getSelf().get(Attribute.Technique)));
+        int targetDmg = 10 + Global.global.random(Math.max(10, getSelf().get(Attribute.Technique)));
         int selfDmg = (int) Math.max(1f, targetDmg / 3f);
         if (getSelf().has(Trait.experienced)) {
             selfDmg *= 0.67;

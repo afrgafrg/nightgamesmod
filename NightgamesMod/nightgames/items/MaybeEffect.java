@@ -16,7 +16,7 @@ public class MaybeEffect extends ItemEffect {
 
     @Override
     public boolean use(Combat c, Character user, Character opponent, Item item) {
-        if (Global.randomdouble() < probability) {
+        if (Global.global.randomdouble() < probability) {
             return effect.use(c, user, opponent, item);
         }
         return false;

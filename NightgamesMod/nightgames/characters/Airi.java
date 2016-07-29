@@ -1,15 +1,6 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TentaclePart;
-import nightgames.characters.custom.CharacterLine;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
@@ -21,6 +12,8 @@ import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class Airi extends BasePersonality {
     /**
@@ -116,6 +109,7 @@ public class Airi extends BasePersonality {
 
     @Override
     public void setGrowth() {
+        growth.stamina = 1;
         character.getGrowth().stamina = 1;
         character.getGrowth().arousal = 1;
         character.getGrowth().willpower = 2.5f;
@@ -186,22 +180,22 @@ public class Airi extends BasePersonality {
     
     private void useTransformation() {
         Global.setFlag(AIRI_TRANSFORMATION_FOCUS, true);
-        
+
     }
 
     private void useParasitism() {
         Global.setFlag(AIRI_PARASITISM_FOCUS, true);
-        
+
     }
 
     private void useSlimeQueen() {
         Global.setFlag(AIRI_QUEEN_SLIME_FOCUS, true);
-        
+
     }
 
     private void useSlimeCarrier() {
         Global.setFlag(AIRI_SLIME_CARRIER_FOCUS, true);
-        
+
     }
 
     @Override
@@ -210,14 +204,12 @@ public class Airi extends BasePersonality {
         if (character.has(Trait.slime)) {
             if (character.hasPussy() && !character.body.getRandomPussy().moddedPartCountsAs(character, PussyPart.gooey)) {
                 character.body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
-                c.write(character, 
-                                Global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
+                c.write(character, Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 character, opponent, character.body.getRandomPussy()));
             }
             if (character.hasDick() && !character.body.getRandomCock().moddedPartCountsAs(character, CockMod.slimy)) {
                 character.body.temporaryAddOrReplacePartWithType(character.body.getRandomCock().applyMod(CockMod.slimy), 999);
-                c.write(character, 
-                                Global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey cock.",
+                c.write(character, Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey cock.",
                                                 character, opponent, character.body.getRandomCock()));
             }
         }
@@ -226,7 +218,8 @@ public class Airi extends BasePersonality {
     @Override
     public void resolveOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart, int times, int totalTimes) {
         if (times == totalTimes && character.getWillpower().percent() < 60 && !character.has(Trait.slime)) {
-            c.write(character, Global.format("After {self:NAME-POSSESSIVE} orgasm, her whole body shimmers and melts into a puddle of goo. A human body rises from the slime and molds itself to a facsimile of {self:reflective}. "
+            c.write(character, Global.global.format(
+                            "After {self:NAME-POSSESSIVE} orgasm, her whole body shimmers and melts into a puddle of goo. A human body rises from the slime and molds itself to a facsimile of {self:reflective}. "
                             + "Gone is the slim repressed girl you knew. The new Airi that appears before you is a sexually idealized version of herself, with bigger breasts, a dynamic body line and long legs that end in a ball of blue goo. "
                             + "You're now fighting {self:name} in slime form!", character, opponent));
             character.nudify();
@@ -289,7 +282,7 @@ public class Airi extends BasePersonality {
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
@@ -394,12 +387,12 @@ public class Airi extends BasePersonality {
     @Override
     public String intervene3p(Combat c, Character target, Character assist) {
         if (target.human()) {
-            return Global.format(
+            return Global.global.format(
                             "Your fight with {other:name} seemed to have ran into a stalemate. Neither of you is willing to get close enough to each other for anything substantial to happen. You just continue to trade taunts whilst waiting for an opportunity.<br/><br/>"
                                             + "Suddenly, you feel something grasp your ankles and pull you off balance. You brace yourself for the fall, but after a second, you only feel softness on your back. It’s Airi. She somehow snuck up on you and tripped you into falling on top of her. She quickly engulfs your hands and legs in her slime and presents your helpless body to {other:name}’s ministrations.",
                             character, assist);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "Your fight with {other:name} seemed to have ran into a stalemate. Neither of you is willing to get close enough to each other for anything substantial to happen. You just continue to trade taunts whilst waiting for an opportunity.<br/><br/>"
                                             + "Suddenly, a blue blob appears in your line of sight. It’s Airi! More swiftly than you would expect, Airi moves to {other:name}’s side and engulfs her body in her own. After dissolving her clothing with her slime, Airi surfaces only {other:name-possessive} torso and sex, presenting her to you. Well, presented with a gift on a silver platter, you’re not going to refuse!",
                             character, target);

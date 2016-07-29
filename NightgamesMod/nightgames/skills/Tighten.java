@@ -32,7 +32,7 @@ public class Tighten extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int[] result = new int[2];
 
-        int m = 5 + Global.random(10) + Math.min(getSelf().get(Attribute.Power) / 3, 20);
+        int m = 5 + Global.global.random(10) + Math.min(getSelf().get(Attribute.Power) / 3, 20);
         result[0] = m;
         result[1] = 1;
 
@@ -61,7 +61,7 @@ public class Tighten extends Thrust {
             target.body.pleasure(getSelf(), selfO, targetO, m[0], c, this);
         if (m[1] != 0)
             getSelf().body.pleasure(target, targetO, selfO, m[1], 0, c, false, this);
-        if (selfO.isType("ass") && Global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
+        if (selfO.isType("ass") && Global.global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;
@@ -80,11 +80,11 @@ public class Tighten extends Thrust {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (c.getStance().en == Stance.anal) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:rhythmically squeeze|rhythmically squeezes} {self:possessive} {self:body-part:ass} around {other:possessive} dick, milking {other:direct-object} for all that {self:pronoun-action:are|is} worth.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:give|gives} {other:direct-object} a seductive wink and suddenly {self:possessive} {self:body-part:pussy} squeezes around {other:possessive} {other:body-part:cock} as though it's trying to milk {other:direct-object}.",
                             getSelf(), target);
         }

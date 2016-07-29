@@ -1,14 +1,13 @@
 package nightgames.gui;
 
-import java.awt.Font;
-
-import javax.swing.JButton;
-
 import nightgames.characters.Character;
 import nightgames.combat.IEncounter;
 import nightgames.global.Encs;
 import nightgames.global.Global;
 import nightgames.trap.Trap;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class EncounterButton extends JButton {
     /**
@@ -27,9 +26,9 @@ public class EncounterButton extends JButton {
         this.target = target;
         this.choice = choice;
         addActionListener(arg0 -> {
-            EncounterButton.this.enc.parse(EncounterButton.this.choice, Global.getPlayer(),
+            EncounterButton.this.enc.parse(EncounterButton.this.choice, Global.global.getPlayer(),
                             EncounterButton.this.target);
-            Global.getMatch().resume();
+            Global.global.getMatch().resume();
         });
     }
 
@@ -41,9 +40,10 @@ public class EncounterButton extends JButton {
         this.choice = choice;
         this.trap = trap;
         addActionListener(arg0 -> {
-            EncounterButton.this.enc.parse(EncounterButton.this.choice, Global.getPlayer(), EncounterButton.this.target,
+            EncounterButton.this.enc
+                            .parse(EncounterButton.this.choice, Global.global.getPlayer(), EncounterButton.this.target,
                             EncounterButton.this.trap);
-            Global.getMatch().resume();
+            Global.global.getMatch().resume();
         });
     }
 }

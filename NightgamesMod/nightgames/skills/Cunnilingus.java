@@ -48,7 +48,7 @@ public class Cunnilingus extends Skill {
     public boolean resolve(Combat c, Character target) {
         Result results = Result.normal;
         boolean facesitting = c.getStance().isBeingFaceSatBy(c, getSelf(), target);
-        int m = 10 + Global.random(8);
+        int m = 10 + Global.global.random(8);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
         }
@@ -56,7 +56,7 @@ public class Cunnilingus extends Skill {
         if (!facesitting && c.getStance().mobile(target) && !target.roll(getSelf(), c, accuracy(c, target))) {
             results = Result.miss;
         } else {
-            if (target.has(Trait.enthrallingjuices) && Global.random(4) == 0 && !target.wary()) {
+            if (target.has(Trait.enthrallingjuices) && Global.global.random(4) == 0 && !target.wary()) {
                 i = -2;
             } else if (target.has(Trait.lacedjuices)) {
                 i = -1;
@@ -144,7 +144,7 @@ public class Cunnilingus extends Skill {
                             + (damage == -2 ? " You feel a strange pull on you mind,"
                                             + " somehow she has managed to enthrall you with her juices." : "");
         }
-        int r = Global.random(3);
+        int r = Global.global.random(3);
         if (r == 0) {
             return "You gently lick " + target.name() + "'s pussy and sensitive clit."
                             + (damage == -1 ? " As you drink down her juices, they seem to flow "
@@ -171,7 +171,7 @@ public class Cunnilingus extends Skill {
         String special;
         switch (damage) {
             case -1:
-                special = String.format(" %s aphrodisiac juices manage to arouse %s as much as %s aroused %s.", 
+                special = String.format(" %s aphrodisiac juices manage to arouse %s as much as %s aroused %s.",
                                 target.nameOrPossessivePronoun(), getSelf().nameDirectObject(),
                                 getSelf().pronoun(), target.nameDirectObject());
                 break;
@@ -199,11 +199,11 @@ public class Cunnilingus extends Skill {
                             target.pronoun(), target.action("sit"), getSelf().possessiveAdjective(),
                             special);
         }
-        return String.format("%s locates and captures %s clit between %s lips and attacks it with %s tongue.%s", 
+        return String.format("%s locates and captures %s clit between %s lips and attacks it with %s tongue.%s",
                         getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
                         getSelf().possessiveAdjective(), special);
     }
-    
+
     @Override
     public String describe(Combat c) {
         return "Perfom cunnilingus on opponent";

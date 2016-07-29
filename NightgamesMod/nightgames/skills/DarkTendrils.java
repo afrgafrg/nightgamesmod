@@ -38,7 +38,7 @@ public class DarkTendrils extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().arouse((int) (getSelf().getArousal().max() * .20), c);
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            if (Global.random(2) == 1) {
+            if (Global.global.random(2) == 1) {
                 writeOutput(c, Result.normal, target);
                 target.add(c, new Bound(target, Math.min(10 + 3 * getSelf().get(Attribute.Dark), 55), "shadows"));
                 target.add(c, new Falling(target));
@@ -92,7 +92,7 @@ public class DarkTendrils extends Skill {
             return String.format("%s shadow seems to come to life as dark tendrils wrap around %s legs and bring %s to the floor.",
                             target.nameOrPossessivePronoun(), target.possessiveAdjective(), target.directObject());
         } else {
-            return String.format("%s summons shadowy tentacles which snare %s arms and hold %s in place.", 
+            return String.format("%s summons shadowy tentacles which snare %s arms and hold %s in place.",
                             getSelf().subject(), target.nameOrPossessivePronoun(), target.directObject());
         }
     }

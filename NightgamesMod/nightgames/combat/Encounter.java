@@ -1,8 +1,5 @@
 package nightgames.combat;
 
-import java.io.Serializable;
-import java.util.Optional;
-
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.characters.Attribute;
@@ -13,13 +10,12 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Encs;
 import nightgames.global.Global;
 import nightgames.items.Item;
-import nightgames.status.Enthralled;
-import nightgames.status.Flatfooted;
-import nightgames.status.Hypersensitive;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.trap.Spiderweb;
 import nightgames.trap.Trap;
+
+import java.io.Serializable;
+import java.util.Optional;
 
 public class Encounter implements Serializable, IEncounter {
 
@@ -55,14 +51,14 @@ public class Encounter implements Serializable, IEncounter {
                 p1.addNonCombat(new Flatfooted(p1, 2));
                 p1.addNonCombat(new Hypersensitive(p1));
                 if (p1.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("At " + p2.name() + "'s interruption, you break free from the"
                                           + " succubus' hold on your mind. However, the shock all but"
                                           + " short-circuits your brain; you "
                                           + " collapse to the floor, feeling helpless and"
                                           + " strangely oversensitive");
                 } else if (p2.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message(p1.name() + " doesn't appear to notice you at first, but when you "
                                           + "wave your hand close to her face her eyes open wide and"
                                           + " she immediately drops to the floor. Although the display"
@@ -123,34 +119,34 @@ public class Encounter implements Serializable, IEncounter {
         } else {
             if (p1.state == State.masturbating) {
                 if (p1.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message(p2.name()
                                           + " catches you masturbating, but fortunately she's still not allowed to attack you, so she just watches you jerk off with "
                                           + "an amused grin.");
                 } else if (p2.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("You stumble onto " + p1.name()
                                           + " with her hand between her legs, masturbating. Since you just fought, you still can't touch her, so "
                                           + "you just watch the show until she orgasms.");
                 }
             } else if (p2.state == State.masturbating) {
                 if (p2.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message(p1.name()
                                           + " catches you masturbating, but fortunately she's still not allowed to attack you, so she just watches you jerk off with "
                                           + "an amused grin.");
                 } else if (p1.human()) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("You stumble onto " + p2.name()
                                           + " with her hand between her legs, masturbating. Since you just fought, you still can't touch her, so "
                                           + "you just watch the show until she orgasms.");
                 }
             } else if (!p1.eligible(p2) && p1.human()) {
-                Global.gui()
+                Global.global.gui()
                       .message("You encounter " + p2.name()
                                       + ", but you still haven't recovered from your last fight.");
             } else if (p1.human()) {
-                Global.gui()
+                Global.global.gui()
                       .message("You find " + p2.name()
                                       + " still naked from your last encounter, but she's not fair game again until she replaces her clothes.");
             }
@@ -174,13 +170,13 @@ public class Encounter implements Serializable, IEncounter {
                 startFightTimer();
                 if (p1.human() || p2.human()) {
                     if (p1.human()) {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p2.challenge(p1));
                     } else {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p1.challenge(p2));
                     }
-                    this.fight = Global.gui()
+                    this.fight = Global.global.gui()
                                        .beginCombat(p1, p2);
                 } else {
                     // this.fight=new NullGUI().beginCombat(p1,p2);
@@ -189,17 +185,17 @@ public class Encounter implements Serializable, IEncounter {
             } else if (p1ff) {
                 if (p1Guaranteed.isPresent() && !p2Guaranteed.isPresent()) {
                     if (p1.human() || p2.human())
-                        Global.gui().message(p1Guaranteed.get());
+                        Global.global.gui().message(p1Guaranteed.get());
                     startFightTimer();
-                    this.fight = Global.gui().beginCombat(p1, p2);
+                    this.fight = Global.global.gui().beginCombat(p1, p2);
                 } else if (p2Guaranteed.isPresent()) {
                     if (p1.human() || p2.human())
-                        Global.gui().message(p2Guaranteed.get());
+                        Global.global.gui().message(p2Guaranteed.get());
                     p2.flee(location);
                 } else if (p2.check(Attribute.Speed, 10 + p1.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? 5 : 0)
                                 + (p2.has(Trait.sprinter) ? -5 : 0))) {
                     if (p1.human()) {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p2.name() + " dashes away before you can move.");
                     }
                     p2.flee(location);
@@ -207,14 +203,14 @@ public class Encounter implements Serializable, IEncounter {
                     startFightTimer();
                     if (p1.human() || p2.human()) {
                         if (p1.human()) {
-                            Global.gui()
+                            Global.global.gui()
                                   .message(p2.name() + " tries to run, but you stay right on her heels and catch her.");
                         } else {
-                            Global.gui()
+                            Global.global.gui()
                                   .message("You quickly try to escape, but " + p1.name()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Global.gui()
+                        this.fight = Global.global.gui()
                                            .beginCombat(p1, p2);
                     } else {
 
@@ -225,17 +221,17 @@ public class Encounter implements Serializable, IEncounter {
             } else if (p2ff) {
                 if (p2Guaranteed.isPresent() && !p1Guaranteed.isPresent()) {
                     if (p1.human() || p2.human())
-                        Global.gui().message(p2Guaranteed.get());
+                        Global.global.gui().message(p2Guaranteed.get());
                     startFightTimer();
-                    this.fight = Global.gui().beginCombat(p1, p2);
+                    this.fight = Global.global.gui().beginCombat(p1, p2);
                 } else if (p1Guaranteed.isPresent()) {
                     if (p1.human() || p2.human())
-                        Global.gui().message(p1Guaranteed.get());
+                        Global.global.gui().message(p1Guaranteed.get());
                     p1.flee(location);
                 } else if (p1.check(Attribute.Speed, 10 + p2.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? -5 : 0)
                                 + (p2.has(Trait.sprinter) ? 5 : 0))) {
                     if (p2.human()) {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p1.name() + " dashes away before you can move.");
                     }
                     p1.flee(location);
@@ -243,14 +239,14 @@ public class Encounter implements Serializable, IEncounter {
                     startFightTimer();
                     if (p1.human() || p2.human()) {
                         if (p2.human()) {
-                            Global.gui()
+                            Global.global.gui()
                                   .message(p1.name() + " tries to run, but you stay right on her heels and catch her.");
                         } else {
-                            Global.gui()
+                            Global.global.gui()
                                   .message("You quickly try to escape, but " + p2.name()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Global.gui()
+                        this.fight = Global.global.gui()
                                            .beginCombat(p1, p2);
                     } else {
                         // this.fight=new NullGUI().beginCombat(p1,p2);
@@ -258,15 +254,16 @@ public class Encounter implements Serializable, IEncounter {
                     }
                 }
             } else {
-                if (p1.get(Attribute.Speed) + Global.random(10) >= p2.get(Attribute.Speed) + Global.random(10)) {
+                if (p1.get(Attribute.Speed) + Global.global.random(10) >= p2.get(Attribute.Speed) + Global.global
+                                .random(10)) {
                     if (p2.human()) {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p1.name() + " dashes away before you can move.");
                     }
                     p1.flee(location);
                 } else {
                     if (p1.human()) {
-                        Global.gui()
+                        Global.global.gui()
                               .message(p2.name() + " dashes away before you can move.");
                     }
                     p2.flee(location);
@@ -283,8 +280,8 @@ public class Encounter implements Serializable, IEncounter {
         startFightTimer();
         target.addNonCombat(new Flatfooted(target, 3));
         if (p1.human() || p2.human()) {
-            fight = Global.gui().beginCombat(attacker, target, 0);
-            Global.gui().message(Global.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
+            fight = Global.global.gui().beginCombat(attacker, target, 0);
+            Global.global.gui().message(Global.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
         } else {
             fight = new Combat(attacker, target, location, 0);
         }
@@ -294,23 +291,23 @@ public class Encounter implements Serializable, IEncounter {
         startFightTimer();
         if (target.human()) {
             if (location.id() == Movement.shower) {
-                Global.gui()
+                Global.global.gui()
                       .message("You aren't in the shower long before you realize you're not alone. Before you can turn around, a soft hand grabs your exposed penis. "
                                       + attacker.name() + " has the drop on you.");
             } else if (location.id() == Movement.pool) {
-                Global.gui()
+                Global.global.gui()
                       .message("The relaxing water causes you to lower your guard a bit, so you don't notice "
                                       + attacker.name()
                                       + " until she's standing over you. There's no chance to escape, you'll have to face her nude.");
             }
         } else if (attacker.human()) {
             if (location.id() == Movement.shower) {
-                Global.gui()
+                Global.global.gui()
                       .message("You stealthily walk up behind " + target.name()
                                       + ", enjoying the view of her wet naked body. When you stroke her smooth butt, "
                                       + "she jumps and lets out a surprised yelp. Before she can recover from her surprise, you pounce!");
             } else if (location.id() == Movement.pool) {
-                Global.gui()
+                Global.global.gui()
                       .message("You creep up to the jacuzzi where " + target.name()
                                       + " is soaking comfortably. As you get close, you notice that her eyes are "
                                       + "closed and she may well be sleeping. You crouch by the edge of the jacuzzi for a few seconds and just admire her nude body with her breasts "
@@ -319,7 +316,7 @@ public class Encounter implements Serializable, IEncounter {
             }
         }
         if (p1.human() || p2.human()) {
-            fight = Global.gui()
+            fight = Global.global.gui()
                           .beginCombat(p1, p2, 1);
         } else {
             // this.fight=new NullGUI().beginCombat(p1,p2);
@@ -333,14 +330,14 @@ public class Encounter implements Serializable, IEncounter {
         target.gainXP(target.getDefeatXP(attacker));
         if (target.human()) {
             if (location.id() == Movement.shower) {
-                Global.gui()
+                Global.global.gui()
                       .message("The hot shower takes your fatigue away, but you can't seem to calm down. Your cock is almost painfully hard. You need to deal with this while "
                                       + "you have the chance. You jerk off quickly, hoping to finish before someone stumbles onto you. Right before you cum, you are suddenly grabbed from behind and "
                                       + "spun around. " + attacker.name()
                                       + " has caught you at your most vulnerable and, based on her expression, may have been waiting for this moment. She kisses you and "
                                       + "firmly grasps your twitching dick. In just a few strokes, you cum so hard it's almost painful.\n");
             } else if (location.id() == Movement.pool) {
-                Global.gui()
+                Global.global.gui()
                       .message("As you relax in the jacuzzi, you start to feel extremely horny. Your cock is in your hand before you're even aware of it. You stroke yourself "
                                       + "off underwater and you're just about ready to cum when you hear nearby footsteps. Oh shit, you'd almost completely forgotten you were in the middle of a "
                                       + "match. The footsteps are from " + attacker.name()
@@ -352,7 +349,7 @@ public class Encounter implements Serializable, IEncounter {
             }
         } else if (attacker.human()) {
             if (location.id() == Movement.shower) {
-                Global.gui()
+                Global.global.gui()
                       .message("You empty the bottle of aphrodisiac onto the shower floor, letting the heat from the shower turn it to steam. You watch "
                                       + target.name() + " and wait "
                                       + "for a reaction. Just when you start to worry that it was all washed down the drain, you see her hand slip between her legs. Her fingers go to work pleasuring herself "
@@ -363,7 +360,7 @@ public class Encounter implements Serializable, IEncounter {
                                       + "immediately. You give her a kiss on the cheek and leave while she's still too dazed to realize what happened. You're feeling pretty horny, but after a show like that "
                                       + "it's hardly surprising.\n");
             } else if (location.id() == Movement.pool) {
-                Global.gui()
+                Global.global.gui()
                       .message("You sneak up to the jacuzzi, and empty the aphrodisiac into the water without "
                                       + target.name() + " noticing. You slip away and find a hiding spot. In a "
                                       + "couple minutes, you notice her stir. She glances around, but fails to see you and then closes her eyes and relaxes again. There's something different now though and "
@@ -381,7 +378,7 @@ public class Encounter implements Serializable, IEncounter {
         target.getArousal()
               .empty();
         attacker.tempt(20);
-        Global.getMatch()
+        Global.global.getMatch()
               .score(attacker, target.has(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
@@ -392,18 +389,18 @@ public class Encounter implements Serializable, IEncounter {
         attacker.gainXP(attacker.getVictoryXP(target));
         target.gainXP(target.getDefeatXP(attacker));
         if (target.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("You jerk off frantically, trying to finish as fast as possible. Just as you feel the familiar sensation of imminent orgasm, you're grabbed from behind. "
                                   + "You freeze, cock still in hand. As you turn your head to look at your attacker, "
                                   + attacker.name()
                                   + " kisses you on the lips and rubs the head of your penis with her "
                                   + "palm. You were so close to the edge that just you cum instantly.");
             if (!target.mostlyNude()) {
-                Global.gui()
+                Global.global.gui()
                       .message("You groan in resignation and reluctantly strip off your clothes and hand them over.");
             }
         } else if (attacker.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("You spot " + target.name()
                                   + " leaning against the wall with her hand working excitedly between her legs. She is mostly, but not completely successful at "
                                   + "stifling her moans. She hasn't noticed you yet, and as best as you can judge, she's pretty close to the end. It'll be an easy victory for you as long as you work fast. "
@@ -418,7 +415,7 @@ public class Encounter implements Serializable, IEncounter {
         target.getArousal()
               .empty();
         attacker.tempt(20);
-        Global.getMatch()
+        Global.global.getMatch()
               .score(attacker, target.has(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
@@ -429,7 +426,7 @@ public class Encounter implements Serializable, IEncounter {
         attacker.gainXP(attacker.getVictoryXP(target));
         target.gainXP(target.getDefeatXP(attacker));
         if (attacker.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message(target.name()
                                   + " is naked and helpless in the giant rope web. You approach slowly, taking in the lovely view of her body. You trail your fingers "
                                   + "down her front, settling between her legs to tease her sensitive pussy lips. She moans and squirms, but is completely unable to do anything in her own defense. "
@@ -440,7 +437,7 @@ public class Encounter implements Serializable, IEncounter {
                                   + "The intense stimulation, coupled with your fingers inside her, quickly brings her to orgasm. While she's trying to regain her strength, you untie the ropes "
                                   + "binding her hands and feet and ease her out of the web.");
         } else if (target.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("You're trying to figure out a way to free yourself, when you see " + attacker.name()
                                   + " approach. You groan in resignation. There's no way you're "
                                   + "going to get free before she finishes you off. She smiles as she enjoys your vulnerable state. She grabs your dangling penis and puts it in her mouth, licking "
@@ -457,7 +454,7 @@ public class Encounter implements Serializable, IEncounter {
         target.getArousal()
               .empty();
         attacker.tempt(20);
-        Global.getMatch()
+        Global.global.getMatch()
               .score(attacker, target.has(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
@@ -493,7 +490,7 @@ public class Encounter implements Serializable, IEncounter {
 
     protected void steal(Character thief, Character target) {
         if (thief.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("You quietly swipe " + target.name()
                                   + "'s clothes while she's occupied. It's a little underhanded, but you can still turn them in for cash just as if you defeated her.");
         }
@@ -505,10 +502,10 @@ public class Encounter implements Serializable, IEncounter {
 
     public void trap(Character opportunist, Character target, Trap trap) {
         if (opportunist.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("You leap out of cover and catch " + target.name() + " by surprise.");
         } else if (target.human()) {
-            Global.gui()
+            Global.global.gui()
                   .message("Before you have a chance to recover, " + opportunist.name() + " pounces on you.");
         }
         trap.capitalize(opportunist, target, this);
@@ -517,7 +514,7 @@ public class Encounter implements Serializable, IEncounter {
     public void engage(Combat fight) {
         this.fight = fight;
         if (fight.p1.human() || fight.p2.human()) {
-            Global.gui().watchCombat(fight);
+            Global.global.gui().watchCombat(fight);
         }
     }
 
@@ -543,7 +540,7 @@ public class Encounter implements Serializable, IEncounter {
                 aphrodisiactrick(self, target);
                 break;
             case stealclothes:
-                steal(Global.getPlayer(), target);
+                steal(Global.global.getPlayer(), target);
                 break;
             case fight:
                 fightOrFlight(self, true, Optional.empty());

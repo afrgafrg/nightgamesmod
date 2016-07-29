@@ -1,34 +1,25 @@
 package nightgames.daytime;
 
-import static nightgames.requirements.RequirementShortcuts.bodypart;
-import static nightgames.requirements.RequirementShortcuts.not;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.bodypart;
+import static nightgames.requirements.RequirementShortcuts.not;
+
 public class ReykaTime extends BaseNPCTime {
     public ReykaTime(Character player) {
-        super(player, Global.getNPC("Reyka"));
+        super(player, Global.global.getNPC("Reyka"));
         knownFlag = "Reyka";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
@@ -50,7 +41,7 @@ public class ReykaTime extends BaseNPCTime {
             TransformationOption growCock = new TransformationOption();
             growCock.ingredients.put(Item.PriapusDraft, 1);
             growCock.ingredients.put(Item.Talisman, 1);
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
             growCock.option = "Reyka: Grow a cock";
             growCock.scene = "[Placeholder]<br/>Reyka downs the bottle of the priapus draft after channeling her dark magic into the talisman and attaching it to her clitoris. "
@@ -64,7 +55,7 @@ public class ReykaTime extends BaseNPCTime {
         {
             TransformationOption removeCock = new TransformationOption();
             removeCock.ingredients.put(Item.FemDraft, 3);
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
             removeCock.option = "Reyka: Remove her cock";
             removeCock.scene = "<br/>Reyka doesn't seem extremely pleased with your request to remove her new found maleness, but complies anyways with your wishes. "
@@ -209,7 +200,7 @@ public class ReykaTime extends BaseNPCTime {
     @Override
     public void subVisitIntro(String choice) {
         if (npc.getAffection(player) > 0) {
-            Global.gui()
+            Global.global.gui()
                   .message("You go over to the chapel, wondering if Her Demonic Highness would deign to "
                                   + "see you. As you enter, the priest notices you and quickly shuffles away, apparently "
                                   + "a little skittish around anyone who would want to visit a demon. You walk towards "
@@ -223,18 +214,18 @@ public class ReykaTime extends BaseNPCTime {
                                   + "soul with her menacing eyes: <i>\"You didn't touch anything, did you?\"</i> "
                                   + "Quickly shaking your head, you emphatically declare your innocence. You're only here to spend some time "
                                   + "with your favorite demoness. <i>\"Is that so, and what might you be planning then?\"</i>");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
-            if (Global.getPlayer().checkAddiction(AddictionType.CORRUPTION)) {
-                Global.gui().choose(this, "Strengthen Corruption");
+            if (Global.global.getPlayer().checkAddiction(AddictionType.CORRUPTION)) {
+                Global.global.gui().choose(this, "Strengthen Corruption");
             }
-        } else if (Global.getPlayer()
+        } else if (Global.global.getPlayer()
                          .checkAddiction(AddictionType.CORRUPTION)) {
-            Global.gui()
+            Global.global.gui()
                   .message("Reyka low-affection corruption intro");
             if (npc.getAttraction(player) < 15) {
                 npc.gainAttraction(player, 2);
@@ -242,17 +233,17 @@ public class ReykaTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui()
+                Global.global.gui()
                       .choose(this, "Games");
-                Global.gui()
+                Global.global.gui()
                       .choose(this, "Sparring");
-                Global.gui()
+                Global.global.gui()
                       .choose(this, "Sex");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Strengthen Corruption");
         } else if (npc.getAttraction(player) < 10) {
-            Global.gui()
+            Global.global.gui()
                   .message("You were going to ask Aesop where to find Reyka, but while on your way "
                                   + "there you noticed a dim pink haze protruding from a window leading into "
                                   + "the campus chapel's basement. The irony of a demon living beneath a church "
@@ -281,7 +272,7 @@ public class ReykaTime extends BaseNPCTime {
         } else {
             player.gainAffection(npc, 1);
             npc.gainAffection(player, 1);
-            Global.gui()
+            Global.global.gui()
                   .message("Deciding you'd rather have lunch instead, you head for the cafeteria. Halfway there, "
                                   + "you are pushed to the wall by a surprisingly wing-less but still strikingly beautiful Reyka. "
                                   + "\"So listen, I love playing around at night and all, but the days do tend to get a bit dull. "
@@ -299,14 +290,14 @@ public class ReykaTime extends BaseNPCTime {
                                   + "<i>\"Excellent. Now you never really had a choice of course, but as a reward for coming willingly, "
                                   + "I'll let you choose what we are going to do! Who knows, I might even let you into my home.\"</i> "
                                   + "You are not sure whether to be relieved or worried about this, but you have a choice to make.");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
         }
-        Global.gui()
+        Global.global.gui()
               .choose(this, "Leave");
     }
 
@@ -314,12 +305,12 @@ public class ReykaTime extends BaseNPCTime {
     public void subVisit(String choice) {
         if (choice.equals("Strengthen Corruption")) {
             if (npc.getAffection(player) == 0) {
-                Global.gui()
+                Global.global.gui()
                       .message("Reyka has you perform 'evil' acts to strengthen your corruption. This"
                                       + " is a placeholder. It still increases your addiction, though. You"
                                       + " won't suffer withdrawal effects tonight.");
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("You tell Reyka about the darkness you've been feeling inside. The thing she put there."
                                       + " <i>\"Oh, left a little mark, did I? Well, don't worry, you'll be fine. As long as "
                                       + "you keep it fed, of course.\"</i> You most certainly do not like the sound of that. "
@@ -383,14 +374,14 @@ public class ReykaTime extends BaseNPCTime {
                                       + " concern? Pondering the theological implications of a demon showing affection,"
                                       + " you head home. ");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
-            Global.getPlayer()
+            Global.global.getPlayer()
                   .addict(AddictionType.CORRUPTION, npc, Addiction.MED_INCREASE);
-            Global.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
+            Global.global.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.desensitized) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.desensitized) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("You hesitated for a bit too long, and again Reyka's eyes flash red. Again, your mind fogs over, "
                                       + "ready to do whatever your mistress wants. Again, Reyka, hauls you off. You don't seem to "
                                       + "be able to focus on anything; everything around you is distorted and blurry, except for Reyka. "
@@ -449,14 +440,14 @@ public class ReykaTime extends BaseNPCTime {
                                       + "her irises are taking on a pinkish hue. Eventually, you get up and get dressed. Reyka, her old self "
                                       + "again, does the same and you share a final kiss before you leave.");
                 if (!player.has(Trait.desensitized)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>Having been in the maelstrom that is Reyka's pussy while she was orgasming, you are sure "
                                           + "nothing else will ever come close to those feelings. Your sexual endurance has permanently increased.</b>");
                     player.add(Trait.desensitized);
                     npc.getGrowth().addTrait(0, Trait.desensitized);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("Feeling a tad squeamish, you are about to suggest going out to get something to eat. As you turn "
                                       + "to Reyka to say this, however,  you see a quick flash of red in her eyes. Your mind fogs over for "
                                       + "a moment. When you try to recall what you where saying, Reyka instead whispers in your ear: <i>\"How about "
@@ -495,15 +486,15 @@ public class ReykaTime extends BaseNPCTime {
                                       + "lest she changes her mind about your value to her.<br/>"
                                       + "Then again, you realize you didn't have any choice from the start. ");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.clairvoyance) || Global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.clairvoyance) || Global.global.random(2) == 1)) {
                 if (!player.has(Trait.clairvoyance)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<i>\"Are you that eager to get your ass... kicked, shall we say... again? I must "
                                           + "say I admire your courage. Tell you what, if you do a little something for me, "
                                           + "I'll teach you a little trick, give you a fighting chance. Come with me.\"</i> "
@@ -543,7 +534,7 @@ public class ReykaTime extends BaseNPCTime {
                     player.add(Trait.clairvoyance);
                     npc.getGrowth().addTrait(0, Trait.clairvoyance);
                 } else {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<i>\"Ah, good. By now, you may have figured out that there really isn't that much room to grow, "
                                           + "I can only do so much for a mortal such as yourself. Still, it's always fun getting a "
                                           + "little practice in, so let's go to the gym.\"</i><br/><br/>"
@@ -593,7 +584,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "you think.");
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("<i>\"So basically, you want to practice sexfighting, just more the fighting than "
                                       + "the sex, yes?\"</i> Reyka asks you. <i>\"How dull, but I'm sure "
                                       + "we can make it fun!\"</i> Soon you are in a relatively small practice room in the far "
@@ -626,16 +617,16 @@ public class ReykaTime extends BaseNPCTime {
                                       + "they're bite marks. You don't remember anything since falling to the ground in the gym, but between "
                                       + "the marks and your unerringly sore ass, it's probably better that way.");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.locator) || Global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.locator) || Global.global.random(2) == 1)) {
 
                 if (!player.has(Trait.locator)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<i>\"Another game? Great! I liked the way the last one turned out!\"</i> She winks as she says this, "
                                           + "stirring memories you'd rather be bygones. You quickly suggest to play something else, saying you need all your "
                                           + "faculties in good condition if you are to study later. <i>\"Hey, you came to me! But alright, I guess we can "
@@ -655,7 +646,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "after a few seconds. <i>\"What? Were you expecting fireworks? Let's go and give it a try.\"</i>");
                     player.add(Trait.locator);
                 }
-                Global.gui()
+                Global.global.gui()
                       .message("Reyka pulls you out towards the dorms. A lot of people, men and women alike, look your way, "
                                       + "jealous at the " + Global.getPlayer().guyOrGirl() + " who is getting tugged towards the dorms by a stunningly beautiful woman "
                                       + "with a devilish grin on her face. You are not so sure if you are all that lucky, but hey, it "
@@ -705,7 +696,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "run off straight to your room. For once, you arrived back from a visit to Reyka fully intact, just the raging "
                                       + "boner to worry about. Ah, well. You did voluntarily visit a succubus, what did you expect?");
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("Seeing Reyka confused is certainly a change, she is usually the very image of confidence. "
                                       + "<i>\"A game? You want to play a game? An actual, no-sex game?\"</i> You nod affirmatively, "
                                       + "wary of what she might do next. <i>\"Well... I don't know any games. At least, none that do "
@@ -746,7 +737,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "her again. She didn't do so just now. Still, after a quick meal and a hot shower, you are ready to go back "
                                       + "out.");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
@@ -760,6 +751,8 @@ public class ReykaTime extends BaseNPCTime {
     
     @Override
     public Optional<String> getAddictionOption() {
-        return Global.getPlayer().checkAddiction(AddictionType.CORRUPTION) ? Optional.of("Strengthen Corruption") : Optional.empty();
+        return Global.global.getPlayer().checkAddiction(AddictionType.CORRUPTION) ?
+                        Optional.of("Strengthen Corruption") :
+                        Optional.empty();
     }
 }

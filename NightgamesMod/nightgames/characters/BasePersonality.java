@@ -108,7 +108,7 @@ public abstract class BasePersonality implements Personality {
         HashSet<Skill> tactic;
         Skill chosen;
         ArrayList<WeightedSkill> priority = Decider.parseSkills(available, c, character);
-        if (!Global.checkFlag(Flag.dumbmode)) {
+        if (!Global.global.checkFlag(Flag.dumbmode)) {
             chosen = Decider.prioritizeNew(character, priority, c);
         } else {
             chosen = character.prioritize(priority);
@@ -116,7 +116,7 @@ public abstract class BasePersonality implements Personality {
         if (chosen == null) {
             tactic = available;
             Skill[] actions = tactic.toArray(new Skill[tactic.size()]);
-            return actions[Global.random(actions.length)];
+            return actions[Global.global.random(actions.length)];
         } else {
             return chosen;
         }
@@ -131,7 +131,7 @@ public abstract class BasePersonality implements Personality {
     @Override
     public void pickFeat() {
         ArrayList<Trait> available = new ArrayList<Trait>();
-        for (Trait feat : Global.getFeats(character)) {
+        for (Trait feat : Global.global.getFeats(character)) {
             if (!character.has(feat)) {
                 available.add(feat);
             }
@@ -139,7 +139,7 @@ public abstract class BasePersonality implements Personality {
         if (available.size() == 0) {
             return;
         }
-        character.add((Trait) available.toArray()[Global.random(available.size())]);
+        character.add((Trait) available.toArray()[Global.global.random(available.size())]);
     }
 
     @Override

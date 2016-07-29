@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
@@ -33,7 +32,7 @@ public class Sensitized extends DurationStatus {
     public String initialMessage(Combat c, boolean replaced) {
         if (replaced)
             return "";
-        return Global.format(String.format("{self:NAME-POSSESSIVE} groans as {self:possessive} %s grows hot.",
+        return Global.global.format(String.format("{self:NAME-POSSESSIVE} groans as {self:possessive} %s grows hot.",
                         part.describe(affected)), affected, c.getOpponent(affected));
     }
 
@@ -132,7 +131,7 @@ public class Sensitized extends DurationStatus {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Sensitized(Global.noneCharacter(), JsonUtils.gson.fromJson(obj.get("part"), BodyPart.class), obj.get("magnitude").getAsFloat(),
+        return new Sensitized(NPC.NONE_CHARACTER, JsonUtils.gson.fromJson(obj.get("part"), BodyPart.class), obj.get("magnitude").getAsFloat(),
                         obj.get("maximum").getAsFloat(), obj.get("duration").getAsInt());
     }
 

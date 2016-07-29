@@ -151,13 +151,13 @@ public class Squeeze extends Skill {
         } else if (modifier == Result.weak) {
             return String.format("%s grabs %s balls through %s %s and squeezes hard.",
                             getSelf().subject(), target.nameOrPossessivePronoun(),
-                            target.possessiveAdjective(), 
+                            target.possessiveAdjective(),
                             target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName());
         } else if (modifier == Result.weak2) {
             return String.format("%s grins menacingly and firmly grabs %s nuts. %s squeezes as hard as "
                             + "%s can, but %s hardly %s it.", getSelf().subject(),
                             target.nameOrPossessivePronoun(),
-                            Global.capitalizeFirstLetter(getSelf().subject()),
+                            Global.global.capitalizeFirstLetter(getSelf().subject()),
                             getSelf().pronoun(), target.pronoun(), target.action("feel"));
         } else if (modifier == Result.item) {
             return String.format("%s grabs %s crotch through %s %s, but %s can barely feel it.",

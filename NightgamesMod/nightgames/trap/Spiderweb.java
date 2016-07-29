@@ -27,19 +27,19 @@ public class Spiderweb extends Trap {
     public void trigger(Character target) {
         if (target.human()) {
             if (target.mostlyNude()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You feel the tripwire underfoot too late to avoid it. A staggering amount of rope flies up to entangle your limbs and pull you off the ground. "
                                                 + "Oh hell. You're completely immobilized and suspended in midair. Surprisingly, it's not that uncomfortable, but if someone finds you before you can get free, "
                                                 + "you'll be completely defenseless.");
             } else {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You feel the tripwire underfoot too late to avoid it. A staggering amount of rope flies up to entangle your limbs and pull you off the ground. "
                                                 + "Something snags your clothes and pulls them off of you with unbelievable precision."
                                                 + "Oh hell. You're completely immobilized and suspended naked in midair. Surprisingly, it's not that uncomfortable, but if someone finds you before you can get free, "
                                                 + "you'll be completely defenseless.");
             }
         } else if (target.location().humanPresent()) {
-            Global.gui().message("You hear a snap as " + target.name()
+            Global.global.gui().message("You hear a snap as " + target.name()
                             + " triggers your spiderweb trap and ends up helplessly suspended in midair like a naked present.");
         }
         target.state = State.webbed;
@@ -70,7 +70,7 @@ public class Spiderweb extends Trap {
     @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
         if (attacker.human()) {
-            Global.gui().message(
+            Global.global.gui().message(
                             victim.name() + " is naked and helpless in the giant rope web. You approach slowly, taking in the lovely view of her body. You trail your fingers "
                                             + "down her front, settling between her legs to tease her sensitive pussy lips. She moans and squirms, but is completely unable to do anything in her own defense. "
                                             + "You are going to make her cum, that's just a given. If you weren't such a nice guy, you would leave her in that trap afterward to be everyone else's prey "
@@ -80,7 +80,8 @@ public class Spiderweb extends Trap {
                                             + "The intense stimulation, coupled with your fingers inside her, quickly brings her to orgasm. While she's trying to regain her strength, you untie the ropes "
                                             + "binding her hands and feet and ease her out of the web.");
         } else if (victim.human()) {
-            Global.gui().message("You're trying to figure out a way to free yourself, when you see " + attacker.name()
+            Global.global.gui().message("You're trying to figure out a way to free yourself, when you see " + attacker
+                            .name()
                             + " approach. You groan in resignation. There's no way you're "
                             + "going to get free before she finishes you off. She smiles as she enjoys your vulnerable state. She grabs your dangling penis and puts it in her mouth, licking "
                             + "and sucking it until it's completely hard. Then the teasing starts. She strokes you, rubs you, and licks the head of your dick. She uses every technique to "
@@ -95,7 +96,7 @@ public class Spiderweb extends Trap {
         victim.defeated(attacker);
         victim.getArousal().empty();
         attacker.tempt(20);
-        Global.getMatch().score(attacker, victim.has(Trait.event) ? 5 : 1);
+        Global.global.getMatch().score(attacker, victim.has(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         victim.state = State.ready;
         victim.location().endEncounter();

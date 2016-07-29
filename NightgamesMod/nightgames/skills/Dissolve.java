@@ -48,7 +48,7 @@ public class Dissolve extends Skill {
             String msg = "{self:SUBJECT-ACTION:reach|reaches} out with a slimy hand and"
                             + " {self:action:caress|caresses} {other:possessive} " + destroyed.getName()
                             + ". Slowly, it dissolves away beneath {self:possessive} touch.";
-            c.write(getSelf(), Global.format(msg, getSelf(), target));
+            c.write(getSelf(), Global.global.format(msg, getSelf(), target));
             if (getSelf().has(Trait.VolatileSubstrate)) {
                 target.add(c, new Slimed(target, getSelf(), Global.random(2, 4)));
             }

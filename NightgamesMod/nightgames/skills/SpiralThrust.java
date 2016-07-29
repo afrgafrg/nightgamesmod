@@ -83,7 +83,7 @@ public class SpiralThrust extends Thrust {
             return "You unleash your strongest technique into " + target.name()
                             + "'s ass, spiraling your hips and stretching her tight sphincter.";
         } else if (modifier == Result.reverse) {
-            return Global.format("As you bounce on " + target.name()
+            return Global.global.format("As you bounce on " + target.name()
                             + "'s steaming pole, you feel a power welling up inside you. You put everything you have into moving your hips circularly, "
                             + "rubbing every inch of her cock with your hot slippery "
                             + getSelfOrgan(c, target).fullDescribe(getSelf()) + ".", getSelf(), target);
@@ -104,7 +104,7 @@ public class SpiralThrust extends Thrust {
                             Global.capitalizeFirstLetter(target.nameOrPossessivePronoun()),
                             target.pronoun(), target.action("fall"), target.possessiveAdjective());
         } else if (modifier != Result.reverse) {
-            return Global.format(
+            return Global.global.format(
                             "The movements of {self:name-possessive} cock suddenly change. {self:PRONOUN} suddenly begins "
                             + "drilling {other:name-possessive} poor pussy with an unprecedented passion. "
                                             + "The only thing {other:subject} can do is bite {other:possessive} lips and try to not instantly cum.",

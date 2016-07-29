@@ -12,7 +12,7 @@ import nightgames.stance.Missionary;
 public class CounterDrain extends CounterBase {
     public CounterDrain(Character self) {
         super("Counter Vortex", self, 6,
-                        Global.format("{self:SUBJECT-ACTION:glow|glows} with a purple light.", self, self));
+                        Global.global.format("{self:SUBJECT-ACTION:glow|glows} with a purple light.", self, self));
         addTag(SkillTag.drain);
         addTag(SkillTag.fucking);
         addTag(SkillTag.staminaDamage);
@@ -22,7 +22,7 @@ public class CounterDrain extends CounterBase {
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.randomfloat() * 3;
+        return Global.global.randomfloat() * 3;
     }
 
     @Override
@@ -76,11 +76,11 @@ public class CounterDrain extends CounterBase {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup) {
-            return Global.format(
+            return Global.global.format(
                             "You drop your stance, take a deep breath and close your eyes. A purple glow starts radiating from your core.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "You suddenly open your eyes as you sense {other:name} approaching. "
                                             + "The purple light that surrounds you suddenly flies into {other:direct-object}, "
                                             + "eliciting a cry out of her. She collapses like a puppet with her strings cut and falls to the ground. "
@@ -92,12 +92,12 @@ public class CounterDrain extends CounterBase {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup) {
-            return Global.format(
+            return Global.global.format(
                             "She drops her stance, takes a deep breath and closes her eyes. {other:SUBJECT-ACTION:notice|notices}"
                             + " a purple glow begin to radiate from her core.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} suddenly opens her eyes as {other:subject-action:approach|approaches}. "
                                             + "The purple light that was orbiting around {self:direct-object} suddenly reverses directions and flies into {other:direct-object}. "
                                             + "The purple energy seems to paralyze {other:possessive} muscles and {other:pronoun-action:collapse|collapses}"

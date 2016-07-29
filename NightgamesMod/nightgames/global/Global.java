@@ -1,42 +1,5 @@
 package nightgames.global;
 
-import java.awt.Rectangle;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
 
@@ -49,43 +12,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 
 import nightgames.Resources.ResourceLoader;
-import nightgames.actions.Action;
-import nightgames.actions.Bathe;
-import nightgames.actions.BushAmbush;
-import nightgames.actions.Craft;
-import nightgames.actions.Energize;
-import nightgames.actions.Hide;
-import nightgames.actions.Locate;
-import nightgames.actions.MasturbateAction;
-import nightgames.actions.Movement;
-import nightgames.actions.PassAmbush;
-import nightgames.actions.Recharge;
-import nightgames.actions.Resupply;
-import nightgames.actions.Scavenge;
-import nightgames.actions.SetTrap;
-import nightgames.actions.TreeAmbush;
-import nightgames.actions.Use;
+import nightgames.actions.*;
 import nightgames.actions.Wait;
 import nightgames.areas.Area;
 import nightgames.areas.MapDrawHint;
-import nightgames.characters.Airi;
-import nightgames.characters.Angel;
-import nightgames.characters.Attribute;
-import nightgames.characters.Cassie;
-import nightgames.characters.Character;
-import nightgames.characters.CharacterSex;
-import nightgames.characters.Eve;
-import nightgames.characters.Jewel;
-import nightgames.characters.Kat;
-import nightgames.characters.Mara;
-import nightgames.characters.Maya;
-import nightgames.characters.NPC;
-import nightgames.characters.Personality;
-import nightgames.characters.Player;
-import nightgames.characters.Reyka;
-import nightgames.characters.Trait;
-import nightgames.characters.TraitTree;
-import nightgames.characters.Yui;
+import nightgames.characters.*;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.StraponPart;
 import nightgames.characters.custom.CustomNPC;
@@ -95,22 +26,12 @@ import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
 import nightgames.ftc.FTCMatch;
 import nightgames.gui.GUI;
-import nightgames.gui.HeadlessGui;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.json.JsonUtils;
 import nightgames.modifier.CustomModifierLoader;
 import nightgames.modifier.Modifier;
-import nightgames.modifier.standard.FTCModifier;
-import nightgames.modifier.standard.NoItemsModifier;
-import nightgames.modifier.standard.NoModifier;
-import nightgames.modifier.standard.NoRecoveryModifier;
-import nightgames.modifier.standard.NoToysModifier;
-import nightgames.modifier.standard.NudistModifier;
-import nightgames.modifier.standard.PacifistModifier;
-import nightgames.modifier.standard.UnderwearOnlyModifier;
-import nightgames.modifier.standard.VibrationModifier;
-import nightgames.modifier.standard.VulnerableModifier;
+import nightgames.modifier.standard.*;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.Ptype;
 import nightgames.skills.*;
@@ -118,53 +39,59 @@ import nightgames.start.NpcConfiguration;
 import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
 import nightgames.status.Status;
-import nightgames.trap.Alarm;
-import nightgames.trap.AphrodisiacTrap;
-import nightgames.trap.Decoy;
-import nightgames.trap.DissolvingTrap;
-import nightgames.trap.EnthrallingTrap;
-import nightgames.trap.IllusionTrap;
-import nightgames.trap.RoboWeb;
-import nightgames.trap.Snare;
-import nightgames.trap.Spiderweb;
-import nightgames.trap.SpringTrap;
-import nightgames.trap.StripMine;
-import nightgames.trap.TentacleTrap;
-import nightgames.trap.Trap;
-import nightgames.trap.Tripline;
+import nightgames.trap.*;
+
+import java.awt.*;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Global {
-    private static Random rng;
-    private static GUI gui;
-    private static Set<Skill> skillPool = new HashSet<>();
-    private static Map<String, NPC> characterPool;
-    private static Set<Action> actionPool;
-    private static Set<Trap> trapPool;
-    private static Set<Trait> featPool;
-    private static Set<Modifier> modifierPool;
-    private static Set<Character> players;
-    private static Set<Character> debugChars;
-    private static Set<Character> resting;
-    private static Set<String> flags;
-    private static Map<String, Float> counters;
-    public static Player human;
-    private static Match match;
-    public static Daytime day;
-    protected static int date;
-    private static Time time;
-    private Date jdate;
-    private static TraitTree traitRequirements;
-    public static Scene current;
+    public static Global global;
     public static boolean debug[] = new boolean[DebugFlags.values().length];
-    public static int debugSimulation = 0;
-    public static double moneyRate = 1.0;
-    public static double xpRate = 1.0;
-    public static ContextFactory factory;
-    public static Context cx;
 
-    public static final Path COMBAT_LOG_DIR = new File("combatlogs").toPath();
+    private Random rng;
+    public GUI gui;
+    private Set<Skill> skillPool = new HashSet<>();
+    private Map<String, NPC> characterPool;
+    private Set<Action> actionPool;
+    private Set<Trap> trapPool;
+    private Set<Trait> featPool;
+    private Set<Modifier> modifierPool;
+    private Set<Character> players;
+    private Set<Character> debugChars;
+    private Set<Character> resting;
+    private Set<String> flags;
+    private Map<String, Float> counters;
+    public Player human;
+    private Match match;
+    public Daytime day;
+    protected int date;
+    private Time time;
+    private Date jdate;
+    private TraitTree traitRequirements;
+    public Scene current;
+    public int debugSimulation = 0;
+    public double moneyRate = 1.0;
+    public double xpRate = 1.0;
+    public ContextFactory factory;
+    public Context cx;
+
+    public final Path COMBAT_LOG_DIR = new File("combatlogs").toPath();
+
+    public Global() {
+        Global(false);
+    }
 
     public Global(boolean headless) {
+        global = this;
         rng = new Random();
         flags = new HashSet<>();
         players = new HashSet<>();
@@ -212,8 +139,10 @@ public class Global {
         buildParser();
         buildActionPool();
         buildFeatPool();
-        buildSkillPool(noneCharacter);
+        buildSkillPool(NPC.NONE_CHARACTER);
         buildModifierPool();
+        flag(Flag.AiriEnabled);
+        human = new Player("Dummy");
         gui = makeGUI(headless);
     }
 
@@ -221,15 +150,15 @@ public class Global {
         return headless ? new HeadlessGui() : new GUI();
     }
 
-    public static boolean meetsRequirements(Character c, Trait t) {
+    public boolean meetsRequirements(Character c, Trait t) {
         return getTraitRequirements().meetsRequirements(c, t);
     }
 
-    public static boolean isDebugOn(DebugFlags flag) {
+    public boolean isDebugOn(DebugFlags flag) {
         return debug[flag.ordinal()] && debugSimulation == 0;
     }
 
-    public static void newGame(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
+    public void newGame(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                     CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
@@ -255,14 +184,14 @@ public class Global {
         time = Time.NIGHT;
         setCharacterDisabledFlag(getNPCByType("Yui"));
         setFlag(Flag.systemMessages, true);
-        setUpMatch(new NoModifier());
+        saveWithDialog();
     }
 
-    public static int random(int start, int end) {
+    public int random(int start, int end) {
         return rng.nextInt(end - start) + start;
     }
 
-    public static int random(int d) {
+    public int random(int d) {
         if (d <= 0) {
             return 0;
         }
@@ -270,7 +199,7 @@ public class Global {
     }
 
     // finds a centered random number from [0, d] (inclusive)
-    public static int centeredrandom(int d, double center, double sigma) {
+    public int centeredrandom(int d, double center, double sigma) {
         int val = 0;
         center = Math.max(0, Math.min(d, center));
         for (int i = 0; i < 10; i++) {
@@ -283,7 +212,7 @@ public class Global {
         return Math.max(0, Math.min(d, val));
     }
 
-    public static GUI gui() {
+    public GUI gui() {
         return gui;
     }
 
@@ -292,11 +221,11 @@ public class Global {
      * IT DOES NOT TAKE INTO ACCOUNT THAT THE PLAYER GETS CLONED. WARNING. WARNING.
      * @return
      */
-    public static Player getPlayer() {
+    public Player getPlayer() {
         return human;
     }
 
-    public static void buildSkillPool(Character ch) {
+    public void buildSkillPool(Character ch) {
         getSkillPool().clear();
         getSkillPool().add(new Slap(ch));
         getSkillPool().add(new Tribadism(ch));
@@ -543,13 +472,13 @@ public class Global {
         getSkillPool().add(new HypnoVisorRemove(ch));
         getSkillPool().add(new StripMinor(ch));
         getSkillPool().add(new DemandArousal(ch));
-        
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
             getSkillPool().add(new SelfStun(ch));
         }
     }
 
-    public static void buildActionPool() {
+    public void buildActionPool() {
         actionPool = new HashSet<>();
         actionPool.add(new Resupply());
         actionPool.add(new Wait());
@@ -574,7 +503,7 @@ public class Global {
         }
     }
 
-    public static void buildTrapPool() {
+    public void buildTrapPool() {
         trapPool = new HashSet<>();
         trapPool.add(new Alarm());
         trapPool.add(new Tripline());
@@ -591,7 +520,7 @@ public class Global {
         trapPool.add(new RoboWeb());
     }
 
-    public static void buildFeatPool() {
+    public void buildFeatPool() {
         featPool = new HashSet<>();
         for (Trait trait : Trait.values()) {
             if (trait.isFeat()) {
@@ -600,7 +529,7 @@ public class Global {
         }
     }
 
-    public static void buildModifierPool() {
+    public void buildModifierPool() {
         modifierPool = new HashSet<>();
         modifierPool.add(new NoModifier());
         modifierPool.add(new NoItemsModifier());
@@ -639,17 +568,17 @@ public class Global {
             System.out.println("Done loading modifiers");
     }
 
-    public static Set<Action> getActions() {
+    public Set<Action> getActions() {
         return actionPool;
     }
 
-    public static List<Trait> getFeats(Character c) {
+    public List<Trait> getFeats(Character c) {
         List<Trait> a = getTraitRequirements().availTraits(c);
         a.sort((first, second) -> first.toString().compareTo(second.toString()));
         return a;
     }
 
-    public static Character lookup(String name) {
+    public Character lookup(String name) {
         for (Character player : players) {
             if (player.name().equalsIgnoreCase(name)) {
                 return player;
@@ -658,33 +587,25 @@ public class Global {
         return null;
     }
 
-    public static Time getTime() {
+    public Time getTime() {
         return time;
     }
 
-    public static Match getMatch() {
+    public Match getMatch() {
         return match;
     }
 
-    public static Daytime getDay() {
+    public Daytime getDay() {
         return day;
     }
 
-    public static void startDay() {
+    public void startDay() {
         match = null;
         day = new Daytime(human);
         day.plan();
     }
 
-    /**
-     * Sets the time to DAY, since the order of operations changed and manual end-of-match
-     * saves got flagged as NIGHT instead.
-     */
-    public static void endNightForSave() {
-        time = Time.DAY;
-    }
-    
-    public static void endNight() {
+    public void endNight() {
         double level = 0;
         int maxLevelTracker = 0;
 
@@ -718,13 +639,13 @@ public class Global {
         }
         date++;
         time = Time.DAY;
-        if (Global.checkFlag(Flag.autosave)) {
-            Global.autoSave();
+        if (Global.global.checkFlag(Flag.autosave)) {
+            Global.global.autoSave();
         }
-        Global.gui().endMatch();
+        Global.global.gui().endMatch();
     }
-    
-    private static Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
+
+    private Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
         List<Character> randomizer = avail.stream()
                         .filter(c -> !c.human())
                         .filter(c -> !c.has(Trait.event))
@@ -736,7 +657,7 @@ public class Global {
         return results;
     }
 
-    public static void endDay() {
+    public void endDay() {
         day = null;
         time = Time.NIGHT;
         if (checkFlag(Flag.autosave)) {
@@ -745,11 +666,11 @@ public class Global {
         startNight();
     }
 
-    public static void startNight() {
+    public void startNight() {
         decideMatchType().buildPrematch(human);
     }
 
-    public static void setUpMatch(Modifier matchmod) {
+    public void setUpMatch(Modifier matchmod) {
         assert day == null;
         Set<Character> lineup = new HashSet<>(debugChars);
         Character lover = null;
@@ -826,16 +747,16 @@ public class Global {
         startMatch();
     }
 
-    public static void startMatch() {
-        Global.getPlayer().getAddictions().forEach(a -> {
+    public void startMatch() {
+        Global.global.getPlayer().getAddictions().forEach(a -> {
             Optional<Status> withEffect = a.startNight();
-            withEffect.ifPresent(s -> Global.getPlayer().addNonCombat(s));
+            withEffect.ifPresent(s -> Global.global.getPlayer().addNonCombat(s));
         });
-        Global.gui().startMatch();
+        Global.global.gui().startMatch();
         match.round();
     }
 
-    public static String gainSkills(Character c) {
+    public String gainSkills(Character c) {
         String message = "";
         if (c.getPure(Attribute.Dark) >= 6 && !c.has(Trait.darkpromises)) {
             c.add(Trait.darkpromises);
@@ -851,13 +772,13 @@ public class Global {
         return message;
     }
 
-    public static void learnSkills(Character c) {
+    public void learnSkills(Character c) {
         for (Skill skill : getSkillPool()) {
             c.learn(skill);
         }
     }
 
-    public static String capitalizeFirstLetter(String original) {
+    public String capitalizeFirstLetter(String original) {
         if (original == null) {
             return "";
         }
@@ -867,7 +788,7 @@ public class Global {
         return original.substring(0, 1).toUpperCase() + original.substring(1);
     }
 
-    public static NPC getNPCByType(String type) {
+    public NPC getNPCByType(String type) {
         NPC results = characterPool.get(type);
         if (results == null) {
             System.err.println("failed to find NPC for type " + type);
@@ -875,14 +796,14 @@ public class Global {
         return results;
     }
 
-    public static Character getCharacterByType(String type) {
+    public Character getCharacterByType(String type) {
         if (type.equals(human.getType())) {
             return human;
         }
         return getNPCByType(type);
     }
 
-    public static HashMap<String, Area> buildMap() {
+    public HashMap<String, Area> buildMap() {
         Area quad = new Area("Quad",
                         "You are in the <b>Quad</b> that sits in the center of the Dorm, the Dining Hall, the Engineering Building, and the Liberal Arts Building. There's "
                                         + "no one around at this time of night, but the Quad is well-lit and has no real cover. You can probably be spotted from any of the surrounding buildings, it may "
@@ -1025,47 +946,47 @@ public class Global {
         return map;
     }
 
-    public static void flag(String f) {
+    public void flag(String f) {
         flags.add(f);
     }
 
-    public static void unflag(String f) {
+    public void unflag(String f) {
         flags.remove(f);
     }
 
-    public static void flag(Flag f) {
+    public void flag(Flag f) {
         flags.add(f.name());
     }
 
-    public static void unflag(Flag f) {
+    public void unflag(Flag f) {
         flags.remove(f.name());
     }
 
-    public static void setFlag(String f, boolean value) {
-        if (value) { 
+    public void setFlag(String f, boolean value) {
+        if (value) {
             flag(f);
         } else {
             unflag(f);
         }
     }
 
-    public static void setFlag(Flag f, boolean value) {
-        if (value) { 
-            flags.add(f.name()); 
-        } else { 
-            flags.remove(f.name()); 
+    public void setFlag(Flag f, boolean value) {
+        if (value) {
+            flags.add(f.name());
+        } else {
+            flags.remove(f.name());
         }
     }
 
-    public static boolean checkFlag(Flag f) {
+    public boolean checkFlag(Flag f) {
         return flags.contains(f.name());
     }
 
-    public static boolean checkFlag(String key) {
+    public boolean checkFlag(String key) {
         return flags.contains(key);
     }
 
-    public static float getValue(Flag f) {
+    public float getValue(Flag f) {
         if (!counters.containsKey(f.name())) {
             return 0;
         } else {
@@ -1073,26 +994,26 @@ public class Global {
         }
     }
 
-    public static void modCounter(Flag f, float inc) {
+    public void modCounter(Flag f, float inc) {
         counters.put(f.name(), getValue(f) + inc);
     }
 
-    public static void setCounter(Flag f, float val) {
+    public void setCounter(Flag f, float val) {
         counters.put(f.name(), val);
     }
 
-    public static void autoSave() {
+    public void autoSave() {
         save(new File("./auto.ngs"));
     }
 
-    public static void saveWithDialog() {
+    public void saveWithDialog() {
         Optional<File> file = gui().askForSaveFile();
         if (file.isPresent()) {
             save(file.get());
         }
     }
 
-    protected static SaveData saveData() {
+    protected SaveData saveData() {
         SaveData data = new SaveData();
         data.players.addAll(players);
         data.flags.addAll(flags);
@@ -1102,7 +1023,7 @@ public class Global {
         return data;
     }
 
-    public static void save(File file) {
+    public void save(File file) {
         SaveData data = saveData();
         JsonObject saveJson = data.toJson();
 
@@ -1115,11 +1036,15 @@ public class Global {
         }
     }
 
-    private static Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
+    private Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
         return startConfig.isPresent() ? startConfig.get().findNpcConfig(type) : Optional.empty();
     }
 
-    public static void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
+    public void rebuildCharacterPool() {
+        rebuildCharacterPool(Optional.empty());
+    }
+
+    public void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
         characterPool = new HashMap<>();
         debugChars.clear();
 
@@ -1171,44 +1096,11 @@ public class Global {
         characterPool.put(yui.getCharacter().getType(), yui.getCharacter());
         debugChars.add(mara.getCharacter());
     }
-    
-    public static void loadWithDialog() {
-        JFileChooser dialog = new JFileChooser("./");
-        FileFilter savesFilter = new FileNameExtensionFilter("Nightgame Saves", "ngs");
-        dialog.addChoosableFileFilter(savesFilter);
-        dialog.setFileFilter(savesFilter);
-        dialog.setMultiSelectionEnabled(false);
-        int rv = dialog.showOpenDialog(gui);
-        if (rv != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        File file = dialog.getSelectedFile();
-        if (!file.isFile()) {
-            file = new File(dialog.getSelectedFile().getAbsolutePath() + ".ngs");
-            if (!file.isFile()) {
-                // not a valid save, abort
-                JOptionPane.showMessageDialog(gui, "Nightgames save file not found", "File not found",
-                                JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-        }
-        load(file);
-    }
 
-    protected static void resetForLoad() {
-        players.clear();
-        flags.clear();
-        gui.clearText();
-        human = new Player("Dummy");
-        gui.purgePlayer();
+    public void load(File file) {
+        global = this;
         buildSkillPool(human);
-        Clothing.buildClothingTable();
-        rebuildCharacterPool(Optional.empty());
-        day = null;
-    }
-
-    public static void load(File file) {
-        resetForLoad();
+        rebuildCharacterPool();
 
         JsonObject object;
         try (Reader loader = new InputStreamReader(new FileInputStream(file))) {
@@ -1230,11 +1122,11 @@ public class Global {
     }
 
     /**
-     * Loads game state data into static fields from SaveData object.
+     * Loads game state data into fields from SaveData object.
      *
      * @param data A SaveData object, as loaded from save files.
      */
-    protected static void loadData(SaveData data) {
+    protected void loadData(SaveData data) {
         players.addAll(data.players);
         players.stream().filter(c -> c instanceof NPC).forEach(
                         c -> characterPool.put(c.getType(), (NPC) c));
@@ -1244,11 +1136,11 @@ public class Global {
         time = data.time;
     }
 
-    public static Set<Character> everyone() {
+    public Set<Character> everyone() {
         return players;
     }
 
-    public static boolean newChallenger(Personality challenger) {
+    public boolean newChallenger(Personality challenger) {
         if (!players.contains(challenger.getCharacter())) {
             while (challenger.getCharacter().getLevel() <= human.getLevel()) {
                 challenger.getCharacter().ding();
@@ -1260,7 +1152,7 @@ public class Global {
         }
     }
 
-    public static NPC getNPC(String name) {
+    public NPC getNPC(String name) {
         for (Character c : allNPCs()) {
             if (c.getType().equalsIgnoreCase(name)) {
                 return (NPC) c;
@@ -1270,20 +1162,7 @@ public class Global {
         return null;
     }
 
-    public static void main(String[] args) {
-        new Logwriter();
-        for (String arg : args) {
-            try {
-                DebugFlags flag = DebugFlags.valueOf(arg);
-                debug[flag.ordinal()] = true;
-            } catch (IllegalArgumentException e) {
-                // pass
-            }
-        }
-        new Global(false);
-    }
-
-    public static String getIntro() {
+    public String getIntro() {
         return "You don't really know why you're going to the Student Union in the middle of the night."
                         + " You'd have to be insane to accept the invitation you received this afternoon."
                         + " Seriously, someone is offering you money to sexfight a bunch of other students?"
@@ -1310,7 +1189,7 @@ public class Global {
                         + " Everyone agrees." + " The first match starts at exactly 10:00.";
     }
 
-    public static void reset() {
+    public void reset() {
         players.clear();
         flags.clear();
         day = null;
@@ -1321,20 +1200,20 @@ public class Global {
         gui.createCharacter();
     }
 
-    public static boolean inGame() {
+    public boolean inGame() {
         return !players.isEmpty();
     }
 
-    public static boolean characterTypeInGame(String type) {
+    public boolean characterTypeInGame(String type) {
         return players.stream().anyMatch(c -> type.equals(c.getType()));
     }
 
-    public static float randomfloat() {
+    public float randomfloat() {
         return (float) rng.nextDouble();
     }
 
-    public static String maybeString(String string) {
-        if (Global.random(2) == 0) {
+    public String maybeString(String string) {
+        if (Global.global.random(2) == 0) {
             return string;
         } else {
             return "";
@@ -1342,12 +1221,12 @@ public class Global {
     }
 
     @SafeVarargs
-    public static <T> Optional<T> pickRandom(T ... arr) {
+    public <T> Optional<T> pickRandom(T ... arr) {
         if (arr.length == 0) return Optional.empty();
-        return Optional.of(arr[Global.random(arr.length)]);
+        return Optional.of(arr[Global.global.random(arr.length)]);
     }
-    
-    public static <T> Optional<T> pickRandom(List<T> list) {
+
+    public <T> Optional<T> pickRandom(List<T> list) {
         if (list.size() == 0) {
             return Optional.empty();
         } else {
@@ -1355,7 +1234,7 @@ public class Global {
         }
     }
 
-    public static int getDate() {
+    public int getDate() {
         return date;
     }
 
@@ -1363,9 +1242,10 @@ public class Global {
         String replace(Character self, String first, String second, String third);
     }
 
-    private static HashMap<String, MatchAction> matchActions = null;
 
-    public static void buildParser() {
+    private HashMap<String, MatchAction> matchActions = null;
+
+    public void buildParser() {
         matchActions = new HashMap<>();
         matchActions.put("possessive", (self, first, second, third) -> {
             if (self != null) {
@@ -1518,7 +1398,7 @@ public class Global {
         });
     }
 
-    public static String format(String format, Character self, Character target, Object... strings) {
+    public String format(String format, Character self, Character target, Object... strings) {
         // pattern to find stuff like {word:otherword:finalword} in strings
         Pattern p = Pattern.compile("\\{((?:self)|(?:other)|(?:master))(?::([^:}]+))?(?::([^:}]+))?\\}");
         format = String.format(format, strings);
@@ -1554,7 +1434,7 @@ public class Global {
             if (action != null) {
                 replacement = action.replace(character, first, second, third);
                 if (caps) {
-                    replacement = Global.capitalizeFirstLetter(replacement);
+                    replacement = capitalizeFirstLetter(replacement);
                 }
             }
             matcher.appendReplacement(b, replacement);
@@ -1563,68 +1443,63 @@ public class Global {
         return b.toString();
     }
 
-    private static Character noneCharacter = new NPC("none", 1, null);
 
-    public static Character noneCharacter() {
-        return noneCharacter;
-    }
-
-    public static double randomdouble() {
+    public double randomdouble() {
         return rng.nextDouble();
     }
 
-    public static double randomdouble(double to) {
+    public double randomdouble(double to) {
         return rng.nextDouble() * to;
     }
 
-    public static String prependPrefix(String prefix, String fullDescribe) {
+    public String prependPrefix(String prefix, String fullDescribe) {
         if (prefix.equals("a ") && "aeiou".contains(fullDescribe.substring(0, 1).toLowerCase())) {
             return "an " + fullDescribe;
         }
         return prefix + fullDescribe;
     }
 
-    public static Collection<NPC> allNPCs() {
+    public Collection<NPC> allNPCs() {
         return characterPool.values();
     }
 
-    private static DecimalFormat formatter = new DecimalFormat("#.##");
+    private DecimalFormat formatter = new DecimalFormat("#.##");
 
-    public static String formatDecimal(double val) {
+    public String formatDecimal(double val) {
         return formatter.format(val);
     }
 
-    public static Set<Skill> getSkillPool() {
+    public Set<Skill> getSkillPool() {
         return skillPool;
     }
 
-    public static Set<Modifier> getModifierPool() {
+    public Set<Modifier> getModifierPool() {
         return modifierPool;
     }
 
-    public static HashSet<Skill> getByTactics(Combat c, Tactics tact) {
+    public HashSet<Skill> getByTactics(Combat c, Tactics tact) {
         HashSet<Skill> result = new HashSet<>(skillPool);
         result.removeIf(skill -> skill.type(c) != tact);
         return result;
     }
 
-    public static MatchType decideMatchType() {
+    public MatchType decideMatchType() {
         return MatchType.NORMAL;
         /*
          * TODO Lots of FTC bugs right now, will disable it for the time being.
          * Enable again once some of the bugs are sorted out.
-        
+
         if (checkFlag(Flag.NoFTC)) return MatchType.NORMAL;
-        
+
         if (human.getLevel() < 15)
             return MatchType.NORMAL;
         if (!checkFlag(Flag.didFTC))
             return MatchType.FTC;
-        return isDebugOn(DebugFlags.DEBUG_FTC) || Global.random(10) == 0 ? MatchType.FTC : MatchType.NORMAL;
+        return isDebugOn(DebugFlags.DEBUG_FTC) || Global.global.random(10) == 0 ? MatchType.FTC : MatchType.NORMAL;
         */
     }
 
-    private static Match buildMatch(Collection<Character> combatants, Modifier mod) {
+    private Match buildMatch(Collection<Character> combatants, Modifier mod) {
         if (mod.name().equals("ftc")) {
             if (combatants.size() < 5) {
                 return new Match(combatants, new NoModifier());
@@ -1636,48 +1511,48 @@ public class Global {
         }
     }
 
-    public static HashSet<Character> getCharacters() {
+    public HashSet<Character> getCharacters() {
         return new HashSet<>(players);
     }
 
-    public static int clamp(int number, int min, int max) {
+    public int clamp(int number, int min, int max) {
         return Math.min(Math.max(number, min), max);
     }
 
-    public static double clamp(double number, double min, double max) {
+    public double clamp(double number, double min, double max) {
         return Math.min(Math.max(number, min), max);
     }
 
-    public static long randomlong() {
+    public long randomlong() {
         return rng.nextLong();
     }
 
-    public static Character getCharacterByName(String name) {
+    public Character getCharacterByName(String name) {
         return players.stream().filter(c -> c.getName().equals(name)).findAny().get();
     }
 
-    private static String DISABLED_FORMAT = "%sDisabled";
-    public static boolean checkCharacterDisabledFlag(Character self) {
+    private String DISABLED_FORMAT = "%sDisabled";
+    public boolean checkCharacterDisabledFlag(Character self) {
         return checkFlag(String.format(DISABLED_FORMAT, self.getName()));
     }
 
-    public static void setCharacterDisabledFlag(Character self) {
+    public void setCharacterDisabledFlag(Character self) {
         flag(String.format(DISABLED_FORMAT, self.getName()));
-    }    
+    }
 
-    public static void unsetCharacterDisabledFlag(Character self) {
+    public void unsetCharacterDisabledFlag(Character self) {
         unflag(String.format(DISABLED_FORMAT, self.getName()));
     }
 
-    public static TraitTree getTraitRequirements() {
+    public TraitTree getTraitRequirements() {
         return traitRequirements;
     }
 
-    public static void setTraitRequirements(TraitTree traitRequirements) {
+    public void setTraitRequirements(TraitTree traitRequirements) {
         Global.traitRequirements = traitRequirements;
     }
 
-	public static void writeIfCombat(Combat c, Character self, String string) {
+	public void writeIfCombat(Combat c, Character self, String string) {
 		if (c == null) {
 			gui().message(string);
 		} else {
@@ -1685,11 +1560,24 @@ public class Global {
 		}
 	}
 
-	public static void writeFormattedIfCombat(Combat c, String string, Character self, Character other, Object ...args) {
+	public void writeFormattedIfCombat(Combat c, String string, Character self, Character other, Object ...args) {
 		if (c == null) {
 			gui().message(format(string, self, other, args));
 		} else {
 			c.write(self, format(string, self, other, args));
 		}
 	}
+
+    public static void main(String[] args) {
+        new Logwriter();
+        for (String arg : args) {
+            try {
+                DebugFlags flag = DebugFlags.valueOf(arg);
+                debug[flag.ordinal()] = true;
+            } catch (IllegalArgumentException e) {
+                // pass
+            }
+        }
+        global = new Global();
+    }
 }

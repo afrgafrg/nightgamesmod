@@ -3,7 +3,6 @@ package nightgames.status;
 import java.util.function.Function;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -162,7 +161,7 @@ public class DarkChaos extends Status {
                 return FRENZIED;
             Effect picked;
             do {
-                picked = Global.pickRandom(values()).get();
+                picked = Global.global.pickRandom(values()).get();
             } while (!picked.possible(c));
             return picked;
         }

@@ -52,7 +52,7 @@ public class CockGrowth extends Skill {
             res = Result.special;
         }
 
-        boolean permanent = Global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
+        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
 
         if (res != Result.miss) {
@@ -112,7 +112,7 @@ public class CockGrowth extends Skill {
         String message;
         if (modifier == Result.miss) {
             message = String.format("%s moving and begins chanting. %s feeling some "
-                            + "tingling in %s groin, but it quickly subsides as %s %s out of the way.", 
+                            + "tingling in %s groin, but it quickly subsides as %s %s out of the way.",
                             getSelf().subjectAction("stop"), Global.capitalizeFirstLetter(target.subjectAction("start")),
                             target.possessiveAdjective(), target.pronoun(), target.action("dodge"));
         } else {
@@ -122,7 +122,7 @@ public class CockGrowth extends Skill {
                                 + "The sensations from %s new maleness make %s tremble.",
                                 getSelf().subjectAction("stop"), Global.capitalizeFirstLetter(target.subjectAction("start")),
                                 target.possessiveAdjective(),
-                                Global.capitalizeFirstLetter(target.pronoun()), target.pronoun(), target.action("are", "is"), 
+                                Global.capitalizeFirstLetter(target.pronoun()), target.pronoun(), target.action("are", "is"),
                                 target.body.getRandomCock().describe(target),
                                 target.possessiveAdjective(), target.directObject());
             } else {

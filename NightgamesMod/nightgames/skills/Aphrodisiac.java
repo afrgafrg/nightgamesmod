@@ -106,7 +106,8 @@ public class Aphrodisiac extends Skill {
                             + getSelf().possessiveAdjective() + " juices" + " on " + getSelf().possessiveAdjective()
                             + " fingertip, " + getSelf().subjectAction("pull") + " it out and flicks it at "
                             + target.directObject() + "," + " skillfully depositing it in " + target.possessiveAdjective()
-                            + " open mouth. " + Global.capitalizeFirstLetter(target.subject()) + " immediately feel"
+                            + " open mouth. " + Global.global.capitalizeFirstLetter(target.subject())
+                            + " immediately feel"
                             + " a flash of heat spread through " + target.directObject()
                             + " and only a small part of it results from the anger caused by "
                             + getSelf().possessiveAdjective() + " dirty move.";
@@ -143,7 +144,8 @@ public class Aphrodisiac extends Skill {
                             + getSelf().possessiveAdjective() + " juices" + " on " + getSelf().possessiveAdjective()
                             + " fingertip, " + getSelf().subjectAction("pull") + " it out and flicks it at "
                             + target.directObject() + "," + " skillfully depositing it in " + target.possessiveAdjective()
-                            + " open mouth. " + Global.capitalizeFirstLetter(target.subject()) + " immediately feel"
+                            + " open mouth. " + Global.global.capitalizeFirstLetter(target.subject())
+                            + " immediately feel"
                             + " a flash of heat spread through " + target.directObject()
                             + " and only a small part of it" + " results from the anger caused by "
                             + getSelf().possessiveAdjective() + " dirty move.";

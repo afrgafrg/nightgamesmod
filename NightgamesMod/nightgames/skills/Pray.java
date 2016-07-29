@@ -22,6 +22,8 @@ public class Pray extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().human() && ((Player)getSelf()).getAddiction(AddictionType.ZEAL).map(addiction -> addiction.wasCausedBy(target))
+        return Global.global.getPlayer().getAddiction(AddictionType.ZEAL)
+                        .map(addiction -> addiction.wasCausedBy(target))
                         .orElse(false);
     }
 
@@ -39,6 +41,7 @@ public class Pray extends Skill {
                                         + " and strengthens your faith.",
                         target.name()));
         int amt = Math.round((((Player)getSelf()).getAddiction(AddictionType.ZEAL)
+        int amt = Math.round((Global.global.getPlayer().getAddiction(AddictionType.ZEAL)
                         .orElseThrow(() -> new SkillUnusableException(this)).getMagnitude() * 5));
         getSelf().restoreWillpower(c, amt);
         ((Player)getSelf()).addict(AddictionType.ZEAL, Global.getCharacterByType("Angel"), Addiction.LOW_INCREASE);

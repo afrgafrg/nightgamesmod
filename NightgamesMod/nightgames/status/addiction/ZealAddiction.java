@@ -1,11 +1,6 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
-import javax.naming.OperationNotSupportedException;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -19,6 +14,9 @@ import nightgames.stance.Stance;
 import nightgames.status.CrisisOfFaith;
 import nightgames.status.DivineCharge;
 import nightgames.status.Status;
+
+import java.util.Optional;
+import javax.naming.OperationNotSupportedException;
 
 public class ZealAddiction extends Addiction {
 
@@ -35,7 +33,7 @@ public class ZealAddiction extends Addiction {
 
     @Override
     protected Optional<Status> withdrawalEffects() {
-        return Optional.of(new CrisisOfFaith(Global.getPlayer()));
+        return Optional.of(new CrisisOfFaith(Global.global.getPlayer()));
     }
 
     @Override
@@ -72,12 +70,12 @@ public class ZealAddiction extends Addiction {
     public void tick(Combat c) {
         super.tick(c);
         if ((c.getStance().en == Stance.neutral || c.getStance().en == Stance.behind)
-                        && Global.randomdouble() < Math.min(.5f, combatMagnitude / 2.0)) {
-            c.write(Global.getPlayer(), "Overcome by your desire to serve " + cause.name() + ", you get on the ground "
+                        && Global.global.randomdouble() < Math.min(.5f, combatMagnitude / 2.0)) {
+            c.write(Global.global.getPlayer(), "Overcome by your desire to serve " + cause.name() + ", you get on the ground "
                             + "and prostrate yourself in front of " + cause.directObject() + ".");
             boolean behindPossible = cause.hasDick();
             Position pos;
-            if (!behindPossible || Global.random(2) == 0) {
+            if (!behindPossible || Global.global.random(2) == 0) {
                 pos = new Mount(cause, affected);
                 c.write(cause, String.format(
                                 "%s tells you to roll over, and once you have done so %s sets"

@@ -46,12 +46,12 @@ public class Carry extends Fuck {
         String premessage = premessage(c, target);
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.capitalizeFirstLetter(
+                c.write(getSelf(), Global.global.capitalizeFirstLetter(
                                 premessage + deal(c, premessage.length(), Result.normal, target)));
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.normal, target));
             }
-            int m = 5 + Global.random(5);
+            int m = 5 + Global.global.random(5);
             int otherm = m;
             if (getSelf().has(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
@@ -61,8 +61,8 @@ public class Carry extends Fuck {
             getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m, c, this);
         } else {
             if (getSelf().human()) {
-                c.write(getSelf(), Global
-                                .capitalizeFirstLetter(premessage + deal(c, premessage.length(), Result.miss, target)));
+                c.write(getSelf(), Global.global.capitalizeFirstLetter(
+                                premessage + deal(c, premessage.length(), Result.miss, target)));
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.miss, target));
             }
@@ -101,7 +101,7 @@ public class Carry extends Fuck {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return Global.format(
+            return Global.global.format(
                             (damage > 0 ? "" : "{self:subject} ")
                                             + "picks {other:subject} up, but {other:pronoun-action:manage|manages} out of"
                                             + " {self:possessive} grip before {self:pronoun} can do anything. Moreover, "
@@ -109,7 +109,7 @@ public class Carry extends Fuck {
                                             + "while she's distracted.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             (damage > 0 ? "" : "{self:subject} ")
                                             + "scoops {other:subject} up in {self:possessive} powerful arms and simultaneously thrusts"
                                             + " {self:possessive} {self:body-part:cock} into {other:possessive} {other:body-part:pussy}.",

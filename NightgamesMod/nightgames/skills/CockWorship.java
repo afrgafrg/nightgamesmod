@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
@@ -10,6 +8,8 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
+
+import java.util.Optional;
 
 public class CockWorship extends Skill {
 
@@ -40,7 +40,7 @@ public class CockWorship extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 10 + Global.random(8);
+        int m = 10 + Global.global.random(8);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
         }
@@ -48,7 +48,7 @@ public class CockWorship extends Skill {
         BodyPart mouth = getSelf().body.getRandom("mouth");
         BodyPart cock = target.body.getRandom("cock");
         target.body.pleasure(getSelf(), mouth, cock, m, c, this);
-        if (getSelf().hasDick() && (!getSelf().hasPussy() || Global.random(2) == 0)) {
+        if (getSelf().hasDick() && (!getSelf().hasPussy() || Global.global.random(2) == 0)) {
             getSelf().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), getSelf().body.getRandomCock(), m, c, this);
         } else if (getSelf().hasPussy()) {
             getSelf().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), getSelf().body.getRandomPussy(), m,
@@ -92,7 +92,7 @@ public class CockWorship extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "You ecstatically crawl towards {other:name-do} and reverently hold {other:possessive} {other:body-part:cock} with your hands. "
                                         + "You carefully take {other:possessive} member into your {self:body-part:mouth} and start blowing {other:direct-object} for all you are worth. "
                                         + "Minutes pass and you lose yourself in sucking {other:name-possessive} divine shaft while idly playing with yourself. Finally, {other:subject} "
@@ -102,7 +102,7 @@ public class CockWorship extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:subject} ecstatically crawls to {other:subject} on {self:possessive} knees and reverently cups {other:possessive} {other:body-part:cock}"
                                         + "with {self:possessive} hands. {self:PRONOUN} carefully takes {other:possessive} member into {self:possessive} {self:body-part:mouth} and starts sucking on it "
                                         + "like it was the most delicious popsicle made. Minutes pass and {self:subject} continues blowing {other:possessive} shaft while idly playing with "

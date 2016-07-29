@@ -39,7 +39,7 @@ public class Charm extends Skill {
         }
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
-            double mag = 2 + Global.random(4) + 2 * getSelf().body.getHotness(target);
+            double mag = 2 + Global.global.random(4) + 2 * getSelf().body.getHotness(target);
             if (target.has(Trait.imagination)) {
                 mag += 4;
             }
@@ -71,7 +71,7 @@ public class Charm extends Skill {
         } else {
             writeOutput(c, Result.weak, target);
             return false;
-        }        
+        }
     }
 
     @Override
@@ -139,7 +139,7 @@ public class Charm extends Skill {
                 message += String.format("\nYou're not sure if this was intentional, but %s flushed "
                                 + "face and ragged breathing makes the act a lot more erotic than "
                                 + "you would expect. %s to contain %s need to fuck the little kitty in heat.",
-                                getSelf().nameOrPossessivePronoun(), 
+                                getSelf().nameOrPossessivePronoun(),
                                 Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
                                 target.possessiveAdjective());
             }

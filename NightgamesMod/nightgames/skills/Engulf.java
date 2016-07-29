@@ -52,7 +52,7 @@ public class Engulf extends CounterBase {
 
     @Override
     public String getBlockedString(Combat c, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:move|moves} to engulf {other:subject} "
                                         + "in {self:possessive} slime, but {other:pronoun} stays out of {self:possessive} reach.",
                         getSelf(), target);
@@ -75,14 +75,14 @@ public class Engulf extends CounterBase {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "You spread out your slime, getting ready to trap {other:name} in it.",
                         getSelf(), target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:NAME}'s body spreads out across the floor. From {self:possessive} lowered position, "
                         + "{self:pronoun} smiles deviously up at {other:name-do}, goading {other:direct-object} into an attack.",
                         getSelf(), target);
@@ -110,7 +110,7 @@ public class Engulf extends CounterBase {
         if (getSelf().getType()
                      .equals("Airi"))
             msg += "\n<i>\"It's done... over... stop struggling... cum.\"</i>";
-        c.write(getSelf(), Global.format(msg, getSelf(), target));
+        c.write(getSelf(), Global.global.format(msg, getSelf(), target));
         c.setStance(new Engulfed(getSelf(), target), getSelf(), true);
         getSelf().emote(Emotion.dominant, 50);
         getSelf().emote(Emotion.horny, 30);

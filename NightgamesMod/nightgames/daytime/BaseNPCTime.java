@@ -1,10 +1,5 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.Trait;
@@ -12,6 +7,11 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class BaseNPCTime extends Activity {
     protected NPC npc;
@@ -33,7 +33,7 @@ public abstract class BaseNPCTime extends Activity {
 
     @Override
     public boolean known() {
-        return knownFlag.isEmpty() || Global.checkFlag(knownFlag);
+        return knownFlag.isEmpty() || Global.global.checkFlag(knownFlag);
     }
 
     List<TransformationOption> options;
@@ -56,31 +56,31 @@ public abstract class BaseNPCTime extends Activity {
     
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
         List<Loot> giftables = getGiftables();
         Map<Item, Integer> MyInventory = this.player.getInventory();
 
         Optional<TransformationOption> optionalOption =
                         options.stream().filter(opt -> choice.equals(opt.option)).findFirst();
         Optional<Loot> optionalGiftOption = giftables.stream()
-                        .filter(gift -> choice.equals(Global.capitalizeFirstLetter(gift.getName()))).findFirst();
+                        .filter(gift -> choice.equals(Global.global.capitalizeFirstLetter(gift.getName()))).findFirst();
 
         if (optionalOption.isPresent()) {
             TransformationOption option = optionalOption.get();
             boolean hasAll = option.ingredients.entrySet().stream()
                             .allMatch(entry -> player.has(entry.getKey(), entry.getValue()));
             if (hasAll) {
-                Global.gui().message(Global.format(option.scene, npc, player));
+                Global.global.gui().message(Global.global.format(option.scene, npc, player));
                 option.ingredients.entrySet().stream().forEach(entry -> player.consume(entry.getKey(), entry.getValue(), false));
                 option.effect.execute(null, player, npc);
-                Global.gui().choose(this, "Leave");
+                Global.global.gui().choose(this, "Leave");
             } else {
-                Global.gui().message(Global.format(noRequestedItems, npc, player));
-                Global.gui().choose(this, "Back");
+                Global.global.gui().message(Global.global.format(noRequestedItems, npc, player));
+                Global.global.gui().choose(this, "Back");
             }
         } else if (optionalGiftOption.isPresent()) {
-            Global.gui().message(Global.format(giftedString, npc, player));
+            Global.global.gui().message(Global.global.format(giftedString, npc, player));
             if (optionalGiftOption.get() instanceof Clothing) {
                 if (player.closet.contains(optionalGiftOption.get())) {
                     player.closet.remove(optionalGiftOption.get());
@@ -89,59 +89,60 @@ public abstract class BaseNPCTime extends Activity {
             }
             player.gainAffection(npc, 2);
             npc.gainAffection(player, 2);
-            Global.gui().choose(this, "Back");
+            Global.global.gui().choose(this, "Back");
         } else if (choice.equals("Gift")) {
-            Global.gui().message(Global.format(giftString, npc, player));
-            giftables.stream().forEach(loot -> Global.gui().choose(this, Global.capitalizeFirstLetter(loot.getName())));
-            Global.gui().choose(this, "Back");
+            Global.global.gui().message(Global.global.format(giftString, npc, player));
+            giftables.stream().forEach(loot -> Global.global.gui()
+                            .choose(this, Global.global.capitalizeFirstLetter(loot.getName())));
+            Global.global.gui().choose(this, "Back");
         } else if (choice.equals("Change Outfit")) {
-            Global.gui().changeClothes(npc, this, "Back");
+            Global.global.gui().changeClothes(npc, this, "Back");
         } else if (choice.equals(transformationOptionString)) {
-            Global.gui().message(Global.format(transformationIntro, npc, player));
+            Global.global.gui().message(Global.global.format(transformationIntro, npc, player));
             if (!transformationFlag.equals("")) {
-                Global.flag(transformationFlag);
+                Global.global.flag(transformationFlag);
             }
             options.stream()
                    .filter(option -> option.requirements.stream().allMatch(req -> req.meets(null, player, npc)))
                    .forEach(opt -> {
-                Global.gui().message(opt.option + ":");
+                Global.global.gui().message(opt.option + ":");
                 opt.ingredients.entrySet().forEach((entry) -> {
                     if (MyInventory.get(entry.getKey()) == null || MyInventory.get(entry.getKey()) == 0) {
-                        Global.gui().message(
+                        Global.global.gui().message(
                                         entry.getValue() + " " + entry.getKey().getName() + " (you don't have any)");
 
                     } else {
-                        Global.gui().message(entry.getValue() + " " + entry.getKey().getName() + " (you have: "
+                        Global.global.gui().message(entry.getValue() + " " + entry.getKey().getName() + " (you have: "
                                         + MyInventory.get(entry.getKey()) + ")");
                     }
                 });
                 if (!opt.additionalRequirements.isEmpty()) {
-                    Global.gui().message(opt.additionalRequirements);
+                    Global.global.gui().message(opt.additionalRequirements);
                 }
-                Global.gui().message("<br/>");
-                Global.gui().choose(this, opt.option);
+                Global.global.gui().message("<br/>");
+                Global.global.gui().choose(this, opt.option);
             });
-            Global.gui().choose(this, "Back");
+            Global.global.gui().choose(this, "Back");
         } else if (choice.equals("Start") || choice.equals("Back")) {
             if (npc.getAffection(player) > 25 && (advTrait == null || npc.has(advTrait))) {
-                Global.gui().message(Global.format(loveIntro, npc, player));
-                Global.gui().choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                Global.global.gui().message(Global.global.format(loveIntro, npc, player));
+                Global.global.gui().choose(this, "Games");
+                Global.global.gui().choose(this, "Sparring");
+                Global.global.gui().choose(this, "Sex");
                 if (!options.isEmpty()) {
-                    Global.gui().choose(this, transformationOptionString);
+                    Global.global.gui().choose(this, transformationOptionString);
                 }
                 if (npc.getAffection(player) > 30) {
-                    Global.gui().choose(this, "Gift");
+                    Global.global.gui().choose(this, "Gift");
                 }
                 if (npc.getAffection(player) > 35) {
-                    Global.gui().choose(this, "Change Outfit");
+                    Global.global.gui().choose(this, "Change Outfit");
                 }
                 Optional<String> addictionOpt = getAddictionOption();
                 if (addictionOpt.isPresent()) {
-                    Global.gui().choose(this, addictionOpt.get());
+                    Global.global.gui().choose(this, addictionOpt.get());
                 }
-                Global.gui().choose(this, "Leave");
+                Global.global.gui().choose(this, "Leave");
             } else {
                 subVisitIntro(choice);
             }

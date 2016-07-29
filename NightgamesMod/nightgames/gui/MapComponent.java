@@ -1,22 +1,16 @@
 package nightgames.gui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.util.Collection;
-
-import javax.swing.JComponent;
-
 import nightgames.areas.Area;
 import nightgames.areas.Cache;
 import nightgames.areas.MapDrawHint;
 import nightgames.global.Global;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 
 @SuppressWarnings("serial")
 public class MapComponent extends JComponent {
@@ -52,7 +46,7 @@ public class MapComponent extends JComponent {
     }
 
     public void paint(Graphics g) {
-        if (Global.getMatch() == null) {
+        if (Global.global.getMatch() == null) {
             return;
         }
         if (g instanceof Graphics2D) {
@@ -69,7 +63,7 @@ public class MapComponent extends JComponent {
         g.fillRect(0, 0, getWidth(), getHeight());
         g.setColor(Color.WHITE);
         g.drawRect(borderWidth, borderWidth, width - borderWidth * 2, height - borderWidth * 2);
-        Collection<Area> rooms = Global.getMatch().getAreas();
+        Collection<Area> rooms = Global.global.getMatch().getAreas();
         rooms.stream().forEach(area -> {
             if (area.drawHint.rect.width == 0 || area.drawHint.rect.height == 0) {
                 return;

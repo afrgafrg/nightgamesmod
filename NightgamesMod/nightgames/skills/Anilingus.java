@@ -1,9 +1,5 @@
 package nightgames.skills;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
@@ -14,6 +10,8 @@ import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class Anilingus extends Skill {
     private static final String worshipString = "Ass Worship";
@@ -62,15 +60,15 @@ public class Anilingus extends Skill {
         int selfm = 0;
         if (isWorship(c, target)) {
             result = Result.sub;
-            m += 4 + Global.random(6);
+            m += 4 + Global.global.random(6);
             n = 20;
             selfm = 20;
         } else if (c.getStance().isBeingFaceSatBy(c, getSelf(), target)) {
             result = Result.reverse;
-            m += Global.random(6);
+            m += Global.global.random(6);
             n = 10;
         } else if (!c.getStance().mobile(target) || target.roll(getSelf(), c, accuracy(c, target))) {
-            m += Global.random(6);
+            m += Global.global.random(6);
             if (getSelf().has(Trait.silvertongue)) {
                 m += 4;
                 result = Result.special;
@@ -136,8 +134,8 @@ public class Anilingus extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return String.format("%s closes in on %s behind, but %s %s to push %s head away.", getSelf().name(), 
-                            target.nameOrPossessivePronoun(), getSelf().pronoun(), 
+            return String.format("%s closes in on %s behind, but %s %s to push %s head away.", getSelf().name(),
+                            target.nameOrPossessivePronoun(), getSelf().pronoun(),
                             target.action("manage"), target.possessiveAdjective());
         } else if (modifier == Result.special) {
             return String.format("%s gently rims %s asshole with %s tongue, sending shivers through %s body.",

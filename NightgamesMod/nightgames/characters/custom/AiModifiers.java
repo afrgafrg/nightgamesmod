@@ -1,15 +1,8 @@
 package nightgames.characters.custom;
 
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import nightgames.Resources.ResourceLoader;
 import nightgames.global.Flag;
 import nightgames.global.Global;
@@ -17,6 +10,12 @@ import nightgames.json.JsonUtils;
 import nightgames.skills.Skill;
 import nightgames.stance.Stance;
 import nightgames.status.Stsflag;
+
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class AiModifiers {
 
@@ -75,7 +74,7 @@ public class AiModifiers {
     }
 
     public double getMalePref() {
-        return malePref.orElse((double) Global.getValue(Flag.malePref));
+        return malePref.orElse((double) Global.global.getValue(Flag.malePref));
     }
 
     public void setMalePref(Optional<Double> malePref) {

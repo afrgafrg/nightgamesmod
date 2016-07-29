@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
@@ -10,6 +8,8 @@ import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
+
+import java.util.Optional;
 
 public class BreastWorship extends Skill {
     public BreastWorship(Character self) {
@@ -30,13 +30,13 @@ public class BreastWorship extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
-        int m = 8 + Global.random(6);
+        int m = 8 + Global.global.random(6);
         writeOutput(c, results, target);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
         }
         target.body.pleasure(getSelf(), getSelf().body.getRandom("mouth"), target.body.getRandom("breasts"), m, c, this);
-        if (getSelf().hasDick() && (!getSelf().hasPussy() || Global.random(2) == 0)) {
+        if (getSelf().hasDick() && (!getSelf().hasPussy() || Global.global.random(2) == 0)) {
             getSelf().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), getSelf().body.getRandomCock(), m, c, this);
         } else if (getSelf().hasPussy()) {
             getSelf().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), getSelf().body.getRandomPussy(), m,

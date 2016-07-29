@@ -1,26 +1,8 @@
 package nightgames.combat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import nightgames.areas.Area;
-import nightgames.characters.Attribute;
+import nightgames.characters.*;
 import nightgames.characters.Character;
-import nightgames.characters.Emotion;
-import nightgames.characters.NPC;
-import nightgames.characters.Player;
-import nightgames.characters.State;
-import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.PussyPart;
@@ -35,53 +17,14 @@ import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.Pet;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.RoboArmManager;
-import nightgames.skills.Anilingus;
-import nightgames.skills.BreastWorship;
-import nightgames.skills.CockWorship;
-import nightgames.skills.Command;
-import nightgames.skills.ConcedePosition;
-import nightgames.skills.FootWorship;
-import nightgames.skills.Grind;
-import nightgames.skills.PetInitiatedThreesome;
-import nightgames.skills.Piston;
-import nightgames.skills.PussyGrind;
-import nightgames.skills.PussyWorship;
-import nightgames.skills.Reversal;
-import nightgames.skills.Skill;
-import nightgames.skills.Tactics;
-import nightgames.skills.Thrust;
-import nightgames.skills.WildThrust;
-import nightgames.stance.Behind;
-import nightgames.stance.Kneeling;
-import nightgames.stance.Mount;
-import nightgames.stance.Neutral;
-import nightgames.stance.Pin;
-import nightgames.stance.Position;
-import nightgames.stance.Stance;
-import nightgames.stance.StandingOver;
-import nightgames.stance.TribadismStance;
-import nightgames.status.Abuff;
-import nightgames.status.Alluring;
-import nightgames.status.BodyFetish;
-import nightgames.status.Braced;
-import nightgames.status.Collared;
-import nightgames.status.CounterStatus;
-import nightgames.status.DivineCharge;
-import nightgames.status.Enthralled;
-import nightgames.status.Falling;
-import nightgames.status.Flatfooted;
-import nightgames.status.Frenzied;
-import nightgames.status.SapphicSeduction;
-import nightgames.status.Slimed;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
-import nightgames.status.Stunned;
-import nightgames.status.Trance;
-import nightgames.status.Wary;
-import nightgames.status.Winded;
+import nightgames.skills.*;
+import nightgames.status.*;
 import nightgames.status.addiction.Addiction;
-import nightgames.status.addiction.Addiction.Severity;
+import nightgames.stance.Pin;
 import nightgames.status.addiction.AddictionType;
+import nightgames.status.addiction.Addiction.Severity;
+
+import java.util.*;
 
 public class Combat extends Observable implements Cloneable {
     private enum CombatPhase {
@@ -187,10 +130,10 @@ public class Combat extends Observable implements Cloneable {
             self.add(this, new SapphicSeduction(self));
         }
 
-        
+
         if (self.has(Trait.footfetishist)) {
             applyFetish(self, other, "feet");
-        } 
+        }
         if(self.has(Trait.breastobsessed) && other.hasBreasts()) {
             applyFetish(self, other, "breasts");
         }
@@ -203,19 +146,19 @@ public class Combat extends Observable implements Cloneable {
         if(self.has(Trait.cockcraver)&& other.hasDick()) {
             applyFetish(self, other, "cock");
         }
-        
+
     }
-    
-    
+
+
     public void applyFetish(Character self, Character other, String FetishType) {
-        
+
         if ( !other.body.get(FetishType).isEmpty() && !self.body.getFetish(FetishType).isPresent()) {
             if (self.human()) {
                 write(self, "As your first battle of the night begins, you can't help but think about " + FetishType + ".");
-            } 
+            }
             self.add(this, new BodyFetish(self, null, FetishType, .25));
         }
-    
+
     }
 
     public void go() {
@@ -265,56 +208,56 @@ public class Combat extends Observable implements Cloneable {
         } else if (loser.hasDick() && (victor.human() || victor.has(Trait.madscientist))
                         && victor.has(Item.EmptyBottle, 1)) {
             // for now only the player and mara collects semen
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{self:SUBJECT-ACTION:manage|manages} to collect some of {other:name-possessive} scattered semen in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.semen, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.divine)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:name-possessive} divine pussy juices in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.HolyWater, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.succubus)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:name-possessive} demonic pussy juices in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.ExtremeAphrodisiac, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.plant)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:possessive} nectar in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.nectar, 3);
         }
         if (checkBottleCollection(victor, loser, PussyPart.cybernetic)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:possessive} artificial lubricant in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.LubricatingOils, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.arcane)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of the floating mana wisps ejected from {other:possessive} orgasm in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.RawAether, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.feral)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:possessive} musky juices in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
             victor.gain(Item.FeralMusk, 1);
         }
         if (checkBottleCollection(victor, loser, PussyPart.gooey)) {
-            write(victor, Global.format(
+            write(victor, Global.global.format(
                             "<br/><b>{other:SUBJECT-ACTION:shoot|shoots} {self:name-do} a dirty look as {self:subject-action:move|moves} to collect some of {other:possessive} goo in an empty bottle</b>",
                             victor, loser));
             victor.consume(Item.EmptyBottle, 1, false);
@@ -331,8 +274,8 @@ public class Combat extends Observable implements Cloneable {
         loser.getWillpower()
              .fill();
 
-        if (Global.checkFlag(Flag.FTC) && loser.has(Item.Flag)) {
-            write(victor, Global.format(
+        if (Global.global.checkFlag(Flag.FTC) && loser.has(Item.Flag)) {
+            write(victor, Global.global.format(
                             "<br/><b>{self:SUBJECT-ACTION:take|takes} the " + "Flag from {other:subject}!</b>", victor,
                             loser));
             loser.remove(Item.Flag);
@@ -346,7 +289,7 @@ public class Combat extends Observable implements Cloneable {
         p2.evalChallenges(this, null);
         p2.draw(this, state);
         updateMessage();
-        winner = Optional.of(Global.noneCharacter());
+        winner = Optional.of(NPC.NONE_CHARACTER);
     }
 
     private void victory(Character won) {
@@ -391,15 +334,15 @@ public class Combat extends Observable implements Cloneable {
     private void checkForCombatComment() {
         Character other;
         if (p1.human() || p2.human()) {
-            other = (NPC) getOpponent(Global.getPlayer());
+            other = (NPC) getOpponent(Global.global.getPlayer());
         } else {
-            other = (NPC) (Global.random(2) == 0 ? p1 : p2);
+            other = (NPC) (Global.global.random(2) == 0 ? p1 : p2);
         }
         if (other instanceof NPC) {
             NPC commenter = (NPC) other;
             Optional<String> comment = commenter.getComment(this);
             if (comment.isPresent()) {
-                write(commenter, "<i>\"" + Global.format(comment.get(), commenter, Global.getPlayer()) + "\"</i>");
+                write(commenter, "<i>\"" + Global.global.format(comment.get(), commenter, Global.global.getPlayer()) + "\"</i>");
             }
         }
     }
@@ -416,11 +359,11 @@ public class Combat extends Observable implements Cloneable {
             other = p1;
         }
         message = describe(player, other);
-        if (!shouldAutoresolve() && !Global.checkFlag(Flag.noimage)) {
-            Global.gui()
+        if (!shouldAutoresolve() && !Global.global.checkFlag(Flag.noimage)) {
+            Global.global.gui()
                   .clearImage();
             if (!imagePath.isEmpty()) {
-                Global.gui()
+                Global.global.gui()
                       .displayImage(imagePath, images.get(imagePath));
             }
         }
@@ -460,7 +403,7 @@ public class Combat extends Observable implements Cloneable {
 
     private void doAuraTick(Character character, List<Character> allies, List<Character> opponents) {
         if (character.has(Trait.overwhelmingPresence)) {
-            write(character, Global.format("{self:NAME-POSSESSIVE} overwhelming presence mentally exhausts {self:possessive} opponents.", character, character));
+            write(character, Global.global.format("{self:NAME-POSSESSIVE} overwhelming presence mentally exhausts {self:possessive} opponents.", character, character));
             opponents.forEach(opponent -> opponent.weaken(this, opponent.getStamina().max() / 10));
         }
         String beguilingbreastCompletedFlag = Trait.beguilingbreasts.name() + "Completed";
@@ -468,7 +411,7 @@ public class Combat extends Observable implements Cloneable {
                         && character.outfit.slotOpen(ClothingSlot.top)) {
             Character mainOpponent = getOpponent(character);
             write(character, Global.format("The instant {self:subject-action:lay|lays} {self:possessive} eyes on {other:name-possessive} bare breasts, {self:possessive} consciousness flies out of {self:possessive} mind. " +
-                            (character.canAct() ? "{other:SUBJECT-ACTION:giggle|giggles} a bit and cups her stupendous tits and gives them a little squeeze to which {self:subject} can only moan." : ""), 
+                            (character.canAct() ? "{other:SUBJECT-ACTION:giggle|giggles} a bit and cups her stupendous tits and gives them a little squeeze to which {self:subject} can only moan." : ""),
                             character, mainOpponent));
             opponents.forEach(opponent -> opponent.add(this, new Trance(opponent, 50)));
             getCombatantData(character).setBooleanFlag(beguilingbreastCompletedFlag, true);
@@ -506,16 +449,16 @@ public class Combat extends Observable implements Cloneable {
         if(character.has(Trait.cockcraver)) {
             fetishDisadvantageAura(character, allies, opponents, "cock", ClothingSlot.bottom);
         }
-        
+
         opponents.forEach(opponent -> checkIndividualAuraEffects(character, opponent));
     }
-    
-    
+
+
     private void fetishDisadvantageAura(Character character, List<Character> allies, List<Character> opponents, String fetishType, ClothingSlot clothingType) {
-       
+
         float ifPartNotNull = 0;
-       
-        
+
+
         if(fetishType == "breasts" && opponents.get(0).hasBreasts()){
             ifPartNotNull = 1;
         } else if(fetishType == "pussy" && opponents.get(0).hasPussy()){
@@ -528,15 +471,15 @@ public class Combat extends Observable implements Cloneable {
             ifPartNotNull = 1;
         } else{
             ifPartNotNull = 0;
-        }      
-        
+        }
+
         if(ifPartNotNull == 1)
         {
             Optional<Character> otherWithAura = opponents.stream().filter(other -> !other.body.get(fetishType).isEmpty()).findFirst();
             Clothing clothes = otherWithAura.get().getOutfit().getTopOfSlot(clothingType);
             boolean seeFetish = clothes == null || clothes.getLayer() <= 1 || otherWithAura.get().getOutfit().getExposure() >= .5;
             String partDescrip;
-            
+
         if(fetishType == "breasts"){
              partDescrip = otherWithAura.get().body.getRandomBreasts().describe(otherWithAura.get()) ;
          } else if(fetishType == "ass"){
@@ -548,7 +491,7 @@ public class Combat extends Observable implements Cloneable {
          } else{
              partDescrip = fetishType;
          }
-        
+
             if ( otherWithAura.isPresent() && seeFetish && Global.random(5) == 0) {
                 if (character.human()) {
                     write(character, "You can't help thinking about " + otherWithAura.get().nameOrPossessivePronoun() + " " + partDescrip + ".");
@@ -556,11 +499,11 @@ public class Combat extends Observable implements Cloneable {
                 character.add(this, new BodyFetish(character, null, fetishType, .05));
             }
         }
-        
-       
-    
+
+
+
     }
-    
+
     private void checkIndividualAuraEffects(Character self, Character other) {
         if (self.has(Trait.magicEyeEnthrall) && other.getArousal().percent() >= 50 && getStance().facing(other, self)
                         && Global.random(20) == 0) {
@@ -632,14 +575,14 @@ public class Combat extends Observable implements Cloneable {
                                         + " influencing you somehow!", self, other, source.getName());
                     } else {
                         msg += "It's probably nothing, though.</i>";
-                    }   
+                    }
                     write(other, msg);
                 }
             }
         }
     }
 
-    private static final List<CombatPhase> SKIPPABLE_PHASES = 
+    private static final List<CombatPhase> SKIPPABLE_PHASES =
                     Arrays.asList(
                     CombatPhase.PET_ACTIONS,
                     CombatPhase.P1_ACT_FIRST,
@@ -797,12 +740,12 @@ public class Combat extends Observable implements Cloneable {
                             + player.describe(player.get(Attribute.Perception), this) + "<br/><br/>"
                             + other.describe(player.get(Attribute.Perception), this) + "<br/><br/>";
         } else if (!player.is(Stsflag.blinded)) {
-            return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>"
-                            + Global.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
+            return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>" + Global.global
+                            .capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
                             + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
         } else {
-            return "<b>You are blinded, and cannot see what " + other.name() + " is doing!</b><br/><br/>"
-                            + Global.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
+            return "<b>You are blinded, and cannot see what " + other.name() + " is doing!</b><br/><br/>" + Global.global
+                            .capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
                             + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
         }
     }
@@ -832,7 +775,7 @@ public class Combat extends Observable implements Cloneable {
             Skill skill = avail.remove(avail.size() - 1)
                                .copy(self);
             if (Skill.skillIsUsable(this, skill, other)) {
-                write(other, Global.format(
+                write(other, Global.global.format(
                                 "<b>{other:NAME-POSSESSIVE} divine aura forces {self:subject} to forget what {self:pronoun} {self:action:were|was} doing and crawl to {other:direct-object} on {self:possessive} knees.</b>",
                                 self, other));
                 return Optional.of(skill);
@@ -848,10 +791,10 @@ public class Combat extends Observable implements Cloneable {
                 chance += 10;
             }
             chance += getCombatantData(self).getDoubleFlag(TEMPT_WORSHIP_BONUS);
-            if (Global.random(100) < chance) {
+            if (Global.global.random(100) < chance) {
                 getCombatantData(self).setDoubleFlag(TEMPT_WORSHIP_BONUS, 0);
                 return true;
-            }            
+            }
         }
         return false;
     }
@@ -908,7 +851,7 @@ public class Combat extends Observable implements Cloneable {
                 if (!otherCombatants.contains(pet) || alreadyBattled.contains(pet)) { continue; }
                 for (PetCharacter otherPet : pets) {
                     if (!otherCombatants.contains(pet) || alreadyBattled.contains(otherPet)) { continue; }
-                    if (!pet.getSelf().owner().equals(otherPet.getSelf().owner()) && Global.random(2) == 0) {
+                    if (!pet.getSelf().owner().equals(otherPet.getSelf().owner()) && Global.global.random(2) == 0) {
                         petbattle(pet.getSelf(), otherPet.getSelf());
                         alreadyBattled.add(pet);
                         alreadyBattled.add(otherPet);
@@ -945,95 +888,95 @@ public class Combat extends Observable implements Cloneable {
                 return;
             }
         }
-        
+
         if (self.has(Trait.smqueen)) {
                 write(self,
-                            Global.format("{self:NAME-POSSESSIVE} cold gaze in {self:possessive} dominant position"
+                            Global.global.format("{self:NAME-POSSESSIVE} cold gaze in {self:possessive} dominant position"
                                             + " makes {other:direct-object} shiver.",
                                             self, other));
             other.loseWillpower(this, stanceDominance, 0, false, " (SM Queen)");
         } else if (getStance().time % 2 == 0 && getStance().time > 0) {
             if (other.has(Trait.indomitable)) {
-                write(self, Global.format("{other:SUBJECT}, typically being the dominant one,"
+                write(self, Global.global.format("{other:SUBJECT}, typically being the dominant one,"
                                 + "{other:action:are|is} simply refusing to acknowledge {self:name-possessive}"
                                 + " current dominance.", self, other));
                 stanceDominance = Math.max(1, stanceDominance - 3);
             } else {
-                write(self, Global.format("{other:NAME-POSSESSIVE} compromising position takes a toll on {other:possessive} willpower.",
+                write(self, Global.global.format("{other:NAME-POSSESSIVE} compromising position takes a toll on {other:possessive} willpower.",
                                             self, other));
             }
             other.loseWillpower(this, stanceDominance, 0, false, " (Dominance)");
         }
-        
-        if (self.has(Trait.confidentdom) && Global.random(2) == 0) {
+
+        if (self.has(Trait.confidentdom) && Global.global.random(2) == 0) {
             Attribute attr;
             String desc;
-            if (self.get(Attribute.Ki) > 0 && Global.random(2) == 0) {
+            if (self.get(Attribute.Ki) > 0 && Global.global.random(2) == 0) {
                 attr = Attribute.Ki;
                 desc = "strengthening {self:possessive} focus on martial discipline";
-            } else if (Global.random(2) == 0) {
+            } else if (Global.global.random(2) == 0) {
                 attr = Attribute.Power;
                 desc = "further empowering {self:possessive} muscles";
             } else {
                 attr = Attribute.Cunning;
                 desc = "granting {self:direct-object} increased mental clarity";
             }
-            write(self, Global.format("{self:SUBJECT-ACTION:feel|feels} right at home atop"
+            write(self, Global.global.format("{self:SUBJECT-ACTION:feel|feels} right at home atop"
                             + " {other:name-do}, %s.", self, other, desc));
-            self.add(this, new Abuff(self, attr, Global.random(3) + 1, 10));
+            self.add(this, new Abuff(self, attr, Global.global.random(3) + 1, 10));
         }
-        
-        if (self.has(Trait.unquestionable) && Global.random(4) == 0) {
-            write(self, Global.format("<b><i>\"Stay still, worm!\"</i> {self:subject-action:speak|speaks}"
+
+        if (self.has(Trait.unquestionable) && Global.global.random(4) == 0) {
+            write(self, Global.global.format("<b><i>\"Stay still, worm!\"</i> {self:subject-action:speak|speaks}"
                             + " with such force that it casues {other:name-do} to temporarily"
                             + " cease resisting.</b>", self, other));
             other.add(this, new Flatfooted(other, 1, false));
         }
-        
-        if (self.is(Stsflag.collared) && Global.random(10) < 3 && new Reversal(other).usable(this, self)) {
-            self.pain(this, null, Global.random(20, 50));
+
+        if (self.is(Stsflag.collared) && Global.global.random(10) < 3 && new Reversal(other).usable(this, self)) {
+            self.pain(this, null, Global.global.random(20, 50));
             Position nw = stance.reverse(this, false);
             if (!stance.equals(nw)) {
                 stance = nw;
-                write(Global.format("Appearantly punishing {self:name-do} for being dominant, the collar"
+                write(Global.global.format("Appearantly punishing {self:name-do} for being dominant, the collar"
                                 + " around {self:possessive} neck gives {self:direct-object} a painful"
                                 + " shock. At the same time, {other:subject-action:grab|grabs}"
                                 + " hold of {self:possessive} body and gets {other:reflective}"
                                 + " into a more advantegeous position.", self, other));
             } else {
                 stance = new Pin(other, self);
-                write(Global.format("Distracted by a shock from the collar around {self:possessive}"
+                write(Global.global.format("Distracted by a shock from the collar around {self:possessive}"
                                 + " neck, {self:subject-action:have|has} no chance to resist as"
                                 + " {other:subject-action:put|puts} {self:direct-object}"
                                 + " in a pin.", self, other));
             }
         }
-        
-        if (self.is(Stsflag.collared) && Global.random(10) < 3 && new Reversal(other).usable(this, self)) {
-            self.pain(this, null, Global.random(20, 50));
+
+        if (self.is(Stsflag.collared) && Global.global.random(10) < 3 && new Reversal(other).usable(this, self)) {
+            self.pain(this, null, Global.global.random(20, 50));
             Position nw = stance.reverse(this, false);
             if (!stance.equals(nw)) {
                 stance = nw;
-                write(Global.format("Appearantly punishing {self:name-do} for being dominant, the collar"
+                write(Global.global.format("Appearantly punishing {self:name-do} for being dominant, the collar"
                                 + " around {self:possessive} neck gives {self:direct-object} a painful"
                                 + " shock. At the same time, {other:subject-action:grab|grabs}"
                                 + " hold of {self:possessive} body and gets {other:reflective}"
                                 + " into a more advantegeous position.", self, other));
             } else {
                 stance = new Pin(other, self);
-                write(Global.format("Distracted by a shock from the collar around {self:possessive}"
+                write(Global.global.format("Distracted by a shock from the collar around {self:possessive}"
                                 + " neck, {self:subject-action:have|has} no chance to resist as"
                                 + " {other:subject-action:put|puts} {self:direct-object}"
                                 + " in a pin.", self, other));
             }
         }
-        
+
         if (getStance().facing(self, other) && other.breastsAvailable() && !self.has(Trait.temptingtits) && other.has(Trait.temptingtits)) {
-            write(self, Global.format("{self:SUBJECT-ACTION:can't avert|can't avert} {self:possessive} eyes from {other:NAME-POSSESSIVE} perfectly shaped tits sitting in front of {self:possessive} eyes.",
+            write(self, Global.global.format("{self:SUBJECT-ACTION:can't avert|can't avert} {self:possessive} eyes from {other:NAME-POSSESSIVE} perfectly shaped tits sitting in front of {self:possessive} eyes.",
                                             self, other));
             self.temptNoSkill(this, other, other.body.getRandomBreasts(), 10 + Math.max(0, other.get(Attribute.Seduction) / 3 - 7));
         } else if (getOpponent(self).has(Trait.temptingtits) && getStance().behind(other)) {
-            write(self, Global.format("{self:SUBJECT-ACTION:feel|feels} a heat in {self:possessive} groin as {other:name-possessive} enticing tits pressing against {self:possessive} back.",
+            write(self, Global.global.format("{self:SUBJECT-ACTION:feel|feels} a heat in {self:possessive} groin as {other:name-possessive} enticing tits pressing against {self:possessive} back.",
                             self, other));
             double selfTopExposure = self.outfit.getExposure(ClothingSlot.top);
             double otherTopExposure = other.outfit.getExposure(ClothingSlot.top);
@@ -1045,7 +988,7 @@ public class Combat extends Observable implements Cloneable {
 
     private boolean checkCounter(Character attacker, Character target, Skill skill) {
         return !target.has(Trait.submissive) && getStance().mobile(target)
-                        && target.counterChance(this, attacker, skill) > Global.random(100);
+                        && target.counterChance(this, attacker, skill) > Global.global.random(100);
     }
 
     private boolean resolveCrossCounter(Skill skill, Character target, int chance) {
@@ -1113,7 +1056,7 @@ public class Combat extends Observable implements Cloneable {
                     stat.spendCharges(this, 1);
                     write(Global.format("The training collar around {self:name-possessive}"
                                     + "neck reacts to {self:possessive} aggression by sending"
-                                    + " a powerful shock down {self:possessive} spine.", 
+                                    + " a powerful shock down {self:possessive} spine.",
                                     skill.user(), target));
                     skill.user().pain(this, null, Global.random(10, 40));
                 }
@@ -1123,7 +1066,7 @@ public class Combat extends Observable implements Cloneable {
                 stat.spendCharges(this, 1);
                 write(Global.format("The training collar around {self:name-possessive}"
                                 + "neck reacts to {self:possessive} aggression by sending"
-                                + " a powerful shock down {self:possessive} spine.", 
+                                + " a powerful shock down {self:possessive} spine.",
                                 skill.user(), target));
                 skill.user().pain(this, null, Global.random(10, 40));
             }
@@ -1167,7 +1110,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(String text) {
-        text = Global.capitalizeFirstLetter(text);
+        text = Global.global.capitalizeFirstLetter(text);
         if (text.isEmpty()) {
             return;
         }
@@ -1186,7 +1129,7 @@ public class Combat extends Observable implements Cloneable {
 
     public void updateAndClearMessage() {
         if (beingObserved) {
-            Global.gui().clearText();
+            Global.global.gui().clearText();
         }
         combatMessageChanged = true;
         setChanged();
@@ -1194,7 +1137,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(Character user, String text) {
-        text = Global.capitalizeFirstLetter(text);
+        text = Global.global.capitalizeFirstLetter(text);
         if (text.length() > 0) {
             if (user.human()) {
                 message = message + "<br/><font color='rgb(200,200,255)'>" + text + "<font color='white'>";
@@ -1308,7 +1251,7 @@ public class Combat extends Observable implements Cloneable {
             if (!(p1.human() || p2.human() || intruder.human())) {
                 end();
             } else {
-                Global.gui().watchCombat(this);
+                Global.global.gui().watchCombat(this);
                 next();
             }
         }
@@ -1372,8 +1315,8 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void petbattle(Pet one, Pet two) {
-        int roll1 = Global.random(20) + one.power();
-        int roll2 = Global.random(20) + two.power();
+        int roll1 = Global.global.random(20) + one.power();
+        int roll2 = Global.global.random(20) + two.power();
         if (one.hasPussy() && two.hasDick()) {
             roll1 += 3;
         } else if (one.hasDick() && two.hasPussy()) {
@@ -1439,7 +1382,7 @@ public class Combat extends Observable implements Cloneable {
     public void offerImage(String path, String artist) {
         imagePath = path;
         if (!imagePath.isEmpty() && !cloned && isBeingObserved()) {
-            Global.gui()
+            Global.global.gui()
                   .displayImage(imagePath, images.get(imagePath));
         }
     }
@@ -1472,12 +1415,12 @@ public class Combat extends Observable implements Cloneable {
                 if (newStance.havingSex(this)) {
                     threesomeSkill.resolve(this, newStance.bottom);
                 } else if (!getStance().sub(newStance.bottom)) {
-                    write(initiator, Global.format("{self:SUBJECT-ACTION:take|takes} the chance to send {other:name-do} sprawling to the ground", initiator, newStance.bottom));
+                    write(initiator, Global.global.format("{self:SUBJECT-ACTION:take|takes} the chance to send {other:name-do} sprawling to the ground", initiator, newStance.bottom));
                     newStance.bottom.add(this, new Falling(newStance.bottom));
                     return;
                 }
             } else {
-                if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                     System.out.printf("Tried to chance stance without both players, stopping: %s -> %s\n",
                                     stance.getClass().getName(),
                                     newStance.getClass().getName());
@@ -1486,7 +1429,7 @@ public class Combat extends Observable implements Cloneable {
                 return;
             }
         }
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("Stance Change: %s -> %s\n", stance.getClass()
                                                                  .getName(),
                             newStance.getClass()
@@ -1528,7 +1471,7 @@ public class Combat extends Observable implements Cloneable {
                         getCombatantData(initiator).setIntegerFlag("ChoseToFuck", 1);
                         getCombatantData(getOpponent(initiator)).setIntegerFlag("ChoseToFuck", -1);
                     }
-                    if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                    if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                         System.out.println(initiator + " initiated penetration, voluntary=" + voluntary);
                     }
                 }
@@ -1549,7 +1492,7 @@ public class Combat extends Observable implements Cloneable {
         }
 
         if (stance != newStance && initiator != null && initiator.has(Trait.Catwalk)) {
-            write(initiator, Global.format("The way {self:subject-action:move|moves} exudes such feline grace that it demands {other:name-possessive} attention.",
+            write(initiator, Global.global.format("The way {self:subject-action:move|moves} exudes such feline grace that it demands {other:name-possessive} attention.",
                             initiator, getOpponent(initiator)));
             initiator.add(this, new Alluring(initiator, 1));
         }
@@ -1571,13 +1514,13 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void writeSystemMessage(String battleString) {
-        if (Global.checkFlag(Flag.systemMessages)) {
+        if (Global.global.checkFlag(Flag.systemMessages)) {
             write(battleString);
         }
     }
 
     public void writeSystemMessage(Character character, String string) {
-        if (Global.checkFlag(Flag.systemMessages)) {
+        if (Global.global.checkFlag(Flag.systemMessages)) {
             write(character, string);
         }
     }
@@ -1587,7 +1530,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private boolean doExtendedLog() {
-        return (p1.human() || p2.human()) && Global.checkFlag(Flag.extendedLogs);
+        return (p1.human() || p2.human()) && Global.global.checkFlag(Flag.extendedLogs);
     }
 
     public boolean isBeingObserved() {
@@ -1600,11 +1543,11 @@ public class Combat extends Observable implements Cloneable {
             log = new CombatLog(this);
         }
     }
-    
+
     public boolean shouldPrintReceive(Character ch, Combat c) {
         return beingObserved || (c.p1.human() || c.p2.human());
     }
-    
+
     public boolean shouldAutoresolve() {
         return !(p1.human() || p2.human()) && !beingObserved;
     }
@@ -1612,11 +1555,11 @@ public class Combat extends Observable implements Cloneable {
     public String bothDirectObject(Character target) {
         return target.human() ? "you" : "them";
     }
-    
+
     public String bothPossessive(Character target) {
         return target.human() ? "your" :  "their";
     }
-    
+
     public String bothSubject(Character target) {
         return target.human() ? "you" : "they";
     }
@@ -1627,7 +1570,7 @@ public class Combat extends Observable implements Cloneable {
 
     public void removePet(PetCharacter self) {
         if (self.has(Trait.resurrection) && !getCombatantData(self).getBooleanFlag("resurrected")) {
-            write(self, "Just as " + self.subject() + " was about to disappear, a dazzling light covers " 
+            write(self, "Just as " + self.subject() + " was about to disappear, a dazzling light covers "
             + self.possessiveAdjective() + " body. When the light fades, " + self.pronoun() + " looks completely refreshed!");
             getCombatantData(self).setBooleanFlag("resurrected", true);
             self.getArousal().empty();

@@ -39,11 +39,11 @@ public class UseDildo extends Skill {
             int m;
             if (getSelf().has(Item.Dildo2)) {
                 writeOutput(c, Result.upgrade, target);
-                m = Global.random(10, 20);
+                m = Global.global.random(10, 20);
             } else {
                 writeOutput(c, Result.normal, target);
-                m = Global.random(5, 15);
-                
+                m = Global.global.random(5, 15);
+
             }
 
             m = (int)getSelf().modifyDamage(DamageType.gadgets, target, m);
@@ -86,16 +86,16 @@ public class UseDildo extends Skill {
 
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:try|tries} to slip a dildo into {other:name-do}, but {other:pronoun-action:block|blocks} it.",
                             getSelf(), target);
         } else if (modifier == Result.upgrade) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:touch|touches} the imperceptibly vibrating dildo to {other:possessive} love button and {other:subject-action:jump|jumps} as if shocked. Before {other:subject} can defend {other:reflective}, {self:subject} "
                                             + "slips it into {other:possessive} {other:body-part:pussy}. {other:SUBJECT-ACTION:start|starts} moaning in pleasure immediately.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:rub|rubs} the dildo against {other:name-possessive} lower lips to lubricate it before {self:pronoun-action:thrust|thrusts} it inside {other:name-do}. "
                                             + "{other:SUBJECT} can't help but moan a little as {self:subject-action:pump|pumps} the rubber toy in and out of {other:possessive} {other:body-part:pussy}.",
                             getSelf(), target);

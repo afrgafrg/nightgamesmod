@@ -1,10 +1,5 @@
 package nightgames.areas;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import nightgames.actions.Movement;
 import nightgames.characters.Character;
 import nightgames.combat.IEncounter;
@@ -12,6 +7,10 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.status.Stsflag;
 import nightgames.trap.Trap;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Area implements Serializable {
     /**
@@ -123,10 +122,10 @@ public class Area implements Serializable {
         if (fight != null && fight.checkIntrude(p)) {
             p.intervene(fight, fight.getPlayer(1), fight.getPlayer(2));
         } else if (present.size() > 1 && canFight(p)) {
-            for (Character opponent : Global.getMatch().combatants) {
+            for (Character opponent : Global.global.getMatch().combatants) {
                 if (present.contains(opponent) && opponent != p
                                 && canFight(opponent)) {
-                    fight = Global.getMatch().getType().buildEncounter(p, opponent, this);
+                    fight = Global.global.getMatch().getType().buildEncounter(p, opponent, this);
                     return fight.spotCheck();
                 }
             }
@@ -137,13 +136,13 @@ public class Area implements Serializable {
     private boolean canFight(Character c) {
         return !c.human() || !Global.isDebugOn(DebugFlags.DEBUG_SPECTATE);
     }
-    
+
     public boolean opportunity(Character target, Trap trap) {
         if (present.size() > 1) {
             for (Character opponent : present) {
                 if (opponent != target) {
                     if (target.eligible(opponent) && opponent.eligible(target) && fight == null) {
-                        fight = Global.getMatch().getType().buildEncounter(opponent, target, this);
+                        fight = Global.global.getMatch().getType().buildEncounter(opponent, target, this);
                         opponent.promptTrap(fight, target, trap);
                         return true;
                     }

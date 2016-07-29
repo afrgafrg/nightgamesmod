@@ -53,7 +53,7 @@ public class AssPart extends GenericBodyPart {
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
         if (self.has(Trait.oiledass) && c.getStance().anallyPenetratedBy(c, self, opponent)) {
-            c.write(self, Global.format(
+            c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} naturally oiled asshole swallows {other:name-possessive} cock with ease.",
                             self, opponent));
             bonus += 5;
@@ -67,7 +67,7 @@ public class AssPart extends GenericBodyPart {
             if (self.has(Trait.holecontrol)) {
                 desc += "well-trained ";
             }
-            c.write(self, Global.format(
+            c.write(self, Global.global.format(
                             "{self:SUBJECT-ACTION:use|uses} {self:possessive} " + desc
                                             + "sphincter muscles to milk {other:name-possessive} cock, adding to the pleasure.",
                             self, opponent));
@@ -97,7 +97,7 @@ public class AssPart extends GenericBodyPart {
     @Override
     public void tickHolding(Combat c, Character self, Character opponent, BodyPart otherOrgan) {
         if (self.has(Trait.autonomousAss)) {
-            c.write(self, Global.format(
+            c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} " + fullDescribe(self)
                                             + " churns against {other:name-possessive} cock, "
                                             + "seemingly with a mind of its own. {self:POSSESSIVE} internal muscles feel like a hot fleshy hand inside her asshole, jerking {other:possessive} shaft.",
@@ -110,8 +110,8 @@ public class AssPart extends GenericBodyPart {
     public double applyReceiveBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
         if (opponent.has(Trait.asshandler) || opponent.has(Trait.anatomyknowledge)) {
-            c.write(opponent,
-                            Global.format("{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} ass causes {self:subject} to shudder uncontrollably.",
+            c.write(opponent, Global.global.format(
+                            "{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} ass causes {self:subject} to shudder uncontrollably.",
                                             self, opponent));
             if (opponent.has(Trait.asshandler)) {
                 bonus += 5;

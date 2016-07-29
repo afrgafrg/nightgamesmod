@@ -47,7 +47,7 @@ public class DarkTalisman extends Skill {
         writeOutput(c, result, target);
         getSelf().consume(Item.Talisman, 1);
         if (result == Result.normal) {
-            target.add(c, new Enthralled(target, getSelf(), Global.random(3) + 1));
+            target.add(c, new Enthralled(target, getSelf(), Global.global.random(3) + 1));
             return true;
         } else {
             return false;

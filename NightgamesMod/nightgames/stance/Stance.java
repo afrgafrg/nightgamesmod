@@ -34,6 +34,7 @@ public enum Stance {
     upsidedownfemdom, kneeling,;
 
     public SkillTag getSkillTag() {
-        return new BothRequirementSkillTag((result, value) -> result.getCombat().getStance().en == this, Global.capitalizeFirstLetter(name())+"Position");
+        return new BothRequirementSkillTag((result, value) -> result.getCombat().getStance().en == this,
+                        Global.global.capitalizeFirstLetter(name()) + "Position");
     }
 }

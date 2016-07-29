@@ -51,7 +51,7 @@ public class DarkKiss extends Skill {
         float mag = add.getMagnitude();
         int min = (int) (mag * 3);
         int mod = (int) (mag * 8);
-        int amt = min + Global.random(mod);
+        int amt = min + Global.global.random(mod);
         target.loseWillpower(c, amt, false);
         add.alleviateCombat(Addiction.HIGH_INCREASE);
         ((Player)getSelf()).addict(AddictionType.CORRUPTION, null, Addiction.LOW_INCREASE);
@@ -67,7 +67,7 @@ public class DarkKiss extends Skill {
     public Tactics type(Combat c) {
         return Tactics.pleasure;
     }
-    
+
     @Override
     public boolean makesContact(){
         return true;

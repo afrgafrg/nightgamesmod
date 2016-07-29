@@ -24,7 +24,7 @@ public class ReverseAssFuck extends Fuck {
     @Override
     public float priorityMod(Combat c) {
         return ((getSelf().getMood() == Emotion.dominant ? 1.0f : 0)
-                        + (getSelf().has(Trait.autonomousAss) ? 4.0f : 0) 
+                        + (getSelf().has(Trait.autonomousAss) ? 4.0f : 0)
                         + (getSelf().has(Trait.oiledass) ? 2.0f : 0)
                         + (getSelf().has(Trait.drainingass) ? 3.f : 0)
                         + (getSelf().has(Trait.bewitchingbottom) ? 3.f : 0))
@@ -72,9 +72,9 @@ public class ReverseAssFuck extends Fuck {
             getSelf().add(c, new Oiled(getSelf()));
             getSelf().consume(Item.Lubricant, 1);
         }
-        c.write(getSelf(), Global.format(premessage, getSelf(), target));
+        c.write(getSelf(), Global.global.format(premessage, getSelf(), target));
 
-        int m = Global.random(10, 15);
+        int m = Global.global.random(10, 15);
         writeOutput(c, Result.normal, target);
 
         int otherm = m;
@@ -85,7 +85,7 @@ public class ReverseAssFuck extends Fuck {
         getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m, c, this);
         c.setStance(new AnalCowgirl(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());
         getSelf().emote(Emotion.dominant, 30);
-        if (Global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().has(Trait.bewitchingbottom)) {
+        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().has(Trait.bewitchingbottom)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;
@@ -122,7 +122,7 @@ public class ReverseAssFuck extends Fuck {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format("%s makes sure %s %s is sufficiently lubricated and pushes %s %s into %s greedy hole.",
-                        getSelf().name(), getSelf().possessiveAdjective(), getSelfOrgan().describe(getSelf()), 
+                        getSelf().name(), getSelf().possessiveAdjective(), getSelfOrgan().describe(getSelf()),
                         target.nameOrPossessivePronoun(),
                         getTargetOrgan(target).describe(target), getSelf().possessiveAdjective());
     }

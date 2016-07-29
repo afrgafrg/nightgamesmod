@@ -1,10 +1,5 @@
 package nightgames.skills;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Decider;
@@ -15,6 +10,11 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
 import nightgames.nskills.tags.SkillTag;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class StripSelf extends Skill {
     public StripSelf(Character self) {
@@ -73,7 +73,7 @@ public class StripSelf extends Skill {
                 });
                 checks.put(article, rating);
             });
-            if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
                 checks.entrySet().stream().forEach(entry -> {
                     System.out.println("Stripping " + entry.getKey() + ": " + entry.getValue());
                 });
@@ -94,7 +94,7 @@ public class StripSelf extends Skill {
         if (clothing == null) {
             c.write(getSelf(), "Skill failed...");
         } else {
-            c.write(getSelf(), Global.format(String.format("{self:SUBJECT-ACTION:strip|strips} off %s %s.",
+            c.write(getSelf(), Global.global.format(String.format("{self:SUBJECT-ACTION:strip|strips} off %s %s.",
                             getSelf().possessiveAdjective(), clothing.getName()), getSelf(), target));
         }
         return true;

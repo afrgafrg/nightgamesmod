@@ -25,7 +25,8 @@ public class MimicWitch extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.getNPC("Cassie").has(Trait.witch);
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.global.getNPC("Cassie")
+                        .has(Trait.witch);
     }
 
     @Override
@@ -75,7 +76,8 @@ public class MimicWitch extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("{self:NAME-POSSESSIVE} amorphous body shakes violently and her human-features completely dissolve. "
+        return Global.global
+                        .format("{self:NAME-POSSESSIVE} amorphous body shakes violently and her human-features completely dissolve. "
                         + "After briefly becoming something that resembles a mannequin, her goo shifts colors into a glowing purple hue. "
                         + "Facial features forms again out of her previously smooth slime into something very familiar to {other:name-do}. "
                         + "Looks like {self:NAME} is mimicking Cassie's witch form!", getSelf(), target);

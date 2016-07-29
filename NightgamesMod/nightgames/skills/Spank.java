@@ -30,7 +30,7 @@ public class Spank extends Skill {
     public boolean resolve(Combat c, Character target) {
         double m = Global.random(6, 13);
         if (getSelf().has(Trait.disciplinarian)) {
-            boolean shamed = Global.random(10) >= 5 || !target.is(Stsflag.shamed) && getSelf().canSpend(5);
+            boolean shamed = Global.global.random(10) >= 5 || !target.is(Stsflag.shamed) && getSelf().canSpend(5);
             if (shamed) {
                 getSelf().spendMojo(c, 5);
             }

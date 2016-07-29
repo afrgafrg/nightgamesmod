@@ -78,15 +78,15 @@ public class PullOut extends Skill {
                 writeOutput(c, result, target);
                 c.setStance(c.getStance().insertRandom(c));
                 return true;
-            } else if (getSelf().check(Attribute.Power, 
+            } else if (getSelf().check(Attribute.Power,
                             baseDifficulty - getSelf().escape(c, target) + powerMod)) {
                 if (isLocked) {
-                    c.write(getSelf(), Global.format("Despite {other:name-possessive} inhumanly tight"
+                    c.write(getSelf(), Global.global.format("Despite {other:name-possessive} inhumanly tight"
                                     + " ass and {other:possessive} strong grip on {self:direct-object},"
                                     + " {self:pronoun-action:manage|manages} to pull {self:body-part:cock}"
                                     + " ever so slowly out of {other:direct-object}.", getSelf(), target));
                 } else {
-                    c.write(getSelf(), Global.format("{other:NAME-POSSESSIVE} ass clenches powerfully"
+                    c.write(getSelf(), Global.global.format("{other:NAME-POSSESSIVE} ass clenches powerfully"
                                     + " around {self:name-possessive} {self:body-part:cock} as"
                                     + " {self:pronoun-action:try|tries} to pull out of"
                                     + " it, but it proves insufficient as the hard shaft escapes its"
@@ -94,14 +94,14 @@ public class PullOut extends Skill {
                 }
                 c.setStance(c.getStance().insertRandom(c));
             } else if (!isLocked) {
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
                                 + " {other:name-possessive} lustrous ass, but {other:pronoun-action:squeeze|squeezes}"
                                 + " {other:possessive} asscheeks tightly around your {self:body-part:cock},"
                                 + " preventing your extraction.", getSelf(), target));
                 getSelf().body.pleasure(target, target.body.getRandomAss(), getSelf().body.getRandomCock(), 6, c, this);
             } else {
                 String lockDesc = getSelf().hasStatus(Stsflag.leglocked) ? "legs" : "arms";
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
                                 + " {other:name-possessive} lustrous ass, but the combination"
                                 + " of {other:possessive} tightly squeezing ass and"
                                 + " powerful %s locks {self:pronoun} firmly inside of {other:direct-object}."
@@ -171,13 +171,13 @@ public class PullOut extends Skill {
                 CockBound s = (CockBound) getSelf().getStatus(Stsflag.cockbound);
                 c.write(getSelf(), String.format("%s to pull out of %s %s, but %s instantly reacts "
                                 + "and pulls %s dick back in.", getSelf().subjectAction("try", "tries"),
-                                target.nameOrPossessivePronoun(), 
+                                target.nameOrPossessivePronoun(),
                                 target.body.getRandomPussy().describe(target),
                                 s.binding, getSelf().possessiveAdjective()));
                 int m = 8;
                 getSelf().body.pleasure(target, target.body.getRandom("pussy"), getSelf().body.getRandom("cock"), m, c, this);
                 return false;
-            } else 
+            } else
                 writeOutput(c, result, target);
             c.setStance(c.getStance().insertRandom(c));
         }

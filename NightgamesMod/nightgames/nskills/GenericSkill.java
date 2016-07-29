@@ -1,16 +1,12 @@
 package nightgames.nskills;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.requirements.Requirement;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 public class GenericSkill implements SkillInterface {
     List<SkillResult> results;
@@ -69,10 +65,10 @@ public class GenericSkill implements SkillInterface {
 
     @Override
     public boolean resolve(Combat c, Character user, Character target) {
-        double roll = Global.randomdouble();
+        double roll = Global.global.randomdouble();
         Optional<SkillResult> maybeResults = getPossibleResults(c, user, target, roll).stream().max((a, b) -> Integer.compare(a.getPriority(), b.getPriority()));
         if (!maybeResults.isPresent() || maybeResults.get().getPriority() < 0) {
-            c.write(user, Global.format("{self:NAME-POSSESSIVE} %s failed.", user, target, getName()));
+            c.write(user, Global.global.format("{self:NAME-POSSESSIVE} %s failed.", user, target, getName()));
             return false;
         }
         return maybeResults.get().resolve(c, user, target, roll);

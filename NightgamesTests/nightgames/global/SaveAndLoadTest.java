@@ -1,9 +1,12 @@
 package nightgames.global;
 
 import com.google.gson.JsonObject;
-import nightgames.characters.*;
+import nightgames.characters.BlankPersonality;
 import nightgames.characters.Character;
-import org.hamcrest.*;
+import nightgames.characters.Player;
+import org.hamcrest.Description;
+import org.hamcrest.Factory;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,12 +28,12 @@ public class SaveAndLoadTest {
     }
 
     @Test public void testLoadAndSave() throws Exception {
-        Global.load(savePath.toFile());
-        SaveData firstLoadData = Global.saveData();
+        Global.global.load(savePath.toFile());
+        SaveData firstLoadData = Global.global.saveData();
         Path tempSave = Files.createTempFile("", "");
-        Global.save(tempSave.toFile());
-        Global.load(tempSave.toFile());
-        SaveData reloadedData = Global.saveData();
+        Global.global.save(tempSave.toFile());
+        Global.global.load(tempSave.toFile());
+        SaveData reloadedData = Global.global.saveData();
         assertThat(reloadedData.players, equalTo(firstLoadData.players));
         for (Character player : firstLoadData.players) {
             Character reloaded = reloadedData.players.stream().filter(p -> p.equals(player)).findFirst()

@@ -53,7 +53,7 @@ public class FTCEncounter extends Encounter {
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));
         if (p1.human() || p2.human()) {
-            fight = Global.gui().beginCombat(attacker, victim, 0);
+            fight = Global.global.gui().beginCombat(attacker, victim, 0);
             fight.setStance(new Pin(attacker, victim));
             String message = "";
             if (victim.human()) {
@@ -81,9 +81,9 @@ public class FTCEncounter extends Encounter {
                 }
                 message += " you bind {other:possessive} hands together. There are worse" + " ways to start a match.";
             }
-            Global.gui().message(Global.format(message, attacker, victim));
+            Global.global.gui().message(Global.global.format(message, attacker, victim));
         } else {
-            Global.gui().refresh();
+            Global.global.gui().refresh();
             fight = new Combat(attacker, victim, location, 0);
             fight.setStance(new Pin(attacker, victim));
         }
@@ -97,7 +97,7 @@ public class FTCEncounter extends Encounter {
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));
         if (p1.human() || p2.human()) {
-            fight = Global.gui().beginCombat(attacker, victim, 0);
+            fight = Global.global.gui().beginCombat(attacker, victim, 0);
             fight.setStance(new Mount(attacker, victim));
             String message = "";
             if (victim.human()) {
@@ -117,9 +117,9 @@ public class FTCEncounter extends Encounter {
                                 + " Immediately you jump on {other:possessive} back and tie "
                                 + "{other:possessive} hands together.";
             }
-            Global.gui().message(Global.format(message, attacker, victim));
+            Global.global.gui().message(Global.global.format(message, attacker, victim));
         } else {
-            Global.gui().refresh();
+            Global.global.gui().refresh();
             fight = new Combat(attacker, victim, location, 0);
             fight.setStance(new Pin(attacker, victim));
         }
@@ -127,8 +127,9 @@ public class FTCEncounter extends Encounter {
 
     private void passAmbush(Character attacker, Character victim) {
         int attackerScore = 30 + attacker.get(Attribute.Speed) * 10 + attacker.get(Attribute.Perception) * 5
-                        + Global.random(30);
-        int victimScore = victim.get(Attribute.Speed) * 10 + victim.get(Attribute.Perception) * 5 + Global.random(30);
+                        + Global.global.random(30);
+        int victimScore = victim.get(Attribute.Speed) * 10 + victim.get(Attribute.Perception) * 5 + Global.global
+                        .random(30);
         String message = "";
         if (attackerScore > victimScore) {
             if (attacker.human()) {
@@ -144,7 +145,7 @@ public class FTCEncounter extends Encounter {
                                 + " other side. The impact knocks the wind out of you, putting you"
                                 + " at a disadvantage.";
             }
-            fight = Global.gui().beginCombat(attacker, victim);
+            fight = Global.global.gui().beginCombat(attacker, victim);
             victim.addNonCombat(new Flatfooted(victim, 3));
         } else {
             if (attacker.human()) {
@@ -164,11 +165,11 @@ public class FTCEncounter extends Encounter {
                                 + " Then, you throw {self:direct-object} to the side, causing"
                                 + " {self:direct-object} to fall to the ground.";
             }
-            fight = Global.gui().beginCombat(attacker, victim);
+            fight = Global.global.gui().beginCombat(attacker, victim);
             attacker.addNonCombat(new Flatfooted(attacker, 3));
         }
         if (attacker.human() || victim.human()) {
-            Global.gui().message(Global.format(message, attacker, victim));
+            Global.global.gui().message(Global.global.format(message, attacker, victim));
         } else {
 
         }

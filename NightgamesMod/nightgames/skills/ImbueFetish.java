@@ -1,15 +1,15 @@
 package nightgames.skills;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.status.BodyFetish;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ImbueFetish extends Skill {
 
@@ -45,7 +45,7 @@ public class ImbueFetish extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        chosenFetish = Global.pickRandom(
+        chosenFetish = Global.global.pickRandom(
                         POSSIBLE_FETISHES.stream().filter(part -> getSelf().body.has(part)).toArray(String[]::new)).get();
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
@@ -53,7 +53,7 @@ public class ImbueFetish extends Skill {
             c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         target.add(c, new BodyFetish(target, getSelf(), chosenFetish,
-                        Global.randomdouble() * .2 + getSelf().get(Attribute.Fetish) * .01));
+                        Global.global.randomdouble() * .2 + getSelf().get(Attribute.Fetish) * .01));
         chosenFetish = null;
         return true;
     }
@@ -84,7 +84,7 @@ public class ImbueFetish extends Skill {
                         + "strong attraction towards %s.",
                         target.subjectAction("feel"), target.possessiveAdjective(), target.pronoun(),
                         target.action("look"), target.pronoun(), target.action("see"),
-                        Global.capitalizeFirstLetter(target.subjectAction("remove")),
+                        Global.global.capitalizeFirstLetter(target.subjectAction("remove")),
                         target.pronoun(), target.action("look"), getSelf().nameDirectObject(),
                         getSelf().possessiveAdjective(), target.pronoun(), target.action("feel"),
                         chosenFetish);

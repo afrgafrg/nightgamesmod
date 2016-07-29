@@ -32,8 +32,8 @@ public class Piston extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 15 + Global.random(8);
-        int mt = 10 + Global.random(5);
+        int m = 15 + Global.global.random(8);
+        int mt = 10 + Global.global.random(5);
         if (getSelf().has(Trait.experienced)) {
             mt = mt * 2 / 3;
         }
@@ -55,7 +55,7 @@ public class Piston extends Thrust {
             return "You pound " + target.name()
                             + " in the ass. She whimpers in pleasure and can barely summon the strength to hold herself off the floor.";
         } else if (modifier == Result.reverse) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:bounce|bounces} on {other:name-possessive} cock, relentlessly driving you both towards orgasm.",
                             getSelf(), target);
         } else {
@@ -75,14 +75,14 @@ public class Piston extends Thrust {
             return String.format("%s pistons into %s while pushing %s shoulders on the ground; %s tits"
                             + " are shaking above %s head while %s strapon stimulates %s prostate.",
                             getSelf().subject(), target.nameDirectObject(), target.possessiveAdjective(),
-                            getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun(), 
+                            getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective(), getSelf().possessiveAdjective());
         } else if (modifier == Result.reverse) {
             return String.format("%s bounces on %s cock, relentlessly driving %s both toward orgasm.",
-                            getSelf().subject(), target.nameOrPossessivePronoun(), 
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
                             c.bothDirectObject(target));
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:rapidly pound|rapidly pounds} {self:possessive} {self:body-part:cock} into {other:possessive} {other:body-part:pussy}, "
                                             + "relentlessly driving %s toward orgasm.",
                             getSelf(), target, c.bothDirectObject(target));

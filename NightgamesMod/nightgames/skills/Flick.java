@@ -48,10 +48,10 @@ public class Flick extends Skill {
                 writeOutput(c, Result.weak, target);
             } else {
                 int mojoLost = 25;
-                int m = Global.random(8) + 8;
+                int m = Global.global.random(8) + 8;
                 writeOutput(c, Result.normal, target);
                 if (target.has(Trait.achilles)) {
-                    m += 2 + Global.random(target.get(Attribute.Perception) / 2);
+                    m += 2 + Global.global.random(target.get(Attribute.Perception) / 2);
                     mojoLost = 40;
                 }
                 target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));

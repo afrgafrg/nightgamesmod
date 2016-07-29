@@ -73,7 +73,7 @@ public class ToggleSlimePussy extends Skill {
             getSelf().body.add(PussyPart.gooey);
         }
         if (!target.human() || !target.is(Stsflag.blinded))
-            c.write(getSelf(), Global.format(msg, getSelf(), target));
+            c.write(getSelf(), Global.global.format(msg, getSelf(), target));
         else 
             printBlinded(c);
         return true;

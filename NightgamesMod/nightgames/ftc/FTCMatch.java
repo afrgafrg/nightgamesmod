@@ -1,21 +1,17 @@
 package nightgames.ftc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Match;
 import nightgames.global.MatchType;
 import nightgames.items.Item;
 import nightgames.modifier.standard.FTCModifier;
+
+import java.util.*;
 
 public class FTCMatch extends Match {
     private Map<Character, Area> bases;
@@ -25,7 +21,7 @@ public class FTCMatch extends Match {
     private int flagCounter;
 
     { // To prevent uninitalized comparison in manageConditions
-        prey = Global.noneCharacter();
+        prey = NPC.NONE_CHARACTER;
         gracePeriod = -1;
     }
     
@@ -72,13 +68,13 @@ public class FTCMatch extends Match {
     @Override
     public void end() {
         super.end();
-        Global.unflag(Flag.FTC);
+        Global.global.unflag(Flag.FTC);
         combatants.forEach(c -> c.remove(Item.Flag));
     }
 
     @Override
     public void manageConditions(Character ch) {
-        if (Global.getMatch() == this)
+        if (Global.global.getMatch() == this)
             super.manageConditions(ch);
         if (ch.equals(prey)) {
             if (gracePeriod > 0)
@@ -86,7 +82,7 @@ public class FTCMatch extends Match {
             if (ch.has(Item.Flag) && gracePeriod == 0 && (++flagCounter % 3) == 0) {
                 score(ch, 1);
                 if (ch.human()) {
-                    Global.gui().message("You scored one point for holding the flag.");
+                    Global.global.gui().message("You scored one point for holding the flag.");
                 }
             }
         }
@@ -219,8 +215,8 @@ public class FTCMatch extends Match {
     public void turnInFlag(Character ch) {
         flagInCenter = true;
         score(ch, 5);
-        Global.gui().message(Global.format("<b>{self:SUBJECT-ACTION:turn|turns} in the flag and "
-                        + "{self:action:gain|gains} five points.</b>", ch, Global.noneCharacter()));
+        Global.global.gui().message(Global.global.format("<b>{self:SUBJECT-ACTION:turn|turns} in the flag and "
+                        + "{self:action:gain|gains} five points.</b>", ch, NPC.NONE_CHARACTER));
         ch.remove(Item.Flag);
     }
 
@@ -232,9 +228,10 @@ public class FTCMatch extends Match {
         flagInCenter = false;
         gracePeriod = 3;
         flagCounter = 0;
-        Global.gui().message(Global.format("{self:SUBJECT-ACTION:grab|grabs} a new flag from the stash. That means"
+        Global.global.gui().message(Global.global
+                        .format("{self:SUBJECT-ACTION:grab|grabs} a new flag from the stash. That means"
                         + " {self:pronoun} cannot be attacked for two turns, so {self:pronoun}"
-                        + " {self:action:have|has} a chance to hide.", prey, Global.noneCharacter()));
+                                        + " {self:action:have|has} a chance to hide.", prey, NPC.NONE_CHARACTER));
         prey.gain(Item.Flag);
     }
 

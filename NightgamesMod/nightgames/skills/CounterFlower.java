@@ -11,8 +11,8 @@ import nightgames.stance.FlowerSex;
 
 public class CounterFlower extends CounterBase {
     public CounterFlower(Character self) {
-        super("Flower Counter", self, 5,
-                        Global.format("<b>The giant flower at the base of {self:name-possessive} legs are open, with the petals waving invitingly.</b>",
+        super("Flower Counter", self, 5, Global.global.format(
+                        "<b>The giant flower at the base of {self:name-possessive} legs are open, with the petals waving invitingly.</b>",
                                         self, self),
                         2);
         addTag(SkillTag.fucking);
@@ -22,7 +22,7 @@ public class CounterFlower extends CounterBase {
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.randomfloat() * 2;
+        return Global.global.randomfloat() * 2;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class CounterFlower extends CounterBase {
 
     @Override
     public String getBlockedString(Combat c, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:block|blocks} {other:name-possessive} assault with a vine and {self:action:shoot|shoots} out {self:possessive} vines to drag {other:direct-object} into {self:possessive} flower. "
                                         + "However, {other:subject-action:were|was} wary of {self:direct-object} and {other:action:jump|jumps} back before {self:subject} can catch {other:direct-object}.",
                         getSelf(), target);
@@ -92,15 +92,15 @@ public class CounterFlower extends CounterBase {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup) {
-            return Global.format("You open up the flower at the base of your legs and get ready for a counter.",
+            return Global.global.format("You open up the flower at the base of your legs and get ready for a counter.",
                             getSelf(), target);
         } else if (modifier == Result.miss) {
-            return Global.format(
+            return Global.global.format(
                             "You shoot out your vines and drag {other:name-do} into your flower. You urge {other:possessive} hips forward into yours, but "
                                             + "you discover that you do not have the right equipment for the job. Whoops!",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "You shoot out your vines and drag {other:name-do} into your flower. You shove {other:possessive} face between your breasts "
                                             + "and {other:possessive} cock inside your drenched flower cunt. "
                                             + "With a quick flick of your mind, you close the petals of your outer flower around yourselves, trapping {other:name} and you inside."
@@ -112,18 +112,18 @@ public class CounterFlower extends CounterBase {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} giggles softly and opens the flower at the base of {self:possessive} legs invitingly.",
                             getSelf(), target);
         } else if (modifier == Result.miss) {
-            return Global.format(
+            return Global.global.format(
                             "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
                             + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
                             + " {self:PRONOUN} forces {other:possessive} hips forward before frowning"
                             + " when she discovers {other:pronoun-action:don't|doesn't} have the right equipment.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
                             + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
                             + "{self:PRONOUN} coils her limbs around {other:possessive}s, forcing {other:possessive}"

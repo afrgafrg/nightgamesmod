@@ -1,6 +1,7 @@
 package nightgames.characters;
 
-import nightgames.items.clothing.Clothing;
+import nightgames.global.Global;
+import nightgames.global.TestGlobal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -9,7 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests relating to the Player character class.
@@ -18,7 +20,7 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
     @BeforeClass public static void setUpPlayerTest() {
-        Clothing.buildClothingTable();
+        Global.global = new TestGlobal();
     }
 
     @Test public void testStartGenitals() throws Exception {

@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
@@ -16,7 +15,7 @@ public class SlimeMimicry extends DurationStatus {
     private final CockMod cockMimicked;
 
     public SlimeMimicry(String name, PussyPart pussyMimicked, CockMod cockMimicked, Character affected, int duration) {
-        super("Mimicry: " + Global.capitalizeFirstLetter(name), affected, duration);
+        super("Mimicry: " + Global.global.capitalizeFirstLetter(name), affected, duration);
         this.mimickedName = name;
         this.pussyMimicked = pussyMimicked;
         this.cockMimicked = cockMimicked;
@@ -34,12 +33,12 @@ public class SlimeMimicry extends DurationStatus {
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return Global.format("{self:SUBJECT} started mimicking a %s.", affected, c.getOpponent(affected), mimickedName);
+        return Global.global.format("{self:SUBJECT} started mimicking a %s.", affected, c.getOpponent(affected), mimickedName);
     }
 
     @Override
     public String describe(Combat c) {
-    	return Global.format("{self:SUBJECT-ACTION:are|is} mimicking a %s.", affected, c.getOpponent(affected), mimickedName);
+    	return Global.global.format("{self:SUBJECT-ACTION:are|is} mimicking a %s.", affected, c.getOpponent(affected), mimickedName);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class FTCModifier extends BaseModifier {
     }
 
     // NOTE: scenes are in nightgames.ftc.FTCPrematch
-    // This Modifier should not be in Global.modifierPool
+    // This Modifier should not be in Global.global.modifierPool
 
     @Override
     public String intro() {

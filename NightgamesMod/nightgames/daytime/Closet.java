@@ -16,10 +16,10 @@ public class Closet extends Activity {
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
         if (choice.equals("Start")) {
-            Global.gui().changeClothes(player, this, "Back");
+            Global.global.gui().changeClothes(player, this, "Back");
         } else {
             done(false);
         }

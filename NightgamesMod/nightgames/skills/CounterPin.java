@@ -9,13 +9,13 @@ import nightgames.nskills.tags.SkillTag;
 
 public class CounterPin extends CounterBase {
     public CounterPin(Character self) {
-        super("Counter", self, 4, Global.format("{self:SUBJECT-ACTION:hold|holds} a low stance.", self, self));
+        super("Counter", self, 4, Global.global.format("{self:SUBJECT-ACTION:hold|holds} a low stance.", self, self));
         addTag(SkillTag.positioning);
     }
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.randomfloat();
+        return Global.global.randomfloat();
     }
 
     @Override
@@ -57,7 +57,8 @@ public class CounterPin extends CounterBase {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
-            return Global.format("You shift into a low stance, beckoning her inside your reach.", getSelf(), target);
+            return Global.global
+                            .format("You shift into a low stance, beckoning her inside your reach.", getSelf(), target);
         } else {
             return "";
         }
@@ -66,7 +67,8 @@ public class CounterPin extends CounterBase {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
-            return Global.format("Eyeing {other:name-do} carefully, {self:SUBJECT} shifts to a low stance.", getSelf(), target);
+            return Global.global
+                            .format("Eyeing {other:name-do} carefully, {self:SUBJECT} shifts to a low stance.", getSelf(), target);
         } else {
             return "";
         }

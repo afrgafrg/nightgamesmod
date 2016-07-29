@@ -43,13 +43,13 @@ public class EngulfedFuck extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         Pairing pair = Pairing.findPairing(getSelf(), target);
-        double base = 20.0 + Global.random(getSelf().get(Attribute.Slime) + getSelf().get(Attribute.Seduction) / 2);
+        double base = 20.0 + Global.global
+                        .random(getSelf().get(Attribute.Slime) + getSelf().get(Attribute.Seduction) / 2);
         int selfDmg = (int) ((base * pair.modPleasure(true)) / (getSelf().has(Trait.experienced) ? 2.0 : 3.0));
         int targetDmg = (int) (base * pair.modPleasure(false));
         switch (pair) {
             case ASEX_MALE:
-                c.write(getSelf(),
-                                Global.format("{self:SUBJECT-ACTION:wrap|wraps} {other:name-possessive}"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:wrap|wraps} {other:name-possessive}"
                                                 + " {other:body-part:cock} in a clump of slime molded after {self:possessive} ass"
                                                 + " and {self:action:pump|pumps} it furiously.", getSelf(), target));
                 target.body.pleasure(getSelf(), getSelf().body.getRandomAss(), target.body.getRandomCock(), targetDmg,
@@ -57,8 +57,7 @@ public class EngulfedFuck extends Skill {
                 getSelf().body.pleasure(target, target.body.getRandomCock(), getSelf().body.getRandomAss(), selfDmg, c, this);
                 break;
             case FEMALE_HERM:
-                c.write(getSelf(),
-                                Global.format("{self:SUBJECT-ACTION:impale|impales} {self:reflective} on"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:impale|impales} {self:reflective} on"
                                                 + " {other:name-possessive} {other:body-part:cock} and {self:action:bounce|bounces} wildly,"
                                                 + " filling {other:direct-object} with pleasure. At the same time, {self:pronoun} "
                                                 + "{self:action:twiddle|twiddles} {other:possessive} clit with {self:possessive} fingers.",
@@ -71,8 +70,7 @@ public class EngulfedFuck extends Skill {
                                 c, this);
                 break;
             case FEMALE_MALE:
-                c.write(getSelf(),
-                                Global.format("{self:SUBJECT-ACTION:impale|impales} {self:reflective} on"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:impale|impales} {self:reflective} on"
                                                 + " {other:name-possessive} {other:body-part:cock} and {self:action:bounce|bounces} wildly,"
                                                 + " filling {other:direct-object} with pleasure.", getSelf(), target));
                 target.body.pleasure(getSelf(), getSelf().body.getRandomPussy(), target.body.getRandomCock(), targetDmg,
@@ -82,8 +80,7 @@ public class EngulfedFuck extends Skill {
                 break;
             case HERM_ASEX:
             case MALE_ASEX:
-                c.write(getSelf(),
-                                Global.format("Despite not having much to work with, {self:subject} still"
+                c.write(getSelf(), Global.global.format("Despite not having much to work with, {self:subject} still"
                                                 + " {self:action:manage|manages} to make {other:subject} squeal by pounding {other:name-possessive}"
                                                 + " {other:body-part:ass} with {self:possessive} {self:body-part:cock}.",
                                 getSelf(), target));
@@ -92,8 +89,7 @@ public class EngulfedFuck extends Skill {
                 getSelf().body.pleasure(target, target.body.getRandomAss(), getSelf().body.getRandomCock(), selfDmg, c, this);
                 break;
             case HERM_FEMALE:
-                c.write(getSelf(),
-                                Global.format("{self:SUBJECT-ACTION:pound|pounds} {other:name-possessive} "
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:pound|pounds} {other:name-possessive} "
                                                 + "{other:body-part:pussy} with vigor, at the same time fingering {other:possessive}"
                                                 + " ass.", getSelf(), target));
                 target.body.pleasure(getSelf(), getSelf().body.getRandomCock(), target.body.getRandomPussy(),
@@ -104,8 +100,8 @@ public class EngulfedFuck extends Skill {
                                 c, this);
                 break;
             case HERM_HERM:
-                c.write(getSelf(),
-                                Global.format("It takes some clever maneuvering, but {self:SUBJECT-ACTION:manage|manages}"
+                c.write(getSelf(), Global.global.format(
+                                "It takes some clever maneuvering, but {self:SUBJECT-ACTION:manage|manages}"
                                                 + " to line {other:name-do} and {self:direct-object} up perfectly. When"
                                                 + " {self:pronoun} {self:action:strike|strikes}, {other:possessive} {other:body-part:cock} ends up"
                                                 + " in {self:possessive} {self:body-part:pussy}, and {self:body-part:cock} in {other:possessive}"
@@ -122,8 +118,7 @@ public class EngulfedFuck extends Skill {
                                 selfDmg / 2, c, this);
                 break;
             case HERM_MALE:
-                c.write(getSelf(),
-                                Global.format("{self:SUBJECT-ACTION:lower|lowers} {self:possessive}"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:lower|lowers} {self:possessive}"
                                                 + " {self:body-part:pussy} down on {other:name-possessive} {other:body-part:cock}."
                                                 + " While slowly fucking {other:direct-object}, {self:pronoun} {self:action:move|moves}"
                                                 + " {self:possessive} {self:body-part:cock} to the entrance of {other:possessive} ass."
@@ -153,7 +148,7 @@ public class EngulfedFuck extends Skill {
                     msg += " At the same time, {self:pronoun} {self:action:use:uses} both of {self:possessive}"
                                     + " hands to pump {other:possessive} {other:body-part:cock}.";
                 }
-                c.write(getSelf(), Global.format(msg, getSelf(), target));
+                c.write(getSelf(), Global.global.format(msg, getSelf(), target));
                 if (pair == Pairing.MALE_HERM) {
                     target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandomCock(),
                                     targetDmg / 2, c, this);

@@ -21,16 +21,16 @@ public class Resupply extends Action {
 
     @Override
     public boolean usable(Character user) {
-        return  !user.bound() && user.location().resupply() || user.has(Trait.immobile)
-                        || (Global.checkFlag(Flag.FTC) && ((FTCMatch) Global.getMatch()).isBase(user, user.location()));
+        return  !user.bound() && user.location().resupply() || user.has(Trait.immobile) || (Global.global.checkFlag(Flag.FTC)
+                        && ((FTCMatch) Global.global.getMatch()).isBase(user, user.location()));
     }
 
     @Override
     public Movement execute(Character user) {
-        if (Global.checkFlag(Flag.FTC)) {
-            FTCMatch match = (FTCMatch) Global.getMatch();
+        if (Global.global.checkFlag(Flag.FTC)) {
+            FTCMatch match = (FTCMatch) Global.global.getMatch();
             if (user.human()) {
-                Global.gui().message("You get a change of clothes from the chest placed here.");
+                Global.global.gui().message("You get a change of clothes from the chest placed here.");
             }
             if (user.has(Item.Flag) && !match.isPrey(user)) {
                 match.turnInFlag(user);
@@ -39,11 +39,11 @@ public class Resupply extends Action {
             }
         } else {
             if (user.human()) {
-                if (Global.getMatch().condition.name().equals("nudist")) {
-                    Global.gui().message(
+                if (Global.global.getMatch().condition.name().equals("nudist")) {
+                    Global.global.gui().message(
                                     "You check in so that you're eligible to fight again, but you still don't get any clothes.");
                 } else {
-                    Global.gui().message("You pick up a change of clothes and prepare to get back in the fray.");
+                    Global.global.gui().message("You pick up a change of clothes and prepare to get back in the fray.");
                 }
             }
         }

@@ -29,7 +29,7 @@ public class Finger extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = Global.random(8, 13);
+            int m = Global.global.random(8, 13);
             if (getSelf().get(Attribute.Seduction) >= 8) {
                 m += 6;
                 if (getSelf().human()) {

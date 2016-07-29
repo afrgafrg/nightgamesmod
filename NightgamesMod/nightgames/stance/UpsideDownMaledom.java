@@ -89,12 +89,12 @@ public class UpsideDownMaledom extends MaledomSexStance {
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
             if (bottom.human()) {
-                c.write(bottom, Global.format(
+                c.write(bottom, Global.global.format(
                                 "Summoning your remaining strength, you hold your arms up against the floor and use your hips to tip {other:name-do} off-balance with {other:possessive} dick still held inside of you. "
                                                 + "{other:SUBJECT} lands on the floor with you on top of {other:direct-object} in a reverse cow-girl.",
                                 bottom, top));
             } else {
-                c.write(bottom, Global.format(
+                c.write(bottom, Global.global.format(
                                 "{self:SUBJECT} suddenly pushes against the floor and knocks you to the ground with {self:possessive} hips. "
                                                 + "You land on the floor with {self:direct-object} on top of you with in a reverse cow-girl position.",
                                 bottom, top));

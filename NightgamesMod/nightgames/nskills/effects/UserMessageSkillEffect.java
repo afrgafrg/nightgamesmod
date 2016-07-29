@@ -15,7 +15,7 @@ public class UserMessageSkillEffect implements SkillEffect {
     public boolean apply(SkillResultStruct results) {
         Character self = results.getSelf().getCharacter();
         Character other = results.getOther().getCharacter();
-        results.getCombat().write(self, Global.format(message, self, other));
+        results.getCombat().write(self, Global.global.format(message, self, other));
         return true;
     }
 

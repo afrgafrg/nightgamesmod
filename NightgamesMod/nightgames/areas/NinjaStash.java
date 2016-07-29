@@ -1,10 +1,10 @@
 package nightgames.areas;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Character;
 import nightgames.global.Global;
 import nightgames.items.Item;
+
+import java.util.ArrayList;
 
 public class NinjaStash implements Deployable {
 
@@ -15,7 +15,7 @@ public class NinjaStash implements Deployable {
         this.owner = owner;
         contents = new ArrayList<Item>();
         for(int i=0; i<4; i++){
-            switch(Global.random(3)){
+            switch (Global.global.random(3)) {
             case 0:
                 contents.add(Item.Needle);
                 contents.add(Item.Needle);
@@ -29,7 +29,8 @@ public class NinjaStash implements Deployable {
     @Override
     public boolean resolve(Character active) {
         if(owner==active&&active.human()){
-            Global.gui().message("You have a carefully hidden stash of emergency supplies here. You can replace your clothes and collect the items if you need to.");
+            Global.global.gui()
+                            .message("You have a carefully hidden stash of emergency supplies here. You can replace your clothes and collect the items if you need to.");
         }
         return false;
     }

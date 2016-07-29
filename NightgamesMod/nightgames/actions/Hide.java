@@ -24,7 +24,7 @@ public class Hide extends Action {
     @Override
     public Movement execute(Character user) {
         if (user.human()) {
-            Global.gui().message("You find a decent hiding place and wait for unwary opponents.");
+            Global.global.gui().message("You find a decent hiding place and wait for unwary opponents.");
         }
         user.state = State.hidden;
         return Movement.hide;

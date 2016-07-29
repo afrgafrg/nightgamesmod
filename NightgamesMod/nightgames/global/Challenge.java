@@ -1,7 +1,5 @@
 package nightgames.global;
 
-import java.util.ArrayList;
-
 import nightgames.areas.Deployable;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
@@ -9,6 +7,8 @@ import nightgames.characters.State;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
+
+import java.util.ArrayList;
 
 public class Challenge implements Deployable {
     private Character owner;
@@ -37,7 +37,7 @@ public class Challenge implements Deployable {
         }
         available.add(GOAL.pendomwin);
         available.add(GOAL.subwin);
-        return available.get(Global.random(available.size()));
+        return available.get(Global.global.random(available.size()));
     }
 
     public String message() {
@@ -130,17 +130,19 @@ public class Challenge implements Deployable {
     public boolean resolve(Character active) {
         if (active.state == State.ready) {
             owner = active;
-            target = Global.getMatch().combatants.get(Global.random(Global.getMatch().combatants.size() - 1));
+            target = Global.global.getMatch().combatants
+                            .get(Global.global.random(Global.global.getMatch().combatants.size() - 1));
             for (int i = 0; i < 10 && target == active; i++) {
-                target = Global.getMatch().combatants.get(Global.random(Global.getMatch().combatants.size() - 1));
+                target = Global.global.getMatch().combatants
+                                .get(Global.global.random(Global.global.getMatch().combatants.size() - 1));
             }
             if (target == active) {
                 return false;
             }
             goal = pick();
             if (active.human()) {
-                Global.gui().message("You find a gold envelope sitting conspicously in the middle of the "
-                                + Global.getMatch().genericRoomDescription()
+                Global.global.gui().message("You find a gold envelope sitting conspicously in the middle of the "
+                                + Global.global.getMatch().genericRoomDescription()
                                 + ". You open it up and read the note inside.\n'" + message() + "'\n");
             }
             active.location().remove(this);

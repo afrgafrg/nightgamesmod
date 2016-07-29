@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -69,7 +68,7 @@ public class DivineCharge extends Status {
     @Override
     public String describe(Combat c) {
         return "Concentrated divine energy surges through " + affected.nameOrPossessivePronoun() + " " + getPart(c)
-                        + " (" + Global.formatDecimal(magnitude) + ").";
+                        + " (" + Global.global.formatDecimal(magnitude) + ").";
     }
 
     @Override

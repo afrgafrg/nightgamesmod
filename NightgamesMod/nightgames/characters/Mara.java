@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.FacePart;
 import nightgames.characters.body.PussyPart;
@@ -23,6 +20,9 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Oiled;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public class Mara extends BasePersonality {
     /**
      *
@@ -42,9 +42,9 @@ public class Mara extends BasePersonality {
         super("Mara", 1, charConfig, commonConfig, true);
         constructLines();
     }
-    
+
     private void constructLines () {
-        character.addLine(CharacterLine.BB_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.BB_LINER, (c, self, other) -> {
             return "Mara gives you a look of not quite genuine concern. <i>\"That must have really hurt. Sorry for scrambling your eggs. I feel really bad about that. Also for "
                             + "lying just now. I'm not actually that sorry.\"</i>";
         });
@@ -52,23 +52,23 @@ public class Mara extends BasePersonality {
             return "{self:SUBJECT} smiles and faces {other:name-do}, practically daring {other:direct-object} to attack.";
         });
 
-        character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> {
             return "Mara gives an exaggerated squeal and covers herself. <i>\"You brute! You rapist! What are you trying to do to a helpless, innocent girl?\"</i>";
          });
 
-        character.addLine(CharacterLine.STUNNED_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.STUNNED_LINER, (c, self, other) -> {
             return "Mara lets out a slightly pained whimper. <i>\"Go easy on me. I'm not really the masochistic type.\"</i>";
          });
 
-        character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> {
             return "<i>\"If you want me to get you off so badly,\"</i> Mara teases coyly. <i>\"You should have just said so from the start. You don't need to put up this token resistance.\"</i>";
          });
 
-        character.addLine(CharacterLine.TEMPT_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.TEMPT_LINER, (c, self, other) -> {
             return "<i>\"If you want me to get you off so badly,\"</i> Mara teases coyly. <i>\"You should have just said so from the start. You don't need to put up this token resistance.\"</i>";
          });
 
-        character.addLine(CharacterLine.NIGHT_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.NIGHT_LINER, (c, self, other) -> {
             return "On your way back to your dorm after the match, you feel a sudden weight on your back that almost knocks you off your feet. It turns out to be Mara, who jumped "
                             + "on your back in her enthusiasm to spend the night together. You give her a piggyback ride back to the dorm, and per her request, head up to the roof. Unsurprisingly, "
                             + "there's no one here this late at night and there's a good view of the stars. Mara strips off her clothes and dances naked onto the rooftop. <i>\"There's nothing like "
@@ -82,7 +82,7 @@ public class Mara extends BasePersonality {
                             + "before morning.";
          });
 
-        character.addLine(CharacterLine.ORGASM_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.ORGASM_LINER, (c, self, other) -> {
             final String finalLines[] =
                             {"<i>\"NNnnnn..! Oh man I can't take much more!\"</i>", "<i>\"Ngh! Slow down! please!\"</i>",
                                             "Mara groans as her climax subsides, <i>\"Again! I deman a rematch!\"</i>",};
@@ -99,7 +99,7 @@ public class Mara extends BasePersonality {
              }
          });
 
-        character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> { 
+        character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> {
             final String finalLines[] = {"<i>\"Cumming again? You " + other.boyOrGirl() + "s are too easy.\"</i>",
                             "<i>\"You're simply inexhaustible aren't you? Let's test that theory... for science.\"</i>",
                             "Mara laughs triumphantly, <i>\"Again! Again!\"</i>",};
@@ -160,7 +160,7 @@ public class Mara extends BasePersonality {
         self.getArousal().setMax(80);
         self.getMojo().setMax(120);
 
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.setTrophy(Item.MaraTrophy);
         self.body.add(new FacePart(.1, 1.1));
         self.initialGender = CharacterSex.female;
@@ -174,9 +174,9 @@ public class Mara extends BasePersonality {
         character.getGrowth().bonusArousal = 2;
 
         character.addCombatScene(new CombatScene(
-                        (c, self, other) -> self.getLevel() >= 10 && !Global.checkFlag(MARA_GENERAL_TECH_FOCUS)
-                                        && !Global.checkFlag(MARA_HARPOON_FOCUS),
-                        (c, self, other) -> Global.format(
+                        (c, self, other) -> self.getLevel() >= 10 && !Global.global.checkFlag(MARA_GENERAL_TECH_FOCUS)
+                                        && !Global.global.checkFlag(MARA_HARPOON_FOCUS),
+                        (c, self, other) -> Global.global.format(
                                         "You see {self:name} fiddling with the device on her arm"
                                                         + " as you both recover from your match. <i>\"Damn thing is on the fritz"
                                                         + " again... Let me just...\"</i> A shrill beep sounds, and something"
@@ -186,7 +186,7 @@ public class Mara extends BasePersonality {
                                                         + " one really fancy toy, or should I divide my time over several simpeler ones?",
                                         self, other),
                         Arrays.asList(new CombatSceneChoice("Quality", (c, self, other) -> {
-                            c.write(Global.format(
+                            c.write(Global.global.format(
                                             "You tell {self:direct-object} there would be no point to slavering"
                                                             + " away on mediocre devices. Instead, {self:pronoun} should devote {self:reflective}"
                                                             + " to one, truly inspired invention to show {self:possessive} true prowess."
@@ -204,7 +204,7 @@ public class Mara extends BasePersonality {
                             useHarpoon();
                             return true;
                         }), new CombatSceneChoice("Quantity", (c, self, other) -> {
-                            c.write(Global.format(
+                            c.write(Global.global.format(
                                             "You weigh in that one toy, no matter how good it is,"
                                                             + " is bound to get boring eventually. Instead, {self:pronoun}"
                                                             + " should create a more diverse arsenal. \"<i>Interesting... I"
@@ -216,7 +216,7 @@ public class Mara extends BasePersonality {
                             useGeneralTech();
                             return true;
                         }), new CombatSceneChoice("You have faith she can do both [Hard Mode]", (c, self, other) -> {
-                            c.write(Global.format(
+                            c.write(Global.global.format(
                                             "{self:name} is a genius. Surely, if anyone"
                                                             + " could create a true masterpiece and still have time"
                                                             + " left for side projects, it would be her. <i>\"Aww, flatterer!"
@@ -233,22 +233,22 @@ public class Mara extends BasePersonality {
                             useGeneralTech();
                             useHarpoon();
                             character.getGrowth().extraAttributes += 1;
-                            Global.getPlayer()
-                                  .getGrowth().addTraitPoints(new int[] {12, 39}, Global.getPlayer());
+                            Global.global.getPlayer()
+                                  .getGrowth().addTraitPoints(new int[] {12, 39}, Global.global.getPlayer());
                             return true;
                         }))));
 
         character.addCombatScene(new CombatScene(
-                        (c, self, other) -> self.getLevel() >= 10 && !Global.checkFlag(MARA_OCTO_FOCUS)
-                                        && !Global.checkFlag(MARA_MIND_CONTROL_FOCUS),
-                        (c, self, other) -> Global.format(
+                        (c, self, other) -> self.getLevel() >= 10 && !Global.global.checkFlag(MARA_OCTO_FOCUS)
+                                        && !Global.global.checkFlag(MARA_MIND_CONTROL_FOCUS),
+                        (c, self, other) -> Global.global.format(
                                         "You and {self:name} are both getting back up after your match,"
                                                         + " cleaning yourselves as much as possible before moving on. <i>\"Hey, {other:name}."
                                                         + " Perhaps you can help settle a little dispute I've been having with a friend."
                                                         + " Who's better: Mesmero, or Doctor Octopus?\"</i>",
                                         self, other),
                         Arrays.asList(new CombatSceneChoice("Mesmero", (c, self, other) -> {
-                            c.write(Global.format(
+                            c.write(Global.global.format(
                                             "You don't know why, but the idea of mind control has always"
                                                             + " turned you on. You answer {self:name} confidently, and are met"
                                                             + " with a wide grin. <i>\"Ohhh, just what I thought. You want someone"
@@ -261,7 +261,7 @@ public class Mara extends BasePersonality {
                             useMindControl();
                             return true;
                         }), new CombatSceneChoice("Doctor Octopus", (c, self, other) -> {
-                            c.write(Global.format(
+                            c.write(Global.global.format(
                                             "Oh, that's no contest! The good doctor could probably engineer"
                                                             + " one of his arms to block mind control, and then still have more"
                                                             + " left to deal with his enemies. <i>\"Interesting. Yes, I can see"
@@ -276,7 +276,7 @@ public class Mara extends BasePersonality {
                             return true;
                         }), new CombatSceneChoice("What are these strange things you speak of? [Hard Mode]",
                                         (c, self, other) -> {
-                                            c.write(Global.format(
+                                            c.write(Global.global.format(
                                                             "<i>\"{other:name}. Seriously. You are going to need a crash course"
                                                                             + " in comic books, my friend. This cannot stand. But since your feeble"
                                                                             + " mind obviously cannot comprehend this most fascinating art form, I'm"
@@ -292,8 +292,8 @@ public class Mara extends BasePersonality {
                                             useMindControl();
                                             useOcto();
                                             character.getGrowth().extraAttributes += 1;
-                                            Global.getPlayer()
-                                                  .getGrowth().addTraitPoints(new int[] {21, 48}, Global.getPlayer());
+                                            Global.global.getPlayer()
+                                                  .getGrowth().addTraitPoints(new int[] {21, 48}, Global.global.getPlayer());
                                             return true;
                                         }))));
 
@@ -327,7 +327,7 @@ public class Mara extends BasePersonality {
     }
 
     private void useGeneralTech() {
-        Global.flag(MARA_GENERAL_TECH_FOCUS);
+        Global.global.flag(MARA_GENERAL_TECH_FOCUS);
         character.getGrowth().addTrait(10, Trait.bomber);
         character.getGrowth().addTrait(19, Trait.maglocks);
         character.getGrowth().addTrait(26, Trait.trainingcollar);
@@ -335,7 +335,7 @@ public class Mara extends BasePersonality {
     }
 
     private void useHarpoon() {
-        Global.flag(MARA_HARPOON_FOCUS);
+        Global.global.flag(MARA_HARPOON_FOCUS);
         character.getGrowth().addTrait(10, Trait.harpoon);
         character.getGrowth().addTrait(19, Trait.yank);
         character.getGrowth().addTrait(26, Trait.conducivetoy);
@@ -343,18 +343,18 @@ public class Mara extends BasePersonality {
     }
 
     private void useOcto() {
-        Global.flag(MARA_OCTO_FOCUS);
+        Global.global.flag(MARA_OCTO_FOCUS);
         character.getGrowth().addTrait(20, Trait.octo); // upgrades itself (in RoboArmManager)
     }
 
     private void useMindControl() {
-        Global.flag(MARA_MIND_CONTROL_FOCUS);
+        Global.global.flag(MARA_MIND_CONTROL_FOCUS);
         character.getGrowth().addTrait(20, Trait.mindcontroller);
         character.getGrowth().addTrait(29, Trait.infrasound);
         character.getGrowth()
                  .addClothing(29, Clothing.getByID("infrasoundnecklace"));
         character.getGrowth().addTrait(40, Trait.ControlledRelease);
-        if (Global.checkFlag(MARA_GENERAL_TECH_FOCUS)) {
+        if (Global.global.checkFlag(MARA_GENERAL_TECH_FOCUS)) {
             character.getGrowth().addTrait(53, Trait.RemoteControl);
         } else {
             character.getGrowth().addTrait(53, Trait.EyeOpener);
@@ -395,39 +395,39 @@ public class Mara extends BasePersonality {
             character.money -= 600;
         }
         if (character.money > 0 && character.rank >= 1) {
-            Global.getDay()
-                  .visit("Body Shop", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Body Shop", character, Global.global.random(character.money));
         }
         if (character.money > 0 && character.rank >= 1) {
-            Global.getDay()
-                  .visit("Workshop", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Workshop", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Hardware Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Black Market", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Bookstore", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
-                Global.getDay()
+                Global.global.getDay()
                       .visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay()
+                Global.global.getDay()
                       .visit("Browse Porn Sites", this.character, 0);
             }
         }
@@ -715,9 +715,9 @@ public class Mara extends BasePersonality {
                             target.name(), target.name(), target.name(), target.possessiveAdjective(),
                             target.possessiveAdjective(), target.possessiveAdjective(), target.name(), target.pronoun(),
                             target.possessiveAdjective(), target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
+                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
                             target.possessiveAdjective(), target.directObject(), target.pronoun(),
-                            Global.capitalizeFirstLetter(target.possessiveAdjective()));
+                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()));
         }
         return "Mara approaches " + target.name()
                         + " like a panther claiming its prey. She runs her fingers down the length of " + target.name()

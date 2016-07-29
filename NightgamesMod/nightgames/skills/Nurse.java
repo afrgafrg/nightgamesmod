@@ -50,7 +50,7 @@ public class Nurse extends Skill {
         boolean special = c.getStance().en != Stance.nursing && !c.getStance().havingSex(c);
         writeOutput(c, special ? Result.special : Result.normal, target);
         if (getSelf().has(Trait.lactating) && !target.is(Stsflag.suckling) && !target.is(Stsflag.wary)) {
-            c.write(target, Global.format(
+            c.write(target, Global.global.format(
                             "{other:SUBJECT-ACTION:are|is} a little confused at the sudden turn of events, but after milk starts flowing into {other:possessive} mouth, {other:pronoun} can't help but continue to suck on {self:possessive} teats.",
                             getSelf(), target));
             target.add(c, new Suckling(target, getSelf(), 4));
@@ -63,7 +63,7 @@ public class Nurse extends Skill {
             new Suckle(target).resolve(c, getSelf());
             getSelf().emote(Emotion.dominant, 10);
         }
-        if (Global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), BreastsPart.a.getType(), .25));
         }
         return true;

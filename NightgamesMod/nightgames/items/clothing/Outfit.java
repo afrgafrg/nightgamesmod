@@ -1,27 +1,16 @@
 package nightgames.items.clothing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Outfit {
     private Map<ClothingSlot, List<Clothing>> outfit;
@@ -47,7 +36,7 @@ public class Outfit {
     public Collection<Clothing> getAll() {
         return outfit.values().stream().flatMap(List::stream).filter(c -> c != null).collect(Collectors.toSet());
     }
-    
+
     public boolean slotOpen(ClothingSlot slot) {
         return outfit.get(slot).isEmpty() || !outfit.get(slot).stream()
                         .anyMatch(article -> article != null && !article.is(ClothingTrait.open));
@@ -135,7 +124,7 @@ public class Outfit {
         Collections.shuffle(slotsAvailable);
         return slotsAvailable.get(0);
     }
-    
+
     public Collection<Clothing> getArticlesWithTrait(ClothingTrait attribute) {
         return equipped.stream().filter(article -> article.is(attribute)).collect(Collectors.toSet());
     }
@@ -310,13 +299,13 @@ public class Outfit {
             }
         }
         sb.append("<br/>");
-        if (Global.isDebugOn(DebugFlags.DEBUG_CLOTHING)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_CLOTHING)) {
             for (Clothing article : equipped) {
                 sb.append(article);
                 sb.append("<br/>");
             }
         }
-        return Global.capitalizeFirstLetter(Global.format(sb.toString(), c, c));
+        return Global.global.capitalizeFirstLetter(Global.global.format(sb.toString(), c, c));
     }
 
     public boolean isNude() {

@@ -42,7 +42,7 @@ public class ShrinkRay extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
-        boolean permanent = Global.random(20) == 0 && (getSelf().human() || target.human())
+        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || target.human())
                         && !target.has(Trait.stableform);
         if (getSelf().human()) {
             if (target.hasDick()) {

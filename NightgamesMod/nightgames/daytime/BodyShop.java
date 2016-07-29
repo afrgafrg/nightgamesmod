@@ -1,23 +1,15 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.AnalPussyPart;
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class BodyShop extends Activity {
     List<ShopSelection> selection;
@@ -471,33 +463,33 @@ public class BodyShop extends Activity {
     @Override
     public boolean known() {
 
-        return Global.checkFlag(Flag.bodyShop);
+        return Global.global.checkFlag(Flag.bodyShop);
     }
 
     private void displaySelection() {
-        Global.gui().message("You have :$" + player.money + " to spend.");
+        Global.global.gui().message("You have :$" + player.money + " to spend.");
         for (ShopSelection s : selection) {
             if (s.available(player) && player.money >= s.price) {
-                Global.gui().choose(this, s.choice, "Price: $" + s.price);
+                Global.global.gui().choose(this, s.choice, "Price: $" + s.price);
                 Global.gui().message(s.choice + ": $" + s.price);
             }
         }
-        Global.gui().choose(this, "Leave");
+        Global.global.gui().choose(this, "Leave");
     }
 
     @Override
     public void visit(String choice) {
         if (choice.equals("Start")) {
-            Global.gui().clearText();
-            Global.gui().clearCommand();
-            Global.gui().message(
+            Global.global.gui().clearText();
+            Global.global.gui().clearCommand();
+            Global.global.gui().message(
                             "While wondering why you're even here, you walk into the rundown shack named \"The Body Shop\". The proprietor looks at you strangely then mutely points to the sign.");
             displaySelection();
             return;
         }
         for (ShopSelection s : selection) {
             if (s.choice.equals(choice)) {
-                Global.gui().message("<br/>You've selected " + s.choice
+                Global.global.gui().message("<br/>You've selected " + s.choice
                                 + ". While wondering if this was such a great idea, you follow the proprietor into the back room...");
                 s.buy(player);
                 player.money -= s.price;
@@ -505,7 +497,7 @@ public class BodyShop extends Activity {
                 return;
             }
         }
-        Global.gui().message(
+        Global.global.gui().message(
                         "<br/>You have some second thoughts about letting some stranger play with your body. You think up some excuse and quickly leave the shack.");
         done(false);
     }
@@ -514,7 +506,7 @@ public class BodyShop extends Activity {
     public void shop(Character npc, int budget) {
         int chance = 100;
         while (budget > 0) {
-            if (Global.random(100) > chance) {
+            if (Global.global.random(100) > chance) {
                 break;
             }
             chance /= 3;
@@ -543,12 +535,12 @@ public class BodyShop extends Activity {
             if (avail.size() == 0) {
                 return;
             }
-            int randomindex = Global.random(avail.size());
+            int randomindex = Global.global.random(avail.size());
             ShopSelection choice = avail.get(randomindex);
             npc.money -= choice.price;
             budget -= choice.price;
             choice.buy(npc);
-            if (Global.isDebugOn(DebugFlags.DEBUG_PLANNING) && !choice.choice.contains("none")) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_PLANNING) && !choice.choice.contains("none")) {
                 System.out.println(npc.name() + " purchased " + choice.choice);
             }
         }

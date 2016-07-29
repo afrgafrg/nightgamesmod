@@ -91,7 +91,7 @@ public class Tribadism extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return Global.format(
+            return Global.global.format(
                             "You grab {other:name-possessive} legs and push them apart. You then push your hot snatch across her pussy lips and grind down on it.",
                             getSelf(), target);
         }

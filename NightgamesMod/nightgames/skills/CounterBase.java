@@ -24,7 +24,7 @@ public abstract class CounterBase extends Skill {
     }
 
     public String getBlockedString(Combat c, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:block|blocks} {other:name-possessive} attack and {self:action:move|moves} in for a counter. "
                                         + "However, {other:subject-action:were|was} wary of {self:direct-object} and {other:action:jump|jumps} back before {self:subject} can catch {other:direct-object}.",
                         getSelf(), target);

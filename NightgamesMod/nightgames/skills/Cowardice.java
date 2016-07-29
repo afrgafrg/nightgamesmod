@@ -41,7 +41,7 @@ public class Cowardice extends Skill {
             Player player = (Player) getSelf();
             c.write(getSelf(), deal(c, 0, Result.normal, target));
             if (player.checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                player.unaddictCombat(AddictionType.MIND_CONTROL, 
+                player.unaddictCombat(AddictionType.MIND_CONTROL,
                                 target, Addiction.LOW_INCREASE, c);
                 c.write(getSelf(), "Acting submissively voluntarily reduces Mara's control over you.");
             }
@@ -68,8 +68,8 @@ public class Cowardice extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return String.format("%s tries to sprint away, but %s quickly %s %s from behind before %s can escape", 
-                            getSelf().subject(), target.subject(), target.action("grab"), 
+        return String.format("%s tries to sprint away, but %s quickly %s %s from behind before %s can escape",
+                            getSelf().subject(), target.subject(), target.action("grab"),
                             getSelf().directObject(), getSelf().pronoun());
     }
 

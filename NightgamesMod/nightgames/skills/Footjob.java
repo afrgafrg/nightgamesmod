@@ -54,25 +54,25 @@ public class Footjob extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = Global.random(12, 20);
+            int m = Global.global.random(12, 20);
             if (getSelf().human()) {
-                c.write(getSelf(), Global.format(deal(c, m, Result.normal, target), getSelf(), target));
+                c.write(getSelf(), Global.global.format(deal(c, m, Result.normal, target), getSelf(), target));
             } else if (c.shouldPrintReceive(target, c)) {
-                c.write(getSelf(), Global.format(receive(c, m, Result.normal, target), getSelf(), target));
+                c.write(getSelf(), Global.global.format(receive(c, m, Result.normal, target), getSelf(), target));
             }
             if (target.hasDick()) {
                 target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("cock"), m, c, this);
             } else {
                 target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("pussy"), m, c, this);
             }
-            if (Global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+            if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
                 target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
             }
         } else {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.format(deal(c, 0, Result.miss, target), getSelf(), target));
+                c.write(getSelf(), Global.global.format(deal(c, 0, Result.miss, target), getSelf(), target));
             } else if (c.shouldPrintReceive(target, c)) {
-                c.write(getSelf(), Global.format(receive(c, 0, Result.miss, target), getSelf(), target));
+                c.write(getSelf(), Global.global.format(receive(c, 0, Result.miss, target), getSelf(), target));
             }
             return false;
         }

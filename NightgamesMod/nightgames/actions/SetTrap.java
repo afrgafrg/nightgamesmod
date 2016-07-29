@@ -30,7 +30,7 @@ public class SetTrap extends Action {
             user.location().place(newTrap);
             String message = newTrap.setup(user);
             if (user.human()) {
-                Global.gui().message(message);
+                Global.global.gui().message(message);
             }
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();

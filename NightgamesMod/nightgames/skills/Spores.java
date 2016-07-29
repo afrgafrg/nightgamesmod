@@ -38,13 +38,13 @@ public class Spores extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (target.wary()) {
             c.write(getSelf(),
-                            Global.format("{self:SUBJECT-ACTION:release|releases} a mass of tiny particles, but "
+                            Global.global.format("{self:SUBJECT-ACTION:release|releases} a mass of tiny particles, but "
                                             + "{other:subject-action:avoid|avoids} breathing any of them in.",
                             getSelf(), target));
             return false;
         } else {
             c.write(getSelf(),
-                            Global.format("{self:SUBJECT-ACTION:release|releases} a mass of tiny particles, and "
+                            Global.global.format("{self:SUBJECT-ACTION:release|releases} a mass of tiny particles, and "
                                             + "{other:subject-action:are|is} forced to breathe them in. The scent"
                                             + " drives {other:direct-object} into a frenzy.", getSelf(), target));
             target.add(c, new Aggressive(target, getSelf().nameOrPossessivePronoun() + " spores", 5));

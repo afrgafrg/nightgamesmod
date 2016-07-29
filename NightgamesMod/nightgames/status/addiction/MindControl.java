@@ -1,9 +1,6 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -18,6 +15,8 @@ import nightgames.stance.Position;
 import nightgames.status.Enthralled;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class MindControl extends Addiction {
 
@@ -165,7 +164,7 @@ public class MindControl extends Addiction {
     @Override
     public void tick(Combat c) {
         super.tick(c);
-        if (!affected.is(Stsflag.enthralled) && Global.randomdouble() < magnitude / 3) {
+        if (!affected.is(Stsflag.enthralled) && Global.global.randomdouble() < magnitude / 3) {
             affected.addlist.add(new Enthralled(affected, cause, 3));
             c.write(cause, cause.name() + "'s constant urging overcomes your defences, washing away all of your resistance.");
         }
@@ -238,7 +237,7 @@ public class MindControl extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new MindControl(Global.getPlayer(), Global.getCharacterByType(obj.get("cause").getAsString()),
+        return new MindControl(Global.global.getPlayer(), Global.global.getCharacterByType(obj.get("cause").getAsString()),
                         obj.get("magnitude").getAsInt());
     }
 
@@ -247,7 +246,7 @@ public class MindControl extends Addiction {
         private String description;
 
         public Result(Character controller, Position pos) {
-            if (Global.getPlayer()
+            if (Global.global.getPlayer()
                       .is(Stsflag.blinded)) {
                 succeeded = false;
                 description = "Since you can't see, you are protected from " + controller.name() + "'s controlling gaze.";
@@ -319,7 +318,7 @@ public class MindControl extends Addiction {
                         break;
                     case neutral:
                     case standingover:
-                        if (Global.getPlayer()
+                        if (Global.global.getPlayer()
                                   .canAct()) {
                             succeeded = false;
                             description = "With the freedom of movement you have at the moment, turning your gaze away"
@@ -334,7 +333,7 @@ public class MindControl extends Addiction {
                     default:
                         if (pos.facing(Global.getPlayer(), controller)) {
                             succeeded = true;
-                            description = controller.name() + " gazes into your eyes as " + controller.pronoun() 
+                            description = controller.name() + " gazes into your eyes as " + controller.pronoun()
                                             + " pushes you over the edge. ";
                         } else {
                             succeeded = false;
@@ -389,14 +388,14 @@ public class MindControl extends Addiction {
     public class MindControlWithdrawal extends Status {
 
         public MindControlWithdrawal() {
-            super("Mind Control Withdrawal", Global.getPlayer());
+            super("Mind Control Withdrawal", Global.global.getPlayer());
         }
 
         @Override
         public void tick(Combat c) {
             if (affected.getStamina()
                         .percent() > 5) {
-                int amt = getSeverity().ordinal() * (Global.random(6) + 1);
+                int amt = getSeverity().ordinal() * (Global.global.random(6) + 1);
                 affected.weaken(c, (int) cause.modifyDamage(DamageType.temptation, affected, amt));
                 Global.writeIfCombat(c, affected, "You keep fighting your own body to do as you want, and it's tiring you rapidly.");
             }

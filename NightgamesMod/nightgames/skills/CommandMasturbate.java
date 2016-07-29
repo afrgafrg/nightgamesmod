@@ -24,7 +24,7 @@ public class CommandMasturbate extends PlayerCommand {
     @Override
     public boolean resolve(Combat c, Character target) {
         boolean lowStart = target.getArousal().get() < 15;
-        int m = 5 + Global.random(10);
+        int m = 5 + Global.global.random(10);
         target.body.pleasure(target, target.body.getRandom("hands"), target.body.getRandomGenital(), m, c, this);
 
         boolean lowEnd = target.getArousal().get() < 15;

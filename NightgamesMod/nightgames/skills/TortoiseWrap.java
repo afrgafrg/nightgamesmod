@@ -57,8 +57,8 @@ public class TortoiseWrap extends Skill {
         return String.format(
                         "You skillfully tie a rope around %s's torso "
                                         + "in a traditional bondage wrap. %s moans softly as the "
-                                        + "rope digs into %s supple skin.",
-                        target.name(), nightgames.global.Global.capitalizeFirstLetter(target.pronoun()),
+                                        + "rope digs into %s supple skin.", target.name(),
+                        nightgames.global.Global.global.capitalizeFirstLetter(target.pronoun()),
                         target.possessiveAdjective());
     }
 

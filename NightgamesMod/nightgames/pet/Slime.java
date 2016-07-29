@@ -53,7 +53,7 @@ public class Slime extends Pet {
                 + "the faerie girl's limbs before she can escape. More appendages attach to her breasts and groin as the slime starts to vibrate. The faerie lets out a "
                 + "high pitched moan and squirms against her bonds until she shudders in orgasm and vanishes.");
             }
-        } else if (opponent instanceof CharacterPet) { 
+        } else if (opponent instanceof CharacterPet) {
             (new SlimeJob(getSelf())).resolve(c, opponent.getSelf());
         } else {
             if (!opponent.hasDick()) {

@@ -1,7 +1,6 @@
 package nightgames.characters.body;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
@@ -36,7 +35,8 @@ public enum EarPart implements BodyPart, BodyPartMod {
                 b.append("Cute " + fullDescribe(c) + " tops " + c.possessiveAdjective() + " head.");
                 break;
             default:
-                b.append(Global.capitalizeFirstLetter(fullDescribe(c)) + " frames " + c.possessiveAdjective() + " face.");
+                b.append(Global.global.capitalizeFirstLetter(fullDescribe(c)) + " frames " + c.possessiveAdjective()
+                                + " face.");
         }
     }
 

@@ -38,8 +38,8 @@ public class WildThrust extends Thrust {
     @Override
     public boolean resolve(Combat c, Character target) {
         boolean effective = super.resolve(c, target);
-        if (effective && c.getStance().sub(getSelf()) && getSelf().has(Trait.Untamed) && Global.random(4) == 0 ) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:fuck|fucks} {other:name-do} with such abandon that it leaves {other:direct-object} "
+        if (effective && c.getStance().sub(getSelf()) && getSelf().has(Trait.Untamed) && Global.global.random(4) == 0 ) {
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:fuck|fucks} {other:name-do} with such abandon that it leaves {other:direct-object} "
                             + "momentarily dazed. {self:SUBJECT-ACTION:do|does} not let this chance slip and {self:action:rotate|rotates} {self:possessive} body so that {self:pronoun-action:are|is} on top!", getSelf(), target));
             c.setStance(c.getStance().reverse(c, false));
         }
@@ -50,9 +50,9 @@ public class WildThrust extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 5 + Global.random(20) + Math
+        int m = 5 + Global.global.random(20) + Math
                         .min(getSelf().get(Attribute.Animism), getSelf().getArousal().getReal() / 30);
-        int mt = 5 + Global.random(20);
+        int mt = 5 + Global.global.random(20);
         mt = Math.max(1, mt);
 
         results[0] = m;
@@ -106,7 +106,7 @@ public class WildThrust extends Thrust {
             return "You wildly pound " + target.name()
                             + " in the ass with no regard to technique. She whimpers in pleasure and can barely summon the strength to hold herself off the floor.";
         } else if (modifier == Result.reverse) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:bounce|bounces} wildly on {other:name-possessive} cock with no regard to technique, relentlessly driving you both towards orgasm.",
                             getSelf(), target);
         } else {
@@ -133,7 +133,7 @@ public class WildThrust extends Thrust {
             return String.format("%s frenziedly bounces on %s cock, relentlessly driving %s both toward orgasm.",
                             getSelf().subject(), target.nameOrPossessivePronoun(), c.bothDirectObject(target));
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT-ACTION:rapidly pound|rapidly pounds} {self:possessive} {self:body-part:cock} into {other:possessive} {other:body-part:pussy}, "
                                             + "relentlessly driving %s both toward orgasm",
                             getSelf(), target, c.bothDirectObject(target));

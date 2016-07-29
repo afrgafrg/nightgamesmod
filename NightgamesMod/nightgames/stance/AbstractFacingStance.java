@@ -1,11 +1,11 @@
 package nightgames.stance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractFacingStance extends Position {
     public AbstractFacingStance(Character top, Character bottom, Stance stance) {
@@ -31,7 +31,7 @@ public abstract class AbstractFacingStance extends Position {
         if (possibleResults.isEmpty()) {
             return this;
         } else {
-            return possibleResults.get(Global.random(possibleResults.size()));
+            return possibleResults.get(Global.global.random(possibleResults.size()));
         }
     }
 

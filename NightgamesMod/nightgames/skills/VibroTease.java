@@ -43,7 +43,7 @@ public class VibroTease extends Skill {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
         }
-        int m = 10 + Global.random(5);
+        int m = 10 + Global.global.random(5);
         target.body.pleasure(getSelf(), null, target.body.getRandom("ass"), getSelf().modifyDamage(DamageType.gadgets, target, m), c, this);
         getSelf().arouse(2, c);
         return true;
@@ -74,7 +74,7 @@ public class VibroTease extends Skill {
         return String.format("%s cranks up the vibration to maximum level which stirs up %s insides. "
                         + "%s teasingly pokes the tip against %s %s which causes %s limbs to get shaky from the pleasure.",
                         getSelf().subject(), target.nameOrPossessivePronoun(),
-                        Global.capitalizeFirstLetter(getSelf().pronoun()), target.possessiveAdjective(),
+                        Global.global.capitalizeFirstLetter(getSelf().pronoun()), target.possessiveAdjective(),
                         target.hasBalls() ? "prostate" : "sensitive insides", target.possessiveAdjective());
     }
 

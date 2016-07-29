@@ -1,16 +1,6 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
-import nightgames.characters.body.AnalPussyPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
@@ -26,6 +16,10 @@ import nightgames.skills.strategy.ReceiveAnalStrategy;
 import nightgames.skills.strategy.StraponStrategy;
 import nightgames.start.NpcConfiguration;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+
 public class Jewel extends BasePersonality {
     /**
      *
@@ -36,7 +30,7 @@ public class Jewel extends BasePersonality {
     public static final String JEWEL_MARTIAL_FOCUS = "JewelMartialFocus";
     public static final String JEWEL_MENTAL_FOCUS = "JewelMentalFocus";
     public static final String JEWEL_PHYSICAL_FOCUS = "JewelPhysicalFocus";
-    
+
     public Jewel() {
         this(Optional.empty(), Optional.empty());
     }
@@ -70,7 +64,7 @@ public class Jewel extends BasePersonality {
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 2);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.getMojo().setMax(80);
 
         self.setTrophy(Item.JewelTrophy);
@@ -83,7 +77,7 @@ public class Jewel extends BasePersonality {
 
     private void useMartial() {
         Growth growth = character.getGrowth();
-        Global.flag(JEWEL_MARTIAL_FOCUS);
+        Global.global.flag(JEWEL_MARTIAL_FOCUS);
         growth.addTrait(11, Trait.grappler);
         growth.addTrait(25, Trait.disablingblows);
         growth.addTrait(37, Trait.naturalTop);
@@ -91,7 +85,7 @@ public class Jewel extends BasePersonality {
     }
     private void useAnal() {
         Growth growth = character.getGrowth();
-        Global.flag(JEWEL_ANAL_FOCUS);
+        Global.global.flag(JEWEL_ANAL_FOCUS);
         growth.addTrait(11, Trait.holecontrol);
         growth.addTrait(25, Trait.tight);
         growth.addTrait(37, Trait.powerfulcheeks);
@@ -99,13 +93,13 @@ public class Jewel extends BasePersonality {
     }
     private void usePhysical() {
         Growth growth = character.getGrowth();
-        Global.flag(JEWEL_PHYSICAL_FOCUS);
+        Global.global.flag(JEWEL_PHYSICAL_FOCUS);
         growth.addTrait(22, Trait.indomitable);
         growth.addTrait(39, Trait.confidentdom);
-        if (Global.checkFlag(JEWEL_ANAL_FOCUS)) {
+        if (Global.global.checkFlag(JEWEL_ANAL_FOCUS)) {
             growth.addTrait(50, Trait.drainingass);
         }
-        if (Global.checkFlag(JEWEL_PHYSICAL_FOCUS)) {
+        if (Global.global.checkFlag(JEWEL_PHYSICAL_FOCUS)) {
             growth.addTrait(50, Trait.edger);
         }
         growth.addTrait(55, Trait.oblivious);
@@ -113,18 +107,18 @@ public class Jewel extends BasePersonality {
 
     private void useMental() {
         Growth growth = character.getGrowth();
-        Global.flag(JEWEL_MENTAL_FOCUS);
+        Global.global.flag(JEWEL_MENTAL_FOCUS);
         growth.addTrait(22, Trait.commandingvoice);
         growth.addTrait(39, Trait.mentalfortress);
-        if (Global.checkFlag(JEWEL_ANAL_FOCUS)) {
+        if (Global.global.checkFlag(JEWEL_ANAL_FOCUS)) {
             growth.addTrait(50, Trait.bewitchingbottom);
         }
-        if (Global.checkFlag(JEWEL_PHYSICAL_FOCUS)) {
+        if (Global.global.checkFlag(JEWEL_PHYSICAL_FOCUS)) {
             growth.addTrait(50, Trait.unquestionable);
         }
         growth.addTrait(55, Trait.overwhelmingPresence);
     }
-    
+
     @Override
     public void setGrowth() {
         Growth growth = character.getGrowth();
@@ -135,7 +129,7 @@ public class Jewel extends BasePersonality {
         growth.willpower = 1.7f;
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return character.getLevel() >= 10 && !Global.checkFlag(JEWEL_ANAL_FOCUS) 
+            return character.getLevel() >= 10 && !Global.checkFlag(JEWEL_ANAL_FOCUS)
                             && !Global.checkFlag(JEWEL_MARTIAL_FOCUS);
         }, (c, self, player) -> character.name + " leans back a bit as she watches you recover from your fight."
                         + " <i>\"Hey, " + player.name + ". Pop quiz. If I were to knock you on your ass and then"
@@ -172,7 +166,7 @@ public class Jewel extends BasePersonality {
         )));
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return character.getLevel() >= 20 && !Global.checkFlag(JEWEL_MENTAL_FOCUS) 
+            return character.getLevel() >= 20 && !Global.checkFlag(JEWEL_MENTAL_FOCUS)
                             && !Global.checkFlag(JEWEL_PHYSICAL_FOCUS) && (Global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.checkFlag(JEWEL_ANAL_FOCUS));
         }, (c, self, player) -> "Jewel stands over you after the fight while looking at you rather coldly, <i>\"So, " + player.name + ". You're going to be doing what I tell"
                         + " you. No, don't interrupt. You are. My question is, are you just going"
@@ -262,42 +256,42 @@ public class Jewel extends BasePersonality {
 
         if (character.rank >= 1) {
             if (character.money > 0) {
-                Global.getDay()
-                      .visit("Dojo", character, Global.random(character.money));
-                Global.getDay()
-                      .visit("Meditation", character, Global.random(character.money));
+                Global.global.getDay()
+                      .visit("Dojo", character, Global.global.random(character.money));
+                Global.global.getDay()
+                      .visit("Meditation", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay()
-                      .visit("Body Shop", character, Global.random(character.money));
+                Global.global.getDay()
+                      .visit("Body Shop", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay()
-                      .visit("Workshop", character, Global.random(character.money));
+                Global.global.getDay()
+                      .visit("Workshop", character, Global.global.random(character.money));
             }
         }
 
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay()
-                  .visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay()
+                  .visit("Black Market", character, Global.global.random(character.money));
         }
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
-                Global.getDay()
+                Global.global.getDay()
                       .visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay()
+                Global.global.getDay()
                       .visit("Browse Porn Sites", this.character, 0);
             }
         }
@@ -324,7 +318,7 @@ public class Jewel extends BasePersonality {
 
         character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> {
             if (self.has(Trait.bitingwords) && c.getStance().dom(self)) {
-                ArrayList<String> possible = new ArrayList<>(); 
+                ArrayList<String> possible = new ArrayList<>();
                 possible.add("Jewel looks down at you with a sadistic smirk, <i>\"That's a nice look on you there "
                                 + c.getOpponent(self)
                                    .getName()
@@ -399,7 +393,7 @@ public class Jewel extends BasePersonality {
         character.addLine(CharacterLine.LEVEL_DRAIN_LINER, (c, self, other) -> {
             String part = Global.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
             if (other.getLevel() < self.getLevel() - 5) {
-                return "Jewel smirks at you with a sadistic grin on her face as her " + self.body.getRandom(part).describe(self) 
+                return "Jewel smirks at you with a sadistic grin on her face as her " + self.body.getRandom(part).describe(self)
                                 + " plunders your strength once again. <i>\"Poor {other:guy}, being dominated by someone who used to be so much weaker than you.\"</i> "
                                 + "The red-head leans close to your ear, <i>\"Don't worry... I wont be making the same mistake. You'll always be my bottom-bitch from now on.\"</i>";
             } else if (other.getLevel() >= self.getLevel()) {
@@ -548,7 +542,7 @@ public class Jewel extends BasePersonality {
                     message += "She grabs your tender spent dick, which doesn't really hurt, but gets your undivided attention.";
                 } else if (other.hasPussy()) {
                     message += "She pinches your tender clit, which doesn't really hurt, but gets your undivided attention.";
-                } 
+                }
                 message += "<i>\"Try not to bore me next time or I may not play so nice with you.\"</i>"
                                 + "<br/>"
                                 + "She gets dressed and walks away with your clothes, leaving you naked and beaten."

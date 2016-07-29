@@ -1,36 +1,18 @@
 package nightgames.status;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
+import nightgames.characters.NPC;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
-import nightgames.skills.AssFuck;
-import nightgames.skills.Carry;
-import nightgames.skills.Fly;
-import nightgames.skills.Fuck;
-import nightgames.skills.Invitation;
-import nightgames.skills.ReverseAssFuck;
-import nightgames.skills.ReverseCarry;
-import nightgames.skills.ReverseFly;
-import nightgames.skills.ReverseFuck;
-import nightgames.skills.Shove;
-import nightgames.skills.Skill;
-import nightgames.skills.Straddle;
-import nightgames.skills.SubmissiveHold;
-import nightgames.skills.Tackle;
-import nightgames.skills.Tear;
-import nightgames.skills.ToggleKnot;
-import nightgames.skills.Undress;
-import nightgames.skills.WildThrust;
+import nightgames.skills.*;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class Frenzied extends DurationStatus {
 
@@ -38,7 +20,7 @@ public class Frenzied extends DurationStatus {
 
     static {
         // Skills that either lead to penetration, or can be used during it.
-        Character p = Global.noneCharacter();
+        Character p = NPC.NONE_CHARACTER;
         FUCK_SKILLS.add(new AssFuck(p));
         FUCK_SKILLS.add(new Carry(p));
         FUCK_SKILLS.add(new Shove(p));

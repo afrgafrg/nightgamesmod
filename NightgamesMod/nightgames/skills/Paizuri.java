@@ -50,38 +50,38 @@ public class Paizuri extends Skill {
                 break;
             }
         }
-        
+
         int fetishChance = 7 + breasts.size + getSelf().get(Attribute.Fetish) / 2;
 
         int m = 5 + Global.random(5) + breasts.size;
-        
+
         if(getSelf().is(Stsflag.oiled)) {
             m += Global.random(2, 5);
         }
-        
+
         if( getSelf().has(Trait.lactating)) {
-            m += Global.random(3, 5);
+            m += Global.global.random(3, 5);
             fetishChance += 5;
         }
-        
+
         if (getSelf().has(Trait.temptingtits)) {
-            
+
             m += Global.random(4, 8);
             fetishChance += 10;
         }
-        
+
         if (getSelf().has(Trait.beguilingbreasts)) {
-            m *= 1.5;            
+            m *= 1.5;
             fetishChance *= 2;
         }
-        
+
         if (target.human()) {
             c.write(getSelf(), receive(0, Result.normal, target, breasts));
         } else {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
         }
         target.body.pleasure(getSelf(), getSelf().body.getRandom("breasts"), target.body.getRandom("cock"), m, c, this);
-        if (Global.random(100) < fetishChance) {
+        if (Global.global.random(100) < fetishChance) {
             target.add(c, new BodyFetish(target, getSelf(), BreastsPart.a.getType(), .05 + (0.01 * breasts.size) + getSelf().get(Attribute.Fetish) * .01));
         }
         if (getSelf().has(Trait.temptingtits)) {
@@ -119,11 +119,11 @@ public class Paizuri extends Skill {
         {
             b.append(" and milk squirts from your lactating teats");
         }
-        b.append(". ");       
-        
+        b.append(". ");
+
         if(getSelf().is(Stsflag.oiled)){
             b.append("You rub your oiled tits up and down "
-                            + b.append(target.possessiveAdjective()) 
+                            + b.append(target.possessiveAdjective())
                             + "'s shaft and teasingly lick the tip.");
         }
         else{
@@ -131,12 +131,12 @@ public class Paizuri extends Skill {
                             + b.append(target.possessiveAdjective())
                             + "'s shaft and teasingly lick the tip.");
         }
-        
+
         if (getSelf().has(Trait.temptingtits)) {
             b.append(" Upon seeing your perfect tits around their cock "
                              + b.append(target.name())
                             + "shudders with lust");
-            
+
             if (getSelf().has(Trait.beguilingbreasts)) {
                 b.append(" and due to your beguiling nature, they can't help but drool at the show.");
             }
@@ -144,7 +144,7 @@ public class Paizuri extends Skill {
                 b.append(".");
             }
         }
-        
+
         return b.toString();
     }
 
@@ -156,18 +156,18 @@ public class Paizuri extends Skill {
         {
             b.append(" and milk squirts from her lactating teats");
         }
-        b.append(". ");       
-        
+        b.append(". ");
+
         if(getSelf().is(Stsflag.oiled)){
             b.append("She rubs her oiled tits up and down your shaft and teasingly licks your tip.");
         }
         else{
             b.append("She rubs them up and down your shaft and teasingly licks your tip.");
         }
-        
+
         if (getSelf().has(Trait.temptingtits)) {
             b.append(" The sight of those perfect tits around your cock causes you to shudder with lust");
-            
+
             if (getSelf().has(Trait.beguilingbreasts)) {
                 b.append(" and due to ");
                 b.append(getSelf().name()) ;
@@ -177,7 +177,7 @@ public class Paizuri extends Skill {
                 b.append(".");
             }
         }
-        
+
         return b.toString();
     }
 

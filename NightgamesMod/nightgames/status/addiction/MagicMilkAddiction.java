@@ -1,9 +1,6 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -12,6 +9,8 @@ import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class MagicMilkAddiction extends Addiction {
 
@@ -30,10 +29,10 @@ public class MagicMilkAddiction extends Addiction {
     @Override
     protected Optional<Status> withdrawalEffects() {
         double mod = 1.0 / (double) getSeverity().ordinal();
-        originalMaxWill = Global.getPlayer()
+        originalMaxWill = Global.global.getPlayer()
                                 .getWillpower()
                                 .max();
-        Global.getPlayer()
+        Global.global.getPlayer()
               .getWillpower()
               .setTemporaryMax((int) (originalMaxWill * mod));
         return Optional.empty();
@@ -42,7 +41,7 @@ public class MagicMilkAddiction extends Addiction {
     @Override
     public void endNight() {
         super.endNight();
-        Global.getPlayer()
+        Global.global.getPlayer()
               .getWillpower()
               .setTemporaryMax(originalMaxWill);
     }
@@ -208,7 +207,7 @@ public class MagicMilkAddiction extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new MagicMilkAddiction(Global.getPlayer(), Global.getCharacterByType(obj.get("cause").getAsString()),
+        return new MagicMilkAddiction(Global.global.getPlayer(), Global.global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 
@@ -240,18 +239,18 @@ public class MagicMilkAddiction extends Addiction {
             int loss;
             switch (getCombatSeverity()) {
                 case LOW:
-                    loss = Global.random(1, 3);
+                    loss = Global.global.random(1, 3);
                     break;
                 case MED:
-                    loss = Global.random(3, 6);
+                    loss = Global.global.random(3, 6);
                     break;
                 case HIGH:
-                    loss = Global.random(5, 8);
+                    loss = Global.global.random(5, 8);
                     break;
                 default:
                     throw new IllegalStateException();
             }
-            Global.getPlayer()
+            Global.global.getPlayer()
                   .loseWillpower(c, loss, 0, false, " due to your Milk Addiction");
         }
     }

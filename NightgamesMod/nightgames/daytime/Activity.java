@@ -30,12 +30,12 @@ public abstract class Activity {
 
     public void done(boolean acted) {
         if (acted) {
-            Global.getDay().advance(time);
+            Global.global.getDay().advance(time);
         }
         page = 0;
-        Global.gui().clearImage();
-        Global.gui().clearPortrait();
-        Global.getDay().plan();
+        Global.global.gui().clearImage();
+        Global.global.gui().clearPortrait();
+        Global.global.getDay().plan();
     }
 
     @Override

@@ -11,7 +11,7 @@ import nightgames.stance.Missionary;
 
 public class CounterRide extends CounterBase {
     public CounterRide(Character self) {
-        super("Sex Counter", self, 5, Global.format(
+        super("Sex Counter", self, 5, Global.global.format(
                         "{self:SUBJECT-ACTION:invite|invites} the opponent with {self:possessive} body.", self, self));
         addTag(SkillTag.fucking);
         addTag(SkillTag.positioning);
@@ -20,7 +20,7 @@ public class CounterRide extends CounterBase {
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.randomfloat() * 2;
+        return Global.global.randomfloat() * 2;
     }
 
     @Override
@@ -78,21 +78,21 @@ public class CounterRide extends CounterBase {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
-            return Global.format(
+            return Global.global.format(
                             "You turn around and bend over with your ass seductively waving in the air. You slowly "
                                             + "tease your glistening lower lips and spread them apart, inviting {other:name} to take {other:possessive} pleasure.",
                             getSelf(), target);
         } else if (modifier == Result.setup && getSelf().hasDick()) {
-            return Global.format(
+            return Global.global.format(
                             "You grab your cock and quickly stroke it to full mast. You let your dick go and it swings back and forth, catching {other:name-possessive} gaze.",
                             getSelf(), target);
         } else if (getSelf().hasPussy() && target.hasDick()) {
-            return Global.format(
+            return Global.global.format(
                             "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under her. "
                                             + "With one smooth motion, you drop your hips and lodge {other:possessive} dick firmly inside yourself.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under her. "
                                             + "With one smooth motion, you spread her legs apart and plunge into her depths.",
                             getSelf(), target);
@@ -102,22 +102,22 @@ public class CounterRide extends CounterBase {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} turns around and bends over her ass seductively waving in the air. She slowly "
                                             + "teases her glistening lower lips and spread them apart, inviting {other:name-do} in to her depths.",
                             getSelf(), target);
         } else if (modifier == Result.setup && getSelf().hasDick()) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} takes out her cock and strokes it to full mast. She then lets her dick go and it swings back and forth, catching {other:name-possessive} gaze.",
                             getSelf(), target);
         } else if (getSelf().hasPussy() && target.hasDick()) {
-            return Global.format(
+            return Global.global.format(
                             "As {other:subject-action:approach|approaches} {self:name}, {self:pronoun} suddenly disappears from "
                             + "{other:possessive} view; half a second later, {other:possessive} legs are swept out from under {other:direct-object}. "
                                             + "With a soft giggle, {self:name} swiftly mounts {other:name-do} and starts riding {other:possessive} cock.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "As {other:subject} approaches {self:name}, she suddenly disappears from {other:name-possessive} view; half a second "
                             + "later, {other:possessive} legs are swept out from under {other:direct-object}. "
                                             + "With a sexy grin, {self:name} wrenches {other:name-possessive}"

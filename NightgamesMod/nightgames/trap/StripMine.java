@@ -1,7 +1,5 @@
 package nightgames.trap;
 
-import java.util.stream.IntStream;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
@@ -10,12 +8,14 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.status.Flatfooted;
 
+import java.util.stream.IntStream;
+
 public class StripMine extends Trap {
-    
+
     public StripMine() {
         this(null);
     }
-    
+
     public StripMine(Character owner) {
         super("Strip Mine", owner);
     }
@@ -24,18 +24,19 @@ public class StripMine extends Trap {
     public void trigger(Character target) {
         if (target.human()) {
             if (target.mostlyNude()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You're momentarily blinded by a bright flash of light. A camera flash maybe? Is someone taking naked pictures of you?");
             } else {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You're suddenly dazzled by a bright flash of light. As you recover from your disorientation, you notice that it feel a bit drafty. "
                                                 + "You find you're missing some clothes. You reflect that your clothing expenses have gone up significantly since you joined the Games.");
             }
         } else if (target.location().humanPresent()) {
-            Global.gui().message("You're startled by a flash of light not far away. Standing there is a half-naked "
+            Global.global.gui()
+                            .message("You're startled by a flash of light not far away. Standing there is a half-naked "
                             + target.name() + ", looking surprised.");
         }
-        IntStream.range(0, 2 + Global.random(4)).forEach(i -> target.shredRandom());
+        IntStream.range(0, 2 + Global.global.random(4)).forEach(i -> target.shredRandom());
         target.location().opportunity(target, this);
     }
 

@@ -44,8 +44,8 @@ public class PussyGrind extends Skill {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         writeOutput(c, Result.normal, target);
-        int m = 10 + Global.random(10);
-        int otherm = 5 + Global.random(6);
+        int m = 10 + Global.global.random(10);
+        int otherm = 5 + Global.global.random(6);
         target.body.pleasure(getSelf(), selfO, targetO, m, c, this);
         getSelf().body.pleasure(target, targetO, selfO, otherm, c, this);
         return true;
@@ -74,7 +74,7 @@ public class PussyGrind extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return Global.format(
+            return Global.global.format(
                             "You rock your tangled bodies back and forth, grinding your loins into hers. {other:subject} passionately gasps as the stimulation overwhelms her. "
                                             + "Soon the floor is drenched with the fruits of your combined labor.",
                             getSelf(), target);
@@ -85,7 +85,7 @@ public class PussyGrind extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} rocks {other:name-possessive} tangled bodies back and forth, grinding {self:possessive}"
                             + " crotch into %s. {other:SUBJECT-ACTION:moan|moans} passionately as the stimulation overwhelms {other:direct-object}. "
                                             + "Soon the floor is drenched with the fruits of %s combined labor.",

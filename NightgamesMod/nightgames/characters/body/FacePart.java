@@ -34,7 +34,7 @@ public class FacePart extends GenericBodyPart {
         } else {
             desc = "{self:PRONOUN-ACTION:have|has} a beautiful face at the height of femininity.";
         }
-        String parsedDesc = Global.format(desc, c, c);
+        String parsedDesc = Global.global.format(desc, c, c);
         b.append(parsedDesc);
     }
 

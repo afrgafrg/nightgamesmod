@@ -1,22 +1,15 @@
 package nightgames.modifier.action;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiPredicate;
-
 import com.google.gson.JsonObject;
-
 import nightgames.actions.Action;
 import nightgames.characters.Character;
 import nightgames.global.Global;
-import nightgames.global.Match;
 import nightgames.json.JsonUtils;
+import nightgames.global.Match;
 import nightgames.modifier.ModifierComponentLoader;
+
+import java.util.*;
+import java.util.function.BiPredicate;
 
 public class BanActionModifier extends ActionModifier implements ModifierComponentLoader<ActionModifier> {
     private static final String name = "ban-action";
@@ -75,6 +68,6 @@ public class BanActionModifier extends ActionModifier implements ModifierCompone
     }
 
     private Optional<Action> identify(String name) {
-        return Global.getActions().stream().filter(a -> a.getClass().getSimpleName().equals(name)).findAny();
+        return Global.global.getActions().stream().filter(a -> a.getClass().getSimpleName().equals(name)).findAny();
     }
 }

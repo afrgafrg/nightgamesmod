@@ -1,24 +1,5 @@
 package nightgames.debug;
 
-import java.awt.GridLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import nightgames.characters.Character;
 import nightgames.characters.Attribute;
 import nightgames.characters.Trait;
@@ -26,7 +7,13 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.items.Item;
 
-@SuppressWarnings("unused")
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
+
 public class DebugGUIPanel extends JPanel {
     /**
      *
@@ -38,7 +25,7 @@ public class DebugGUIPanel extends JPanel {
     {
         consoleCommands.add(new DebugCommand("(\\w+)\\.setXP (\\d+)", (output, list) -> {
             try {
-                Character target = Global.getCharacterByType(list.get(1));
+                Character target = Global.global.getCharacterByType(list.get(1));
                 target.setXP(Integer.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -46,7 +33,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.setMoney (\\d+)", (output, list) -> {
             try {
-                Character target = Global.getCharacterByType(list.get(1));
+                Character target = Global.global.getCharacterByType(list.get(1));
                 target.setMoney(Integer.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -62,7 +49,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addTrait (\\w+)", (output, list) -> {
             try {
-            	Character target = Global.getCharacterByType(list.get(1));
+            	Character target = Global.global.getCharacterByType(list.get(1));
             	if (list.get(2).equals("all")) {
             		for (Trait t : Trait.values()) {
             			target.add(t);
@@ -78,7 +65,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.removeTrait (\\w+)", (output, list) -> {
             try {
-                Character target = Global.getCharacterByType(list.get(1));
+                Character target = Global.global.getCharacterByType(list.get(1));
                 target.remove(Trait.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -88,7 +75,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addItem (\\w+) ?(\\d+)?", (output, list) -> {
             try {
-                Character target = Global.getCharacterByType(list.get(1));
+                Character target = Global.global.getCharacterByType(list.get(1));
                 int amt = 1;
                 if (list.size() > 3 && list.get(3) != null) {
                     amt = Integer.valueOf(list.get(3));
@@ -116,7 +103,7 @@ public class DebugGUIPanel extends JPanel {
             }
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.ding( \\d+)?", (output, list) -> {
-            Character target = Global.getCharacterByType(list.get(1));
+            Character target = Global.global.getCharacterByType(list.get(1));
             if (target == null) {
                 output.setText(list.get(1) + " is not a valid charater");
                 return;
@@ -132,7 +119,7 @@ public class DebugGUIPanel extends JPanel {
 
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.ding( \\d+)?", (output, list) -> {
-            Character target = Global.getCharacterByType(list.get(1));
+            Character target = Global.global.getCharacterByType(list.get(1));
             if (target == null) {
                 output.setText(list.get(1) + " is not a valid charater");
                 return;
@@ -148,7 +135,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.list", (output, list) -> {
             try {
-                Character target = Global.getCharacterByType(list.get(1));
+                Character target = Global.global.getCharacterByType(list.get(1));
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < target.traits.size(); i++) {
                     sb.append(target.traits.get(i));
@@ -181,9 +168,9 @@ public class DebugGUIPanel extends JPanel {
         IntStream.range(0, flags.length).forEach(i -> {
             DebugFlags flag = flags[i];
             JCheckBox box = new JCheckBox(flag.name());
-            box.setSelected(Global.debug[i]);
+            box.setSelected(Global.global.debug[i]);
             box.addActionListener(event -> {
-                Global.debug[i] = box.isSelected();
+                Global.global.debug[i] = box.isSelected();
             });
             debugOptions.add(box);
         });

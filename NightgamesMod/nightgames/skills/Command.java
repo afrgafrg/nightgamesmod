@@ -1,12 +1,5 @@
 package nightgames.skills;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -19,14 +12,11 @@ import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.skills.damage.DamageType;
-import nightgames.stance.Behind;
-import nightgames.stance.FaceSitting;
-import nightgames.stance.Mount;
-import nightgames.stance.ReverseMount;
-import nightgames.stance.Stance;
-import nightgames.stance.StandingOver;
+import nightgames.stance.*;
 import nightgames.status.BodyFetish;
 import nightgames.status.Stsflag;
+
+import java.util.*;
 
 public class Command extends Skill {
 
@@ -62,7 +52,7 @@ public class Command extends Skill {
         assert !available.isEmpty();
 
         // Fucking takes priority
-        if (available.contains(CommandType.MASTER_INSERT) && Global.random(100) <= 75) {
+        if (available.contains(CommandType.MASTER_INSERT) && Global.global.random(100) <= 75) {
             executeCommand(CommandType.MASTER_INSERT, c, target);
             return true;
         }
@@ -71,24 +61,24 @@ public class Command extends Skill {
         Set<CommandType> positioning = new HashSet<>(available);
         positioning.retainAll(Arrays.asList(CommandType.MASTER_BEHIND, CommandType.MASTER_MOUNT,
                         CommandType.MASTER_REVERSE_MOUNT, CommandType.MASTER_FACESIT));
-        if (!positioning.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(positioning.toArray(new CommandType[] {})).get(), c, target);
+        if (!positioning.isEmpty() && Global.global.random(100) <= 75) {
+            executeCommand(Global.global.pickRandom(positioning.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
         // Then stripping
         Set<CommandType> stripping = new HashSet<>(available);
         stripping.retainAll(Arrays.asList(CommandType.STRIP_MASTER, CommandType.STRIP_SLAVE));
-        if (!stripping.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(stripping.toArray(new CommandType[] {})).get(), c, target);
+        if (!stripping.isEmpty() && Global.global.random(100) <= 75) {
+            executeCommand(Global.global.pickRandom(stripping.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
         // Then 'one-offs'
         Set<CommandType> oneoff = new HashSet<>(available);
         oneoff.retainAll(Arrays.asList(CommandType.MASTER_STRAPON, CommandType.SUBMIT));
-        if (!oneoff.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(oneoff.toArray(new CommandType[] {})).get(), c, target);
+        if (!oneoff.isEmpty() && Global.global.random(100) <= 75) {
+            executeCommand(Global.global.pickRandom(oneoff.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
@@ -104,13 +94,13 @@ public class Command extends Skill {
         Set<CommandType> oral = new HashSet<>(available);
         oral.retainAll(Arrays.asList(CommandType.GIVE_ANNILINGUS, CommandType.GIVE_BLOWJOB,
                         CommandType.GIVE_CUNNILINGUS));
-        if (!oral.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(oral.toArray(new CommandType[] {})).get(), c, target);
+        if (!oral.isEmpty() && Global.global.random(100) <= 75) {
+            executeCommand(Global.global.pickRandom(oral.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
         // If none chosen yet, just pick anything
-        executeCommand(Global.pickRandom(available.toArray(new CommandType[] {})).get(), c, target);
+        executeCommand(Global.global.pickRandom(available.toArray(new CommandType[] {})).get(), c, target);
         return true;
     }
 
@@ -242,8 +232,8 @@ public class Command extends Skill {
                             .contains(ClothingSlot.bottom));
         assert !strippable.isEmpty();
         if (!highPriority.isEmpty())
-            return (Clothing) highPriority.toArray()[Global.random(highPriority.size())];
-        return (Clothing) strippable.toArray()[Global.random(strippable.size())];
+            return (Clothing) highPriority.toArray()[Global.global.random(highPriority.size())];
+        return (Clothing) strippable.toArray()[Global.global.random(strippable.size())];
     }
 
     private void executeCommand(CommandType chosen, Combat c, Character target) {
@@ -258,8 +248,8 @@ public class Command extends Skill {
                                                 target.pronoun(), target.action("dive"), target.action("lick")));
                 int m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomAss(),
-                                7 + Global.random(m), c, this);
-                if (Global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
+                                7 + Global.global.random(m), c, this);
+                if (Global.global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
                     target.add(c, new BodyFetish(target, getSelf(), "ass", .1));
                 }
                 getSelf().buildMojo(c, 15);
@@ -276,8 +266,8 @@ public class Command extends Skill {
                                                               target.action("suck")));
                 m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomCock(),
-                                7 + Global.random(m), c, this);
-                if (Global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
+                                7 + Global.global.random(m), c, this);
+                if (Global.global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
                     target.add(c, new BodyFetish(target, getSelf(), "cock", .1));
                 }
                 getSelf().buildMojo(c, 15);
@@ -292,8 +282,8 @@ public class Command extends Skill {
                                 getSelf().possessiveAdjective()));
                 m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomPussy(),
-                                7 + Global.random(m), c, this);
-                if (Global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
+                                7 + Global.global.random(m), c, this);
+                if (Global.global.random(50) < getSelf().get(Attribute.Fetish) + 10) {
                     target.add(c, new BodyFetish(target, getSelf(), "pussy", .1));
                 }
                 getSelf().buildMojo(c, 15);
@@ -312,7 +302,7 @@ public class Command extends Skill {
                 c.write(getSelf(),
                                 String.format("%s tells %s to remain still and"
                                                 + " gracefully lies down on %s, %s face right above %ss.",
-                                                getSelf().name(), target.subject(), 
+                                                getSelf().name(), target.subject(),
                                                 target.directObject(), getSelf().possessiveAdjective(),
                                                 target.possessiveAdjective()));
                 c.setStance(new Mount(getSelf(), target), target, false);
@@ -336,7 +326,7 @@ public class Command extends Skill {
                                                 + " tells %s that %s the look of it, %s %s practically"
                                                 + " salivating.", getSelf().name(), getSelf().possessiveAdjective(),
                                                 target.directObject(),
-                                                target.subjectAction("are", "is"), 
+                                                target.subjectAction("are", "is"),
                                                 getSelf().subject(), target.subjectAction("like"),
                                                 target.pronoun(), target.action("are", "is")));
                 if (getSelf().has(Item.Strapon2)) {
@@ -355,7 +345,8 @@ public class Command extends Skill {
                                                 + " to play with %s %s for %s.", getSelf().name(),
                                                 target.subject(), target.possessiveAdjective(),
                                                 pleasured.describe(target), getSelf().directObject()));
-                target.body.pleasure(target, target.body.getRandom("hands"), pleasured, 10 + Global.random(20), c, this);
+                target.body.pleasure(target, target.body.getRandom("hands"), pleasured, 10 + Global.global.random(20),
+                                c, this);
                 break;
             case HURT_SELF:
                 c.write(getSelf(),
@@ -365,7 +356,7 @@ public class Command extends Skill {
                                                 + " makes everything alright.", target.subjectAction("slam"),
                                                 target.possessiveAdjective(), target.possessiveAdjective(),
                                                 target.pronoun(), getSelf().nameOrPossessivePronoun()));
-                target.pain(c, target, (int) target.modifyDamage(DamageType.physical, target, Global.random(30, 50)));
+                target.pain(c, target, (int) target.modifyDamage(DamageType.physical, target, Global.global.random(30, 50)));
                 break;
             case STRIP_MASTER:
                 Clothing removed = getStripTarget(getSelf());
@@ -376,9 +367,9 @@ public class Command extends Skill {
                 c.write(getSelf(),
                                 String.format("%s tells %s to remove %s %s for %s."
                                                 + " %s gladly %s, eager to see more of %s perfect physique.",
-                                                getSelf().subject(), target.subject(), 
+                                                getSelf().subject(), target.subject(),
                                                 getSelf().possessiveAdjective(), removed.getName(),
-                                                getSelf().directObject(), 
+                                                getSelf().directObject(),
                                                 Global.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("comply", "complies"),
                                                 getSelf().nameOrPossessivePronoun()));
@@ -393,8 +384,8 @@ public class Command extends Skill {
                                 String.format("With a dismissive gesture, %s tells %s"
                                                 + " that %s would feel far better without %s %s on. Of course!"
                                                 + " That would make <i>everything</i> better! %s eagerly %s"
-                                                + " the offending garment.", getSelf().name(), 
-                                                target.subject(), target.pronoun(), 
+                                                + " the offending garment.", getSelf().name(),
+                                                target.subject(), target.pronoun(),
                                                 target.possessiveAdjective(), removed.getName(),
                                                 Global.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("remove")));
@@ -405,7 +396,7 @@ public class Command extends Skill {
                                                 + " %s that %s should lie down on the ground. %s obey the order"
                                                 + " without hesitation.", getSelf().name(),
                                                 target.nameOrPossessivePronoun(), target.directObject(),
-                                                target.pronoun(), 
+                                                target.pronoun(),
                                                 Global.capitalizeFirstLetter(target.subjectAction("obey"))));
                 c.setStance(new StandingOver(getSelf(), target), target, false);
                 break;
@@ -422,19 +413,19 @@ public class Command extends Skill {
                                                 getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
                                                 target.directObject(),
                                                 Global.capitalizeFirstLetter(target.pronoun()),
-                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(), 
+                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(),
                                                 target.action("worship"),
                                                 getSelf().body.getRandomCock().describe(target),
                                                 target.pronoun(), target.possessiveAdjective(),
                                                 target.reflectivePronoun()));
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomCock(),
-                                10 + Global.random(8), c, this);
+                                10 + Global.global.random(8), c, this);
                 if (target.hasDick())
                     target.body.pleasure(target, target.body.getRandom("hands"), target.body.getRandomCock(),
-                                    10 + Global.random(8), c, this);
+                                    10 + Global.global.random(8), c, this);
                 else if (target.hasPussy())
                     target.body.pleasure(target, target.body.getRandom("hands"), target.body.getRandomPussy(),
-                                    10 + Global.random(8), c, this);
+                                    10 + Global.global.random(8), c, this);
                 break;
             case WORSHIP_PUSSY:
                 c.write(getSelf(),
@@ -449,19 +440,19 @@ public class Command extends Skill {
                                                 getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
                                                 target.directObject(),
                                                 Global.capitalizeFirstLetter(target.pronoun()),
-                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(), 
+                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(),
                                                 target.action("worship"),
                                                 getSelf().body.getRandomPussy().describe(target),
                                                 target.pronoun(), target.possessiveAdjective(),
                                                 target.reflectivePronoun()));
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomPussy(),
-                                10 + Global.random(8), c, this);
+                                10 + Global.global.random(8), c, this);
                 if (target.hasDick())
                     target.body.pleasure(target, target.body.getRandom("hands"), target.body.getRandomCock(),
-                                    10 + Global.random(8), c, this);
+                                    10 + Global.global.random(8), c, this);
                 else if (target.hasPussy())
                     target.body.pleasure(target, target.body.getRandom("hands"), target.body.getRandomPussy(),
-                                    10 + Global.random(8), c, this);
+                                    10 + Global.global.random(8), c, this);
                 break;
             case MASTER_INSERT:
                 c.write(getSelf(),

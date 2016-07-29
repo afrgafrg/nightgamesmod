@@ -43,7 +43,7 @@ public class Handjob extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = Global.random(8, 13);
+        int m = Global.global.random(8, 13);
 
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (getSelf().get(Attribute.Seduction) >= 8) {
@@ -108,9 +108,7 @@ public class Handjob extends Skill {
                 return String.format("%s grabs %s soft penis and plays with the sensitive organ "
                                 + "until it springs into readiness.",
                                 getSelf().subject(), target.nameOrPossessivePronoun());
-            }
-
-            else if ((r = Global.random(3)) == 0) {
+            } else if ((r = Global.global.random(3)) == 0) {
                 return String.format("%s strokes and teases %s dick, sending shivers of pleasure up %s spine.",
                                 getSelf().subject(), target.nameOrPossessivePronoun(),
                                 target.possessiveAdjective());

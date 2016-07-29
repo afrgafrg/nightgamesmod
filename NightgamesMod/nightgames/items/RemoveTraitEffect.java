@@ -27,7 +27,7 @@ public class RemoveTraitEffect extends ItemEffect {
                 c.write(user, user.subjectAction("temporarily lost", "temporarily lost") + " the trait "
                                 + trait.toString() + ".");
             } else if (user.human()) {
-                Global.gui().message(user.subjectAction("temporarily lost", "temporarily lost") + " the trait "
+                Global.global.gui().message(user.subjectAction("temporarily lost", "temporarily lost") + " the trait "
                                 + trait.toString() + ".");
             }
             return true;

@@ -1,8 +1,5 @@
 package nightgames.skills;
 
-import java.util.Arrays;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -11,6 +8,9 @@ import nightgames.items.Item;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Oiled;
 import nightgames.status.Stsflag;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandUse extends PlayerCommand {
 
@@ -53,7 +53,7 @@ public class CommandUse extends PlayerCommand {
     @Override
     public boolean resolve(Combat c, Character target) {
         do {
-            used = Item.values()[Global.random(Item.values().length)];
+            used = Item.values()[Global.global.random(Item.values().length)];
             boolean hasStatus = false;
             switch (used) {
                 case Lubricant:

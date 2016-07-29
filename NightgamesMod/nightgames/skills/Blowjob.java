@@ -69,7 +69,7 @@ public class Blowjob extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 10 + Global.random(8);
+        int m = 10 + Global.global.random(8);
         boolean facesitting = isFacesitting(c, target);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
@@ -167,7 +167,7 @@ public class Blowjob extends Skill {
                             target.action("pull"), target.possessiveAdjective(), getSelf().directObject());
         } else if (modifier == Result.special) {
             m += String.format("%s soft lips and talented tongue work over %s dick, drawing out"
-                            + " dangerously irresistible pleasure with each touch.", 
+                            + " dangerously irresistible pleasure with each touch.",
                             getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun());
         } else if (modifier == Result.intercourse) {
             m += String.format("%s pussy lips suddenly quiver and %s a long sinuous object wrap around %s cock. "
@@ -190,7 +190,7 @@ public class Blowjob extends Skill {
                             getSelf().subjectAction("lap"), target.nameOrPossessivePronoun(), getSelf().action("take"),
                             getSelf().possessiveAdjective());
         } else {
-            int r = Global.random(4);
+            int r = Global.global.random(4);
             if (r == 0) {
                 m += String.format("%s %s tongue up the length of %s dick, sending a jolt of pleasure up %s spine. "
                                 + "%s slowly wraps %s lips around %s dick and sucks.",
@@ -213,7 +213,7 @@ public class Blowjob extends Skill {
 
         if (modifier != Result.miss && getSelf().body.getRandom("mouth").isErogenous()) {
             m += String.format("<br/>Unfortunately for %s, as %s mouth fucks %s cock %s sensitive"
-                            + " modifier mouth pussy sends spasms of pleasure into %s as well.", 
+                            + " modifier mouth pussy sends spasms of pleasure into %s as well.",
                             getSelf().directObject(), getSelf().subject(), target.nameOrPossessivePronoun(),
                             getSelf().possessiveAdjective(), getSelf().reflectivePronoun());
         }

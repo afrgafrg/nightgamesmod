@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.Collection;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -15,6 +13,8 @@ import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
 import nightgames.status.Shamed;
 import nightgames.status.TailFucked;
+
+import java.util.Collection;
 
 public class TailPeg extends Skill {
 
@@ -66,7 +66,7 @@ public class TailPeg extends Skill {
             int strength = Math.min(20, 10 + getSelf().get(Attribute.Dark) / 4);
             boolean vaginal = c.getStance().anallyPenetrated(c, c.getOpponent(getSelf()));
             boolean shamed = false;
-            if (!vaginal && Global.random(4) == 2) {
+            if (!vaginal && Global.global.random(4) == 2) {
                 target.add(c, new Shamed(target));
                 shamed = true;
             }
@@ -120,7 +120,7 @@ public class TailPeg extends Skill {
             target.emote(Emotion.desperate, 10);
             getSelf().emote(Emotion.confident, 15);
             getSelf().emote(Emotion.dominant, 25);
-            if (Global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+            if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
                 target.add(c, new BodyFetish(target, getSelf(), "tail", .25));
             }
         } else {

@@ -39,7 +39,7 @@ public class BreastRay extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
-        boolean permanent = Global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
+        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
         writeOutput(c, permanent ? 1 : 0, Result.normal, target);
         target.add(c, new Hypersensitive(target, 10));
@@ -86,7 +86,7 @@ public class BreastRay extends Skill {
                         + "distracts %s in a delicious way.",
                         getSelf().subjectAction("point"), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                         target.body.getRandomBreasts().describe(target), plural ? "start" : "starts",
-                                        Global.capitalizeFirstLetter(target.pronoun()), 
+                                        Global.capitalizeFirstLetter(target.pronoun()),
                                         target.action("flush", "flushes"),
                                         target.action("try", "tries"),
                                         target.reflectivePronoun(), target.directObject());;

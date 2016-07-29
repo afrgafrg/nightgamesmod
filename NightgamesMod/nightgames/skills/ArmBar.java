@@ -34,7 +34,7 @@ public class ArmBar extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(6, 10));
+            int m = (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(6, 10));
             writeOutput(c, m, Result.normal, target);
             target.pain(c, getSelf(), m);
             target.add(c, new Abuff(target, Attribute.Power, -4, 5));
@@ -85,7 +85,7 @@ public class ArmBar extends Skill {
         } else {
             return String.format("%s %s arm between %s legs, forcibly overextending %s elbow. "
                             + "The pain almost makes %s tap out, but %s %s to yank %s arm out of %s grip",
-                            getSelf().subjectAction("pull"), target.nameOrPossessivePronoun(), 
+                            getSelf().subjectAction("pull"), target.nameOrPossessivePronoun(),
                             getSelf().possessiveAdjective(), target.possessiveAdjective(), target.pronoun(),
                             target.pronoun(), target.action("manage"), target.possessiveAdjective(),
                             getSelf().possessiveAdjective());

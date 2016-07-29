@@ -63,7 +63,7 @@ public class TestAngel extends BasePersonality {
         baseChar.outfitPlan.add(Clothing.getByID("sandals"));
         baseChar.change();
 
-        Global.gainSkills(baseChar);
+        Global.global.gainSkills(baseChar);
 
         return baseChar;
     }
@@ -86,7 +86,7 @@ public class TestAngel extends BasePersonality {
         self.change();
         self.att.put(Attribute.Seduction, 7);
         self.att.put(Attribute.Perception, 6);
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
 
         self.add(Trait.undisciplined);
         self.add(Trait.lickable);
@@ -167,31 +167,31 @@ public class TestAngel extends BasePersonality {
                 character.add(Trait.lacedjuices);
             }
             if (character.money > 0) {
-                Global.getDay().visit("Body Shop", character, Global.random(character.money));
+                Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay().visit("Black Market", character, Global.random(character.money));
+                Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay().visit("Workshop", character, Global.random(character.money));
+                Global.global.getDay().visit("Workshop", character, Global.global.random(character.money));
             }
         }
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(4);
+            r = Global.global.random(4);
             if (r == 1) {
                 if (character.has(Trait.fitnessNut)) {
                     character.getStamina().gain(1);
@@ -453,6 +453,6 @@ public class TestAngel extends BasePersonality {
     }
 
     @Override
-    public void applyStrategy(NPC self) {   
+    public void applyStrategy(NPC self) {
     }
 }

@@ -43,7 +43,7 @@ public class FootPump extends Skill {
     }
 
     @Override public boolean resolve(Combat c, Character target) {
-        int m = 12 + Global.random(6);
+        int m = 12 + Global.global.random(6);
         int m2 = m / 2;
         writeOutput(c, Result.normal, target);
         target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("cock"), m, c, this);
@@ -51,7 +51,7 @@ public class FootPump extends Skill {
         if (c.getStance().en != Stance.behindfootjob) {
             c.setStance(new BehindFootjob(getSelf(), target), getSelf(), true);
         }
-        if (Global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
         }
         return true;
@@ -70,13 +70,13 @@ public class FootPump extends Skill {
     }
 
     @Override public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "You wrap your legs around {other:name-possessive} waist and grip {other:possessive} {other:body-part:cock} between your toes. Massaging {other:name-possessive} {other:body-part:cock} between your toes, you start to stroke {other:possessive} {other:body-part:cock} up and down between your toes. Reaching around from behind {other:possessive} back, you start to tease and caress {other:possessive} breasts with your hands. Alternating between pumping and massaging the head of {other:possessive} {other:body-part:cock} with your toes, {other:pronoun} begins to let out a low moan with each additional touch.",
                         getSelf(), target);
     }
 
     @Override public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT} wraps {self:possessive} legs around {other:name-possessive} waist and settles {self:possessive} "
                         + "feet on both sides of {other:possessive} {other:body-part:cock}. Cupping {other:name-possessive} "
                         + "dick with {self:possessive} arches, {self:subject} starts making long and steady strokes up and "

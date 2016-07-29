@@ -123,19 +123,19 @@ public class Fuck extends Skill {
                             + " right through them, but leaves the skin beneath untouched. Then, ";
         }
 
-        return Global.format(premessage, getSelf(), target);
+        return Global.global.format(premessage, getSelf(), target);
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         String premessage = premessage(c, target);
-        int m = Global.random(10, 15);
+        int m = Global.global.random(10, 15);
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         if (selfO.isReady(getSelf()) && targetO.isReady(target)) {
             if (targetO.isType("pussy") && target.has(Trait.temptingass) && new AssFuck(getSelf()).usable(c, target)
                 && Global.random(3) == 1) {
-                
+
                 c.write(getSelf(), Global.format("%s{self:subject-action:line|lines}"
                                 + " {self:possessive} {self:body-part:cock} up with {other:name-possessive}"
                                 + " {other:body-part:pussy}. At the last moment before thrusting in, however,"
@@ -143,7 +143,7 @@ public class Fuck extends Skill {
                                 + " and {self:action:sink|sinks} the hard rod into {other:name-possessive}"
                                 + " hot ass instead.<br/>", getSelf(), target, premessage));
                 new AssFuck(getSelf()).resolve(c, target);
-                
+
                 return true;
             }
             if (getSelf().human()) {
@@ -230,8 +230,8 @@ public class Fuck extends Skill {
         BodyPart targetO = getTargetOrgan(target);
         if (modifier == Result.normal) {
             return String.format("%s rubs %s %s against %s wet snatch. " +
-                                 "%s slowly but steadily pushes in, forcing %s length into %s hot, wet pussy.", 
-                            getSelf().name(), getSelf().possessiveAdjective(), selfO.describe(getSelf()), 
+                                 "%s slowly but steadily pushes in, forcing %s length into %s hot, wet pussy.",
+                            getSelf().name(), getSelf().possessiveAdjective(), selfO.describe(getSelf()),
                             target.nameOrPossessivePronoun(),
                             Global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().possessiveAdjective(),
                             target.possessiveAdjective());

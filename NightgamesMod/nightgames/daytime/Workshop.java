@@ -17,15 +17,15 @@ public class Workshop extends Activity {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.workshop);
+        return Global.global.checkFlag(Flag.workshop);
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
-        if (!Global.checkFlag(Flag.metJett)) {
-            Global.gui().message(
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
+        if (!Global.global.checkFlag(Flag.metJett)) {
+            Global.global.gui().message(
                             "You head to Jett's workshop. Apparently he has an implicit claim on this workshop in the same way that Mara does on her computer room. "
                                             + "When you enter the room, he's busy machining an unidentifiable metal component. When he finishes the part, he walks over to greet you, but doesn't "
                                             + "bother removing his safety glasses. He's a bit short and skinny. You can't help thinking of him as a stereotypical science nerd. <i>\"You're "
@@ -36,18 +36,18 @@ public class Workshop extends Activity {
                                             + "to someone who doesn't know how to maintain and operate it safely. I'm not risking you sodding up one of my inventions in a way that gets a girl hurt. What "
                                             + "I am willing to do is teach you how I put my equipment together. If you're a quick study and can understand how my toys work, I'll help you build your own. Oh, "
                                             + "and I'm not helping you for free. No offence, but I'm rooting for your opponents. Male solidarity is fine and well, but they're a lot more attractive than you.\"</i>");
-            Global.flag(Flag.metJett);
+            Global.global.flag(Flag.metJett);
             acted = true;
-            Global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
+            Global.global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
         } else if (choice.equals("Start")) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "You head to Jett's workshop. He sets down the parts he was working on and turns to face you. <i>\"You need something? I hope you brought your "
                                             + "wallet.\"</i>");
-            Global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
+            Global.global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
             acted = false;
         } else if (choice.equals("Upgrade Dildo: $2000")) {
             if (player.money >= Item.Dildo2.getPrice()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You hand over the dildo and ask Jett how he plans to upgrade it. <i>\"If I hollow out a small space inside it, there will be enough "
                                                 + "room for a compact oscillating motor.\"</i> That's it? He's just going to put a motor in it? You could have just bought a vibrating dildo at the sex "
                                                 + "shop. <i>\"No. Nonono... no, you don't want to do that. That's a classic beginner's mistake. Crude store bought vibrators just overstimulate nerve "
@@ -61,11 +61,11 @@ public class Workshop extends Activity {
                 player.gain(Item.Dildo2);
                 acted = true;
             } else {
-                Global.gui().message("You can't afford that upgrade");
+                Global.global.gui().message("You can't afford that upgrade");
             }
         } else if (choice.equals("Upgrade Tickler: $3000")) {
             if (player.money >= Item.Tickler2.getPrice()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "Jett rummages around in the back of his workshop for awhile before returning with a small box of feathers. <i>\"Arm,\"</i> he demands bluntly. "
                                                 + "You extend your arm and he touches it with one of the feathers. It feels like a normal feather, but goosebumps appear where it touched. Your skin feels "
                                                 + "more sensitive where it touched. <i>\"The feathers come from a bird which secretes an oil that can increase sensitivity in primates. There's no evolutionary "
@@ -76,11 +76,11 @@ public class Workshop extends Activity {
                 player.gain(Item.Tickler2);
                 acted = true;
             } else {
-                Global.gui().message("You can't afford that upgrade");
+                Global.global.gui().message("You can't afford that upgrade");
             }
         } else if (choice.equals("Upgrade Riding Crop: $1500")) {
             if (player.money >= Item.Crop2.getPrice()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "Jett works on the riding crop for a few minutes and when he returns it, there's a short length of cord attached to the end. you feel the "
                                                 + "cord. It's flexible and softer than leather, but still has some resilience. <i>\"I call it the 'Treasure Hunter.' It's a painful, yet elegant attachment that's "
                                                 + "the right length and size to hit extremely sensitive areas. It's effective against both male and female anatomy. Simple enough to accomplish, but the real "
@@ -91,11 +91,11 @@ public class Workshop extends Activity {
                 player.gain(Item.Crop2);
                 acted = true;
             } else {
-                Global.gui().message("You can't afford that upgrade");
+                Global.global.gui().message("You can't afford that upgrade");
             }
         } else if (choice.equals("Upgrade Onahole: $3000")) {
             if (player.money >= Item.Onahole2.getPrice()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "Jett reluctantly takes the Onahole from you. <i>\"You wash this, right?\"</i> He takes it to the back room and is gone for a while. He returns "
                                                 + "and hands you the cock sleeve which is not visibly different. <i>\"Put your finger inside.\"</i> It's hot and wet, almost indistinguishable from the real thing. "
                                                 + "<i>\"It's self lubricating and maintains a temperature slightly above a normal human body.\"</i> Quite impressive, and there's no obvious heating mechanism or "
@@ -105,25 +105,25 @@ public class Workshop extends Activity {
                 player.gain(Item.Onahole2);
                 acted = true;
             } else {
-                Global.gui().message("You can't afford that upgrade");
+                Global.global.gui().message("You can't afford that upgrade");
             }
         } else if (choice.equals("Upgrade Strapon: $2500")) {
             if (player.money >= Item.Strapon2.getPrice()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "[Placeholder]<br/>Jett upgrades your strapon with a more flexible body and a vibration feature.");
                 player.money -= Item.Strapon2.getPrice();
                 player.consume(Item.Strapon, 1, false);
                 player.gain(Item.Strapon2);
                 acted = true;
             } else {
-                Global.gui().message("You can't afford that upgrade");
+                Global.global.gui().message("You can't afford that upgrade");
             }
         } else if (choice.equals("Leave")) {
             done(acted);
             return;
         } else if (choice.startsWith("Lecture")) {
             if (player.money >= 1000 * (player.getPure(Attribute.Science) + 1)) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "They say that geniuses make poor teachers, but Jett disproves that theory. He explains the principles behind his work in a way that you "
                                                 + "can easily follow. Despite his unfriendly demeanor, he answers any questions you have without complaint. After about an hour of intense lecture, you "
                                                 + "feel like you've gotten the benefits of a week of classes.<br/><br/><i>\"Some of this equipment is likely to consume battery power rapidly. If you need to "
@@ -141,26 +141,26 @@ public class Workshop extends Activity {
                 }
                 acted = true;
             } else {
-                Global.gui().message("You don't have enough money for Jett's lecture.");
+                Global.global.gui().message("You don't have enough money for Jett's lecture.");
             }
             acted = true;
         }
         if (player.has(Item.Dildo)) {
-            Global.gui().choose(this, "Upgrade Dildo: $2000");
+            Global.global.gui().choose(this, "Upgrade Dildo: $2000");
         }
         if (player.has(Item.Tickler)) {
-            Global.gui().choose(this, "Upgrade Tickler: $3000");
+            Global.global.gui().choose(this, "Upgrade Tickler: $3000");
         }
         if (player.has(Item.Crop)) {
-            Global.gui().choose(this, "Upgrade Riding Crop: $1500");
+            Global.global.gui().choose(this, "Upgrade Riding Crop: $1500");
         }
         if (player.has(Item.Onahole)) {
-            Global.gui().choose(this, "Upgrade Onahole: $3000");
+            Global.global.gui().choose(this, "Upgrade Onahole: $3000");
         }
         if (player.has(Item.Strapon)) {
-            Global.gui().choose(this, "Upgrade Strapon: $2500");
+            Global.global.gui().choose(this, "Upgrade Strapon: $2500");
         }
-        Global.gui().choose(this, "Leave");
+        Global.global.gui().choose(this, "Leave");
 
     }
 

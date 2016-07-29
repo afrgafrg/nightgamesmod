@@ -46,7 +46,7 @@ public class RequirementTest {
     @BeforeClass public static void setUpClass() throws Exception {
         Clothing.buildClothingTable();
         new TestGlobal();
-        Global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
+        Global.global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
     }
 
     @Before public void setUp() throws Exception {

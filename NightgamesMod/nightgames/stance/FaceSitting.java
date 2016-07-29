@@ -1,22 +1,15 @@
 package nightgames.stance;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
-import nightgames.skills.Anilingus;
-import nightgames.skills.Blowjob;
-import nightgames.skills.Cunnilingus;
-import nightgames.skills.Escape;
-import nightgames.skills.Nothing;
-import nightgames.skills.Skill;
-import nightgames.skills.Struggle;
-import nightgames.skills.Wait;
+import nightgames.skills.*;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import nightgames.skills.damage.DamageType;
 
 public class FaceSitting extends AbstractBehindStance {
@@ -29,7 +22,7 @@ public class FaceSitting extends AbstractBehindStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.capitalizeFirstLetter(top.subjectAction("are", "is")) + " sitting on "
+        return Global.global.capitalizeFirstLetter(top.subjectAction("are", "is")) + " sitting on "
                         + bottom.nameOrPossessivePronoun() + " face while holding " + bottom.possessiveAdjective()
                         + " arms so " + bottom.subject() + " cannot escape";
     }
@@ -145,10 +138,10 @@ public class FaceSitting extends AbstractBehindStance {
         top.emote(Emotion.dominant, 20);
         top.emote(Emotion.horny, 10);
         if (top.has(Trait.energydrain)) {
-            c.write(top, Global.format(
+            c.write(top, Global.global.format(
                             "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained through your connection.",
                             top, bottom));
-            int m = Global.random(5) + 5;
+            int m = Global.global.random(5) + 5;
             bottom.drain(c, top, (int) top.modifyDamage(DamageType.drain, bottom, m));
         }
     }

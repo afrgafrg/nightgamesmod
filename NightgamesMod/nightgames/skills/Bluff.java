@@ -33,7 +33,7 @@ public class Bluff extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 20 + Global.random(25);
+        int m = 20 + Global.global.random(25);
         writeOutput(c, Result.normal, target);
         if (!getSelf().getArousal().isFull()) {
             getSelf().add(c, new IgnoreOrgasm(getSelf(), 2));
@@ -65,7 +65,7 @@ public class Bluff extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format("Despite %s best efforts, %s is still looking as calm and composed as ever."
-                        + " Either %s %s getting to %s at all, or %s %s really good at hiding it.", 
+                        + " Either %s %s getting to %s at all, or %s %s really good at hiding it.",
                         target.nameOrPossessivePronoun(), getSelf().subject(), target.pronoun(),
                         target.action("aren't", "isn't"), getSelf().directObject(), getSelf().pronoun(),
                         getSelf().action("are", "is"));

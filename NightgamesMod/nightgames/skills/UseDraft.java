@@ -1,10 +1,5 @@
 package nightgames.skills;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.characters.Decider;
 import nightgames.characters.NPC;
@@ -15,6 +10,11 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.ItemEffect;
 import nightgames.status.Stsflag;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 public class UseDraft extends Skill {
     public UseDraft(Character self) {
@@ -56,7 +56,7 @@ public class UseDraft extends Skill {
             });
             checks.put(item, rating);
         });
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
             checks.entrySet().stream().forEach(entry -> {
                 System.out.println("Item " + entry.getKey() + ": " + entry.getValue());
             });
@@ -100,7 +100,7 @@ public class UseDraft extends Skill {
         } else {
             boolean eventful = false;
             if (shouldPrint(target))
-                c.write(getSelf(), Global.format(
+                c.write(getSelf(), Global.global.format(
                             String.format("{self:SUBJECT-ACTION:%s|%ss} %s%s", used.getEffects().get(0).getSelfVerb(),
                                             used.getEffects().get(0).getSelfVerb(), used.pre(), used.getName()),
                             getSelf(), target));

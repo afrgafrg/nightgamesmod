@@ -1,12 +1,12 @@
 package nightgames.daytime;
 
-import java.util.Map;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.Item;
+
+import java.util.Map;
 
 public class HWStore extends Store {
     public HWStore(Character player) {
@@ -20,13 +20,13 @@ public class HWStore extends Store {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.basicStores);
+        return Global.global.checkFlag(Flag.basicStores);
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
         if (choice.equals("Start")) {
             acted = false;
         }
@@ -36,21 +36,21 @@ public class HWStore extends Store {
         }
         checkSale(choice);
         if (player.human()) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "Nothing at the hardware store is designed for the sort of activities you have in mind, but there are components you could use to make some "
                                             + "effective traps.");
             Map<Item, Integer> MyInventory = this.player.getInventory();
             for (Item i : stock.keySet()) {
                 if (MyInventory.get(i) == null || MyInventory.get(i) == 0) {
-                    Global.gui().message(i.getName() + ": $" + i.getPrice());
+                    Global.global.gui().message(i.getName() + ": $" + i.getPrice());
                 } else {
-                    Global.gui().message(
+                    Global.global.gui().message(
                                     i.getName() + ": $" + i.getPrice() + " (you have: " + MyInventory.get(i) + ")");
                 }
             }
-            Global.gui().message("You have : $" + player.money + " to spend.");
+            Global.global.gui().message("You have : $" + player.money + " to spend.");
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
         }
     }
 
@@ -58,7 +58,7 @@ public class HWStore extends Store {
     protected void displayItems() {
         for (Item i : stock.keySet()) {
             if (i != Item.EmptyBottle || player.getRank() > 0) {
-                Global.gui().sale(this, i);
+                Global.global.gui().sale(this, i);
             }
         }
     }

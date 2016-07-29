@@ -48,7 +48,7 @@ public class Threesomes extends DaytimeEvent {
     protected void play(String choice) {
         switch (choice) {
             case "CassieJewel":
-                Global.gui()
+                Global.global.gui()
                       .message("You step out of the shower room with a towel wrapped around your waist to preserve your modesty. One of these days you should get a proper bathrobe, "
                                       + "but the showers aren't far from your room. When you reach your room, you notice your door is ajar. That's odd. You didn't lock the door because you aren't carrying "
                                       + "your keys, but you thought you had at least closed it. Maybe not. You go inside to get a change of clothes, when suddenly you feel your towel get yanked right off. "
@@ -111,11 +111,11 @@ public class Threesomes extends DaytimeEvent {
                                       + "trio too, don't we?\"</i>");
                 break;
             case "CassieAngel":
-                Global.gui()
+                Global.global.gui()
                       .message("");
                 break;
             case "MaraJewel":
-                Global.gui()
+                Global.global.gui()
                       .message("You're sitting in your room, working on some homework, when you hear a knock on your door. You open the door to find Mara, who pushes past you into "
                                       + "your room. <i>\"Sorry to bug you. Well... not that sorry. I'm promise this is more exciting than whatever you were up to. I briefly considered using Jett for this, but "
                                       + "I thought you would be much more fun. Also, if he gets mad at me and refuses to teach me anything, I'd be kinda screwed. I guess it would also be bad if you "
@@ -164,7 +164,7 @@ public class Threesomes extends DaytimeEvent {
                                       + "<i>\"You seem to have two super-horny girls in your room who owe you a favor. How will you possibly manage?\"</i>");
                 break;
             case "CassieMara":
-                Global.gui()
+                Global.global.gui()
                       .message("You return to your room after a brief errand. As you reach for the doorknob, the muffled sound of female voices inside makes you "
                                       + "hesitate. It seems that at least two girls have infiltrated your room in your absence. You left the door unlocked, didn't you? Well, whatever "
                                       + "happens, you have only yourself to blame.<br/><br/>"
@@ -218,7 +218,7 @@ public class Threesomes extends DaytimeEvent {
                                       + "down from her intense climax.");
                 break;
             case "AngelMara":
-                Global.gui()
+                Global.global.gui()
                       .message("'Cum over ASAP.'<br/><br/>"
                                       + "The text message left you somewhat bewildered. It wasn't like Mara to be sparse with details. You quickly grab your jacket and rush out the front "
                                       + "door, perhaps she's gotten herself into trouble somehow. A few minutes later you arrive, completely out of breath knocking at Mara's door. You hear "

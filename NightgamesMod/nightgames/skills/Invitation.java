@@ -71,28 +71,29 @@ public class Invitation extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "You command {other:name} to embrace you. {other:SUBJECT} moves to walk towards you for a second before snapping out of it.",
                                 getSelf(), target);
             }
-            return Global.format("You try to hug {other:name} and pull her down, but she twists out of your grasp.\n",
+            return Global.global
+                            .format("You try to hug {other:name} and pull her down, but she twists out of your grasp.\n",
                             getSelf(), target);
         } else if (!c.getStance().inserted(getSelf())) {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "You command {other:name} to embrace you. {other:SUBJECT} obeys and hugs you close to {other:direct-object}. You follow up on your earlier command and tell her to fuck you, which she promptly lovingly complies.",
                                 getSelf(), target);
             }
-            return Global.format(
+            return Global.global.format(
                             "You embrace {other:name} and smoothly slide her cock into your folds while she's distracted. You then pull her to the ground on top of you and softly wrap your legs around her waist",
                             getSelf(), target);
         } else {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "You command {other:name} to embrace you. {other:SUBJECT} obeys and hugs you close to {other:direct-object}. You follow up on your earlier command and tell her to fuck you, which she promptly lovingly complies.",
                                 getSelf(), target);
             }
-            return Global.format(
+            return Global.global.format(
                             "You embrace {other:name} and pull her on top of you. Taking advantage of her distraction, you push her on top of you while you are fucking her from beneath.",
                             getSelf(), target);
         }
@@ -102,29 +103,29 @@ public class Invitation extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "{self:SUBJECT} commands {other:direct-object} to embrace {self:direct-object}. {other:SUBJECT} move to walk towards {self:direct-object} for a brief second before snapping out of it.",
                                 getSelf(), target);
             }
-            return Global.format(
+            return Global.global.format(
                             "{self:NAME} hugs {other:name-do} softly and tries to pull {other:direct-object} into {self:direct-object}, but {other:pronoun-action:come|comes} to {other:possessive} senses in the nick of time and manage to twist out of {self:possessive} grasp, causing {self:NAME} to pout at {other:direct-object} cutely.\n",
                             getSelf(), target);
         } else if (!c.getStance().inserted(getSelf())) {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "{self:SUBJECT} commands {other:name-do} to embrace {self:direct-object}. {other:SUBJECT-ACTION:obey|obeys} and {other:action:hug|hugs} {self:direct-object} close to {other:reflective}. {self:NAME} follows up on {self:possessive} earlier command and tells {other:name-do} to fuck {self:direct-object}, to which {other:pronoun} promptly, lovingly {other:action:comply|complies}.",
                                 getSelf(), target);
             }
-            return Global.format(
+            return Global.global.format(
                             "{self:NAME} embraces {other:name-do} and smoothly slides {other:possessive} cock into {self:possessive} folds while {other:pronoun-action:are|is} distracted. {self:PRONOUN} then pulls {other:direct-object} to the ground on top of {self:direct-object} and softly wraps {self:possessive} legs around {other:possessive} waist preventing {other:possessive} escape.",
                             getSelf(), target);
         } else {
             if (hasDivinity()) {
-                return Global.format(
+                return Global.global.format(
                                 "{self:SUBJECT} commands {other:direct-object} to embrace {self:direct-object}. {other:SUBJECT-ACTION:obey|obeys} and {other:action:hug|hugs} {self:direct-object} close to {other:reflective}. {self:NAME} follows up on {self:possessive} earlier command and tells {other:name-do} to fuck {self:direct-object}, to which {other:pronoun} promptly, lovingly {other:action:comply|complies}.",
                                 getSelf(), target);
             }
-            return Global.format(
+            return Global.global.format(
                             "{self:NAME} embraces {other:name-do} and pulls {other:direct-object} on top of {self:direct-object}. Taking advantage of {other:possessive} distraction, {self:subject} pushes {other:name-do} above {self:direct-object} with {self:direct-object} fucking {other:direct-object} from underneath.",
                             getSelf(), target);
         }
@@ -137,7 +138,7 @@ public class Invitation extends Skill {
         int strength = getSelf().getLevel() + getSelf().get(Attribute.Seduction)
                         * (getSelf().has(Trait.submissive) ? 2 : 1) * (hasDivinity() ? 2 : 1);
 
-        boolean success = Global.random(Math.min(Math.max(difficulty - strength, 1), 10)) == 0;
+        boolean success = Global.global.random(Math.min(Math.max(difficulty - strength, 1), 10)) == 0;
         Result result = Result.normal;
         if (!success) {
             result = Result.miss;

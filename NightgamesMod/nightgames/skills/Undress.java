@@ -45,7 +45,7 @@ public class Undress extends Skill {
         Result res = Result.normal;
         int difficulty = getSelf().stripDifficulty(target);
         if (difficulty > 0) {
-            res = Global.random(50) > difficulty ? Result.weak : Result.miss;
+            res = Global.global.random(50) > difficulty ? Result.weak : Result.miss;
         }
 
         if (getSelf().human()) {

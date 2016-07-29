@@ -65,15 +65,15 @@ public class BunshinService extends Skill {
         }
         for (int i = 0; i < clones; i++) {
             if (target.roll(getSelf(), c, accuracy(c, target))) {
-                switch (Global.random(4)) {
+                switch (Global.global.random(4)) {
                     case 0:
                         r = Result.weak;
-                        target.tempt(Global.random(3) + getSelf().get(Attribute.Seduction) / 4);
+                        target.tempt(Global.global.random(3) + getSelf().get(Attribute.Seduction) / 4);
                         break;
                     case 1:
                         r = Result.normal;
-                        target.body.pleasure(getSelf(),  getSelf().body.getRandom("hands"),target.body.getRandomBreasts(),
-                                        Global.random(3 + getSelf().get(Attribute.Seduction) / 2)
+                        target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"),target.body.getRandomBreasts(),
+                                        Global.global.random(3 + getSelf().get(Attribute.Seduction) / 2)
                                                         + target.get(Attribute.Perception) / 2,
                                         c, this);
                         break;
@@ -82,8 +82,8 @@ public class BunshinService extends Skill {
                         BodyPart targetPart = target.body.has("cock") ? target.body.getRandomCock()
                                         : target.hasPussy() ? target.body.getRandomPussy()
                                                         : target.body.getRandomAss();
-                        target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"),targetPart, 
-                                        Global.random(4 + getSelf().get(Attribute.Seduction))
+                        target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"),targetPart,
+                                        Global.global(4 + getSelf().get(Attribute.Seduction))
                                                         + target.get(Attribute.Perception) / 2,
                                         c, this);
                         break;
@@ -92,7 +92,7 @@ public class BunshinService extends Skill {
                         targetPart = target.body.has("cock") ? target.body.getRandomCock()
                                         : target.hasPussy() ? target.body.getRandomPussy()
                                                         : target.body.getRandomAss();
-                        target.body.pleasure(getSelf(),getSelf().body.getRandom("hands"), targetPart, Global.random(6)
+                        target.body.pleasure(getSelf(),getSelf().body.getRandom("hands"), targetPart, Global.global.random(6)
                                         + getSelf().get(Attribute.Seduction) / 2 + target.get(Attribute.Perception), c,
                                         this);
                         break;

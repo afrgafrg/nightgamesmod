@@ -14,7 +14,7 @@ public class TextEffect extends ItemEffect {
 
     @Override
     public boolean use(Combat c, Character user, Character opponent, Item item) {
-        c.write(user, Global.format(format, user, opponent));
+        c.write(user, Global.global.format(format, user, opponent));
         return true;
     }
 }

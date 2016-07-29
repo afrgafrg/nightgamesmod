@@ -1,9 +1,9 @@
 package nightgames.nskills.effects.rolls;
 
-import java.util.Random;
-
 import nightgames.global.Global;
 import nightgames.nskills.struct.SkillResultStruct;
+
+import java.util.Random;
 
 public class BasicNumberRoll implements EffectNumberRoll {
     private final double from;
@@ -18,7 +18,7 @@ public class BasicNumberRoll implements EffectNumberRoll {
         }
         this.from = from;
         this.to = to;
-        seed = Global.randomlong();
+        seed = Global.global.randomlong();
     }
 
     @Override

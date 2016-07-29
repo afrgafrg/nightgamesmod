@@ -1,8 +1,5 @@
 package nightgames.ftc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.global.Flag;
@@ -13,16 +10,20 @@ import nightgames.gui.SaveButton;
 import nightgames.gui.SceneButton;
 import nightgames.modifier.standard.FTCModifier;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class FTCPrematch implements Scene {
 
     private Character prey;
 
-    public FTCPrematch(Player player) {        
-        Global.current = this;
-        Global.unflag(Flag.victory);
+    public FTCPrematch(Player player) {
+        Global.global.current = this;
+        Global.global.unflag(Flag.victory);
         List<KeyableButton> choice = new ArrayList<>();
         String message = "";
-        if (!Global.checkFlag(Flag.didFTC)) {
+        if (!Global.global.checkFlag(Flag.didFTC)) {
             message += "When you get to the student union, you find it deserted save for"
                             + " a note telling you to go to the parking lot instead. Once you get"
                             + " there, the others, including Lilly, are already waiting next to a van. "
@@ -54,20 +55,20 @@ public class FTCPrematch implements Scene {
         choice.add(new SceneButton("Volunteer"));
         choice.add(new SceneButton("Keep Silent"));
         choice.add(new SaveButton());
-        Global.gui().prompt(message, choice);
+        Global.global.gui().prompt(message, choice);
     }
 
     @Override
     public void respond(String response) {
         if (response.equals("Start the Match")) {
             FTCModifier mod = new FTCModifier(prey);
-            Global.flag(Flag.didFTC);
-            Global.setUpMatch(mod);
+            Global.global.flag(Flag.didFTC);
+            Global.global.setUpMatch(mod);
         } else {
             String message = "";
             if (response.equals("Volunteer")) {
-                prey = Global.getPlayer();
-                if (!Global.checkFlag(Flag.didFTC)) {
+                prey = Global.global.getPlayer();
+                if (!Global.global.checkFlag(Flag.didFTC)) {
                     message += "\"That's the spirit! Oh, did I mention the Prey has to be naked"
                                     + " for the duration of the match and can't use any items?\" Lilly grins mischievously as she"
                                     + " reveals this small detail, but it's too late to back down now. Everyone"
@@ -88,9 +89,9 @@ public class FTCPrematch implements Scene {
                 }
             } else {
                 do {
-                    prey = (Character) Global.pickRandom(Global.getCharacters().toArray()).get();
+                    prey = (Character) Global.global.pickRandom(Global.global.getCharacters().toArray()).get();
                 } while (prey.human());
-                if (!Global.checkFlag(Flag.didFTC)) {
+                if (!Global.global.checkFlag(Flag.didFTC)) {
                     message += "\"No one? Really? Fine, then I'll pick someone. Let's see... " + prey.name()
                                     + "! You have the honors tonight. Oh and just so"
                                     + " you know, the Prey competes naked and without items. Get to it!\" "
@@ -109,7 +110,7 @@ public class FTCPrematch implements Scene {
             }
             List<KeyableButton> choices = new ArrayList<>();
             choices.add(new SceneButton("Start the Match"));
-            Global.gui().prompt(message, choices);
+            Global.global.gui().prompt(message, choices);
         }
     }
 }

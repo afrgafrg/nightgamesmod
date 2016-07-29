@@ -27,7 +27,7 @@ public class StunBlast extends Skill {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && c.getStance().front(getSelf())
                         && (getSelf().has(Item.Battery, 4) ||
                                         (target.has(Trait.conducivetoy) &&
-                                        target.has(ClothingTrait.harpoonDildo) || 
+                                        target.has(ClothingTrait.harpoonDildo) ||
                                         target.has(ClothingTrait.harpoonOnahole)));
     }
 
@@ -38,8 +38,8 @@ public class StunBlast extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.has(Trait.conducivetoy) && target.has(ClothingTrait.harpoonDildo) || 
-                                        target.has(ClothingTrait.harpoonOnahole)) { 
+        if (target.has(Trait.conducivetoy) && target.has(ClothingTrait.harpoonDildo) ||
+                                        target.has(ClothingTrait.harpoonOnahole)) {
             writeOutput(c, Result.special, target);
             target.getStamina().empty();
             target.add(c, new Winded(target));
@@ -47,7 +47,7 @@ public class StunBlast extends Skill {
             return true;
         }
         getSelf().consume(Item.Battery, 4);
-        if (Global.random(10) >= 4) {
+        if (Global.global.random(10) >= 4) {
             writeOutput(c, Result.normal, target);
             target.getStamina().empty();
             target.add(c, new Falling(target));

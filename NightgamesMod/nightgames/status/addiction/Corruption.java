@@ -1,28 +1,20 @@
 package nightgames.status.addiction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.status.Abuff;
 import nightgames.status.DarkChaos;
 import nightgames.status.Status;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class Corruption extends Addiction {
 
@@ -116,7 +108,8 @@ public class Corruption extends Addiction {
     }
     
     private Attribute getDrainAttr() {
-        return Global.pickRandom(Arrays.stream(Attribute.values()).filter(a -> a != Attribute.Dark && affected.get(a) >= 10).toArray(Attribute[]::new)).get();
+        return Global.global.pickRandom(Arrays.stream(Attribute.values())
+                        .filter(a -> a != Attribute.Dark && affected.get(a) >= 10).toArray(Attribute[]::new)).get();
     }
 
     @Override
@@ -284,7 +277,7 @@ public class Corruption extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Corruption(Global.getPlayer(), Global.getCharacterByType(obj.get("cause").getAsString()),
+        return new Corruption(Global.global.getPlayer(), Global.global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 

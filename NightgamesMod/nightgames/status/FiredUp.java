@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
@@ -52,17 +51,17 @@ public class FiredUp extends DurationStatus {
             }
         } else {
             if (stack == 1) {
-                return Global.capitalizeFirstLetter(String.format(
+                return Global.global.capitalizeFirstLetter(String.format(
                                 "%s has a big grin on %s face at the prospect of further pleasuring %s with %s %s.",
                                 affected.pronoun(), affected.possessiveAdjective(), c.getOpponent(affected).nameDirectObject(),
                                 affected.possessiveAdjective(), part));
             } else if (stack == 2) {
-                return Global.capitalizeFirstLetter(String.format(
+                return Global.global.capitalizeFirstLetter(String.format(
                                 "%s looks as if %s is enjoying working %s %s almost as much as %s.",
                                 affected.pronoun(), affected.possessiveAdjective(), affected.pronoun(), part,
                                 c.getOpponent(affected).subjectAction("are", "is")));
             } else {
-                return Global.capitalizeFirstLetter(
+                return Global.global.capitalizeFirstLetter(
                                 String.format("%s is focused almost exclusively on using %s %s to the greatest possible effect, and it's working.",
                                                 affected.pronoun(), affected.possessiveAdjective(), part));
             }

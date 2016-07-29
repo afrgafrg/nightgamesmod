@@ -76,7 +76,7 @@ public class Cowgirl extends FemdomSexStance {
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
-            c.write(bottom, Global.format(
+            c.write(bottom, Global.global.format(
                             "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} clitoris with {self:possessive} hands as {other:subject-action:try|tries} to ride {self:direct-object}. "
                                             + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to swing around into a dominant missionary position.",
                             bottom, top));
@@ -85,7 +85,7 @@ public class Cowgirl extends FemdomSexStance {
     }
 
     public static Position similarInstance(Character top, Character bottom) {
-        if (top.get(Attribute.Power) > 25 && Global.random(2) == 0) {
+        if (top.get(Attribute.Power) > 25 && Global.global.random(2) == 0) {
             return new UpsideDownFemdom(top, bottom);
         }
         return new Cowgirl(top, bottom);

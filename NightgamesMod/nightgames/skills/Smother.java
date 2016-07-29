@@ -54,7 +54,7 @@ public class Smother extends Skill {
             m = m * 3 / 2;
         }
         getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandom("ass"), m, c, this);
-        double n = 14 + Global.random(4);
+        double n = 14 + Global.global.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
             n += 3 * getSelf().body.getHotness(target);
@@ -71,7 +71,7 @@ public class Smother extends Skill {
         if (c.getStance().enumerate() != Stance.smothering) {
             c.setStance(new Smothering(getSelf(), target), getSelf(), true);
         }
-        if (Global.random(100) < 25 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Global.global.random(100) < 25 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .35));
         }
         return true;
@@ -103,12 +103,16 @@ public class Smother extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("Enjoying your dominance over {other:name-do}, you experimentally scoot your legs forward so that your ass completely eclipses {other:possessive} face. {other:SUBJECT-ACTION:panic|panicks} as {other:pronoun} {other:action:realize|realizes} that {other:pronoun} cannot breathe!", getSelf(), target);
+        return Global.global
+                        .format("Enjoying your dominance over {other:name-do}, you experimentally scoot your legs forward so that your ass completely eclipses {other:possessive} face. {other:SUBJECT-ACTION:panic|panicks} as {other:pronoun} {other:action:realize|realizes} that {other:pronoun} cannot breathe!",
+                                        getSelf(), target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("Enjoying {self:possessive} dominance over {other:name-do}, {self:subject} experimentally scoots {self:possessive} legs forward so that {self:possessive} ass completely eclipses {other:possessive} face. {other:SUBJECT-ACTION:panic|panicks} as {other:pronoun} {other:action:realize|realizes} that {other:pronoun} cannot breathe!", getSelf(), target);
+        return Global.global
+                        .format("Enjoying {self:possessive} dominance over {other:name-do}, {self:subject} experimentally scoots {self:possessive} legs forward so that {self:possessive} ass completely eclipses {other:possessive} face. {other:SUBJECT-ACTION:panic|panicks} as {other:pronoun} {other:action:realize|realizes} that {other:pronoun} cannot breathe!",
+                                        getSelf(), target);
     }
 
     @Override

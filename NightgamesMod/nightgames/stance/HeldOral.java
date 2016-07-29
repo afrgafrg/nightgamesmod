@@ -11,7 +11,7 @@ public class HeldOral extends AbstractFacingStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:are|is} holding {other:name-do} down with {self:possessive} face nested between {other:possessive} legs.",
                         top, bottom);
     }
@@ -98,7 +98,7 @@ public class HeldOral extends AbstractFacingStance {
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
-            
+
         }
         return new Mount(bottom, top);
     }

@@ -1,15 +1,16 @@
 package nightgames.characters;
 
+import nightgames.characters.body.BodyPart;
+import nightgames.global.Flag;
+import nightgames.global.Global;
+import nightgames.items.clothing.Clothing;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import nightgames.characters.body.BodyPart;
-import nightgames.global.Flag;
-import nightgames.global.Global;
-import nightgames.items.clothing.Clothing;
 
 public class Growth implements Cloneable {
     public float arousal;
@@ -54,7 +55,7 @@ public class Growth implements Cloneable {
     public Map<Integer, List<Trait>> getTraits() {
         return new HashMap<>(traits);
     }
-    
+
     public void addTraitPoints(int[] levels, Character charfor) {
         if (!(charfor instanceof Player)) return;
         for (int level : levels) {
@@ -74,7 +75,7 @@ public class Growth implements Cloneable {
     public void addClothing(int level, Clothing c) {
         clothing.putIfAbsent(level, c);
     }
-    
+
     public void addOrRemoveTraits(Character character) {
         traits.keySet().stream().filter(i -> i > character.level).forEach(i -> {
             traits.get(i).forEach(character::remove);
@@ -112,7 +113,7 @@ public class Growth implements Cloneable {
 
         character.availableAttributePoints += attributes[Math.min(character.rank, attributes.length-1)] + extraAttributes;
 
-        if (Global.checkFlag(Flag.hardmode)) {
+        if (Global.global.checkFlag(Flag.hardmode)) {
             character.getStamina().gain(bonusStamina);
             character.getArousal().gain(bonusArousal);
             character.getWillpower().gain(bonusWillpower);
@@ -136,7 +137,7 @@ public class Growth implements Cloneable {
             character.getWillpower().gain(-bonusWillpower);
         }
     }
-    
+
     public Object clone() throws CloneNotSupportedException {
         // TODO, growth should NEVER be modified as a cloned version. if this is true, we need to revisit this.
         Growth clone = (Growth) super.clone();

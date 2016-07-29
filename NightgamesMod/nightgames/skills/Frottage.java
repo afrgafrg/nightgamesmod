@@ -44,7 +44,7 @@ public class Frottage extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 6 + Global.random(8);
+        int m = 6 + Global.global.random(8);
         BodyPart receiver = target.hasDick() ? target.body.getRandomCock() : target.body.getRandomPussy();
         BodyPart dealer = getSelf().hasDick() ? getSelf().body.getRandomCock() : getSelf().has(Trait.strapped) ? StraponPart.generic : getSelf().body.getRandomPussy();
         if (getSelf().human()) {
@@ -69,7 +69,7 @@ public class Frottage extends Skill {
             getSelf().body.pleasure(target, receiver, dealer, m / 2, c, this);
         }
         target.body.pleasure(getSelf(), dealer, receiver, m, c, this);
-        if (Global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "cock", .25));
         }
         getSelf().emote(Emotion.horny, 15);

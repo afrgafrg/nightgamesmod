@@ -14,13 +14,13 @@ public class ClothingStore extends Store {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.basicStores);
+        return Global.global.checkFlag(Flag.basicStores);
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
         if (choice.equals("Start")) {
             acted = false;
         }
@@ -30,14 +30,14 @@ public class ClothingStore extends Store {
         }
         checkSale(choice);
         if (player.human()) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "This is a normal retail clothing outlet. For obvious reasons, you'll need to buy anything you want to wear at night in bulk.");
             for (Clothing i : clothing().keySet()) {
-                Global.gui().message(i.getName() + ": " + i.getPrice() + (player.has(i) ? " (Owned)" : ""));
+                Global.global.gui().message(i.getName() + ": " + i.getPrice() + (player.has(i) ? " (Owned)" : ""));
             }
-            Global.gui().message("You have: $" + player.money + " available to spend.");
+            Global.global.gui().message("You have: $" + player.money + " available to spend.");
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
         }
     }
 

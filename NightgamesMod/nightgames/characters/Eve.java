@@ -1,12 +1,6 @@
 package nightgames.characters;
 
-import java.util.Optional;
-
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -14,6 +8,8 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Optional;
 
 public class Eve extends BasePersonality {
     /**
@@ -50,7 +46,7 @@ public class Eve extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 1);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.setTrophy(Item.EveTrophy);
         self.body.add(BreastsPart.d);
         self.body.add(BasicCockPart.big);
@@ -117,22 +113,22 @@ public class Eve extends BasePersonality {
             character.money -= 300;
         }
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {

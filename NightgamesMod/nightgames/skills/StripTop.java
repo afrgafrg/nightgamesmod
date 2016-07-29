@@ -57,7 +57,7 @@ public class StripTop extends Skill {
         } else {
             stripped = target.outfit.getTopOfSlot(ClothingSlot.top);
             writeOutput(c, Result.miss, target);
-            target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(8, 16)));
+            target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(8, 16)));
             return false;
         }
         return true;
@@ -111,8 +111,8 @@ public class StripTop extends Skill {
                             getSelf().subject(), target.nameOrPossessivePronoun(), stripped.getName(),
                             target.pronoun(), getSelf().directObject());
             if (modifier == Result.critical && extra != null) {
-                msg += String.format(" Before %s can react, %s also strips off %s %s!", 
-                                target.subject(), getSelf().name, 
+                msg += String.format(" Before %s can react, %s also strips off %s %s!",
+                                target.subject(), getSelf().name,
                                 target.possessiveAdjective(), extra.getName());
             }
             return msg;

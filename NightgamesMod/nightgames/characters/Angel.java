@@ -1,14 +1,6 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.WingsPart;
-import nightgames.characters.custom.CharacterLine;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
@@ -17,6 +9,8 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Optional;
 
 public class Angel extends BasePersonality {
     private static final long serialVersionUID = -8169646189131720872L;
@@ -43,7 +37,7 @@ public class Angel extends BasePersonality {
         self.change();
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
         self.modAttributeDontSaveData(Attribute.Perception, 1);
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
 
         self.getStamina().setMax(60);
         self.getArousal().setMax(110);
@@ -254,7 +248,7 @@ public class Angel extends BasePersonality {
         character.getGrowth().addTrait(45, Trait.genuflection);
         if (Global.checkFlag(ANGEL_SEX_FOCUS)) {
             character.getGrowth().addTrait(48, Trait.piety);
-        } 
+        }
         if (Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS)) {
             character.getGrowth().addTrait(48, Trait.mandateOfHeaven);
         }
@@ -298,31 +292,31 @@ public class Angel extends BasePersonality {
                 character.getGrowth().addTrait(Math.min(20, character.getLevel()), Trait.lacedjuices);
             }
             if (character.money > 0) {
-                Global.getDay().visit("Body Shop", character, Global.random(character.money));
+                Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay().visit("Black Market", character, Global.random(character.money));
+                Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay().visit("Workshop", character, Global.random(character.money));
+                Global.global.getDay().visit("Workshop", character, Global.global.random(character.money));
             }
         }
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
@@ -330,7 +324,7 @@ public class Angel extends BasePersonality {
             }
         }
     }
-    
+
     private void constructLines() {
         character.addLine(CharacterLine.BB_LINER, (c, self, other) -> "Angel seems to enjoy your anguish in a way that makes you more than a little nervous. <i>\"That's a great look for you, I'd like to see it more often.\"</i>");
         character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> "Angel gives you a haughty look, practically showing off her body. <i>\"I can't blame you for wanting to see me naked, everyone does.\"</i>");
@@ -481,7 +475,7 @@ public class Angel extends BasePersonality {
                             + "I had a continuous orgasm for at least two minutes and that's way more exhausting. It's been a long time since anyone's made me do that.\"</i> Wait, what? You'd "
                             + "never have guessed that she came if she hadn't said anything. <i>\"Just because you managed to beat me this time doesn't mean you can suddenly start acting "
                             + "lazy. If you let your guard down, I'm going to turn you into my own personal toy.\"</i> At that, she walks away naked.";
-        } 
+        }
         if (opponent.hasDick()) {
             return "Angel trembles and moans as you guide her closer and closer to orgasm. You pump two fingers in and out of her pussy and lick her sensitive nether lips. "
                             + "Her swollen clit peeks out from under its hood and you pinch it gently between your teeth. Angel instantly screams in pleasure and arches her back. A "

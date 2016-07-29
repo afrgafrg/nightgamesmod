@@ -13,11 +13,7 @@ import nightgames.stance.Anal;
 import nightgames.stance.AnalProne;
 import nightgames.stance.BehindFootjob;
 import nightgames.stance.Stance;
-import nightgames.status.Flatfooted;
-import nightgames.status.Frenzied;
-import nightgames.status.IgnoreOrgasm;
-import nightgames.status.Oiled;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 
 public class AssFuck extends Fuck {
     public AssFuck(Character self) {
@@ -70,9 +66,9 @@ public class AssFuck extends Fuck {
             target.add(c, new Oiled(target));
             getSelf().consume(Item.Lubricant, 1);
         }
-        c.write(getSelf(), Global.format(premessage, getSelf(), target));
+        c.write(getSelf(), Global.global.format(premessage, getSelf(), target));
 
-        int m = Global.random(10, 15);
+        int m = Global.global.random(10, 15);
         if (getSelf().has(Trait.strapped) && getSelf().has(Item.Strapon2)) {
             m += 3;
         }
@@ -177,7 +173,7 @@ public class AssFuck extends Fuck {
                             + " inside %s ass.", getSelf().subjectAction("spread"), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective(),
                             Global.capitalizeFirstLetter(target.pronoun()), target.action("try", "tries"),
-                            getSelf().subject(), getSelf().action("pull"), target.possessiveAdjective(), 
+                            getSelf().subject(), getSelf().action("pull"), target.possessiveAdjective(),
                             target.possessiveAdjective());
         }
         if (modifier == Result.normal) {
@@ -189,8 +185,8 @@ public class AssFuck extends Fuck {
                                     target.nameDirectObject(), target.possessiveAdjective(), getSelf().pronoun(), target.possessiveAdjective(),
                                     target.directObject());
                 } else {
-                    return String.format("%s lubes up %s strap-on, positions %s behind %s, and shoves it into %s ass.", 
-                                    getSelf().name(), getSelf().possessiveAdjective(), getSelf().reflectivePronoun(), 
+                    return String.format("%s lubes up %s strap-on, positions %s behind %s, and shoves it into %s ass.",
+                                    getSelf().name(), getSelf().possessiveAdjective(), getSelf().reflectivePronoun(),
                                     target.nameDirectObject(), target.possessiveAdjective());
                 }
             } else {

@@ -27,7 +27,7 @@ public class FlyingCowgirl extends FemdomSexStance {
                         top.body.getRandomPussy().describe(top), bottom.possessiveAdjective(),
                         bottom.body.getRandomInsertable().describe(bottom));
     }
-    
+
     private boolean spectated() {
         return !(top.human() || bottom.human());
     }
@@ -113,7 +113,7 @@ public class FlyingCowgirl extends FemdomSexStance {
     public Position reverse(Combat c, boolean writeMessage) {
         if (bottom.body.getRandomWings() != null) {
             if (writeMessage) {
-                c.write(bottom, Global.format(
+                c.write(bottom, Global.global.format(
                                 "In a desperate gamble for dominance, {self:subject-action:piston|pistons} wildly into {other:name-do}, making {other:direct-object} yelp and breaking {other:possessive} concentration. Shaking off {other:possessive} limbs coiled around {self:subject}, {self:subject-action:start|starts} flying on {self:possessive} own and starts fucking {other:direct-object} back in the air.",
                                 bottom, top));
             }

@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Player;
@@ -14,6 +12,8 @@ import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
+
+import java.util.ArrayList;
 
 public class Masturbate extends Skill {
     public Masturbate(Character self) {
@@ -60,7 +60,7 @@ public class Masturbate extends Skill {
             return Body.nonePart;
         }
 
-        return parts.get(Global.random(parts.size()));
+        return parts.get(Global.global.random(parts.size()));
     }
 
     private BodyPart withO = Body.nonePart;
@@ -82,7 +82,7 @@ public class Masturbate extends Skill {
             } else {
                 c.write(getSelf(), deal(c, 0, Result.normal, target));
                 if (((Player)getSelf()).checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                    ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL, 
+                    ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL,
                                     target, Addiction.MED_INCREASE, c);
                     c.write(getSelf(), "Touching yourself amuses Mara, reducing her control over you.");
                 }

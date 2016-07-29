@@ -1,10 +1,6 @@
 package nightgames.status.addiction;
 
-import java.util.EnumSet;
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.combat.Combat;
@@ -12,6 +8,8 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public abstract class Addiction extends Status {
 
@@ -30,7 +28,7 @@ public abstract class Addiction extends Status {
     // should be saved
     private boolean didDaytime;
     private boolean overloading;
-    
+
     protected final EnumSet<Stsflag> flags;
 
     protected boolean inWithdrawal;
@@ -139,15 +137,15 @@ public abstract class Addiction extends Status {
     public Optional<Status> startNight() {
         if (!didDaytime || overloading) {
             if (!overloading) {
-                float amount = Global.randomfloat() / 4.f;
-                if (Global.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
+                float amount = Global.global.randomfloat() / 4.f;
+                if (Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
                     System.out.println("Alleviating addiction " + this.getType() + " by " + amount);
                 }
                 alleviate(amount);
             }
             if (isActive()) {
                 inWithdrawal = true;
-                Global.gui()
+                Global.global.gui()
                       .message(describeWithdrawal());
                 return withdrawalEffects();
             }
@@ -169,7 +167,7 @@ public abstract class Addiction extends Status {
         if (overloading) {
             magnitude = 0.f;
             overloading = false;
-            Global.gui()
+            Global.global.gui()
                   .message("<b>The overload treatment seems to have worked, and you are now rid of all traces of"
                                   + " your " + name + ".\n</b>");
         }
@@ -200,7 +198,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude + amt);
         if (getSeverity() != old) {
-            Global.gui().message(describeIncrease());
+            Global.global.gui().message(describeIncrease());
         }
     }
 
@@ -208,7 +206,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude - amt);
         if (getSeverity() != old) {
-            Global.gui().message(describeDecrease());
+            Global.global.gui().message(describeDecrease());
         }
     }
 
@@ -216,7 +214,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude + amt);
         if (getSeverity() != old) {
-            Global.gui().message(describeCombatIncrease());
+            Global.global.gui().message(describeCombatIncrease());
         }
     }
 
@@ -224,7 +222,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude - amt);
         if (getSeverity() != old) {
-            Global.gui().message(describeCombatDecrease());
+            Global.global.gui().message(describeCombatDecrease());
         }
     }
 
@@ -248,7 +246,7 @@ public abstract class Addiction extends Status {
     }
 
     public void describeInitial() {
-        Global.gui()
+        Global.global.gui()
               .message(describeIncrease());
     }
 

@@ -68,7 +68,7 @@ public class Thrust extends Skill {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 8 + Global.random(11);
+        int m = 8 + Global.global.random(11);
         if (c.getStance().anallyPenetrated(c, target) && getSelf().has(Trait.assmaster)) {
             m *= 1.5;
         }
@@ -136,7 +136,7 @@ public class Thrust extends Skill {
         if (m[1] != 0) {
             getSelf().body.pleasure(target, targetO, selfO, m[1], c, this);
         }
-        if (selfO.isType("ass") && Global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
+        if (selfO.isType("ass") && Global.global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;
@@ -162,7 +162,7 @@ public class Thrust extends Skill {
         if (modifier == Result.anal) {
             return "You thrust steadily into " + target.name() + "'s ass, eliciting soft groans of pleasure.";
         } else if (modifier == Result.reverse) {
-            return Global.format(
+            return Global.global.format(
                             "You rock your hips against {other:direct-object}, riding her smoothly. "
                                             + "Despite the slow pace, {other:subject} soon starts gasping and mewing with pleasure.",
                             getSelf(), target);
@@ -182,7 +182,7 @@ public class Thrust extends Skill {
                                 + " of %s ass and pushing on %s %s.", getSelf().subject(),
                                 target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                                 target.hasBalls() ? "prostate" : "innermost parts");
-                
+
             } else {
                 res = String.format("%s cock slowly pumps the inside of %s rectum.",
                                 getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun());
@@ -205,7 +205,7 @@ public class Thrust extends Skill {
                             target.nameOrPossessivePronoun(), target.directObject(),
                             target.possessiveAdjective());
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:subject} thrusts into {other:name-possessive} {other:body-part:pussy} in a slow steady rhythm, leaving {other:direct-object} gasping.",
                             getSelf(), target);
         }

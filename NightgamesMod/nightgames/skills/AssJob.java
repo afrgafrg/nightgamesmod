@@ -47,7 +47,7 @@ public class AssJob extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (c.getStance().behind(target)) {
             writeOutput(c, Result.special, target);
-            int m = Global.random(10, 14);
+            int m = Global.global.random(10, 14);
             int fetishChance = 20 + getSelf().get(Attribute.Fetish) / 2;
             if (target.crotchAvailable()) {
                 if (getSelf().crotchAvailable()) {
@@ -63,13 +63,13 @@ public class AssJob extends Skill {
             }
             target.body.pleasure(getSelf(), getSelf().body.getRandomAss(), target.body.getRandomCock(), m, c, this);
 
-            if (Global.random(100) < fetishChance) {
+            if (Global.global.random(100) < fetishChance) {
                 target.add(c, new BodyFetish(target, getSelf(), "ass", .1 + getSelf().get(Attribute.Fetish) * .05));
             }
         } else if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (c.getStance().en == Stance.reversemount) {
                 writeOutput(c, Result.strong, target);
-                int m = Global.random(14, 19);
+                int m = Global.global.random(14, 19);
                 int fetishChance = 20 + getSelf().get(Attribute.Fetish) / 2;
                 if (target.crotchAvailable()) {
                     if (getSelf().crotchAvailable()) {
@@ -89,12 +89,12 @@ public class AssJob extends Skill {
                     target.temptWithSkill(c, getSelf(), getSelf().body.getRandomAss(), m, this);
                 }
 
-                if (Global.random(100) < fetishChance) {
+                if (Global.global.random(100) < fetishChance) {
                     target.add(c, new BodyFetish(target, getSelf(), "ass", .1 + getSelf().get(Attribute.Fetish) * .05));
                 }
             } else {
                 writeOutput(c, Result.normal, target);
-                int m = Global.random(10, 14);
+                int m = Global.global.random(10, 14);
                 if (target.crotchAvailable()) {
                     if (getSelf().crotchAvailable()) {
                         m += 6;
@@ -177,12 +177,12 @@ public class AssJob extends Skill {
                                 "%s %s tight, thinking %s intends to break "
                                                 + "free from %s hold, but instead %s pushes %s firm asscheeks"
                                                 + " against %s cock and grinds them against %s. ",
-                                target.subjectAction("hold"), getSelf().name(), getSelf().pronoun(), 
+                                target.subjectAction("hold"), getSelf().name(), getSelf().pronoun(),
                                 target.possessiveAdjective(), getSelf().pronoun(),
                                 getSelf().possessiveAdjective(), target.possessiveAdjective(), target.directObject());
                 if (getSelf().crotchAvailable() && target.crotchAvailable()) {
                     res += String.format("%s %s slides between %s mounds as if it belongs there.",
-                                    target.possessiveAdjective(), target.body.getRandomCock().describe(target), 
+                                    target.possessiveAdjective(), target.body.getRandomCock().describe(target),
                                     getSelf().possessiveAdjective());
                 } else {
                     res += String.format(
@@ -196,7 +196,7 @@ public class AssJob extends Skill {
                                     "%s sits firmly on %s crotch and starts "
                                                     + "dryhumping %s with an impish grin. As %s grinds against %s "
                                                     + "%s restlessly, %s %s definitely feeling it much more than %s is.",
-                                    getSelf().name(), target.nameOrPossessivePronoun(), target.directObject(), 
+                                    getSelf().name(), target.nameOrPossessivePronoun(), target.directObject(),
                                     getSelf().pronoun(), target.possessiveAdjective(),
                                     target.outfit.getTopOfSlot(ClothingSlot.bottom).getName(),
                                     target.pronoun(), target.action("are", "is"), getSelf().pronoun());
@@ -224,7 +224,7 @@ public class AssJob extends Skill {
                                                     + " against %s groin as %s sits back on %s. <i>\"Like what "
                                                     + "you see?\"</i> - %s taunts %s, shaking %s hips invitingly.",
                                                     target.subjectAction("try", "tries"),
-                                    getSelf().name(), getSelf().pronoun(), 
+                                    getSelf().name(), getSelf().pronoun(),
                                     target.possessiveAdjective(), Global.capitalizeFirstLetter(target.pronoun()),
                                     getSelf().possessiveAdjective(), target.possessiveAdjective(),
                                     getSelf().pronoun(), target.directObject(),
@@ -238,7 +238,7 @@ public class AssJob extends Skill {
                                                 + "%s sensitive %s.",
                                 getSelf().name(), getSelf().possessiveAdjective(),
                                 target.possessiveAdjective(), target.possessiveAdjective(), target.pronoun(), target.possessiveAdjective(),
-                                Global.capitalizeFirstLetter(getSelf().pronoun()), 
+                                Global.global.capitalizeFirstLetter(getSelf().pronoun()),
                                 target.directObject(), getSelf().possessiveAdjective(),
                                 target.possessiveAdjective(), target.body.getRandomCock().describe(target));
             case miss:

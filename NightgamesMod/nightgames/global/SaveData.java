@@ -1,10 +1,5 @@
 package nightgames.global;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,6 +7,11 @@ import com.google.gson.JsonPrimitive;
 
 import nightgames.characters.Character;
 import nightgames.json.JsonUtils;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * SaveData specifies a schema for data that will be saved and loaded.
@@ -44,14 +44,15 @@ public class SaveData {
     public SaveData(JsonObject rootJSON) {
         this();
         if (rootJSON.has("xpRate")) {
-            Global.xpRate = rootJSON.get("xpRate").getAsDouble();
+            Global.global.xpRate = rootJSON.get("xpRate").getAsDouble();
         }
 
         JsonArray charactersJSON = rootJSON.getAsJsonArray(JSONKey.PLAYERS.key);
         for (JsonElement element : charactersJSON) {
             JsonObject characterJSON = element.getAsJsonObject();
             String type = characterJSON.get("type").getAsString();
-            Character character = Global.getCharacterByType(type);
+            // Need a better way to refer to NPCs, one that doesn't require us to load before we load.
+            Character character = Global.global.getCharacterByType(type);
             character.load(characterJSON);
 
             players.add(character);
@@ -72,7 +73,7 @@ public class SaveData {
 
     public JsonObject toJson() {
         JsonObject rootJSON = new JsonObject();
-        rootJSON.add("xpRate", new JsonPrimitive(Global.xpRate));
+        rootJSON.add("xpRate", new JsonPrimitive(Global.global.xpRate));
 
         JsonArray characterJSON = new JsonArray();
         players.stream().map(Character::save).forEach(characterJSON::add);

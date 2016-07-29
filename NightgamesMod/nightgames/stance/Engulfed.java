@@ -1,9 +1,5 @@
 package nightgames.stance;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
@@ -11,6 +7,10 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.skills.damage.DamageType;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Engulfed extends Position {
 
@@ -188,7 +188,7 @@ public class Engulfed extends Position {
             return false;
         if (!bottom.hasDick())
             return true;
-        return Global.random(2) == 0;
+        return Global.global.random(2) == 0;
     }
     
     @Override

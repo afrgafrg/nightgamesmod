@@ -36,7 +36,7 @@ public class Beg extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if ((Global.random(30) <= getSelf().get(Attribute.Submissive) - target.get(Attribute.Cunning) / 2
+        if ((Global.global.random(30) <= getSelf().get(Attribute.Submissive) - target.get(Attribute.Cunning) / 2
                         && !target.is(Stsflag.cynical) || target.getMood() == Emotion.dominant)
                         && target.getMood() != Emotion.angry && target.getMood() != Emotion.desperate) {
             target.add(c, new Charmed(target));
@@ -72,8 +72,8 @@ public class Beg extends Skill {
             return "You throw away your pride and ask " + target.name() + " for mercy. This just seems to encourage "
                             + target.possessiveAdjective() + " sadistic side.";
         }
-        return "You put yourself completely at " + target.name() + "'s mercy. "
-                        + Global.capitalizeFirstLetter(target.pronoun())
+        return "You put yourself completely at " + target.name() + "'s mercy. " + Global.global
+                        .capitalizeFirstLetter(target.pronoun())
                         + " takes pity on you and gives you a moment to recover.";
     }
 
@@ -82,7 +82,7 @@ public class Beg extends Skill {
         if (modifier == Result.miss) {
             return String.format("%s gives %s a pleading look and asks %s to go light on %s."+
                             "%s is cute, but %s is not getting away that easily.", getSelf().name(), target.subject(),
-                            target.directObject(), getSelf().directObject(), Global.capitalizeFirstLetter(getSelf().pronoun()),
+                            target.directObject(), getSelf().directObject(), Global.global.capitalizeFirstLetter(getSelf().pronoun()),
                             getSelf().pronoun());
         }
         return getSelf().name() + " begs you for mercy, looking ready to cry. Maybe you should give "

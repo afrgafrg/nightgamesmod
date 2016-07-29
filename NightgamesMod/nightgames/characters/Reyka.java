@@ -1,14 +1,6 @@
 package nightgames.characters;
 
-import java.util.Optional;
-
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -19,6 +11,8 @@ import nightgames.skills.strategy.FacesitStrategy;
 import nightgames.skills.strategy.FootjobStrategy;
 import nightgames.skills.strategy.KnockdownStrategy;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Optional;
 
 public class Reyka extends BasePersonality {
     private static final long serialVersionUID = 8553663088141308399L;
@@ -55,7 +49,7 @@ public class Reyka extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 2);
         self.setTrophy(Item.ReykaTrophy);
 
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.getStamina().setMax(50);
         self.getArousal().setMax(120);
         self.getMojo().setMax(110);
@@ -125,28 +119,28 @@ public class Reyka extends BasePersonality {
             character.money -= 600;
         }
         if (character.money > 0) {
-            Global.getDay().visit("Body Shop", character, Global.random(character.money));
+            Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
                 Global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
-        character.gain(Item.semen, Global.random(3) + 1);
+        character.gain(Item.semen, Global.global.random(3) + 1);
         buyUpTo(Item.semen, 5);
     }
-    
+
     private void constructLines() {
         character.addLine(CharacterLine.BB_LINER, (c, self, other) -> {
             return "Reyka looks at you with a pang of regret: <i>\"In hindsight, damaging"
@@ -218,7 +212,7 @@ public class Reyka extends BasePersonality {
             return "Reyka alternates between long hard thrusts and sensual grinding to keep you from getting used to the stimulation, and the pleasure it is "
                             + "inflicting on you stops you from mustering the resolve to fight back. <i>\"I do love a good bit of pegging.\"</i> Reyka comments as she begins "
                             + "to gently rock the head of the strapon over your prostate, leaving you breathing hard as your mouth hangs open. <i>\"There's a special "
-                            + "pleasure in making a " + Global.getPlayer().boyOrGirl() + " a little butt slave.\"</i> Her words shock you and cause your resistance to slip a little. <i>\"Hmmm?\"</i> She purrs <i>\"Would "
+                            + "pleasure in making a " + Global.global.getPlayer().boyOrGirl() + " a little butt slave.\"</i> Her words shock you and cause your resistance to slip a little. <i>\"Hmmm?\"</i> She purrs <i>\"Would "
                             + "you like that?\"</i> she asks, picking up the pace of her thrusting. <i>\"To be my little pet " + Global.getPlayer().boyOrGirl() + " slut?\"</i> Your only response is to cum. Hard. Ropes "
                             + "of cum fall to the ground below you.<br/><br/>Reyka pouts as she pulls out <i>\"Such a good waste of semen though.\"</i> she tuts. <i>\"Looks like you "
                             + "still owe me a meal.\"</i> She smirks in a way that makes your eyes flash quickly left to right, looking for an escape route. Reyka is too quick "
@@ -260,7 +254,7 @@ public class Reyka extends BasePersonality {
     @Override
     public String defeat(Combat paramCombat, Result flag) {
         character.arousal.empty();
-        if (character.has(Trait.lacedjuices) && Global.random(3) == 0 ) {
+        if (character.has(Trait.lacedjuices) && Global.global.random(3) == 0 ) {
             return "Reyka shivers as she approaches her climax and her legs fall open defenselessly. You can't resist taking advantage of this opening to deliver the "
                             + "coup de grace. You grab hold of her thighs and run your tongue across her wet pussy. Her love juice is surprisingly sweet and almost intoxicating, "
                             + "but you stay focused on your goal. You ravage her vulnerable love button with your tongue and a flood of tasty wetness hits you as she cums. You "
@@ -409,12 +403,12 @@ public class Reyka extends BasePersonality {
 
     @Override
     public boolean fightFlight(Character paramCharacter) {
-        return !character.mostlyNude() || Global.random(3) == 1;
+        return !character.mostlyNude() || Global.global.random(3) == 1;
     }
 
     @Override
     public boolean attack(Character paramCharacter) {
-        return !character.mostlyNude() || Global.random(3) == 1;
+        return !character.mostlyNude() || Global.global.random(3) == 1;
     }
 
     public double dickPreference() {
@@ -423,7 +417,7 @@ public class Reyka extends BasePersonality {
 
     @Override
     public boolean fit() {
-        return (!character.mostlyNude() || Global.random(3) == 1) && character.getStamina().percent() >= 50
+        return (!character.mostlyNude() || Global.global.random(3) == 1) && character.getStamina().percent() >= 50
                         && character.getArousal().percent() <= 50;
     }
 

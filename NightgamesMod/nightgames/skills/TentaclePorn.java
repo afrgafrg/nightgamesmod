@@ -48,7 +48,7 @@ public class TentaclePorn extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (target.mostlyNude()) {
-                int m = Global.random(getSelf().get(Attribute.Fetish)) / 2 + 1;
+                int m = Global.global.random(getSelf().get(Attribute.Fetish)) / 2 + 1;
                 if (target.bound()) {
                     writeOutput(c, Result.special, target);
                     if (target.hasDick())

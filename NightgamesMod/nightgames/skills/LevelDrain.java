@@ -60,7 +60,7 @@ public class LevelDrain extends Drain {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int type = Global.centeredrandom(2, getSelf().get(Attribute.Dark) / 20.0f, 2);
+        int type = Global.global.centeredrandom(2, getSelf().get(Attribute.Dark) / 20.0f, 2);
         writeOutput(c, type, Result.normal, target);
         switch (type) {
             case 0:
@@ -158,7 +158,7 @@ public class LevelDrain extends Drain {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         String demon = getSelf().useFemalePronouns() ? "succubus" : "incubus";
-        
+
         String base = String.format("%s the %s' pussy suddenly tighten around %s. "
                         + "%s starts kneading %s dick, bringing %s immense pleasure and soon"
                         + " %s %s %s erupt into %s, but %s %s %s %s shooting"
@@ -191,7 +191,7 @@ public class LevelDrain extends Drain {
                                 + " far more valuable than a simple sex fight...",
                                 target.possessiveAdjective(), target.directObject(), target.possessiveAdjective(),
                                 getSelf().subject(), target.subjectAction("feel"), getSelf().subject(),
-                                getSelf().pronoun(), target.subjectAction("are", "is"), 
+                                getSelf().pronoun(), target.subjectAction("are", "is"),
                                 Global.capitalizeFirstLetter(target.possessiveAdjective()),
                                 target.pronoun(), target.action("have", "has"));
             default:

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * TODO: Write class-level documentation.
@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 public class CombatTest {
     @BeforeClass public static void setUpClass() throws Exception {
         new TestGlobal();
-        Global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
+        Global.global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
     }
 
     private NPC self;

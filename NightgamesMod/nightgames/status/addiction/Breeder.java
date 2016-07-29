@@ -1,9 +1,6 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -14,6 +11,8 @@ import nightgames.global.Global;
 import nightgames.status.Horny;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class Breeder extends Addiction {
 
@@ -136,7 +135,7 @@ public class Breeder extends Addiction {
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         if (inWithdrawal) {
-            return "Arousal rages through your body at the sight of " + c.getOpponent(affected).name() 
+            return "Arousal rages through your body at the sight of " + c.getOpponent(affected).name()
                             + ", expecting a well-earned fuck.";
         }
         return "Your instincts howl at the sight of " + cause.name() + ", urging you to fuck " + cause.directObject() + " as soon as possible.";
@@ -236,7 +235,7 @@ public class Breeder extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Breeder(Global.getPlayer(), Global.getCharacterByType(obj.get("cause").getAsString()),
+        return new Breeder(Global.global.getPlayer(), Global.global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 

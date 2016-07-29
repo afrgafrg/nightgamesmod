@@ -52,7 +52,7 @@ public class ReverseFly extends Fly {
             target.emote(Emotion.desperate, 50);
             target.emote(Emotion.nervous, 75);
 
-            int m = 5 + Global.random(5);
+            int m = 5 + Global.global.random(5);
             int otherm = m;
             if (getSelf().has(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);

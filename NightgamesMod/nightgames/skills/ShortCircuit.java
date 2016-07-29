@@ -34,7 +34,7 @@ public class ShortCircuit extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 3);
         writeOutput(c, Result.normal, target);
-        target.add(c, new Rewired(target, 4 + Global.random(3)));
+        target.add(c, new Rewired(target, 4 + Global.global.random(3)));
         return true;
     }
 

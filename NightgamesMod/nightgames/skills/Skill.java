@@ -1,10 +1,5 @@
 package nightgames.skills;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
@@ -15,6 +10,11 @@ import nightgames.skills.damage.Staleness;
 import nightgames.status.FiredUp;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Skill {
     /**
@@ -96,7 +96,7 @@ public abstract class Skill {
                         && s.type(c) != Tactics.fucking && s.type(c) != Tactics.pleasure && s.type(c) != Tactics.misc;
         boolean allureRestricted =
                         target.is(Stsflag.alluring) && (s.type(c) == Tactics.damage || s.type(c) == Tactics.debuff);
-        boolean modifierRestricted = !Global.getMatch().condition.getSkillModifier().allowedSkill(c,s);
+        boolean modifierRestricted = !Global.global.getMatch().condition.getSkillModifier().allowedSkill(c, s);
         boolean usable = s.usable(c, target) && s.getSelf().canSpend(s.getMojoCost(c)) && !charmRestricted
                         && !allureRestricted && !modifierRestricted;
         return usable;

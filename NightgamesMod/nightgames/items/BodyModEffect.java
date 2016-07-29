@@ -43,13 +43,14 @@ public class BodyModEffect extends ItemEffect {
                     BodyPart newPart = original.upgrade();
                     if (newPart == original) {
                         boolean eventful = user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = eventful ? Global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
+                        message = eventful ?
+                                        Global.global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
                                         original.fullDescribe(user)), user, opponent) : "";
                     } else {
                         user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = Global.format(
+                        message = Global.global.format(
                                         String.format("{self:NAME-POSSESSIVE} %s grew into %s",
-                                                        original.fullDescribe(user), Global.prependPrefix(
+                                                        original.fullDescribe(user), Global.global.prependPrefix(
                                                                         newPart.prefix(), newPart.fullDescribe(user))),
                                         user, opponent);
                     }
@@ -62,13 +63,14 @@ public class BodyModEffect extends ItemEffect {
                     BodyPart newPart = original.downgrade();
                     if (newPart == original) {
                         boolean eventful = user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = eventful ? Global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
+                        message = eventful ?
+                                        Global.global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
                                         original.fullDescribe(user)), user, opponent) : "";
                     } else {
                         user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = Global.format(
+                        message = Global.global.format(
                                         String.format("{self:NAME-POSSESSIVE} %s shrunk into %s",
-                                                        original.fullDescribe(user), Global.prependPrefix(
+                                                        original.fullDescribe(user), Global.global.prependPrefix(
                                                                         newPart.prefix(), newPart.fullDescribe(user))),
                                         user, opponent);
                     }
@@ -79,18 +81,18 @@ public class BodyModEffect extends ItemEffect {
             case replace:
                 if (original == affected) {
                     boolean eventful = user.body.temporaryAddOrReplacePartWithType(affected, original, duration);
-                    message = eventful ? Global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
+                    message = eventful ? Global.global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
                                     original.fullDescribe(user)), user, opponent) : "";
                 } else if (original != null) {
                     user.body.temporaryAddOrReplacePartWithType(affected, original, duration);
-                    message = Global.format(String.format("{self:NAME-POSSESSIVE} %s turned into %s",
+                    message = Global.global.format(String.format("{self:NAME-POSSESSIVE} %s turned into %s",
                                     original.fullDescribe(user),
-                                    Global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
+                                    Global.global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
                                     opponent);
                 } else {
                     user.body.temporaryAddPart(affected, duration);
-                    message = Global.format(String.format("{self:SUBJECT} grew %s",
-                                    Global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
+                    message = Global.global.format(String.format("{self:SUBJECT} grew %s",
+                                    Global.global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
                                     opponent);
                 }
                 break;
@@ -99,8 +101,8 @@ public class BodyModEffect extends ItemEffect {
                     message = "";
                 } else if (original == null) {
                     user.body.temporaryAddPart(affected, duration);
-                    message = Global.format(String.format("{self:SUBJECT} grew %s",
-                                    Global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
+                    message = Global.global.format(String.format("{self:SUBJECT} grew %s",
+                                    Global.global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
                                     opponent);
                 } else {
                     message = "";
@@ -108,16 +110,16 @@ public class BodyModEffect extends ItemEffect {
                 break;
             case growMultiple:
                 user.body.temporaryAddPart(affected, duration);
-                message = Global.format(
-                                String.format("{self:SUBJECT} grew %s",
-                                                Global.prependPrefix(affected.prefix(), affected.fullDescribe(user))),
+                message = Global.global.format(
+                                String.format("{self:SUBJECT} grew %s", Global.global.prependPrefix(affected.prefix(),
+                                                affected.fullDescribe(user))),
                                 user, opponent);
                 break;
             case growplus:
                 if (original == null) {
                     user.body.temporaryAddPart(affected, duration);
-                    message = Global.format(String.format("{self:SUBJECT} grew %s",
-                                    Global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
+                    message = Global.global.format(String.format("{self:SUBJECT} grew %s",
+                                    Global.global.prependPrefix(affected.prefix(), affected.fullDescribe(user))), user,
                                     opponent);
                 } else {
                     BodyPart newPart;
@@ -128,11 +130,12 @@ public class BodyModEffect extends ItemEffect {
                     }
                     if (newPart == original) {
                         boolean eventful = user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = eventful ? Global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
+                        message = eventful ?
+                                        Global.global.format(String.format("{self:NAME-POSSESSIVE} %s was reenforced",
                                         original.fullDescribe(user)), user, opponent) : "";
                     } else {
                         user.body.temporaryAddOrReplacePartWithType(newPart, original, duration);
-                        message = Global.format(String.format("{self:NAME-POSSESSIVE} %s grew into %s%s",
+                        message = Global.global.format(String.format("{self:NAME-POSSESSIVE} %s grew into %s%s",
                                         original.fullDescribe(user), newPart.prefix(), newPart.fullDescribe(user)),
                                         user, opponent);
                     }

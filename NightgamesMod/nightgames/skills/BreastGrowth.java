@@ -59,7 +59,7 @@ public class BreastGrowth extends Skill {
         } else {
             res = Result.miss;
         }
-        boolean permanent = Global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
+        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
         writeOutput(c, permanent ? 1 : 0, res, target);
         if (res != Result.miss) {

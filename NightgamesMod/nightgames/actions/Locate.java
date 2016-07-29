@@ -1,8 +1,5 @@
 package nightgames.actions;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import nightgames.areas.Area;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
@@ -11,6 +8,9 @@ import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.status.Detected;
 import nightgames.status.Horny;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Locate extends Action {
     private static final long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ public class Locate extends Action {
 
     @Override
     public Movement execute(Character self) {
-        GUI gui = Global.gui();
+        GUI gui = Global.global.gui();
         gui.clearCommand();
         gui.clearText();
         gui.validate();
@@ -47,9 +47,10 @@ public class Locate extends Action {
 
     public void handleEvent(Character self, String choice) {
         Character target;
-        GUI gui = Global.gui();
+        GUI gui = Global.global.gui();
         if (choice.equals("Start")) {
-            Global.getMatch().combatants.stream().filter(c -> self.getAffection(c) >= MINIMUM_SCRYING_REQUIREMENT)
+            Global.global.getMatch().combatants.stream()
+                            .filter(c -> self.getAffection(c) >= MINIMUM_SCRYING_REQUIREMENT)
                             .forEach((character) -> {
                                 gui.choose(this, character.getName(), self);
                             });
@@ -57,8 +58,8 @@ public class Locate extends Action {
         } else if (choice.equals("Leave")) {
             gui.clearText();
             gui.clearCommand();
-            Global.getMatch().resume();
-        } else if ((target = Global.getCharacterByName(choice)) != null) {
+            Global.global.getMatch().resume();
+        } else if ((target = Global.global.getNPC(choice)) != null) {
             Area area = target.location();
             gui.clearText();
             if (area != null) {

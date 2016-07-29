@@ -74,10 +74,11 @@ public class SubmissiveHold extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (isArmLock(c.getStance())) {
-            return Global.format("You entwine {other:name-possessive} fingers with your own, holding her in position.",
+            return Global.global
+                            .format("You entwine {other:name-possessive} fingers with your own, holding her in position.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "You embrace {other:name} and wrap your legs around her waist, holding her inside you.",
                             getSelf(), target);
         }
@@ -86,11 +87,11 @@ public class SubmissiveHold extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (isArmLock(c.getStance())) {
-            return Global.format("{self:SUBJECT} entwines {other:name-possessive} fingers with {self:possessive}"
+            return Global.global.format("{self:SUBJECT} entwines {other:name-possessive} fingers with {self:possessive}"
                             + " own, holding {other:direct-object} in position.",
                             getSelf(), target);
         } else {
-            return Global.format(
+            return Global.global.format(
                             "{self:SUBJECT} embraces {other:name-do} and wraps {self:possessive} lithesome legs "
                             + "around {other:possessive} waist, holding {other:direct-object} inside {self:direct-object}.",
                             getSelf(), target);

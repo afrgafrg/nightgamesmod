@@ -1,9 +1,5 @@
 package nightgames.skills;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
@@ -11,6 +7,10 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class LeechEnergy extends Skill {
     String lastPart;
@@ -41,7 +41,7 @@ public class LeechEnergy extends Skill {
             List<String> targets = new ArrayList<String>(
                             Arrays.asList("hands", "feet", "skin", "mouth", "cock", "pussy", "balls"));
             while (!targets.isEmpty()) {
-                String type = targets.remove(Global.random(targets.size()));
+                String type = targets.remove(Global.global.random(targets.size()));
                 part = target.body.getRandom(type);
                 if (part != null) {
                     lastPart = type;
@@ -56,7 +56,7 @@ public class LeechEnergy extends Skill {
             String partStringSingular = partString.substring(0, partString.length() - 1);
             if (part.isType("hands")) {
                 c.write(getSelf(),
-                                Global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
+                                Global.global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
                                                 + " latch onto {other:name-possessive} hands and swallow up {other:possessive} fingers. While the "
                                                 + selfPart.describe(getSelf())
                                                 + " are lasciviously licking {other:possessive} digits, "
@@ -64,7 +64,7 @@ public class LeechEnergy extends Skill {
                                 getSelf(), target));
             } else if (part.isType("feet")) {
                 c.write(getSelf(),
-                                Global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
+                                Global.global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
                                                 + " latch onto {other:name-possessive} legs and swallow up {other:possessive} feet. While the numerous bumps and ridges inside the "
                                                 + selfPart.describe(getSelf())
                                                 + " are squeezing and pulling on {other:possessive} ankles, "
@@ -72,35 +72,31 @@ public class LeechEnergy extends Skill {
                                 getSelf(), target));
             } else if (part.isType("skin")) {
                 c.write(getSelf(),
-                                Global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
+                                Global.global.format("{self:name-possessive} numerous " + selfPart.describe(getSelf())
                                                 + " latch onto {other:name-possessive} body and coils around {other:possessive} waist. The numerous tips on the "
                                                 + selfPart.describe(getSelf())
                                                 + " feel like tiny mouths nibbling on your skin as they suck the energy from {other:possessive} body.",
                                 getSelf(), target));
             } else if (part.isType("mouth")) {
-                c.write(getSelf(),
-                                Global.format("A thick " + partStringSingular
+                c.write(getSelf(), Global.global.format("A thick " + partStringSingular
                                                 + " latches onto {other:name-possessive} mouth and violates {other:possessive} oral cavity. {other:NAME-POSSESSIVE} mouth feels as if the "
                                                 + partStringSingular
                                                 + " is deep kissing {other:direct-object} as {other:possessive} energy flows through the connection.",
                                 getSelf(), target));
             } else if (part.isType("cock")) {
-                c.write(getSelf(),
-                                Global.format("A particularly thick " + partStringSingular
+                c.write(getSelf(), Global.global.format("A particularly thick " + partStringSingular
                                                 + " latches onto {other:name-possessive} cock and swallows it whole. {other:SUBJECT-ACTION:gasp|gasps} in pleasure as the "
                                                 + partStringSingular
                                                 + "-pussy churns against {other:possessive} cock relentlessly, sucking out both precum and {other:possessive} precious energy.",
                                 getSelf(), target));
             } else if (part.isType("balls")) {
-                c.write(getSelf(),
-                                Global.format("A particularly thick " + partStringSingular
+                c.write(getSelf(), Global.global.format("A particularly thick " + partStringSingular
                                                 + " latches onto {other:name-possessive} balls and swallows it whole. {other:SUBJECT-ACTION:gasp|gasps} in pleasure as the "
                                                 + partStringSingular
                                                 + "-mouth sucks and chews on {other:possessive} balls relentlessly, sucking out what little fight {other:subject-action:have|has}.",
                                 getSelf(), target));
             } else if (part.isType("pussy")) {
-                c.write(getSelf(),
-                                Global.format("A particularly thick " + partStringSingular
+                c.write(getSelf(), Global.global.format("A particularly thick " + partStringSingular
                                                 + " latches onto {other:name-possessive} pussy and plunges inside. {other:SUBJECT-ACTION:gasp|gasps} in pleasure as the "
                                                 + partStringSingular
                                                 + "-cock thrusts in and out of {other:direct-object} relentlessly, draining {other:direct-object} of energy and replacing it with "
@@ -108,8 +104,8 @@ public class LeechEnergy extends Skill {
             } else {
                 c.write(getSelf(), "Wtf happened");
             }
-            target.drainStaminaAsMojo(c, getSelf(), 10 + Global.random(20), 1.5f);
-            target.body.pleasure(getSelf(), selfPart, part, 10 + Global.random(20), c, this);
+            target.drainStaminaAsMojo(c, getSelf(), 10 + Global.global.random(20), 1.5f);
+            target.body.pleasure(getSelf(), selfPart, part, 10 + Global.global.random(20), c, this);
         } else {
             writeOutput(c, Result.miss, target);
             return false;

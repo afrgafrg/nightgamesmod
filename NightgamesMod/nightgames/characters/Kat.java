@@ -1,14 +1,6 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
@@ -22,6 +14,9 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.Feral;
 import nightgames.status.Pheromones;
 import nightgames.status.Stsflag;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Kat extends BasePersonality {
     /**
@@ -129,8 +124,8 @@ public class Kat extends BasePersonality {
         character.getGrowth().bonusStamina = 1;
         character.getGrowth().bonusArousal = 2;
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 13 && !Global.checkFlag(KAT_POWER_FOCUS) && !Global.checkFlag(KAT_SPEED_FOCUS);
-        }, (c, self, player) -> Global.format("Exhilarated after the fight, Kat pounces on you once again. "
+            return self.getLevel() >= 13 && !Global.global.checkFlag(KAT_POWER_FOCUS) && !Global.global.checkFlag(KAT_SPEED_FOCUS);
+        }, (c, self, player) -> Global.global.format("Exhilarated after the fight, Kat pounces on you once again. "
                         + "She doesn't seem too keen on having more sex, so you just hold her in your lap and pet her cute cat ears. "
                         + "Kat narrows her eyes and purrs, <i>\"So what do you think nya? I've gotten better right?\"</i> "
                         + "You grin and continue scratching her fluffy ears, letting her know that she has. "
@@ -169,14 +164,14 @@ public class Kat extends BasePersonality {
                             useSpeed();
                             usePower();
                             character.getGrowth().extraAttributes += 1;
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.global.getPlayer());
                             return true;
                         })
                     )
                 ));
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 22 && !Global.checkFlag(KAT_FRENZY_FOCUS) && !Global.checkFlag(KAT_PHEROMONE_FOCUS)
-                            && (Global.checkFlag(KAT_POWER_FOCUS) || Global.checkFlag(KAT_SPEED_FOCUS));
+            return self.getLevel() >= 22 && !Global.global.checkFlag(KAT_FRENZY_FOCUS) && !Global.global.checkFlag(KAT_PHEROMONE_FOCUS)
+                            && (Global.global.checkFlag(KAT_POWER_FOCUS) || Global.global.checkFlag(KAT_SPEED_FOCUS));
         }, (c, self, player) -> "Kat smells like an animal in heat, and her scent is driving you wild. "
                         + "You're not sure if she notices this herself, but you can definitely tell that "
                         + "you're not going to calm down any time soon. Against your better judgement, "
@@ -210,7 +205,7 @@ public class Kat extends BasePersonality {
                             return true;
                         }),
                         new CombatSceneChoice("Fuck her like she asked", (c, self, other) -> {
-                            c.write(Global.format("Well you're not one to refuse a lady. Holding Kat's lovely legs above your shoulders, you slam into her drenched snatch. "
+                            c.write(Global.global.format("Well you're not one to refuse a lady. Holding Kat's lovely legs above your shoulders, you slam into her drenched snatch. "
                                             + "She screeches at your sudden intrusion, but soon her voice mellows out to sweet moans as you pound her with reckless abandon. "
                                             + "The two of you spend a while just enjoying the sensations of your bodys meeting again and again; her velvety wetness against your rockhard pole. "
                                             + "Alas all good things have to come to an end. With a final few pumps, you ejaculate your thick cum into the petite girl, eliciting a pleasant purr from her. "
@@ -236,7 +231,7 @@ public class Kat extends BasePersonality {
                             return true;
                         }),
                         new CombatSceneChoice("Sex, but continue indulging in her scent [Hard Mode]", (c, self, other) -> {
-                            c.write(Global.format("Sex with Kat sounds like a good idea, but you can't bring yourself to stop inhaling her sexy odor. "
+                            c.write(Global.global.format("Sex with Kat sounds like a good idea, but you can't bring yourself to stop inhaling her sexy odor. "
                                             + "The pheromones must be getting to your head, since it took a good ten seconds of indecision before the proverbial lightbulb lit up. "
                                             + "Why not just do both? Not even separating your nose from her skin for a split second, you hug her body close to you and "
                                             + "plung into her tightness in a seated position."
@@ -252,7 +247,7 @@ public class Kat extends BasePersonality {
                             useFrenzy();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{21,48},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{21,48},Global.global.getPlayer());
                             return true;
                         })
                     )
@@ -286,29 +281,29 @@ public class Kat extends BasePersonality {
             character.money -= 300;
         }
         if (character.money > 0) {
-            Global.getDay().visit("Body Shop", character, Global.random(character.money));
+            Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
         }
         Decider.visit(character);
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
     }

@@ -42,7 +42,7 @@ public class ReverseCarry extends Carry {
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.normal, target));
             }
-            int m = 5 + Global.random(5);
+            int m = 5 + Global.global.random(5);
             int otherm = m;
             if (getSelf().has(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
@@ -73,7 +73,7 @@ public class ReverseCarry extends Carry {
             return (damage > 0 ? "" : "You ") + "leap into " + target.possessiveAdjective()
                             + " arms, but she deposits you back onto the floor.";
         } else {
-            return Global.format(
+            return Global.global.format(
                             (damage > 0 ? "" : "You ")
                                             + " leap into {other:possessive} arms, impaling yourself onto her {other:body-part:cock} "
                                             + ". She lets out a noise that's equal parts surprise and delight as you bounce on her pole.",

@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -32,7 +31,7 @@ public class Horny extends DurationStatus {
 
     @Override
     public String toString() {
-        return "Aroused from " + source + " (" + Global.formatDecimal(magnitude) + " x " + getDuration() + ")";
+        return "Aroused from " + source + " (" + Global.global.formatDecimal(magnitude) + " x " + getDuration() + ")";
     }
 
     @Override
@@ -76,7 +75,7 @@ public class Horny extends DurationStatus {
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         return String.format("%s %saroused by %s.\n", affected.subjectAction("are", "is"), replaced ? "" : "now ",
-                        source + " (" + Global.formatDecimal(magnitude) + " x " + getDuration() + ")");
+                        source + " (" + Global.global.formatDecimal(magnitude) + " x " + getDuration() + ")");
     }
 
     @Override

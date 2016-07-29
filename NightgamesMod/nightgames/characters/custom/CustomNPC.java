@@ -1,12 +1,6 @@
 package nightgames.characters.custom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import nightgames.characters.BasePersonality;
+import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.NPC;
@@ -15,6 +9,12 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.ItemAmount;
 import nightgames.start.NpcConfiguration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CustomNPC extends BasePersonality {
     private final NPCData data;
@@ -71,7 +71,7 @@ public class CustomNPC extends BasePersonality {
             self.gain(i.item, i.amount);
         }
 
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
     }
 
     public void setGrowth() {
@@ -177,7 +177,7 @@ public class CustomNPC extends BasePersonality {
                         .forEach(e -> applicable.put(e.getKey(), e.getValue()));
         return applicable;
     }
-    
+
     public NPCData getData() {
         return data;
     }

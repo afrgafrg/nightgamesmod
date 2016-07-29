@@ -66,9 +66,9 @@ public class TemptressStripTease extends StripTease {
             } else {
                 c.write(getSelf(), receive(c, 0, Result.weak, target));
             }
-            target.temptNoSource(c, getSelf(), 10 + Global.random(Math.max(5, technique)), this);
-            if (Global.random(2) == 0) {
-                target.add(c, new Charmed(target, Global.random(Math.min(3, technique))));
+            target.temptNoSource(c, getSelf(), 10 + Global.global.random(Math.max(5, technique)), this);
+            if (Global.global.random(2) == 0) {
+                target.add(c, new Charmed(target, Global.global.random(Math.min(3, technique))));
             }
             getSelf().add(c, new Alluring(getSelf(), 3));
         } else {
@@ -78,8 +78,8 @@ public class TemptressStripTease extends StripTease {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
 
-            target.temptNoSource(c, getSelf(), 15 + Global.random(Math.max(10, technique)), this);
-            target.add(c, new Charmed(target, Global.random(Math.min(5, technique))));
+            target.temptNoSource(c, getSelf(), 15 + Global.global.random(Math.max(10, technique)), this);
+            target.add(c, new Charmed(target, Global.global.random(Math.min(5, technique))));
             getSelf().add(c, new Alluring(getSelf(), 5));
             getSelf().undress(c);
         }
@@ -118,7 +118,7 @@ public class TemptressStripTease extends StripTease {
                             + " %s can only gawk in amazement as her perfect body is revealed bit"
                             + " by bit, and the thought of doing anything to blemish such"
                             + " perfection seems very unpleasant indeed.", getSelf().subject(),
-                            Global.capitalizeFirstLetter(target.subject()));
+                            Global.global.capitalizeFirstLetter(target.subject()));
         }
     }
 

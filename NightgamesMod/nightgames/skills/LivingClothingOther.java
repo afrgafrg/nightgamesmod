@@ -74,7 +74,7 @@ public class LivingClothingOther extends Skill {
                         + " out of the device. The created tentacles coils around %s body and"
                         + " wrap themselves into a living suit.", target.nameDirectObject(),
                         getSelf().subject(), getSelf().possessiveAdjective(),
-                        Global.capitalizeFirstLetter(getSelf().pronoun()),
+                        Global.global.capitalizeFirstLetter(getSelf().pronoun()),
                         target.nameOrPossessivePronoun());
         return message;
     }

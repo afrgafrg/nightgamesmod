@@ -1,7 +1,6 @@
 package nightgames.characters.body;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
@@ -62,7 +61,7 @@ public class GenericBodyPart implements BodyPart {
 
     @Override
     public void describeLong(StringBuilder b, Character c) {
-        String parsedDesc = Global.format(descLong, c, c);
+        String parsedDesc = Global.global.format(descLong, c, c);
         b.append(parsedDesc);
     }
 
@@ -165,11 +164,11 @@ public class GenericBodyPart implements BodyPart {
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         int bonus = 0;
         if (self.has(ClothingTrait.nursegloves) && type.equals("hands")) {
-            c.write(self, Global
-                            .format("{self:name-possessive} rubber gloves provide a unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
+            c.write(self, Global.global.format(
+                            "{self:name-possessive} rubber gloves provide a unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
                                             + target.describe(opponent) + ".", self, opponent));
-            bonus += 5 + Global.random(5);
-            if (Global.random(5) == 0) {
+            bonus += 5 + Global.global.random(5);
+            if (Global.global.random(5) == 0) {
                 c.write(self, "Unfortunately, the gloves wear out with their usage.");
                 self.shred(ClothingSlot.arms);
             }

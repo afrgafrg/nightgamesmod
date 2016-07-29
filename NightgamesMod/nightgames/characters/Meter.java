@@ -1,8 +1,8 @@
 package nightgames.characters;
 
-import java.io.Serializable;
-
 import nightgames.global.Global;
+
+import java.io.Serializable;
 
 public class Meter implements Serializable, Cloneable {
     /**
@@ -120,7 +120,8 @@ public class Meter implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return String.format("current: %s / max: %s", Global.formatDecimal(current), Global.formatDecimal(max()));
+        return String.format("current: %s / max: %s", Global.global.formatDecimal(current),
+                        Global.global.formatDecimal(max()));
     }
 
     public double remaining() {

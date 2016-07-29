@@ -36,7 +36,7 @@ public class SuckNeck extends Skill {
             } else {
                 writeOutput(c, Result.normal, target);
             }
-            int m = 1 + Global.random(8);
+            int m = 1 + Global.global.random(8);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("mouth"), target.body.getRandom("skin"), m, c, this);
         } else {
             writeOutput(c, Result.miss, target);

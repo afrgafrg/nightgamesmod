@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -25,10 +24,11 @@ public class OrgasmSeal extends DurationStatus {
     @Override
     public String describe(Combat c) {
         if (affected.hasBalls()) {
-            return Global.format("A pentragram on {self:name-possessive} ballsack glows with a sinister light.",
+            return Global.global.format("A pentragram on {self:name-possessive} ballsack glows with a sinister light.",
                             affected, affected);
         } else {
-            return Global.format("A pentragram on {self:name-possessive} lower belly glows with a sinister light.",
+            return Global.global
+                            .format("A pentragram on {self:name-possessive} lower belly glows with a sinister light.",
                             affected, affected);
         }
     }

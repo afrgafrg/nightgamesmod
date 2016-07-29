@@ -35,7 +35,7 @@ public class Stumble extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (Global.random(2) == 0) {
+        if (Global.global.random(2) == 0) {
             c.setStance(new Mount(target, getSelf()), target, false);
         } else {
             c.setStance(new ReverseMount(target, getSelf()), target, false);
@@ -43,7 +43,7 @@ public class Stumble extends Skill {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
             if (((Player)getSelf()).checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL, 
+                ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL,
                                 target, Addiction.LOW_INCREASE, c);
                 c.write(getSelf(), "Acting submissively voluntarily reduces Mara's control over you.");
             }
@@ -73,7 +73,7 @@ public class Stumble extends Skill {
         return String.format(
                         "%s stumbles and falls, grabbing %s to catch %s. Unfortunately, "
                                         + "%s can't keep %s balance and %s %s on top of %s. Maybe that's not so unfortunate.",
-                        getSelf().name(), target.nameDirectObject(), getSelf().reflectivePronoun(), 
+                        getSelf().name(), target.nameDirectObject(), getSelf().reflectivePronoun(),
                         target.subject(), target.possessiveAdjective(), target.pronoun(),
                         target.action("fall"), getSelf().directObject());
     }

@@ -3,12 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Flag;
@@ -30,7 +25,7 @@ public class MimicSuccubus extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.checkFlag(Flag.Reyka);
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.global.checkFlag(Flag.Reyka);
     }
 
     @Override
@@ -82,7 +77,8 @@ public class MimicSuccubus extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("{self:NAME-POSSESSIVE} mercurial form seems to suddenly expand, then collapse onto itself. "
+        return Global.global
+                        .format("{self:NAME-POSSESSIVE} mercurial form seems to suddenly expand, then collapse onto itself. "
                         + "Her crystal blue goo glimmers and shifts into a deep obsidian. After reforming her features out of "
                         + "her eratically flowing slime, {other:subject-action:see|sees} that she has taken on an appearance reminiscent of Reyka's succubus form, "
                         + "complete with large translucent gel wings, a thick tail and her characteristic laviscious grin.", getSelf(), target);

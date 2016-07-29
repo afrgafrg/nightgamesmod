@@ -1,17 +1,14 @@
 package nightgames.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-
-import javax.swing.border.LineBorder;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.skills.Skill;
 import nightgames.skills.Stage;
+
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
 
 public class SkillButton extends KeyableButton {
     private static final long serialVersionUID = -1253735466299929203L;
@@ -57,11 +54,11 @@ public class SkillButton extends KeyableButton {
                       .size() == 0) {
                 combat.act(SkillButton.this.action.user(), SkillButton.this.action, "");
             } else {
-                Global.gui().commandPanel.reset();
+                Global.global.gui().commandPanel.reset();
                 for (String choice : action.subChoices(c)) {
-                    Global.gui().commandPanel.add(new SubSkillButton(action, choice, combat));
+                    Global.global.gui().commandPanel.add(new SubSkillButton(action, choice, combat));
                 }
-                Global.gui().commandPanel.refresh();
+                Global.global.gui().commandPanel.refresh();
             }
         });
         setLayout(new BorderLayout());

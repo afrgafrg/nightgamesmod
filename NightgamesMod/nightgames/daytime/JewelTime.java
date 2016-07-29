@@ -1,17 +1,9 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
@@ -20,9 +12,12 @@ import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class JewelTime extends BaseNPCTime {
     public JewelTime(Character player) {
-        super(player, Global.getNPC("Jewel"));
+        super(player, Global.global.getNPC("Jewel"));
         knownFlag = "JewelKnown";
         giftedString = "\"Thanks! You're a pretty nice you know?\"";
         giftString = "\"A present? I'm not going to go easy on you even if you bribe me you know?\"";
@@ -123,16 +118,16 @@ public class JewelTime extends BaseNPCTime {
     @Override
     public void subVisitIntro(String choice) {
         if (npc.getAffection(player) > 0) {
-            Global.gui()
+            Global.global.gui()
                   .message("You plan to intercept Jewel on her run again, but when you get to the gardens, you find her already there, sitting on a low stone wall. She smiles "
                                   + "when she sees you and stands up to meet you. Apparently she was waiting for you, but you hadn't made plans to meet. How long was she waiting here?<br/><i>\"I just got here a "
                                   + "few minutes ago. I had a feeling you were going to come here to see me. I've learned to always trust my intuition.\"</i> Her instincts are impressive and apparently convenient. "
                                   + "When you're within reach, she plants a light kiss on your lips. <i>\"If you came looking for me, I assume you're eager for some training. Tell me what you have in mind.\"</i>");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
             if (Global.getPlayer()
                       .checkAddiction(AddictionType.DOMINANCE, npc)) {
@@ -140,7 +135,7 @@ public class JewelTime extends BaseNPCTime {
                       .choose(this, "Ask about Dominance");
             }
         } else if (npc.getAttraction(player) < 15) {
-            Global.gui()
+            Global.global.gui()
                   .message("You wait by the campus gardens, which according to Aesop, is on Jewel's jogging route. Sure enough, she comes running by within ten minutes and "
                                   + "calls out to you when she notices you. <i>\"Hey " + player.name()
                                   + ". It's good to see you. Are you here to train too?\"</i> She's not breathing particularly heavily and there's only "
@@ -155,7 +150,7 @@ public class JewelTime extends BaseNPCTime {
             npc.gainAttraction(player, 2);
             player.gainAttraction(npc, 2);
         } else {
-            Global.gui()
+            Global.global.gui()
                   .message("You look around the campus and manage to catch Jewel while she's preparing for her run. She's doing stretches in a tight workout outfit that shows "
                                   + "off her midriff and legs. She sees you and gives you a friendly wave as you approach. You greet her and suggest spending some time training together. <i>\"I was just about "
                                   + "to go for a run. You're free to tag along if you want, but I'll be setting a fast pace today.\"</i> That seems like a bit of a waste. She can go running anytime, but some "
@@ -166,21 +161,21 @@ public class JewelTime extends BaseNPCTime {
                                   + "more one-on-one competition. She shivers at your touch and kisses you firmly. <i>\"You know exactly how to make me wet. I'll accept your challenge anytime.\"</i>");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
         }
-        Global.gui()
+        Global.global.gui()
               .choose(this, "Leave");
     }
 
     @Override
     public void subVisit(String choice) {
         if (choice.contains("Dominance")) {
-            Global.gui()
+            Global.global.gui()
                   .message("You cautiously ask about Jewel's dominant manner in the Games. \"Oh, just the nights aren't"
                                   + " enough for you? You need to be dominated during the day as well? Well, that can be"
                                   + " arranged.\" Wait, no! You didn't mean that at all! Right? You back away from Jewel "
@@ -245,8 +240,8 @@ public class JewelTime extends BaseNPCTime {
                   .choose(this, "Leave");
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("Jewel leads you to her bedroom instead of the wilderness for once. She seems unusually eager and almost like she could break into skipping at any time. "
                                       + "She's always been as fond of sex as the next girl, but this is uncharacteristic. You eventually decide to ask her if anything special is happening today. <i>\"Hmm? Well, "
                                       + "I guess I have some pretty high expectations for you today. Your sexual prowess has always been above average, but my instincts are telling me that you're capable of "
@@ -276,13 +271,13 @@ public class JewelTime extends BaseNPCTime {
                                       + "unbidden to your mind, but you resist the urge to yell. It takes Jewel a lot longer to recover from this orgasm, but when she does she smiles contently. <i>\"That was even better than I "
                                       + "expected.\"</i>");
                 if (!player.has(Trait.spiral)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>You've learned to harness the awesome power that has laid dormant in your soul... maybe. You've at least learned to move your hips a lot during sex.</b>");
                     player.add(Trait.spiral);
                     npc.getGrowth().addTrait(0, Trait.spiral);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("<i>\"Come on, it's not far now.\"</i> Jewel encourages you as you fall behind her slightly. The two of you are running at a slower pace than usual. You "
                                       + "aren't sure why you're running at all. You suggested sex and she seemed very excited about the prospect, but now you're running. Horizontal jogging can be used "
                                       + "as a euphemism for... no, you're sure you said sex. <i>\"Think of this as a warm up,\"</i> she explains when you ask her about the surprising absence of sexy times. "
@@ -305,14 +300,14 @@ public class JewelTime extends BaseNPCTime {
                                       + "Jewel's vagina, but she looks no worse for wear. <i>\"Well worth a bit of a hike, don't you think?\"</i> she asks, smiling. <i>\"We should probably both wash up a bit before we "
                                       + "head back.\"</i>");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.fearless) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.fearless) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("Today you've brought a wargame to appeal to Jewel's love of military history. You let her play the Allies, both because her father is a soldier and because the "
                                       + "Allies are on offense in this scenario. She advances all her troops from the start, taking heavy casualties, but stealing a couple victory point locations from you. You bide "
                                       + "your time, not worried yet. You are being pushed back, but you're retreating into more defensible positions. More importantly, Jewel will start pulling back her damaged units "
@@ -329,27 +324,26 @@ public class JewelTime extends BaseNPCTime {
                                       + "kids, or a spouse. In a game, the only thing that matters is victory. When you lose a piece, no one has to cry over a friend or family member's grave. You can't treat war like a game, "
                                       + "and likewise you can't treat a game like war.\"</i><br/><br/>She stands up and practically drags you out of your chair. <i>\"Enough serious talk. Strip and get on the bed. I'm on top today.\"</i>");
                 if (!player.has(Trait.fearless)) {
-                    Global.gui()
-                          .message("<br/><br/><b>Jewel has taught you a valuable lesson in reckless determination.</b>");
+                    Global.global.gui().message("<br/><br/><b>Jewel has taught you a valuable lesson in reckless determination.</b>");
                     player.add(Trait.fearless);
                     npc.getGrowth().addTrait(0, Trait.fearless);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("You were somewhat worried how Jewel would respond to the prospect of playing some potentially geeky games, but it seems your concerns were completely unfounded. "
                                       + "The idea of running around with a longsword and slaying monsters immediately appeals to her. She's extremely sharp and learns complex rules in no time. She has also studied enough "
                                       + "military history to recognize a good strategy. No matter what you play, these gaming sessions always prove to be enjoyable mediums for the two of you to get closer. The only "
                                       + "problem is that Jewel's fetish for competition prevents you from finishing long games. Whenever a tense game's climax starts to drag on, she inevitably attacks you and tears "
                                       + "off your clothes. Honestly, as far as problems go, you could do much worse.");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.dirtyfighter) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.dirtyfighter) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("Your martial arts training has finally reached the point where Jewel is willing to spar with you seriously. She's all business when it comes to sparring. There "
                                       + "are no sex holds and no stripping. The only victory condition is to make your opponent admit defeat. Jewel darts in with a snap-kick, which you barely manage to block, and "
                                       + "ducks out of the way of your counter. In theory, neither of you is trying to actually hurt the other, but if you miss a block she won't be able to pull the punch in time. "
@@ -365,13 +359,13 @@ public class JewelTime extends BaseNPCTime {
                                       + "<i>\"You haven't given up yet. Should I assume you want to keep fighting?\"</i> You hastily concede before your situation becomes any more painful. She breathes lustily in your ear and "
                                       + "fondles your penis. <i>\"Try to recover quickly. I need this in me as soon as possible.\"</i>");
                 if (!player.has(Trait.dirtyfighter)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>You've learned the hard way that kicks can be dangerous, even when you're down.</b>");
                     player.add(Trait.dirtyfighter);
                     npc.getGrowth().addTrait(0, Trait.dirtyfighter);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("When you suggested a bit of sparring to Jewel, you weren't expecting anything like this. Despite your experience grappling and sex fighting each night, you don't "
                                       + "have any formal martial arts experience. Jewel was not very impressed when she saw your technique and she insisted that this time would be best spent training you. <i>\"I'll shape you "
                                       + "into a man who can proudly stand as my rival.\"</i> with that plan, the two of you soon find a small out-of-the-way courtyard and start training.<br/><br/>Jewel is a strict drill sergeant and "
@@ -386,7 +380,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "penalty applies to them too. They've long since stopped making fun of you when their clothes start coming off. By the time training is over, you still don't know either girl's name "
                                       + "but you feel a faint sense of solidarity with them, even though Jewel let them keep their panties on.");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
@@ -398,7 +392,7 @@ public class JewelTime extends BaseNPCTime {
 
     @Override
     public Optional<String> getAddictionOption() {
-        return Global.getPlayer()
+        return Global.global.getPlayer()
                      .checkAddiction(AddictionType.DOMINANCE) ? Optional.of("Ask about Dominance") : Optional.empty();
     }
 }

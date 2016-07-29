@@ -1,16 +1,8 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.MouthPussyPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
@@ -26,6 +18,9 @@ import nightgames.skills.strategy.NurseStrategy;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Energized;
 import nightgames.status.Stsflag;
+
+import java.util.HashSet;
+import java.util.Optional;
 
 public class Cassie extends BasePersonality {
     /**
@@ -125,7 +120,7 @@ public class Cassie extends BasePersonality {
         character.addLine(CharacterLine.LEVEL_DRAIN_LINER, (c, self, other) -> {
             String part = Global.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
             if (other.getLevel() < self.getLevel() - 5) {
-                return "Cassie grins at you as your strength is once again sucked into her devilish " + part 
+                return "Cassie grins at you as your strength is once again sucked into her devilish " + part
                                 + ", <i>\"{other:NAME}, I truly love you, you know that? But this... this is no longer a competition. "
                                 + "Thanks to your previous efforts, I'm now stronger, smarter, and more seductive than you'll ever be. "
                                 + "I think that's okay though... I can take care of you for the rest of your life. "
@@ -146,7 +141,7 @@ public class Cassie extends BasePersonality {
     public void applyStrategy(NPC self) {
         self.plan = Plan.hunting;
         self.mood = Emotion.confident;
-        
+
         self.addPersonalStrategy(new OralStrategy());
         self.addPersonalStrategy(new BreastStrategy());
         self.addPersonalStrategy(new NurseStrategy());
@@ -169,7 +164,7 @@ public class Cassie extends BasePersonality {
 
         self.getStamina().setMax(70);
         self.getArousal().setMax(100);
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.setTrophy(Item.CassieTrophy);
         self.body.add(BreastsPart.c);
         self.initialGender = CharacterSex.female;
@@ -317,7 +312,7 @@ public class Cassie extends BasePersonality {
         character.getGrowth().addTrait(53, Trait.addictivefluids);
         // 57 - first choice 4
         // 60 - second choice 6
-        
+
         // mostly feminine face, cute but not quite at Angel's level
         character.body.add(new FacePart(.1, 2.9));
     }
@@ -361,38 +356,38 @@ public class Cassie extends BasePersonality {
         }
         if (character.rank >= 1) {
             if (character.money > 0) {
-                Global.getDay().visit("Magic Training", character, Global.random(character.money));
+                Global.global.getDay().visit("Magic Training", character, Global.global.random(character.money));
             }
             if (character.money > 0) {
-                Global.getDay().visit("Workshop", character, Global.random(character.money));
+                Global.global.getDay().visit("Workshop", character, Global.global.random(character.money));
             }
         }
 
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
         }
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Global.global.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
-        if (Global.getValue(Flag.CassieLoneliness) < 0) {
-            Global.setCounter(Flag.CassieLoneliness, 0);
+        if (Global.global.getValue(Flag.CassieLoneliness) < 0) {
+            Global.global.setCounter(Flag.CassieLoneliness, 0);
         }
-        Global.modCounter(Flag.CassieLoneliness, 5);
+        Global.global.modCounter(Flag.CassieLoneliness, 5);
         Decider.visit(character);
     }
 
@@ -422,7 +417,7 @@ public class Cassie extends BasePersonality {
                             + "you actually came while she was pegging you. <i>\"You came?\"</i> she gasps. <i>\"I mean the shopkeeper said it would work but....\"</i> she trails off.  She smiles, and stands. <i>\"I never knew "
                             + "I'd enjoy that so much.\"</i> Her grin widens in a way that makes you nervous. <i>\"I might need to try that again in the future.\"</i> Your decide to bid a hasty retreat leaving your "
                             + "clothes behind to the victor.";
-        } else if (character.has(Trait.witch) && character.has(Trait.silvertongue) && Global.random(3) == 0) {
+        } else if (character.has(Trait.witch) && character.has(Trait.silvertongue) && Global.global.random(3) == 0) {
             character.arousal.empty();
             return "Cassie's efforts to pleasure you finally break your resistance and you find yourself completely unable to stop her. She slips between your legs and takes your straining "
                             + "dick into her mouth. She eagerly sucks on your cock, while glancing up to meet your eyes. Her talented oral technique blows away your endurance and you spill your seed "
@@ -491,7 +486,7 @@ public class Cassie extends BasePersonality {
     @Override
     public String defeat(Combat c, Result flag) {
         Character opponent = c.getOpponent(character);
-        if (character.has(Trait.witch) && Global.random(3) == 0) {
+        if (character.has(Trait.witch) && Global.global.random(3) == 0) {
             opponent.add(c, new Energized(opponent, 10));
             return "You capture Cassie's lips and slip your hand between her legs to facilitate her imminent orgasm. You rub her soaked pussy lips and she moans against your lips. Her body "
                             + "tenses as she clings to you, letting you know she's reached her climax. You keep rubbing her petals as she starts to relax. She shows no sign of breaking the kiss or "
@@ -566,7 +561,8 @@ public class Cassie extends BasePersonality {
     public String draw(Combat c, Result flag) {
         Character opponent=c.getOpponent(character);
         if (flag == Result.intercourse) {
-            if (character.has(Trait.witch) && opponent.getPure(Attribute.Arcane) >= 4 && character.getAffection(opponent) >= 12 && Global.random(2) == 0) {
+            if (character.has(Trait.witch) && opponent.getPure(Attribute.Arcane) >= 4
+                            && character.getAffection(opponent) >= 12 && Global.global.random(2) == 0) {
                 return "You thrust your hips in time with Cassie's, pushing you both closer to orgasm. At this rate, it seems a draw is pretty much certain. If you pulled out, "
                                 + "there's a chance you could change tactics and take the advantage, but right at this moment, it feels like there are more important things than winning.<br/><br/> "
                                 + "Cassie interlocks her fingers with yours, her eyes filled with desire and pleasure."

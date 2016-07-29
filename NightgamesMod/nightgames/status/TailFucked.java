@@ -32,7 +32,7 @@ public class TailFucked extends Status {
         if (hole == null || tail == null) {
             return "";
         }
-        return Global.capitalizeFirstLetter(String.format("%s now fucking %s %s with %s %s\n",
+        return Global.global.capitalizeFirstLetter(String.format("%s now fucking %s %s with %s %s\n",
                         other.subjectAction("are", "is"), affected.nameOrPossessivePronoun(), hole.describe(affected),
                         other.possessiveAdjective(), tail.describe(other)));
     }
@@ -44,7 +44,7 @@ public class TailFucked extends Status {
         if (hole == null || tail == null) {
             return "";
         }
-        return Global.capitalizeFirstLetter(String.format("%s fucking %s %s with %s %s\n",
+        return Global.global.capitalizeFirstLetter(String.format("%s fucking %s %s with %s %s\n",
                             other.subjectAction("are", "is"), affected.nameOrPossessivePronoun(),
                             hole.describe(affected), other.possessiveAdjective(), tail.describe(other)));
     }
@@ -67,8 +67,8 @@ public class TailFucked extends Status {
             affected.removelist.add(this);
             return;
         }
-        c.write(other, Global.capitalizeFirstLetter(
-                        Global.format("{other:name-possessive} {other:body-part:tail} relentlessly fucks {self:name-do} in {self:possessive} {self:body-part:"
+        c.write(other, Global.global.capitalizeFirstLetter(Global.global.format(
+                        "{other:name-possessive} {other:body-part:tail} relentlessly fucks {self:name-do} in {self:possessive} {self:body-part:"
                                         + target + "}.", affected, other)));
         affected.body.pleasure(other, tail, hole, 10, c);
         other.body.pleasure(affected, hole, tail, 2, c);

@@ -1,40 +1,16 @@
 package nightgames.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ScrollPaneConstants;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.Trait;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.start.StartConfiguration;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class CreationGUI extends JPanel {
     /**
@@ -139,7 +115,7 @@ public class CreationGUI extends JPanel {
         textPane.setBackground(new Color(18, 30, 49));
         textPane.setFont(new Font("Baskerville Old Face", Font.PLAIN, 22));
         textPane.setEditable(false);
-        textPane.setText(Global.getIntro());
+        textPane.setText(Global.global.getIntro());
 
         JPanel panel_2 = new JPanel();
         add(panel_2, BorderLayout.SOUTH);
@@ -520,17 +496,17 @@ public class CreationGUI extends JPanel {
                 traits = Arrays.asList((Trait) StrengthBox.getSelectedItem(), (Trait) WeaknessBox.getSelectedItem());
             }
             if (rdbtnDumb.isSelected()) {
-                Global.flag(Flag.dumbmode);
+                Global.global.flag(Flag.dumbmode);
             }
             if (rdbtnHard.isSelected()) {
-                Global.flag(Flag.hardmode);
+                Global.global.flag(Flag.hardmode);
             }
             Map<Attribute, Integer> selectedAttributes = new HashMap<>();
             selectedAttributes.put(Attribute.Power, power);
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
-            Global.newGame(name, startConfig, traits, sex, selectedAttributes);
-            Global.startMatch();
+            Global.global.newGame(name, startConfig, traits, sex, selectedAttributes);
+            Global.global.startMatch();
         }
     }
 

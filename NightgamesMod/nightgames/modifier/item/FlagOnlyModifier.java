@@ -10,7 +10,7 @@ public class FlagOnlyModifier extends ItemModifier {
 
     @Override
     public boolean itemIsBanned(Character c, Item i) {
-        return ((FTCMatch) Global.getMatch()).isPrey(c) && i != Item.Flag;
+        return ((FTCMatch) Global.global.getMatch()).isPrey(c) && i != Item.Flag;
     }
 
     @Override

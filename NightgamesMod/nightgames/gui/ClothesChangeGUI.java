@@ -1,28 +1,18 @@
 package nightgames.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.Box;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
-
 import nightgames.characters.Character;
 import nightgames.daytime.Activity;
 import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSorter;
+
+import javax.swing.*;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class ClothesChangeGUI extends JPanel {
     /**
@@ -107,7 +97,7 @@ public class ClothesChangeGUI extends JPanel {
         DecimalFormat format = new DecimalFormat("#.##");
         appearanceLabel.setText("Attractiveness: " + format.format(character.body.getHotness(Global.getCharacterByType("Angel"))));
         exposureLabel.setText("Exposure: " + format.format(character.outfit.getExposure()));
-        Global.gui().refresh();
+        Global.global.gui().refresh();
     }
 
     private void styleButton(JButton button) {
@@ -123,8 +113,8 @@ public class ClothesChangeGUI extends JPanel {
         setForeground(GUIColors.textColorLight);
         setLayout(new BorderLayout());
 
-        int width = Global.gui().getWidth();
-        int height = Global.gui().getHeight();
+        int width = Global.global.gui().getWidth();
+        int height = Global.global.gui().getHeight();
         int strutSize = (height - 500) / 3;
         int listWidth = (width - 400) / 3;
 
@@ -179,7 +169,7 @@ public class ClothesChangeGUI extends JPanel {
         JButton btnOk = new JButton("OK");
         btnOk.addActionListener(arg0 -> {
             ClothesChangeGUI.this.character.change();
-            Global.gui().removeClosetGUI();
+            Global.global.gui().removeClosetGUI();
             resume.visit(doneOption);
         });
         styleButton(btnOk);

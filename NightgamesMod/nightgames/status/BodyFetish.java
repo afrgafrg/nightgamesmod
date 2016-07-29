@@ -1,32 +1,16 @@
 package nightgames.status;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
-import nightgames.skills.Anilingus;
-import nightgames.skills.Blowjob;
-import nightgames.skills.BreastWorship;
-import nightgames.skills.CockWorship;
-import nightgames.skills.FootWorship;
-import nightgames.skills.Grind;
-import nightgames.skills.Invitation;
-import nightgames.skills.Piston;
-import nightgames.skills.PussyWorship;
-import nightgames.skills.ReverseAssFuck;
-import nightgames.skills.ReverseCarry;
-import nightgames.skills.ReverseFly;
-import nightgames.skills.Skill;
-import nightgames.skills.SpiralThrust;
-import nightgames.skills.Thrust;
-import nightgames.skills.WildThrust;
+import nightgames.skills.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class BodyFetish extends DurationStatus {
     Character origin;
@@ -34,7 +18,7 @@ public class BodyFetish extends DurationStatus {
     public double magnitude;
 
     public BodyFetish(Character affected, Character origin, String part, double magnitude) {
-        super(Global.capitalizeFirstLetter(part) + " Fetish", affected, 10);
+        super(Global.global.capitalizeFirstLetter(part) + " Fetish", affected, 10);
         flag(Stsflag.bodyfetish);
         this.origin = origin;
         this.part = part;
@@ -69,14 +53,14 @@ public class BodyFetish extends DurationStatus {
         } else {
             desc = "overwhelming ";
         }
-        String magString = Global.formatDecimal(magnitude);
+        String magString = Global.global.formatDecimal(magnitude);
         if (affected.human()) {
             if (origin != null && c != null && c.getOpponent(affected) == origin) {
-                return Global.capitalizeFirstLetter(
+                return Global.global.capitalizeFirstLetter(
                                 desc + "fantasies of worshipping " + origin.nameOrPossessivePronoun() + " " + part
                                                 + " run through your mind (" + magString + ").");
             } else {
-                return Global.capitalizeFirstLetter(desc + "fantasies of worshipping " + part
+                return Global.global.capitalizeFirstLetter(desc + "fantasies of worshipping " + part
                                 + " run through your mind (" + magString + ").");
             }
         } else {

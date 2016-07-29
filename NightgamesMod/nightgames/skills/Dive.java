@@ -40,7 +40,7 @@ public class Dive extends Skill {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
             if (((Player)getSelf()).checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL, 
+                ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL,
                                 target, Addiction.LOW_INCREASE, c);
                 c.write(getSelf(), "Acting submissively voluntarily reduces Mara's control over you.");
             }

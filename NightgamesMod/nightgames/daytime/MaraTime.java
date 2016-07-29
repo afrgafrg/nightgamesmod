@@ -1,28 +1,23 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.*;
+
 public class MaraTime extends BaseNPCTime {
     public MaraTime(Character player) {
-        super(player, Global.getNPC("Mara"));
+        super(player, Global.global.getNPC("Mara"));
         knownFlag = "MaraKnown";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
@@ -51,7 +46,7 @@ public class MaraTime extends BaseNPCTime {
         {
             TransformationOption growCock = new TransformationOption();
             growCock.ingredients.put(Item.Dildo, 1);
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
             growCock.option = "Mara: Install a cock";
             growCock.scene = "[Placeholder]<br/>Mara makes some modifications to the dildo and manages to attach it to her own body through methods unknown to you.";
@@ -64,7 +59,7 @@ public class MaraTime extends BaseNPCTime {
         {
             TransformationOption removeCock = new TransformationOption();
             removeCock.ingredients.put(Item.DisSol, 3);
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
             removeCock.option = "Mara: Remove her cock";
             removeCock.scene = "[Placeholder]<br/>Mara uses the solvent to dissolve the bond from her modified cock, making her wholly female again.";
@@ -124,27 +119,27 @@ public class MaraTime extends BaseNPCTime {
     @Override
     public void subVisitIntro(String choice) {
         if (npc.getAffection(player) > 0) {
-            Global.gui()
+            Global.global.gui()
                   .message("You go to the computer lab to find Mara for some quality time. She immediately breaks into a smile when she sees you enter. You can tell "
                                   + "at a glance that she's better rested than the first time you came in here. It's not just her that's changed. The room is still a mess of electronics, but "
                                   + "a significant portion of the clutter is gone. You can reasonably walk across the room without getting tangled in anything. <i>\"I cut back on the number of "
                                   + "concurrent projects I'm working on,\"</i> she explains when she notices you looking around. <i>\"I've always had the habit of finding stuff to do in addition to "
                                   + "my classwork, but I guess I may have gotten a little over my head there.\"</i> She walks over to you and smiles up playfully. <i>\"I'm taking care of myself just "
                                   + "like you asked, now it's your turn to keep up your part of the deal. How are you going to entertain me today?\"</i>");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
             if(player.getPure(Attribute.Arcane)>=3){
-                Global.gui().choose(this,"Faerie play");
+                Global.global.gui().choose(this, "Faerie play");
             }
-            if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
-                Global.gui().choose(this, "Confront about control");
+            if (Global.global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
+                Global.global.gui().choose(this, "Confront about control");
             }
-        } else if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
-            Global.gui()
+        } else if (Global.global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
+            Global.global.gui()
             .message("Mara low-affection addiction intro");
             if (npc.getAttraction(player) < 15) {
                 npc.gainAttraction(player, 2); 
@@ -152,13 +147,13 @@ public class MaraTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui() .choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                Global.global.gui().choose(this, "Games");
+                Global.global.gui().choose(this, "Sparring");
+                Global.global.gui().choose(this, "Sex");
             }
-            Global.gui().choose(this, "Confront about control");
+            Global.global.gui().choose(this, "Confront about control");
         } else if (npc.getAttraction(player) < 15) {
-            Global.gui()
+            Global.global.gui()
                   .message("You eventually find Mara in one of the computer labs, or at least a room labeled Computer Lab D. You typically think of a computer "
                                   + "lab as having rows of fully functional computers and enough clear floorspace to walk through. Most of the computers here are only half assembled and "
                                   + "every surface is covered with assorted electronics. Mara is the only one in the small room, unless someone is buried in the PLCs and cords. She's focused "
@@ -173,7 +168,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAttraction(player, 2);
             player.gainAttraction(npc, 2);
         } else {
-            Global.gui()
+            Global.global.gui()
                   .message("You head to the computer lab to see Mara. She jumps in surprise when the door opens, but relaxes when she sees who you are. <i>\"Hi "
                                   + player.name() + ". "
                                   + "I'm in the middle of something I can't really put down, but if you won't be bored, I'd enjoy some company.\"</i> Mara clears the junk off a chair behind her. You make "
@@ -190,14 +185,14 @@ public class MaraTime extends BaseNPCTime {
                                   + "we're having fun, I won't think about anything but you.\"</i> Basically she'll only take a break while you're hanging out together. It's better than nothing.");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Games");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sparring");
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Sex");
         }
-        Global.gui()
+        Global.global.gui()
               .choose(this, "Leave");
     }
 
@@ -205,11 +200,12 @@ public class MaraTime extends BaseNPCTime {
     public void subVisit(String choice) {
         if (choice.equals("Confront about control")) {
             if (npc.getAffection(player) == 0) {
-                Global.gui().message("Mara has some fun making you do embarassing things in public, and then takes"
+                Global.global.gui()
+                                .message("Mara has some fun making you do embarassing things in public, and then takes"
                                 + " you home so you can put on a good show of jacking off for her. At the end, "
                                 + "she reinforces her control over you. This is a placeholder.");
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("<i>\"Haha, yes! Great isn't it? Hands up!\"</i> You try to resist, "
                                       + "but this close and this direct it's no use. You let her know you're not happy about all this. <i>\"He, "
                                       + "sorry, I got a little carried away. You can put them down.\"</i> You do so and open your mouth to speak"
@@ -269,17 +265,17 @@ public class MaraTime extends BaseNPCTime {
                                       + "muscles feel a little sluggish, and it's only going to get worse with time and distance, but maybe"
                                       + " it's worth it?");
             }
-            Global.gui().choose(this, "Leave");
-            Global.getPlayer().addict(AddictionType.MIND_CONTROL, npc, Addiction.MED_INCREASE);
-            Global.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
+            Global.global.gui().choose(this, "Leave");
+            Global.global.getPlayer().addict(AddictionType.MIND_CONTROL, npc, Addiction.MED_INCREASE);
+            Global.global.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("You invite Mara to your room some fun. As soon as you get there she walks up behind you, shoves her hand down the front of your pants, and grabs you penis. "
                                       + "You're taken by surprise, but it doesn't stop you from getting hard in her hand. <i>\"You said we're here to have fun and I've decided you're my toy today,\"</i> she whispers "
                                       + "in an unusually sultry voice. When you're fully erect, she withdraws her hand and orders you to strip. Once you're naked, she has you sit on the bed and begins to fondle "
-                                      + "your balls. <i>\"" +Global.capitalizeFirstLetter(Global.getPlayer().boyOrGirl()) + "s get really nervous when I play with these, but it feels good, doesn't it?\"</i> She's mostly back to her typical, mischievous self, but you can see a "
+                                      + "your balls. <i>\"" + Global.global.capitalizeFirstLetter(Global.global.getPlayer().boyOrGirl()) + "s get really nervous when I play with these, but it feels good, doesn't it?\"</i> She's mostly back to her typical, mischievous self, but you can see a "
                                       + "dominant gleam in her eye. She takes her time undressing, turning it into a full stripshow, then she sits on your lap facing you. Her pussy is close enough to your straining "
                                       + "dick that you can feel her heat. <i>\"I think it would be a lot of fun to train you,\"</i> she says in her sweetest, innocent voice. <i>\"I'll train you so no other girl can get you "
                                       + "hard, but you'll come instantly at my touch. Then you'll win against everyone except me. Doesn't that sound advantageous for both of us?\"</i> You can't tell if she's joking or "
@@ -306,13 +302,13 @@ public class MaraTime extends BaseNPCTime {
                                       + "won't be able to last, so you massage and play with her breasts to accelerate her climax. When your endurance breaks and you shoot you seed in Mara, she shudders and you can feel her pussy "
                                       + "squeeze you. She collapses into your chest and mumbles, <i>\"Four orgasms. I think you're trying to train my body.\"</i>");
                 if (!player.has(Trait.ticklemonster)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>You've gotten better at finding sensitive spots when tickling nude opponents.</b>");
                     player.add(Trait.ticklemonster);
                     npc.getGrowth().addTrait(0, Trait.ticklemonster);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("You suggest finding a bed for some private fun. Mara smiles at you mischievously. <i>\"We don't really need a bed for that\"</i> She clears some space "
                                       + "off a nearby table and starts to undress you. She wants to do it right here? The door doesn't lock. What's to stop someone from walking in on you? <i>\"Nobody is "
                                       + "going to catch us. You're the only one who ever visits me here.\"</i> She gives you a tender kiss while she slips off your boxers. She's still fully dressed, and "
@@ -338,14 +334,14 @@ public class MaraTime extends BaseNPCTime {
                                       + "said I'd get some rest if you kept me company. I thought we could take a nap together.\"</i> That sounds like a very good idea.");
 
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spider) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spider) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("Mara is too damn good at these games. She moves her third spider next to your queen, trapping it in place. You don't lose until she fills in all six spaces "
                                       + "adjacent to your queen, but even with just those three pieces, you don't have enough room to move out of there. For the rest of the game, you try to block off her access "
                                       + "to the remaining spaces, while rushing to try to surround her queen and put her on the defensive. It's no use. You never manage to immobilize her queen so she always manages "
@@ -376,13 +372,13 @@ public class MaraTime extends BaseNPCTime {
                                       + "make you cum. Surely she has something she wants you to do. She lowers her eyes shyly and replies softly. <i>\"Yeah, I want you to fall in love with me.\"</i> She gives you a tender, lingering "
                                       + "kiss. <i>\"There's no time limit, just get started on that when you get a chance.\"</i>");
                 if (!player.has(Trait.spider)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>Mara has taught you to make the brilliant and insanely complex Spiderweb Trap.</b>");
                     player.add(Trait.spider);
                     npc.getGrowth().addTrait(0, Trait.spider);
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("You knew Mara was clever, but you didn't expect playing a board game against her to be this frustrating. Every move you make, she seems to have planned far "
                                       + "ahead. She doesn't even pretend to be trying very hard. While you're planning out your next move, she tends to get bored and cuddle with you on the couch. This has a pretty profound impact on "
                                       + "your ability to concentrate. Even simple calculations become a challenge when she's stroking your thigh or breathing on your neck. On your turn you place down two stones in formation to "
@@ -404,14 +400,14 @@ public class MaraTime extends BaseNPCTime {
                                       + "it's far from completely destroying you. You managed to give her a pretty good run for her money for the second half. By the time the game is over, she's mostly forgotten why she's "
                                       + "pretending to be mad at you, but she does demand to be on top during your 'follow-up game' to address your combined sexual frustration.");
             }
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.heeldrop) || Global.random(2) == 1)) {
-                Global.gui()
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.heeldrop) || Global.global.random(2) == 1)) {
+                Global.global.gui()
                       .message("You and Mara prepare for some sparring practice by getting undressed. She tosses her clothes aside and is so eager that she's actually bouncing noticeably, "
                                       + "unconcerned about her nudity. You finish stretching and square off with her, but she raises a hand to stop you. <i>\"Wait! Can I have a kiss before we start?\"</i> You hesitate "
                                       + "in surprise. Mara's always angling for an advantage, is she going to try a sneak attack when you approach to kiss her? She pouts and looks a little hurt. <i>\"I wouldn't "
@@ -434,7 +430,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "up her strokes to finish you off. Spurts of semen shoot into the air as you cum. You've probably recovered enough to get up, but you decide to take advantage of her lap pillow for a little "
                                       + "while longer.");
                 if (!player.has(Trait.heeldrop)) {
-                    Global.gui()
+                    Global.global.gui()
                           .message("<br/><br/><b>You've experienced Mara's most painful technique and learned how to use it yourself.</b>");
                     player.add(Trait.heeldrop);
                     npc.getGrowth().addTrait(0, Trait.heeldrop);
@@ -470,7 +466,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if(choice.equals("Faerie play")){
-                    Global.gui().message("The two of you head to Mara's room, where apparently she has a request for you. A quick glance around her room doesn't reveal any obvious traps or preparation. Everything seems "
+                    Global.global.gui().message("The two of you head to Mara's room, where apparently she has a request for you. A quick glance around her room doesn't reveal any obvious traps or preparation. Everything seems "
                             + "fairly normal: slightly messy and her laptop left unlocked with some 'adult entertainment' on the desktop. <i>\"Hey! Don't be nosy!\"</i> She closes her laptop, noticably blushing, and sits "
                             + "on her bed.<br/><br/>"
                             + "<i>\"So... you've been learning some actual magic, right?\"</i> She asks with thinly veiled excitement. <i>\"Can you summon those faeries anytime?\"</i> She's practically vibrating at "
@@ -503,10 +499,11 @@ public class MaraTime extends BaseNPCTime {
                             + "tired to play with them and entertain themselves by starting an impromptu sex-fight. You and Mara watch the show and she giggles in delight as the female gains the upper hand, milking "
                             + "the boy dry. Mara finally gets a chance to play with the female, giving the victor an orgasm as reward.");
                     if(!player.has(Trait.faefriend)){
-                        Global.gui().message("<br/><br/><b>You're finding it easier to call faeries. They seem to be more eager to respond to your summons.</b>");
+                        Global.global.gui()
+                                        .message("<br/><br/><b>You're finding it easier to call faeries. They seem to be more eager to respond to your summons.</b>");
                         player.add(Trait.faefriend);
                     }
-                    Global.gui().choose(this,"Leave");
+                Global.global.gui().choose(this, "Leave");
                     npc.gainAffection(player,1);
                     player.gainAffection(npc,1);
             } else if (choice.equals("Leave")) {
@@ -516,7 +513,7 @@ public class MaraTime extends BaseNPCTime {
     
     @Override
     public Optional<String> getAddictionOption() {
-        return Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL) ? 
+        return Global.global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL) ?
                         Optional.of("Confront about control") : Optional.empty();
     }
 }

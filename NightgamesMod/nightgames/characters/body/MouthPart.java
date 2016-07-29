@@ -7,11 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.skills.damage.DamageType;
-import nightgames.status.FluidAddiction;
-import nightgames.status.Frenzied;
-import nightgames.status.PartiallyCorrupted;
-import nightgames.status.Stsflag;
-import nightgames.status.Trance;
+import nightgames.status.*;
 
 public class MouthPart extends GenericBodyPart {
     /**
@@ -36,21 +32,22 @@ public class MouthPart extends GenericBodyPart {
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
         if (target.isErogenous() && opponent.has(Trait.lickable)) {
-            c.write(opponent, Global.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
+            c.write(opponent, Global.global.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
                             + " when licked by " + self.directObject() + ".");
-            bonus += Global.random(2, 4) + opponent.getLevel() / 20;
+            bonus += Global.global.random(2, 4) + opponent.getLevel() / 20;
             if (target.isGenital()) {
                 bonus += Global.random(2, 4) + Math.max(0, opponent.getLevel() / 20 - 2);
             }
         }
         String fluid = target.getFluids(opponent);
         if (!fluid.isEmpty() && opponent.has(Trait.lacedjuices)) {
-            c.write(self, Global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " drug-laced " + fluid
+            c.write(self, Global.global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " drug-laced "
+                            + fluid
                             + " leaves " + self.nameOrPossessivePronoun() + " entire body tingling with arousal.");
             self.arouse(Math.max(opponent.getArousal().get() / 10, 5), c);
         }
-        if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Global.random(5) == 0) {
-            c.write(self, Global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
+        if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Global.global.random(5) == 0) {
+            c.write(self, Global.global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
                             + fluid + " leaves " + self.nameOrPossessivePronoun() + " in a state of frenzy.");
             self.add(c, new Frenzied(self, 3));
         }
@@ -61,14 +58,14 @@ public class MouthPart extends GenericBodyPart {
                 // pass (addiction was resisted)
             } else if (st.activated()) {
                 if (self.human()) {
-                    c.write(self, Global.capitalizeFirstLetter(Global.format(
+                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
                                     "As {other:name-possessive} " + fluid
                                                     + " flow down your throat, your entire mind fogs up. "
                                                     + "You forget where you are, why you're here, and what you're doing. "
                                                     + "The only thing left in you is a primal need to obtain more of {other:possessive} fluids.",
                                     self, opponent)));
                 } else {
-                    c.write(self, Global.capitalizeFirstLetter(Global.format(
+                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
                                     "As your " + fluid
                                                     + " slides down {self:name-possessive} throat, you see a shadow pass over {self:possessive} face. "
                                                     + "Whereas {self:name} was playfully teasing you just a few seconds ago, you can now only see a desperate need that {self:pronoun} did not possess before.",
@@ -76,18 +73,18 @@ public class MouthPart extends GenericBodyPart {
                 }
             } else if (!st.isActive()) {
                 if (self.human()) {
-                    c.write(self, Global.capitalizeFirstLetter(
-                                    Global.format("You feel a strange desire to drink down more of {other:name-possessive} "
+                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                                    "You feel a strange desire to drink down more of {other:name-possessive} "
                                                     + fluid + ".", self, opponent)));
                 } else {
-                    c.write(self, Global.capitalizeFirstLetter(
-                                    Global.format("{self:name} drinks down your " + fluid + " and seems to want more.",
+                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                                    "{self:name} drinks down your " + fluid + " and seems to want more.",
                                                     self, opponent)));
                 }
             }
         }
         if (self.has(Trait.experttongue)) {
-            if (Global.random(6) == 0 && !opponent.wary() && damage > 5) {
+            if (Global.global.random(6) == 0 && !opponent.wary() && damage > 5) {
                 if (!self.human()) {
                     c.write(opponent, "<br/>Your mind falls into a pink colored fog from the tongue lashing.");
                 } else {
@@ -96,7 +93,7 @@ public class MouthPart extends GenericBodyPart {
                 }
                 opponent.add(c, new Trance(opponent));
             }
-            bonus += Global.random(3) + Global.clamp(self.get(Attribute.Seduction) / 3, 10, 30)
+            bonus += Global.global.random(3) + Global.global.clamp(self.get(Attribute.Seduction) / 3, 10, 30)
                             * self.getArousal().percent() / 100.0;
         }
         if (self.has(Trait.sweetlips) && c.getStance().sub(self)) {
@@ -105,11 +102,12 @@ public class MouthPart extends GenericBodyPart {
             opponent.temptNoSkill(c, self, this, (int) self.modifyDamage(DamageType.temptation, opponent, damage));
         }
         if (self.has(Trait.catstongue)) {
-            c.write(opponent, Global.format("<br/>{self:name-possessive} abrasive tongue produces an unique sensation.",
+            c.write(opponent, Global.global.format(
+                            "<br/>{self:name-possessive} abrasive tongue produces an unique sensation.",
                             self, opponent));
 
-            bonus += Global.random(3) + 4;
-            opponent.pain(c, opponent, 8 + Global.random(10), false, true);
+            bonus += Global.global.random(3) + 4;
+            opponent.pain(c, opponent, 8 + Global.global.random(10), false, true);
         }
         if (self.has(Trait.corrupting) && opponent.human()) {
             opponent.add(c, new PartiallyCorrupted((Player) opponent, self));
@@ -125,7 +123,7 @@ public class MouthPart extends GenericBodyPart {
                                                 + ", you instinctively draw in her spirit, forcing her energy through "
                                                 + target.describe(opponent) + " into your mouth.");
             }
-            bonus += Global.random(3) + 2;
+            bonus += Global.global.random(3) + 2;
             opponent.drainWillpowerAsMojo(c, self, (int) self.modifyDamage(DamageType.drain, opponent, 2), 2);
         }
         return bonus;

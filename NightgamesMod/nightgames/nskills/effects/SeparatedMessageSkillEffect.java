@@ -1,10 +1,10 @@
 package nightgames.nskills.effects;
 
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.global.Global;
 import nightgames.nskills.struct.SkillResultStruct;
+
+import java.util.Optional;
 
 public class SeparatedMessageSkillEffect implements SkillEffect {
     private final String message;
@@ -25,9 +25,9 @@ public class SeparatedMessageSkillEffect implements SkillEffect {
         Character self = results.getSelf().getCharacter();
         Character other = results.getOther().getCharacter();
         if (!self.human() && npcMessage.isPresent()) {
-            results.getCombat().write(self, Global.format(npcMessage.get(), self, other));
+            results.getCombat().write(self, Global.global.format(npcMessage.get(), self, other));
         } else {
-            results.getCombat().write(self, Global.format(message, self, other));
+            results.getCombat().write(self, Global.global.format(message, self, other));
         }
         return true;
     }

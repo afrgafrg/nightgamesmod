@@ -49,7 +49,7 @@ public class HeelGrind extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 12 + Global.random(6);
+        int m = 12 + Global.global.random(6);
         int m2 = m / 2;
         writeOutput(c, Result.normal, target);
         target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("pussy"), m, c, this);
@@ -57,7 +57,7 @@ public class HeelGrind extends Skill {
         if (c.getStance().en != Stance.behindfootjob) {
             c.setStance(new BehindFootjob(getSelf(), target), getSelf(), true);
         }
-        if (Global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
         }
         return true;
@@ -80,14 +80,14 @@ public class HeelGrind extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "You wrap your legs around {other:name-possessive} waist and press your heel gently into {other:possessive} cunt. Locking your ankles to keep {other:possessive} held in place, you start to gently gyrate your heel against {other:possessive} wet lips. Cupping each of {other:possessive} {other:body-part:breasts} with your hands, you start to pull and play with {other:name-possessive} nipples between your fingers. Your heel now coated in {other:possessive} wetness, you apply even more pressure and speed as you feel {other:subject} starting to hump it on {other:possessive} own.",
                         getSelf(), target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:subject} wraps {self:possessive} legs around {other:name-possessive} waist and "
                         + "presses {self:possessive} soft heel against {other:possessive} pussy, eliciting a gasp. "
                         + "{self:SUBJECT} grins at {other:name-possessive} reaction while locking {self:possessive} feet "

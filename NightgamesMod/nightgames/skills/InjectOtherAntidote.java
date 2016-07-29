@@ -49,13 +49,13 @@ public class InjectOtherAntidote extends Skill {
     }
 
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "Moving quickly you inject {other:name-do} with an antidote, removing any buffs or debuffs {other:possessive} had.",
                         getSelf(), target);
     }
 
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT} quickly manages to stick {other:name-do} with a hypodermic needle. As the contents flood into {other:possessive} body, {other:pronoun-action:feel|feels} any temporary buffs or debuffs leave {other:direct-object}.",
                         getSelf(), target);
     }

@@ -1,10 +1,6 @@
 package nightgames.characters.body;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
@@ -13,6 +9,9 @@ import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.status.Sensitized;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public enum BasicCockPart implements CockPart {
     tiny("tiny", 3),
@@ -40,8 +39,8 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String describe(Character c) {
-        String syn = Global.pickRandom(synonyms).get();
-        return Global.maybeString(desc + " ") + (c.hasPussy() ? "girl-" : "") + syn;
+        String syn = Global.global.pickRandom(synonyms).get();
+        return Global.global.maybeString(desc + " ") + (c.hasPussy() ? "girl-" : "") + syn;
     }
 
     @Override
@@ -51,7 +50,7 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String fullDescribe(Character c) {
-        String syn = Global.pickRandom(synonyms).get();
+        String syn = Global.global.pickRandom(synonyms).get();
         return desc + " " + (c.hasPussy() ? "girl-" : "") + syn;
     }
 
@@ -173,7 +172,7 @@ public enum BasicCockPart implements CockPart {
             if (self.has(Trait.polecontrol)) {
                 desc += "expert ";
             }
-            c.write(self, Global.format(
+            c.write(self, Global.global.format(
                             "{self:SUBJECT-ACTION:use|uses} {self:possessive} " + desc
                                             + "cock control to grind against {other:name-possessive} inner walls, making {other:possessive} knuckles whiten as {other:pronoun} {other:action:moan|moans} uncontrollably.",
                             self, opponent));
@@ -201,8 +200,8 @@ public enum BasicCockPart implements CockPart {
     public double applyReceiveBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
         if (opponent.has(Trait.dickhandler) || opponent.has(Trait.anatomyknowledge)) {
-            c.write(opponent,
-                            Global.format("{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} cock causes {self:subject} to shudder uncontrollably.",
+            c.write(opponent, Global.global.format(
+                            "{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} cock causes {self:subject} to shudder uncontrollably.",
                                             self, opponent));
             if (opponent.has(Trait.dickhandler)) {
                 bonus += 5;
@@ -213,7 +212,8 @@ public enum BasicCockPart implements CockPart {
         }
         if (self.has(Trait.druglacedprecum) && !opponent.isPartProtected(target)) {
             opponent.add(c, new Sensitized(opponent, target, .2, 2.0, 20));
-            c.write(self, Global.format("{self:NAME-POSSESSIVE} drug-laced precum is affecting {other:direct-object}.",
+            c.write(self, Global.global.format(
+                            "{self:NAME-POSSESSIVE} drug-laced precum is affecting {other:direct-object}.",
                             self, opponent));
         }
         return bonus;

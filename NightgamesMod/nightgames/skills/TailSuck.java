@@ -46,20 +46,20 @@ public class TailSuck extends Skill {
         if (target.is(Stsflag.tailsucked)) {
             writeOutput(c, Result.special, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandomCock(),
-                            Global.random(10) + 10, c, this);
+                            Global.global.random(10) + 10, c, this);
             drain(c, target);
         } else if (getSelf().roll(getSelf(), c, accuracy(c, target))) {
             Result res = c.getStance().isBeingFaceSatBy(c, target, getSelf()) ? Result.critical
                             : Result.normal;
             writeOutput(c, res, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandomCock(),
-                            Global.random(10) + 10, c, this);
+                            Global.global.random(10) + 10, c, this);
             drain(c, target);
             target.add(c, new TailSucked(target, getSelf(), power()));
         } else if (target.hasBalls()) {
             writeOutput(c, Result.weak, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandom("balls"),
-                            Global.random(5) + 5, c, this);
+                            Global.global.random(5) + 5, c, this);
             return true;
         } else {
             writeOutput(c, Result.miss, target);
@@ -140,7 +140,7 @@ public class TailSuck extends Skill {
                             getSelf().name(), getSelf().possessiveAdjective(),
                             target.nameOrPossessivePronoun(), target.directObject(),target.directObject(),
                             target.possessiveAdjective(), target.body.getRandomCock().describe(target),
-                            Global.capitalizeFirstLetter(target.subjectAction("feel")),
+                            Global.global.capitalizeFirstLetter(target.subjectAction("feel")),
                             target.pronoun(), target.action("are", "is"), target.directObject());
         } else if (modifier == Result.critical) {
             return String.format(
@@ -150,9 +150,9 @@ public class TailSuck extends Skill {
                                             + " think %s were fucking %s. Suddenly, the slick canal contracts around %s dick, and"
                                             + " %s %s some of %s strength flowing out of %s and into it. That is not good.",
                             target.possessiveAdjective(), getSelf().nameOrPossessivePronoun(), target.subjectAction("feel"),
-                            getSelf().possessiveAdjective(), Global.capitalizeFirstLetter(target.pronoun()),
+                            getSelf().possessiveAdjective(), Global.global.capitalizeFirstLetter(target.pronoun()),
                             target.action("are", "is"), target.pronoun(), target.action("feel"),
-                            target.possessiveAdjective(), target.body.getRandomCock().describe(target), 
+                            target.possessiveAdjective(), target.body.getRandomCock().describe(target),
                             getSelf().possessiveAdjective(), user().body.getRandomPussy().describe(getSelf()),
                             target.possessiveAdjective(),
                             getSelf().subject(), target.directObject(), target.nameOrPossessivePronoun(),
@@ -175,14 +175,14 @@ public class TailSuck extends Skill {
                             + " %s groin. The tip opens up like a flower, revealing a hollow"
                             + " inside shaped suspiciously like a pussy. That cannot be good, so"
                             + " %s %s hips just in time to evade the tail as it suddenly"
-                            + " launches forward..", getSelf().name(), getSelf().possessiveAdjective(), 
+                            + " launches forward..", getSelf().name(), getSelf().possessiveAdjective(),
                             target.nameOrPossessivePronoun(),
                             target.subjectAction("twist"), target.possessiveAdjective());
         }
     }
 
     private void drain(Combat c, Character target) {
-        Attribute toDrain = Global.pickRandom(target.att.entrySet().stream().filter(e -> e.getValue() != 0)
+        Attribute toDrain = Global.global.pickRandom(target.att.entrySet().stream().filter(e -> e.getValue() != 0)
                         .map(e -> e.getKey()).toArray(Attribute[]::new)).get();
         target.add(c, new Abuff(target, toDrain, -power(), 20));
         getSelf().add(c, new Abuff(getSelf(), toDrain, power(), 20));

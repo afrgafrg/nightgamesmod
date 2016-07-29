@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
@@ -10,6 +8,8 @@ import nightgames.global.Global;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Kneeling;
 import nightgames.status.BodyFetish;
+
+import java.util.Optional;
 
 public class FootWorship extends Skill {
     public FootWorship(Character self) {
@@ -44,14 +44,14 @@ public class FootWorship extends Skill {
         Result result = Result.normal;
         int m = 0;
         int n = 0;
-        m = 8 + Global.random(6);
+        m = 8 + Global.global.random(6);
         n = 20;
         BodyPart mouth = getSelf().body.getRandom("mouth");
         BodyPart feet = target.body.getRandom("feet");
         if (getSelf().human()) {
-            c.write(getSelf(), Global.format(deal(c, 0, Result.normal, target), getSelf(), target));
+            c.write(getSelf(), Global.global.format(deal(c, 0, Result.normal, target), getSelf(), target));
         } else {
-            c.write(getSelf(), Global.format(receive(c, 0, Result.normal, target), getSelf(), target));
+            c.write(getSelf(), Global.global.format(receive(c, 0, Result.normal, target), getSelf(), target));
         }
         if (m > 0) {
             target.body.pleasure(getSelf(), mouth, feet, m, c, this);

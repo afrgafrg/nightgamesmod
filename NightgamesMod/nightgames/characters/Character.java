@@ -1,28 +1,5 @@
 package nightgames.characters;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-
-import javax.swing.plaf.basic.BasicTreeUI.TreeIncrementAction;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -31,13 +8,7 @@ import nightgames.actions.Move;
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.areas.NinjaStash;
-import nightgames.characters.body.Body;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TentaclePart;
-import nightgames.characters.body.ToysPart;
+import nightgames.characters.body.*;
 import nightgames.characters.custom.AiModifiers;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
@@ -45,11 +16,7 @@ import nightgames.combat.CombatantData;
 import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
 import nightgames.ftc.FTCMatch;
-import nightgames.global.Challenge;
-import nightgames.global.DebugFlags;
-import nightgames.global.Flag;
-import nightgames.global.Global;
-import nightgames.global.Match;
+import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -71,27 +38,17 @@ import nightgames.skills.Tactics;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Position;
 import nightgames.stance.Stance;
-import nightgames.status.Abuff;
-import nightgames.status.Alluring;
-import nightgames.status.BodyFetish;
-import nightgames.status.DivineCharge;
-import nightgames.status.DivineRecoil;
-import nightgames.status.Enthralled;
-import nightgames.status.Falling;
-import nightgames.status.Feral;
-import nightgames.status.Frenzied;
-import nightgames.status.Masochistic;
-import nightgames.status.Resistance;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
-import nightgames.status.Trance;
+import nightgames.status.*;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 import nightgames.status.addiction.Dominance;
 import nightgames.status.addiction.MindControl;
 import nightgames.trap.Trap;
 
-@SuppressWarnings("unused")
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
 public abstract class Character extends Observable implements Cloneable {
     private static final String APOSTLES_COUNT = "APOSTLES_COUNT";
 
@@ -137,7 +94,7 @@ public abstract class Character extends Observable implements Cloneable {
     public int cloned;
     private Map<Integer, LevelUpData> levelPlan;
     private Growth growth;
-    
+
     public Character(String name, int level) {
         this.name = name;
         this.level = level;
@@ -185,7 +142,7 @@ public abstract class Character extends Observable implements Cloneable {
         busy = 0;
         setRank(0);
 
-        Global.learnSkills(this);
+        Global.global.learnSkills(this);
     }
 
     @Override
@@ -362,8 +319,8 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean check(Attribute a, int dc) {
-        int rand = Global.random(20);
-        if (Global.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
+        int rand = Global.global.random(20);
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
             System.out.println("Checked " + a + " = " + get(a) + " against " + dc + ", rolled " + rand);
         }
         if (rand == 0) {
@@ -387,7 +344,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (has(Trait.fastLearner)) {
             rate += .2;
         }
-        rate *= Global.xpRate;
+        rate *= Global.global.xpRate;
         xp += Math.round(i * rate);
         update();
     }
@@ -416,7 +373,7 @@ public abstract class Character extends Observable implements Cloneable {
         getGrowth().levelDown(this);
         levelPlan.remove(getLevel());
         level--;
-        return subject() + " lost a level! <br/>" + Global.gainSkills(this);
+        return subject() + " lost a level! <br/>" + Global.global.gainSkills(this);
     }
 
     public int getXP() {
@@ -428,7 +385,7 @@ public abstract class Character extends Observable implements Cloneable {
         // so for each damage type, one level from the attacker should result in about 10% increased damage, while a point in defense should reduce damage by around 5% per level.
         // this differential should be max capped to (3 * (100 + attacker's level * 5))%
         // this differential should be min capped to (.5 * (100 + attacker's level * 5))%
-        
+
         double maxDamage = baseDamage * 3 * (1 + .05 * getLevel());
         double minDamage = baseDamage * .5 * (1 + .05 * getLevel());
         double multiplier = (1 + .1 * getOffensivePower(type) - .05 * other.getDefensivePower(type));
@@ -510,7 +467,7 @@ public abstract class Character extends Observable implements Cloneable {
         int bonus = 0;
         if (is(Stsflag.rewired) && physical) {
             String message = String.format("%s pleasured for <font color='rgb(255,50,200)'>%d<font color='white'>\n",
-                            Global.capitalizeFirstLetter(subjectWas()), pain);
+                            Global.global.capitalizeFirstLetter(subjectWas()), pain);
             if (c != null) {
                 c.writeSystemMessage(message);
             }
@@ -526,7 +483,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (c != null) {
             if (has(Trait.cute) && other != null && primary && physical) {
                 bonus -= Math.min(get(Attribute.Seduction), 50) * pain / 100;
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "{self:NAME-POSSESSIVE} innocent appearance throws {other:direct-object} off and {other:subject-action:use|uses} much less strength than intended.",
                                 this, other));
             }
@@ -535,7 +492,7 @@ public abstract class Character extends Observable implements Cloneable {
                                 .sub(other))
                             && physical) {
                 bonus += 10;
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "{other:SUBJECT-ACTION:know|knows} how to fight dirty, and {other:action:manage|manages} to give {self:direct-object} a lot more trouble than {self:subject} expected despite being in a compromised position.",
                                 this, other));
             }
@@ -577,7 +534,7 @@ public abstract class Character extends Observable implements Cloneable {
         }
         if (other != null && other.has(Trait.sadist) && !is(Stsflag.masochism)) {
             c.write("<br/>"+Global.capitalizeFirstLetter(
-                            String.format("%s blows hits all the right spots and %s to some masochistic tendencies.", 
+                            String.format("%s blows hits all the right spots and %s to some masochistic tendencies.",
                                             other.nameOrPossessivePronoun(), subjectAction("awaken"))));
             add(c, new Masochistic(this));
         }
@@ -759,7 +716,7 @@ public abstract class Character extends Observable implements Cloneable {
                 dmg = (int) Math.round((i + bonus) * temptMultiplier * stalenessModifier);
                 message = String.format(
                                 "%s tempted %s for <font color='rgb(240,100,100)'>%d<font color='white'> (base:%d%s, charisma:%.1f%s)%s\n",
-                                Global.capitalizeFirstLetter(tempter.subject()),
+                                Global.global.capitalizeFirstLetter(tempter.subject()),
                                 tempter == this ? reflectivePronoun() : nameDirectObject(), dmg, i, bonusString, temptMultiplier, stalenessString, extraMsg);
             }
 
@@ -813,7 +770,7 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         String message = String.format("%s aroused for <font color='rgb(240,100,100)'>%d<font color='white'> %s%s\n",
-                        Global.capitalizeFirstLetter(subjectWas()), i, source, extraMsg);
+                        Global.global.capitalizeFirstLetter(subjectWas()), i, source, extraMsg);
         if (c != null) {
             c.writeSystemMessage(message);
         }
@@ -823,7 +780,7 @@ public abstract class Character extends Observable implements Cloneable {
     public String subjectAction(String verb, String pluralverb) {
         return subject() + " " + pluralverb;
     }
-    
+
     public String subjectAction(String verb) {
         return subjectAction(verb, verb + "s");
     }
@@ -843,7 +800,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void calm(Combat c, int i) {
         if (c != null) {
             String message = String.format("%s calmed down by <font color='rgb(80,145,200)'>%d<font color='white'>\n",
-                            Global.capitalizeFirstLetter(subjectAction("have", "has")), i);
+                            Global.global.capitalizeFirstLetter(subjectAction("have", "has")), i);
             c.writeSystemMessage(message);
         }
         arousal.reduce(i);
@@ -871,12 +828,12 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void buildMojo(Combat c, int percent, String source) {
         if (human() && Dominance.mojoIsBlocked(c)) {
-            c.write(c.getOpponent(this), 
-                            String.format("Enraptured by %s display of dominance, you build no mojo.", 
+            c.write(c.getOpponent(this),
+                            String.format("Enraptured by %s display of dominance, you build no mojo.",
                                             c.getOpponent(this).nameOrPossessivePronoun()));
             return;
         }
-        
+
         int x = percent * Math.min(mojo.max(), 200) / 100;
         int bonus = 0;
         for (Status s : getStatuses()) {
@@ -886,7 +843,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (x > 0) {
             mojo.restore(x);
             if (c != null) {
-                c.writeSystemMessage(Global.capitalizeFirstLetter(
+                c.writeSystemMessage(Global.global.capitalizeFirstLetter(
                                 String.format("%s <font color='rgb(100,200,255)'>%d<font color='white'> mojo%s.",
                                                 subjectAction("built", "built"), x, source)));
             }
@@ -911,7 +868,7 @@ public abstract class Character extends Observable implements Cloneable {
             mojo.set(0);
         }
         if (c != null && i != 0) {
-            c.writeSystemMessage(Global.capitalizeFirstLetter(
+            c.writeSystemMessage(Global.global.capitalizeFirstLetter(
                             String.format("%s <font color='rgb(150,150,250)'>%d<font color='white'> mojo%s.",
                                             subjectAction("spent", "spent"), cost, source)));
         }
@@ -928,7 +885,7 @@ public abstract class Character extends Observable implements Cloneable {
             mojo.set(0);
         }
         if (c != null) {
-            c.writeSystemMessage(Global.capitalizeFirstLetter(
+            c.writeSystemMessage(Global.global.capitalizeFirstLetter(
                             String.format("%s <font color='rgb(150,150,250)'>%d<font color='white'> mojo%s.",
                                             subjectAction("lost", "lost"), amt, source)));
         }
@@ -940,7 +897,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public int init() {
-        return att.get(Attribute.Speed) + Global.random(10);
+        return att.get(Attribute.Speed) + Global.global.random(10);
     }
 
     public boolean reallyNude() {
@@ -970,8 +927,8 @@ public abstract class Character extends Observable implements Cloneable {
     public void change() {
         outfit.undress();
         outfit.dress(outfitPlan);
-        if (Global.getMatch() != null) {
-            Global.getMatch().condition.handleOutfit(this);
+        if (Global.global.getMatch() != null) {
+            Global.global.getMatch().condition.handleOutfit(this);
         }
     }
 
@@ -1121,7 +1078,7 @@ public abstract class Character extends Observable implements Cloneable {
         levelPlan.putIfAbsent(level, new LevelUpData());
         return levelPlan.get(level);
     }
-    
+
     public void modAttributeDontSaveData(Attribute a, int i) {
         if (human() && i != 0) {
             Global.gui().message("You have " + (i > 0 ? "gained" : "lost") + " " + i + " " + a.name());
@@ -1299,17 +1256,17 @@ public abstract class Character extends Observable implements Cloneable {
         }
         if (done) {
             if (!message.isEmpty()) {
-                message = Global.capitalizeFirstLetter(message);
+                message = Global.global.capitalizeFirstLetter(message);
                 if (c != null) {
                     if (!c.getOpponent(this).human() || !c.getOpponent(this).is(Stsflag.blinded)) {
                         c.write(this, "<b>" + message + "</b>");
                     } effectiveStatus.onApply(c, c.getOpponent(this));
                 } else if (human() || location() != null && location().humanPresent()) {
-                    Global.gui().message("<b>" + message + "</b>");
+                    Global.global.gui().message("<b>" + message + "</b>");
                     effectiveStatus.onApply(null, null);
                 }
             }
-            if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println(message);
             }
         }
@@ -1326,7 +1283,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public boolean rollPheromones(Combat c) {
         double chance = getPheromonesChance(c);
-        double roll = Global.randomdouble();
+        double roll = Global.global.randomdouble();
         return roll < chance;
     }
 
@@ -1339,7 +1296,7 @@ public abstract class Character extends Observable implements Cloneable {
                         .collect(Collectors.toSet());
         removedStatuses.addAll(removelist);
         removedStatuses.forEach(s -> {
-            if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println(s.name + " removed from " + name());
             }
             s.onRemove(c, opponent);
@@ -1464,7 +1421,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public int escape(Combat c, Character from) {
         int total = getEscape(c, from);
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println("Escape: " + total);
         }
         if (c.getStance().escape(c, this) < 0) {
@@ -1524,7 +1481,7 @@ public abstract class Character extends Observable implements Cloneable {
     public abstract void showerScene(Character target, IEncounter encounter);
 
     public boolean humanControlled(Combat c) {
-        return human() || Global.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES) && c.getOpponent(this).human();
+        return human() || Global.global.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES) && c.getOpponent(this).human();
     }
 
     public JsonObject save() {
@@ -1601,7 +1558,7 @@ public abstract class Character extends Observable implements Cloneable {
             if (getType().equals("Airi"))
                 traits.remove(Trait.slime);
         }
-        
+
         body = Body.load(object.getAsJsonObject("body"), this);
         att = JsonUtils.mapFromJson(object.getAsJsonObject("attributes"), Attribute.class, Integer.class);
 
@@ -1617,8 +1574,8 @@ public abstract class Character extends Observable implements Cloneable {
         }
         loadInternal(object);
         change();
-        Global.gainSkills(this);
-        Global.learnSkills(this);
+        Global.global.gainSkills(this);
+        Global.global.learnSkills(this);
     }
 
     private void addClothes(JsonArray array) {
@@ -1658,7 +1615,7 @@ public abstract class Character extends Observable implements Cloneable {
     protected void resolveOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart, int times,
                     int totalTimes) {
         String orgasmLiner = "<b>" + orgasmLiner(c) + "</b>";
-        String opponentOrgasmLiner = (opponent == null || opponent == this || opponent.isPet()) ? "" : 
+        String opponentOrgasmLiner = (opponent == null || opponent == this || opponent.isPet()) ? "" :
             "<b>" + opponent.makeOrgasmLiner(c, this) + "</b>";
         orgasmed = true;
         if (times == 1) {
@@ -1708,7 +1665,7 @@ public abstract class Character extends Observable implements Cloneable {
             if (human()) {
                 c.write("Cumming actually made you feel kind of refreshed, albeit with a burning desire for more.");
             } else {
-                c.write(Global.format(
+                c.write(Global.global.format(
                                 "After {self:subject} comes down from {self:possessive} orgasmic high, {self:pronoun} doesn't look satisfied at all. There's a mad glint in {self:possessive} eye that seems to be endlessly asking for more.",
                                 this, opponent));
             }
@@ -1730,20 +1687,20 @@ public abstract class Character extends Observable implements Cloneable {
         if (this instanceof Player) {
             Player p = (Player) this;
 
-            if (p.checkAddiction(AddictionType.CORRUPTION, opponent) && selfPart != null && opponentPart != null 
+            if (p.checkAddiction(AddictionType.CORRUPTION, opponent) && selfPart != null && opponentPart != null
                             && opponentPart.isType("pussy") && selfPart
                             .isType("cock") && c.getCombatantData(this).getIntegerFlag("ChoseToFuck") == 1) {
                 c.write(this, "Your willing sacrifice to " + opponent.getName() + " greatly reinforces"
                                 + " the corruption inside of you.");
                 p.addict(AddictionType.CORRUPTION, opponent, Addiction.HIGH_INCREASE);
             }
-            if (p.checkAddiction(AddictionType.ZEAL, opponent) && selfPart != null && opponentPart != null 
+            if (p.checkAddiction(AddictionType.ZEAL, opponent) && selfPart != null && opponentPart != null
                             && opponentPart.isType("pussy") && selfPart
                             .isType("cock")) {
                 c.write(this, "Experiencing so much pleasure inside of " + opponent + " reinforces" + " your faith in your lovely goddess.");
                 p.addict(AddictionType.ZEAL, opponent, Addiction.MED_INCREASE);
             }
-            if (p.checkAddiction(AddictionType.ZEAL, opponent) && selfPart != null && opponentPart != null 
+            if (p.checkAddiction(AddictionType.ZEAL, opponent) && selfPart != null && opponentPart != null
                             && opponentPart.isType("cock") && (selfPart
                             .isType("pussy") || selfPart.isType("ass"))) {
                 c.write(this, "Experiencing so much pleasure from " + opponent.nameOrPossessivePronoun() + " cock inside you reinforces" + " your faith.");
@@ -1764,21 +1721,21 @@ public abstract class Character extends Observable implements Cloneable {
     private void resolvePreOrgasmForSolo(Combat c, Character opponent, BodyPart selfPart, int times) {
         if (selfPart != null && selfPart.isType("cock")) {
             if (times == 1) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{self:NAME-POSSESSIVE} back arches as thick ropes of jizz fire from {self:possessive} dick and land on {self:reflective}.</b>",
                                 this, opponent));
             } else {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{other:SUBJECT-ACTION:expertly coax|expertly coaxes} yet another orgasm from {self:name-do}, leaving {self:direct-object} completely spent.</b>",
                                 this, opponent));
             }
         } else {
             if (times == 1) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{self:SUBJECT-ACTION:shudder|shudders} as {self:pronoun} {self:action:bring|brings} {self:reflective} to a toe-curling climax.</b>",
                                 this, opponent));
             } else {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{other:SUBJECT-ACTION:expertly coax|expertly coaxes} yet another orgasm from {self:name-do}, leaving {self:direct-object} completely spent.</b>",
                                 this, opponent));
             }
@@ -1790,11 +1747,11 @@ public abstract class Character extends Observable implements Cloneable {
         if (c.getStance().inserted(this) && !has(Trait.strapped)) {
             Character partner = c.getStance().getPenetratedCharacter(c, this);
             if (times == 1) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{self:SUBJECT-ACTION:tense|tenses} up as {self:possessive} hips wildly buck against {other:name-do}. In no time, {self:possessive} hot seed spills into {other:possessive} pulsing hole.</b>",
                                 this, partner));
             } else {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{other:NAME-POSSESSIVE} devilish orfice does not let up, and {other:possessive} intense actions somehow force {self:name-do} to cum again instantly.</b>",
                                 this, partner));
             }
@@ -1806,23 +1763,23 @@ public abstract class Character extends Observable implements Cloneable {
         } else if (selfPart != null && selfPart.isType("cock") && opponentPart != null
                         && !opponentPart.isType("none")) {
             if (times == 1) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{self:NAME-POSSESSIVE} back arches as thick ropes of jizz fire from {self:possessive} dick and land on {other:name-possessive} "
                                                 + opponentPart.describe(opponent) + ".</b>",
                                 this, opponent));
             } else {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{other:SUBJECT-ACTION:expertly coax|expertly coaxes} yet another orgasm from {self:name-do}, leaving {self:direct-object} completely spent.</b>",
                                 this, opponent));
             }
             opponent.body.receiveCum(c, this, opponentPart);
         } else {
             if (times == 1) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{self:SUBJECT-ACTION:shudder|shudders} as {other:subject-action:bring|brings} {self:direct-object} to a toe-curling climax.</b>",
                                 this, opponent));
             } else {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "<b>{other:SUBJECT-ACTION:expertly coax|expertly coaxes} yet another orgasm from {self:name-do}, leaving {self:direct-object} completely spent.</b>",
                                 this, opponent));
             }
@@ -1840,7 +1797,7 @@ public abstract class Character extends Observable implements Cloneable {
                     message += "The warm sheath around your dick suddenly tightens, pulling incredibly"
                                     + ", almost painfully tight around the shaft. At the same time, it starts"
                                     + " vibrating powerfully. The combined assault causes your eyes to open"
-                                    + " wide and defenseless."; 
+                                    + " wide and defenseless.";
                     ((Player)this).addict(AddictionType.MIND_CONTROL, opponent, Addiction.LOW_INCREASE);
                 }
                 message += "While your senses are overwhelmed by your violent orgasm, the deep pools of Mara's eyes"
@@ -1863,14 +1820,14 @@ public abstract class Character extends Observable implements Cloneable {
         if (selfPart != null && opponentPart != null) {
             selfPart.onOrgasmWith(c, this, opponent, opponentPart, true);
             opponentPart.onOrgasmWith(c, opponent, this, selfPart, false);
-        } else if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        } else if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("Could not process %s's orgasm against %s: self=%s, opp=%s, pos=%s", this, opponent,
                             selfPart, opponentPart, c.getStance());
         }
         body.getCurrentParts().forEach(part -> part.onOrgasm(c, this, opponent));
 
         if (opponent.has(Trait.erophage)) {
-            c.write(Global.capitalizeFirstLetter("<b>" + opponent.subjectAction("flush", "flushes")
+            c.write(Global.global.capitalizeFirstLetter("<b>" + opponent.subjectAction("flush", "flushes")
                             + " as the feedback from " + nameOrPossessivePronoun() + " orgasm feeds "
                             + opponent.possessiveAdjective() + " divine power.</b>"));
             opponent.add(c, new Alluring(opponent, 5));
@@ -1880,22 +1837,23 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         if (opponent.has(Trait.sexualmomentum)) {
-            c.write(Global.capitalizeFirstLetter(
+            c.write(Global.global.capitalizeFirstLetter(
                             "<b>" + opponent.subjectAction("are more composed", "seems more composed") + " as "
                                             + nameOrPossessivePronoun() + " forced orgasm goes straight to "
                                             + opponent.possessiveAdjective() + " ego.</b>"));
-            opponent.restoreWillpower(c, 10 + Global.random(10));
+            opponent.restoreWillpower(c, 10 + Global.global.random(10));
         }
         if (opponent.has(Trait.leveldrainer) && !has(Trait.leveldrainer)
                         && (((c.getStance().penetratedBy(c, opponent, this) || c.getStance().penetratedBy(c, this, opponent))
                                         && !has(Trait.strapped)
                                         && !opponent.has(Trait.strapped))
                         || c.getStance().en == Stance.trib)) {
-            if (getLevel() > 1 && (!c.getCombatantData(opponent).getBooleanFlag("has_drained") 
-                            || Global.checkFlag(Flag.hardmode))) {
+            if (getLevel() > 1 && (!c.getCombatantData(opponent).getBooleanFlag("has_drained")
+                            || Global.global.checkFlag(Flag.hardmode))) {
                 c.getCombatantData(opponent).toggleFlagOn("has_drained", true);
                 if (c.getStance().penetratedBy(c, opponent, this)) {
-                    c.write(opponent, Global.capitalizeFirstLetter(String.format("<b>%s %s contracts around %s %s, reinforcing"
+                    c.write(opponent, Global.global.capitalizeFirstLetter(
+                                    String.format("<b>%s %s contracts around %s %s, reinforcing"
                             + " %s orgasm and drawing upon %s very strength and experience. Once it's over, %s"
                                                     + " left considerably more powerful, at %s expense.</b>",
                                     opponent.nameOrPossessivePronoun(),
@@ -1909,7 +1867,7 @@ public abstract class Character extends Observable implements Cloneable {
                                     + "Once it's over, {other:pronoun-action:are|is} left considerably more powerful at {self:possessive} expense.",
                                     this, opponent));
                 } else {
-                    c.write(opponent, Global.format("{other:NAME-POSSESSIVE} greedy {other:body-part:pussy} sucks itself tightly to {self:name-possessive} {self:body-part:pussy}, "
+                    c.write(opponent, Global.global.format("{other:NAME-POSSESSIVE} greedy {other:body-part:pussy} sucks itself tightly to {self:name-possessive} {self:body-part:pussy}, "
                                     + "drawing in {self:possessive} very strength and experience along the pleasures of {self:possessive} orgasm. "
                                     + "Once it's over, {other:pronoun-action:are|is} left considerably more powerful at {self:possessive} expense.",
                                     this, opponent));
@@ -1930,7 +1888,7 @@ public abstract class Character extends Observable implements Cloneable {
                 }
                 opponent.gainXP(gained);
             } else {
-                c.write(opponent, Global.capitalizeFirstLetter(String.format("<b>%s %s pulses, but fails to"
+                c.write(opponent, Global.global.capitalizeFirstLetter(String.format("<b>%s %s pulses, but fails to"
                                                 + " draw in %s experience.</b>", opponent.nameOrPossessivePronoun(),
                                 opponent.body.getRandomPussy().describe(opponent),
                                 nameOrPossessivePronoun())));
@@ -1965,11 +1923,11 @@ public abstract class Character extends Observable implements Cloneable {
                             subject(), extra == 0 ? Integer.toString(amt) : i + "+" + extra + " (" + amt + ")",
                             source));
         } else if (human()) {
-            Global.gui().systemMessage(String
+            Global.global.gui().systemMessage(String
                             .format("%s lost <font color='rgb(220,130,40)'>%d<font color='white'> willpower" + reduced
                                             + "%s.", subject(), amt, source));
         }
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("will power reduced from %d to %d\n", old, willpower.get());
         }
     }
@@ -1991,7 +1949,7 @@ public abstract class Character extends Observable implements Cloneable {
                     + "{self:SUBJECT} reaches into the light and holds the figure's hands. "
                     + "<i>\"See {other:name}, I'm not a greedy {self:girl}. I can share with my friends.\"</i>"
                     );
-    
+
     public void eot(Combat c, Character opponent, Skill last) {
         dropStatus(c, opponent);
         tick(c);
@@ -2025,18 +1983,18 @@ public abstract class Character extends Observable implements Cloneable {
                 }
             }
             if (has(Trait.energydrain) && selfOrgan != null && otherOrgan != null) {
-                c.write(this, Global.format(
+                c.write(this, Global.global.format(
                                 "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained into {self:possessive} "
                                                 + selfOrgan.describe(this) + " through your connection.",
                                 this, opponent));
-                int m = Global.random(5) + 5;
+                int m = Global.global.random(5) + 5;
                 opponent.drain(c, this, (int) this.modifyDamage(DamageType.drain, opponent, m));
             }
             // TODO this works weirdly when both have both organs.
             body.tickHolding(c, opponent, selfOrgan, otherOrgan);
         }
         if (outfit.has(ClothingTrait.tentacleSuit)) {
-            c.write(this, Global.format("The tentacle suit squirms against {self:name-possessive} body.", this,
+            c.write(this, Global.global.format("The tentacle suit squirms against {self:name-possessive} body.", this,
                             opponent));
             if (hasBreasts()) {
                 TentaclePart.pleasureWithTentacles(c, this, 5, body.getRandomBreasts());
@@ -2048,7 +2006,8 @@ public abstract class Character extends Observable implements Cloneable {
             if (hasPussy()) {
                 undieName = "panties";
             }
-            c.write(this, Global.format("The tentacle " + undieName + " squirms against {self:name-possessive} crotch.",
+            c.write(this, Global.global.format(
+                            "The tentacle " + undieName + " squirms against {self:name-possessive} crotch.",
                             this, opponent));
             if (hasDick()) {
                 TentaclePart.pleasureWithTentacles(c, this, 5, body.getRandomCock());
@@ -2064,7 +2023,7 @@ public abstract class Character extends Observable implements Cloneable {
         }
         if (outfit.has(ClothingTrait.harpoonDildo)) {
             if (!hasPussy()) {
-                c.write(Global.format("Since {self:name-possessive} pussy is now gone, the dildo that was stuck inside of it falls"
+                c.write(Global.global.format("Since {self:name-possessive} pussy is now gone, the dildo that was stuck inside of it falls"
                                 + " to the ground. {other:SUBJECT-ACTION:reel|reels} it back into its slot on"
                                 + " {other:possessive} arm device.", this, opponent));
             } else {
@@ -2082,14 +2041,14 @@ public abstract class Character extends Observable implements Cloneable {
                     damage += 3;
                 }
 
-                c.write(Global.format("{other:NAME-POSSESSIVE} harpoon dildo is still stuck in {self:name-possessive}"
+                c.write(Global.global.format("{other:NAME-POSSESSIVE} harpoon dildo is still stuck in {self:name-possessive}"
                                 + " {self:body-part:pussy}, vibrating against {other:possessive} walls.", this, opponent));
                 body.pleasure(opponent, ToysPart.dildo, body.getRandomPussy(), damage, c);
             }
         }
         if (outfit.has(ClothingTrait.harpoonOnahole)) {
             if (!hasDick()) {
-                c.write(Global.format("Since {self:name-possessive} dick is now gone, the onahole that was stuck onto it falls"
+                c.write(Global.global.format("Since {self:name-possessive} dick is now gone, the onahole that was stuck onto it falls"
                                 + " to the ground. {other:SUBJECT-ACTION:reel|reels} it back into its slot on"
                                 + " {other:possessive} arm device.", this, opponent));
             } else {
@@ -2106,8 +2065,8 @@ public abstract class Character extends Observable implements Cloneable {
                 if (opponent.has(Trait.intensesuction)) {
                     damage += 3;
                 }
-                
-                c.write(Global.format("{other:NAME-POSSESSIVE} harpoon onahole is still stuck on {self:name-possessive}"
+
+                c.write(Global.global.format("{other:NAME-POSSESSIVE} harpoon onahole is still stuck on {self:name-possessive}"
                                 + " {self:body-part:cock}, vibrating against {other:possessive} shaft.", this, opponent));
                 body.pleasure(opponent, ToysPart.onahole, body.getRandomCock(), damage, c);
             }
@@ -2115,7 +2074,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (getPure(Attribute.Animism) >= 4 && getArousal().percent() >= 50 && !is(Stsflag.feral)) {
             add(c, new Feral(this));
         }
-        
+
         if (opponent.has(Trait.temptingass) && !is(Stsflag.frenzied)) {
             AssFuck fuck = new AssFuck(this);
             if (fuck.requirements(c, opponent) && fuck.usable(c, opponent)) {
@@ -2145,7 +2104,7 @@ public abstract class Character extends Observable implements Cloneable {
         Optional<PetCharacter> randomOpponentPetOptional = Global.pickRandom(c.getPetsFor(opponent));
         if (randomOpponentPetOptional.isPresent()) {
             PetCharacter pet = randomOpponentPetOptional.get();
-            boolean weakenBetter = modifyDamage(DamageType.physical, pet, 100) / pet.getStamina().remaining() 
+            boolean weakenBetter = modifyDamage(DamageType.physical, pet, 100) / pet.getStamina().remaining()
                             > 100 / pet.getStamina().remaining();
             if (canAct() && c.getStance().mobile(this) && pet.roll(this, c, 20)) {
                 if (weakenBetter) {
@@ -2205,7 +2164,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean stealthCheck(int perception) {
-        return check(Attribute.Cunning, Global.random(20) + perception) || state == State.hidden;
+        return check(Attribute.Cunning, Global.global.random(20) + perception) || state == State.hidden;
     }
 
     public boolean spotCheck(Character checked) {
@@ -2232,7 +2191,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
-        travel(adjacent[Global.random(adjacent.length)]);
+        travel(adjacent[Global.global.random(adjacent.length)]);
         location2.endEncounter();
     }
 
@@ -2264,7 +2223,7 @@ public abstract class Character extends Observable implements Cloneable {
         update();
         notifyObservers();
     }
-    
+
     public String debugMessage(Combat c, Position p) {
         String mood;
         if (this instanceof NPC) { // useOfInstanceOfWithThis
@@ -2322,7 +2281,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void consume(Item item, int quantity, boolean canBeResourceful) {
-        if (canBeResourceful && has(Trait.resourceful) && Global.random(5) == 0) {
+        if (canBeResourceful && has(Trait.resourceful) && Global.global.random(5) == 0) {
             quantity--;
         }
         if (inventory.containsKey(item)) {
@@ -2359,33 +2318,33 @@ public abstract class Character extends Observable implements Cloneable {
         getWillpower().fill();
         if (location().present.size() > 1) {
             if (location().id() == Movement.dorm) {
-                if (Global.getMatch().gps("Quad").present.isEmpty()) {
+                if (Global.global.getMatch().gps("Quad").present.isEmpty()) {
                     if (human()) {
-                        Global.gui()
+                        Global.global.gui()
                                         .message("You hear your opponents searching around the dorm, so once you finish changing, you hop out the window and head to the quad.");
                     }
-                    travel(Global.getMatch().gps("Quad"));
+                    travel(Global.global.getMatch().gps("Quad"));
                 } else {
                     if (human()) {
-                        Global.gui()
+                        Global.global.gui()
                                         .message("You hear your opponents searching around the dorm, so once you finish changing, you quietly move downstairs to the laundry room.");
                     }
-                    travel(Global.getMatch().gps("Laundry"));
+                    travel(Global.global.getMatch().gps("Laundry"));
                 }
             }
             if (location().id() == Movement.union) {
-                if (Global.getMatch().gps("Quad").present.isEmpty()) {
+                if (Global.global.getMatch().gps("Quad").present.isEmpty()) {
                     if (human()) {
-                        Global.gui()
+                        Global.global.gui()
                                         .message("You don't want to be ambushed leaving the student union, so once you finish changing, you hop out the window and head to the quad.");
                     }
-                    travel(Global.getMatch().gps("Quad"));
+                    travel(Global.global.getMatch().gps("Quad"));
                 } else {
                     if (human()) {
-                        Global.gui()
+                        Global.global.gui()
                                         .message("You don't want to be ambushed leaving the student union, so once you finish changing, you sneak out the back door and head to the pool.");
                     }
-                    travel(Global.getMatch().gps("Pool"));
+                    travel(Global.global.getMatch().gps("Pool"));
                 }
             }
         }
@@ -2396,7 +2355,7 @@ public abstract class Character extends Observable implements Cloneable {
             Character victor = Global.getCharacterByType(victorType);
             victor.bounty(has(Trait.event) ? 5 : 1, victor);
         }
-        Global.gui().clearImage();
+        Global.global.gui().clearImage();
         mercy.clear();
         change();
         clearStatus();
@@ -2418,8 +2377,8 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void bounty(int points, Character victor) {
         int score = points;
-        if (Global.checkFlag(Flag.FTC) && points == 1) {
-            FTCMatch match = (FTCMatch) Global.getMatch();
+        if (Global.global.checkFlag(Flag.FTC) && points == 1) {
+            FTCMatch match = (FTCMatch) Global.global.getMatch();
             if (match.isPrey(this)) {
                 score = 3;
             } else if (!match.isPrey(victor)) {
@@ -2428,13 +2387,13 @@ public abstract class Character extends Observable implements Cloneable {
                 score = 0; // Hunter beating prey gets no points, only for flag.
             }
         }
-        Global.getMatch().score(this, score);
+        Global.global.getMatch().score(this, score);
     }
 
     public boolean eligible(Character p2) {
         boolean ftc = true;
-        if (Global.checkFlag(Flag.FTC)) {
-            FTCMatch match = (FTCMatch) Global.getMatch();
+        if (Global.global.checkFlag(Flag.FTC)) {
+            FTCMatch match = (FTCMatch) Global.global.getMatch();
             ftc = !match.inGracePeriod() || (!match.isPrey(this) && !match.isPrey(p2));
         }
         return ftc && !mercy.contains(p2.getType()) && state != State.resupplying;
@@ -2462,7 +2421,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void craft() {
-        int roll = Global.random(15);
+        int roll = Global.global.random(15);
         if (check(Attribute.Cunning, 25)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
@@ -2507,7 +2466,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void search() {
-        int roll = Global.random(15);
+        int roll = Global.global.random(15);
         switch (roll) {
             case 9:
                 gain(Item.Tripwire);
@@ -2578,7 +2537,7 @@ public abstract class Character extends Observable implements Cloneable {
             Thread.dumpStack();
             return;
         }
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("%s gained attraction for %s\n", name(), other.name());
         }
         if (attractions.containsKey(other.getType())) {
@@ -2617,7 +2576,7 @@ public abstract class Character extends Observable implements Cloneable {
             x += 1;
         }
 
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("%s gained %d affection for %s\n", name(), x, other.name());
         }
         if (affections.containsKey(other.getType())) {
@@ -2681,7 +2640,7 @@ public abstract class Character extends Observable implements Cloneable {
     private int getSpeedDifference(Character opponent) {
         return Math.min(Math.max(get(Attribute.Speed) - opponent.get(Attribute.Speed), -5), 5);
     }
-    
+
     public int getChanceToHit(Character attacker, Combat c, int accuracy) {
         int hitDiff = attacker.getSpeedDifference(this) + (attacker.get(Attribute.Perception) - get(
                         Attribute.Perception));
@@ -2704,7 +2663,7 @@ public abstract class Character extends Observable implements Cloneable {
     public boolean roll(Character attacker, Combat c, int accuracy) {
         int attackroll = Global.random(100);
         int chanceToHit = getChanceToHit(attacker, c, accuracy);
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.printf("Rolled %s against %s\n",
                             attackroll, chanceToHit);
         }
@@ -2894,11 +2853,11 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean taintedFluids() {
-        return Global.random(get(Attribute.Dark) / 4 + 5) >= 4;
+        return Global.global.random(get(Attribute.Dark) / 4 + 5) >= 4;
     }
 
     protected void pickSkillsWithGUI(Combat c, Character target) {
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
             c.write(this, nameOrPossessivePronoun() + " turn...");
             c.updateAndClearMessage();
         }
@@ -2927,7 +2886,7 @@ public abstract class Character extends Observable implements Cloneable {
             available.add(new Nothing(this));
         }
         available.addAll(cds);
-        Global.gui().clearCommand();
+        Global.global.gui().clearCommand();
         Skill lastUsed = null;
         for (Skill a : available) {
             if (a.getName().equals(c.getCombatantData(this).getLastUsedSkillName())) {
@@ -2953,36 +2912,36 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         if (lastUsed != null) {
-            Global.gui().addSkill(c, lastUsed, target);
+            Global.global.gui().addSkill(c, lastUsed, target);
         }
         for (Skill a : stripping) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : position) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : fucking) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : pleasure) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : damage) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : debuff) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : summoning) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : recovery) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
         for (Skill a : misc) {
-            Global.gui().addSkill(c, a, target);
+            Global.global.gui().addSkill(c, a, target);
         }
-        Global.gui().showSkills();
+        Global.global.gui().showSkills();
     }
 
     public float getOtherFitness(Combat c, Character other) {
@@ -3174,7 +3133,7 @@ public abstract class Character extends Observable implements Cloneable {
     public abstract String getPortrait(Combat c);
 
     public void modMoney(int i) {
-        setMoney((int) (money + Math.round(i * Global.moneyRate)));
+        setMoney((int) (money + Math.round(i * Global.global.moneyRate)));
     }
 
     public void setMoney(int i) {
@@ -3207,7 +3166,7 @@ public abstract class Character extends Observable implements Cloneable {
             return "his";
         }
     }
-    
+
     public String possessivePronoun() {
         if (useFemalePronouns()) {
             return "hers";
@@ -3225,11 +3184,11 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean useFemalePronouns() {
-        return hasPussy() 
-                        || !hasDick() 
-                        || (body.getLargestBreasts().size > BreastsPart.flat.size && body.getFace().getFemininity(this) > 0) 
-                        || (body.getFace().getFemininity(this) >= 1.5) 
-                        || Global.checkFlag(Flag.FemalePronounsOnly);
+        return hasPussy()
+                        || !hasDick()
+                        || (body.getLargestBreasts().size > BreastsPart.flat.size && body.getFace().getFemininity(this) > 0)
+                        || (body.getFace().getFemininity(this) >= 1.5)
+                        || Global.global.checkFlag(Flag.FemalePronounsOnly);
     }
 
     public String nameDirectObject() {
@@ -3265,11 +3224,11 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public double pussyPreference() {
-        return 11 - Global.getValue(Flag.malePref);
+        return 11 - Global.global.getValue(Flag.malePref);
     }
 
     public double dickPreference() {
-        return Global.getValue(Flag.malePref);
+        return Global.global.getValue(Flag.malePref);
     }
 
     public boolean wary() {
@@ -3278,20 +3237,21 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void gain(Combat c, Item item) {
         if (c != null) {
-            c.write(Global.format("<b>{self:subject-action:have|has} gained " + item.pre() + item.getName() + "</b>",
+            c.write(Global.global
+                            .format("<b>{self:subject-action:have|has} gained " + item.pre() + item.getName() + "</b>",
                             this, this));
         }
         gain(item, 1);
     }
 
     public String temptLiner(Combat c, Character target) {
-        return Global.format("{self:SUBJECT-ACTION:tempt|tempts} {other:direct-object}.", this, target);
+        return Global.global.format("{self:SUBJECT-ACTION:tempt|tempts} {other:direct-object}.", this, target);
     }
 
     public String action(String firstPerson, String thirdPerson) {
         return thirdPerson;
     }
-    
+
     public String action(String verb) {
         return action(verb, verb + "s");
     }
@@ -3514,7 +3474,7 @@ public abstract class Character extends Observable implements Cloneable {
      */
     public void usedAttribute(Attribute att, Combat c, double baseChance) {
         // divine recoil applies at 20% per magnitude
-        if (att == Attribute.Divinity && Global.randomdouble() < baseChance) {
+        if (att == Attribute.Divinity && Global.global.randomdouble() < baseChance) {
             add(c, new DivineRecoil(this, 1));
         }
     }
@@ -3579,7 +3539,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void matchPrep(Match m) {
         if(getPure(Attribute.Ninjutsu)>=9){
-            Global.gainSkills(this);
+            Global.global.gainSkills(this);
             placeNinjaStash(m);
         }
         if (has(Trait.octo)) {
@@ -3599,7 +3559,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     private void placeNinjaStash(Match m) {
         String location;
-        switch(Global.random(6)){
+        switch (Global.global.random(6)) {
         case 0:
             location = "Library";
             break;
@@ -3687,7 +3647,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void flagStatus(Stsflag flag) {
         statusFlags.add(flag);
     }
-    
+
     public void unflagStatus(Stsflag flag) {
         statusFlags.remove(flag);
     }
@@ -3769,7 +3729,7 @@ public abstract class Character extends Observable implements Cloneable {
     public boolean isPetOf(Character other) {
         return false;
     }
-    
+
     public boolean isPet() {
         return false;
     }
@@ -3777,7 +3737,7 @@ public abstract class Character extends Observable implements Cloneable {
     public int getPetLimit() {
         return has(Trait.congregation) ? 2 : 1;
     }
-    
+
     public Collection<Action> allowedActions() {
         return status.stream().flatMap(s -> s.allowedActions().stream()).collect(Collectors.toSet());
     }

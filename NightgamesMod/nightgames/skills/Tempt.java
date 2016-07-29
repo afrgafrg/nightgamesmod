@@ -24,8 +24,7 @@ public class Tempt extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         writeOutput(c, Result.normal, target);
-        double m = 4 + Global.random(4);
-
+        double m = 4 + Global.global.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
             m += 2 * getSelf().body.getHotness(target);
@@ -37,15 +36,15 @@ public class Tempt extends Skill {
 
         int n = (int) Math.round(m);
 
-        boolean tempted = Global.random(5) == 0;
+        boolean tempted = Global.global.random(5) == 0;
         if (getSelf().has(Trait.darkpromises) && tempted && !target.wary() && getSelf().canSpend(15)) {
             getSelf().spendMojo(c, 15);
-            c.write(getSelf(),
-                            Global.format("{self:NAME-POSSESSIVE} words fall on fertile grounds. {other:NAME-POSSESSIVE} will to resist crumbles in light of {self:possessive} temptation.",
+            c.write(getSelf(), Global.global.format(
+                            "{self:NAME-POSSESSIVE} words fall on fertile grounds. {other:NAME-POSSESSIVE} will to resist crumbles in light of {self:possessive} temptation.",
                                             getSelf(), target));
             target.add(c, new Enthralled(target, getSelf(), 3));
-        } else if (getSelf().has(Trait.commandingvoice) && Global.random(3) == 0) {
-            c.write(getSelf(), Global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
+        } else if (getSelf().has(Trait.commandingvoice) && Global.global.random(3) == 0) {
+            c.write(getSelf(), Global.global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
                             + " authority that {self:subject-action:don't|doesn't} even consider not obeying."
                             , getSelf(), target));
             target.add(c, new Trance(target, 1, false));

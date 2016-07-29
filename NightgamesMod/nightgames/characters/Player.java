@@ -1,16 +1,7 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import nightgames.actions.Action;
 import nightgames.actions.Leap;
 import nightgames.actions.Move;
@@ -41,18 +32,18 @@ import nightgames.stance.Behind;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
 import nightgames.start.PlayerConfiguration;
-import nightgames.status.Enthralled;
-import nightgames.status.Masochistic;
-import nightgames.status.Pheromones;
-import nightgames.status.PlayerSlimeDummy;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.Addiction.Severity;
 import nightgames.status.addiction.AddictionType;
 import nightgames.trap.Trap;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class Player extends Character {
+    public static final String type = "Player";
+
     public GUI gui;
     public int traitPoints;
     private int levelsToGain;
@@ -118,19 +109,19 @@ public class Player extends Character {
     }
 
     public void setGrowth() {
-        getGrowth().stamina = 2;
-        getGrowth().arousal = 4;
-        getGrowth().bonusStamina = 1;
-        getGrowth().bonusArousal = 2;
-        getGrowth().attributes = new int[]{2, 3, 3, 3};
+        growth.stamina = 2;
+        growth.arousal = 4;
+        growth.bonusStamina = 1;
+        growth.bonusArousal = 2;
+        growth.attributes = new int[]{2, 3, 3, 3};
     }
 
     public String describeStatus() {
         StringBuilder b = new StringBuilder();
-        if (Global.gui().combat != null && (Global.gui().combat.p1.human() || Global.gui().combat.p2.human())) {
-            body.describeBodyText(b, Global.gui().combat.getOpponent(this), false);
+        if (Global.global.gui().combat != null && (Global.global.gui().combat.p1.human() || Global.global.gui().combat.p2.human())) {
+            body.describeBodyText(b, Global.global.gui().combat.getOpponent(this), false);
         } else {
-            body.describeBodyText(b, Global.getCharacterByType("Angel"), false);
+            body.describeBodyText(b, Global.global.getCharacterByType("Angel"), false);
         }
         if (getTraits().size() > 0) {
             b.append("<br/>Traits:<br/>");
@@ -242,7 +233,7 @@ public class Player extends Character {
     public void detect() {
         for (Area adjacent : location.adjacent) {
             if (adjacent.ping(get(Attribute.Perception))) {
-                Global.gui()
+                Global.global.gui()
                       .message("You hear something in the <b>" + adjacent.name + "</b>.");
                 adjacent.setPinged(true);
             }
@@ -311,7 +302,7 @@ public class Player extends Character {
 
         if (state == State.combat) {
             if (!location.fight.battle()) {
-                Global.getMatch()
+                Global.global.getMatch()
                       .resume();
             }
         } else if (busy > 0) {
@@ -340,8 +331,8 @@ public class Player extends Character {
         } else if (state == State.masturbating) {
             masturbate();
         } else {
-            if (Global.checkFlag(Flag.FTC)) {
-                Character holder = ((FTCMatch) Global.getMatch()).getFlagHolder();
+            if (Global.global.checkFlag(Flag.FTC)) {
+                Character holder = ((FTCMatch) Global.global.getMatch()).getFlagHolder();
                 if (holder != null && !holder.human()) {
                     gui.message("<b>" + holder.name + " currently holds the Flag.</b></br>");
                 }
@@ -380,10 +371,10 @@ public class Player extends Character {
                             possibleActions.add(new Leap(path));
                         }
                     }
-                    possibleActions.addAll(Global.getActions());
+                    possibleActions.addAll(Global.global.getActions());
                     for (Action act : possibleActions) {
-                        if (act.usable(this) 
-                                        && Global.getMatch().condition.allowAction(act, this, Global.getMatch())) {
+                        if (act.usable(this)
+                                        && Global.global.getMatch().condition.allowAction(act, this, Global.global.getMatch())) {
                             gui.addAction(act, this);
                         }
                     }
@@ -420,7 +411,7 @@ public class Player extends Character {
     @Override
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
-        Area destination = adjacent[Global.random(adjacent.length)];
+        Area destination = adjacent[Global.global.random(adjacent.length)];
         gui.message("You dash away and escape into the <b>" + destination.name + ".</b>");
         travel(destination);
         location2.endEncounter();
@@ -444,7 +435,7 @@ public class Player extends Character {
 
     @Override
     public void craft() {
-        int roll = Global.random(10);
+        int roll = Global.global.random(10);
         Global.gui().message("You spend some time crafting some potions with the equipment.");
         if (check(Attribute.Cunning, 25)) {
             if (roll == 9) {
@@ -494,7 +485,7 @@ public class Player extends Character {
 
     @Override
     public void search() {
-        int roll = Global.random(10);
+        int roll = Global.global.random(10);
         switch (roll) {
             case 9:
                 gain(Item.Tripwire);
@@ -592,8 +583,9 @@ public class Player extends Character {
                                             + "moan, <i>\"I'm gonna cum!\"</i> You hastily remove %s dick out of "
                                             + "your mouth and pump it rapidly. %s shoots %s load into the air, barely "
                                             + "missing you.", target.name(),
-                            Global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
-                            Global.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(), target.name(),
+                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
+                            Global.global.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
+                            target.name(),
                             target.possessiveAdjective()));
         } else {
             c.write(target.name()
@@ -608,7 +600,7 @@ public class Player extends Character {
 
     @Override
     public void gain(Item item) {
-        Global.gui()
+        Global.global.gui()
               .message("<b>You've gained " + item.pre() + item.getName() + ".</b>");
         super.gain(item);
     }
@@ -620,7 +612,7 @@ public class Player extends Character {
 
     @Override
     public void promptTrap(IEncounter enc, Character target, Trap trap) {
-        Global.gui()
+        Global.global.gui()
               .message("Do you want to take the opportunity to ambush <b>" + target.name() + "</b>?");
         assessOpponent(target);
         gui.promptOpportunity(enc, target, trap);
@@ -636,18 +628,18 @@ public class Player extends Character {
             case damage:
                 c.write(this, "You dodge " + target.name()
                                 + "'s slow attack and hit her sensitive tit to stagger her.");
-                target.pain(c, target, 4 + Math.min(Global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
                 break;
             case pleasure:
                 if (!target.crotchAvailable() || !target.hasPussy()) {
                     c.write(this, "You pull " + target.name()
                                     + " off balance and lick her sensitive ear. She trembles as you nibble on her earlobe.");
                     target.body.pleasure(this, body.getRandom("tongue"), target.body.getRandom("ears"),
-                                    4 + Math.min(Global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
                 } else {
                     c.write(this, "You pull " + target.name() + " to you and rub your thigh against her girl parts.");
                     target.body.pleasure(this, body.getRandom("feet"), target.body.getRandomPussy(),
-                                    4 + Math.min(Global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
                 }
                 break;
             case fucking:
@@ -658,15 +650,15 @@ public class Player extends Character {
                     if (reverse != c.getStance() && !BodyPart.hasOnlyType(reverse.bottomParts(), "strapon")) {
                         c.setStance(reverse, this, false);
                     } else {
-                        c.write(this, Global.format(
+                        c.write(this, Global.global.format(
                                         "{self:NAME-POSSESSIVE} quick wits find a gap in {other:name-possessive} hold and {self:action:slip|slips} away.",
                                         this, target));
                         c.setStance(new Neutral(this, target), this, true);
                     }
                 } else {
                     target.body.pleasure(this, body.getRandom("hands"), target.body.getRandomBreasts(),
-                                    4 + Math.min(Global.random(get(Attribute.Seduction)), 20), c);
-                    c.write(this, Global.format(
+                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                    c.write(this, Global.global.format(
                                     "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} nipples with {self:possessive} hands as {other:subject-action:try|tries} to fuck {self:direct-object}. "
                                                     + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to pleasure {other:possessive} body.",
                                     this, target));
@@ -681,7 +673,7 @@ public class Player extends Character {
                 } else {
                     c.write(this, "You manage to dodge " + target.possessiveAdjective()
                                     + " groping hands and give a retaliating slap in return.");
-                    target.pain(c, target, 4 + Math.min(Global.random(get(Attribute.Power)), 20));
+                    target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
                 }
                 break;
             case positioning:
@@ -698,7 +690,7 @@ public class Player extends Character {
             default:
                 c.write(this, "You manage to dodge " + target.possessiveAdjective()
                                 + " attack and give a retaliating slap in return.");
-                target.pain(c, target, 4 + Math.min(Global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
         }
     }
 
@@ -713,26 +705,26 @@ public class Player extends Character {
             add(c, Pheromones.getWith(opponent, this, opponent.getPheromonePower(), 10));
         }
         if (opponent.has(Trait.sadist) && !is(Stsflag.masochism)) {
-            c.write("<br/>"+Global.capitalizeFirstLetter(
+            c.write("<br/>" + Global.global.capitalizeFirstLetter(
                             String.format("%s seem to shudder in arousal at the thought of pain.", subject())));
             add(c, new Masochistic(this));
         }
         if (has(Trait.RawSexuality)) {
-            c.write(this, Global.format("{self:NAME-POSSESSIVE} raw sexuality turns both of you on.", this, opponent));
+            c.write(this, Global.global.format("{self:NAME-POSSESSIVE} raw sexuality turns both of you on.", this, opponent));
             temptNoSkillNoSource(c, opponent, arousal.max() / 25);
             opponent.temptNoSkillNoSource(c, this, opponent.arousal.max() / 25);
         }
         if (has(Trait.slime)) {
             if (hasPussy() && !body.getRandomPussy().moddedPartCountsAs(this, PussyPart.gooey)) {
                 body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
-                c.write(this, 
-                                Global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
+                c.write(this,
+                                Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 this, opponent, body.getRandomPussy()));
             }
             if (hasDick() && !body.getRandomCock().moddedPartCountsAs(this, CockMod.slimy)) {
                 body.temporaryAddOrReplacePartWithType(body.getRandomCock().applyMod(CockMod.slimy), 999);
-                c.write(this, 
-                                Global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
+                c.write(this,
+                                Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 this, opponent, body.getRandomPussy()));
             }
         }
@@ -757,7 +749,7 @@ public class Player extends Character {
     public String possessiveAdjective() {
         return "your";
     }
-    
+
     @Override
     public String possessivePronoun() {
         return "yours";
@@ -810,7 +802,7 @@ public class Player extends Character {
 
     @Override
     public String getType() {
-        return getClass().getSimpleName();
+        return type;
     }
 
     @Override
@@ -832,7 +824,7 @@ public class Player extends Character {
     }
 
     public void addict(AddictionType type, Character cause, float mag) {
-        boolean dbg = Global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
+        boolean dbg = Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
         Optional<Addiction> addiction = getAddiction(type);
         if (addiction.isPresent()) {
             if (dbg) {
@@ -856,7 +848,7 @@ public class Player extends Character {
     }
 
     public void unaddict(AddictionType type, float mag) {
-        boolean dbg = Global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
+        boolean dbg = Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
         if (dbg) {
             System.out.printf("Alleviating %s on player by %.3f\n", type.name(), mag);
         }
@@ -875,7 +867,7 @@ public class Player extends Character {
     }
 
     public void addictCombat(AddictionType type, Character cause, float mag, Combat c) {
-        boolean dbg = Global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
+        boolean dbg = Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
         Optional<Addiction> addiction = getAddiction(type);
         if (addiction.isPresent()) {
             if (dbg) {
@@ -901,7 +893,7 @@ public class Player extends Character {
     }
 
     public void unaddictCombat(AddictionType type, Character cause, float mag, Combat c) {
-        boolean dbg = Global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
+        boolean dbg = Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION);
         Optional<Addiction> addict = getAddiction(type);
         if (addict.isPresent()) {
             if (dbg) {
@@ -933,8 +925,8 @@ public class Player extends Character {
         super.regen(c, combat);
         addictions.forEach(Addiction::refreshWithdrawal);
     }
-    
-     @Override protected void saveInternal(JsonObject object) {
+
+    @Override protected void saveInternal(JsonObject object) {
         JsonArray addictions = new JsonArray();
         this.addictions.stream().map(Status::saveToJson).forEach(addictions::add);
         object.add("addictions", addictions);
@@ -947,7 +939,7 @@ public class Player extends Character {
         for (Object a : addictions) {
             JsonObject json = (JsonObject) a;
             AddictionType type = AddictionType.valueOf(json.get("type").getAsString());
-            Character cause = Global.getCharacterByType(json.get("cause").getAsString());
+            Character cause = Global.global.getCharacterByType(json.get("cause").getAsString());
             float mag = json.get("magnitude").getAsFloat();
             float combat = json.get("combat").getAsFloat();
             boolean overloading = json.has("overloading") ? json.get("overloading").getAsBoolean() : false;

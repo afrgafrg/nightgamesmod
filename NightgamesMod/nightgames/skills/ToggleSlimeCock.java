@@ -67,7 +67,7 @@ public class ToggleSlimeCock extends Skill {
             getSelf().body.temporaryAddOrReplacePartWithType(new ModdedCockPart(BasicCockPart.big, CockMod.slimy), 100);
         }
         if (!target.human() || !target.is(Stsflag.blinded))
-            c.write(getSelf(), Global.format(msg, getSelf(), target));
+            c.write(getSelf(), Global.global.format(msg, getSelf(), target));
         else 
             printBlinded(c);
         return true;

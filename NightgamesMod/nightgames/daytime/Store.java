@@ -1,11 +1,11 @@
 package nightgames.daytime;
 
-import java.util.HashMap;
-
 import nightgames.characters.Character;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+
+import java.util.HashMap;
 
 public abstract class Store extends Activity {
     protected HashMap<Item, Integer> stock;
@@ -44,14 +44,14 @@ public abstract class Store extends Activity {
     protected void displayClothes() {
         for (Clothing i : clothingstock.keySet()) {
             if (!player.has(i)) {
-                Global.gui().sale(this, i);
+                Global.global.gui().sale(this, i);
             }
         }
     }
 
     protected void displayItems() {
         for (Item i : stock.keySet()) {
-            Global.gui().sale(this, i);
+            Global.global.gui().sale(this, i);
         }
     }
 
@@ -82,9 +82,9 @@ public abstract class Store extends Activity {
             player.modMoney(-price);
             player.gain(item);
             acted = true;
-            Global.gui().refresh();
+            Global.global.gui().refresh();
         } else {
-            Global.gui().message("You don't have enough money to purchase that.");
+            Global.global.gui().message("You don't have enough money to purchase that.");
         }
     }
 
@@ -94,9 +94,9 @@ public abstract class Store extends Activity {
             player.modMoney(-price);
             player.gain(item);
             acted = true;
-            Global.gui().refresh();
+            Global.global.gui().refresh();
         } else {
-            Global.gui().message("You don't have enough money to purchase that.");
+            Global.global.gui().message("You don't have enough money to purchase that.");
         }
 
     }

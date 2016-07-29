@@ -45,10 +45,10 @@ public class Tackle extends Skill {
                         && getSelf().check(Attribute.Power, target.knockdownDC() - getSelf().get(Attribute.Animism))) {
             if (getSelf().get(Attribute.Animism) >= 1) {
                 writeOutput(c, Result.special, target);
-                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(15, 30)));
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(15, 30)));
             } else {
                 writeOutput(c, Result.normal, target);
-                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(10, 25)));
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(10, 25)));
             }
             c.setStance(new Mount(getSelf(), target), getSelf(), true);
         } else {
@@ -87,7 +87,7 @@ public class Tackle extends Skill {
         if (getSelf().has(Trait.takedown) && target.getStamina().percent() <= 25) {
             return 200;
         }
-        
+
         int base = 80;
         if (getSelf().get(Attribute.Animism) >= 1) {
             base = 120 + (getSelf().getArousal().getReal() / 10);

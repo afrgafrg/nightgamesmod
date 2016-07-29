@@ -85,14 +85,14 @@ public class ImpFem extends Pet {
         }
         c.removePet(getSelf());
     }
-    
+
     @Override
     protected void buildSelf() {
         PetCharacter self = new PetCharacter(this, owner().nameOrPossessivePronoun() + " " + getName(), getName(), new Growth(), getPower());
         // imps are about as tall as goblins, maybe a bit shorter
         self.body.setHeight(110);
         if (getPower() > 30) {
-            self.body.add(PussyPart.succubus);            
+            self.body.add(PussyPart.succubus);
         } else {
             self.body.add(PussyPart.normal);
         }

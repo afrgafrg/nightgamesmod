@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests involving the CreationGUI.
@@ -23,7 +23,7 @@ public class CreationGUITest {
     }
 
     @Test public void testSelectPlayerStats() throws Exception {
-        CreationGUI creationGUI = Global.gui().creation;
+        CreationGUI creationGUI = Global.global.gui().creation;
         creationGUI.namefield.setText("TestPlayer");
         creationGUI.StrengthBox.setSelectedItem(Trait.romantic);
         creationGUI.WeaknessBox.setSelectedItem(Trait.insatiable);
@@ -31,8 +31,8 @@ public class CreationGUITest {
         creationGUI.seduction = 11;
         creationGUI.cunning = 9;
         creationGUI.makeGame(Optional.empty());
-        assertThat(Global.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
+        assertThat(Global.global.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
                         hasEntry(Attribute.Cunning, 9)));
-        assertThat(Global.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
+        assertThat(Global.global.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
     }
 }

@@ -35,8 +35,8 @@ public class Wait extends Skill {
         if (channel(c)) {
             writeOutput(c, Result.special, target);
             if (focused(c)) {
-                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.random(8, 16)));
-                getSelf().calm(c, Global.random(8, 14));
+                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.global.random(8, 16)));
+                getSelf().calm(c, Global.global.random(8, 14));
             } else {
                 getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.random(4, 8)));
             }
@@ -46,7 +46,7 @@ public class Wait extends Skill {
             getSelf().calm(c, Global.random(8, 14));
         } else {
             writeOutput(c, Result.normal, target);
-            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.random(4, 8)));
+            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.global.random(4, 8)));
         }
         return true;
     }

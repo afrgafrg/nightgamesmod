@@ -1,34 +1,24 @@
 package nightgames.daytime;
 
-import static nightgames.requirements.RequirementShortcuts.bodypart;
-import static nightgames.requirements.RequirementShortcuts.not;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
+import nightgames.characters.body.*;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.*;
+
 public class KatTime extends BaseNPCTime {
     public KatTime(Character player) {
-        super(player, Global.getNPC("Kat"));
+        super(player, Global.global.getNPC("Kat"));
         knownFlag = "Kat";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? That was unexpected nya\"";
@@ -45,7 +35,7 @@ public class KatTime extends BaseNPCTime {
         {
             TransformationOption growCock = new TransformationOption();
             growCock.ingredients.put(Item.PriapusDraft, 3);
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
             growCock.option = "Kat: Grow a cock";
             growCock.scene = "<br/><i>\"Mrrr... Y-you want me to w-what!?\"</i> Kat doesn't seem to be too amused at your suggestion for a little switch-up. "
@@ -94,7 +84,7 @@ public class KatTime extends BaseNPCTime {
         {
             TransformationOption removeCock = new TransformationOption();
             removeCock.ingredients.put(Item.FemDraft, 3);
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
             removeCock.option = "Kat: Remove her cock";
             removeCock.scene = "<br/>Kat gladly drinks the three femdrafts one after another and her penis shrinks back into her normal clitoris. "
@@ -175,7 +165,7 @@ public class KatTime extends BaseNPCTime {
     @Override
     public void subVisitIntro(String choice) {
         if (npc.getAffection(player) > 0) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "You send Kat a text to see if she's free. Since exchanging numbers with her, you've discovered that she's much more outgoing "
                                             + "when texting than she is in person. The two of you have chatted quite a bit, you just hope she'll eventually get more used to talking with you in "
                                             + "person.<br/>You quickly receive a reply from Kat. 'i'm free right now. :) do you want to meet up?' You text her back, asking if there's a place you "
@@ -184,18 +174,18 @@ public class KatTime extends BaseNPCTime {
                                             + "fair, she does inspire inspire that sort of protective attitude, even from her opponents. For Kat's sake, you'll do your best to get along with them, but "
                                             + "they may not be as agreeable, especially if they find out you're having sex with their protegée.<br/><br/>On your way to Kat's room, you get another text. "
                                             + "'i think i'm too excited waiting for you to get here. what are you planning?'");
-            Global.gui().choose(this, "Games");
-            Global.gui().choose(this, "Sparring");
-            Global.gui().choose(this, "Sex");
-            if (Global.checkFlag(Flag.metAisha) && !Global.checkFlag(Flag.catspirit)
-                            && Global.getNPC("Kat").getAffection(player) >= 5) {
-                Global.gui().choose(this, "Ask about Animal Spirit");
+            Global.global.gui().choose(this, "Games");
+            Global.global.gui().choose(this, "Sparring");
+            Global.global.gui().choose(this, "Sex");
+            if (Global.global.checkFlag(Flag.metAisha) && !Global.global.checkFlag(Flag.catspirit)
+                            && Global.global.getNPC("Kat").getAffection(player) >= 5) {
+                Global.global.gui().choose(this, "Ask about Animal Spirit");
             }
-            if (Global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
-                Global.gui().choose(this, "Must... Fuck...");
+            if (Global.global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
+                Global.global.gui().choose(this, "Must... Fuck...");
             }
-        } else if (Global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
-            Global.gui()
+        } else if (Global.global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
+            Global.global.gui()
             .message("Kat low-affection addiction intro");
             if (npc.getAttraction(player) < 15) {
                 npc.gainAttraction(player, 2); 
@@ -203,13 +193,13 @@ public class KatTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui() .choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                Global.global.gui().choose(this, "Games");
+                Global.global.gui().choose(this, "Sparring");
+                Global.global.gui().choose(this, "Sex");
             }
-            Global.gui().choose(this, "Must... Fuck...");
+            Global.global.gui().choose(this, "Must... Fuck...");
         } else if (npc.getAttraction(player) < 10) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "You decide to look for Kat and see if she's interested in spending some time together. You don't have any way to contact her directly, "
                                             + "but she apparently spends a lot of time in the campus gardens. That's probably your best hope for running into her.<br/><br/>You eventually spot Kat walking "
                                             + "through the gardens, but you almost don't recognize her. Instead of the light, casual clothes she usually wears during a match, she's currently dressed "
@@ -228,7 +218,7 @@ public class KatTime extends BaseNPCTime {
             npc.gainAttraction(player, 2);
             player.gainAttraction(npc, 2);
         } else {
-            Global.gui().message(
+            Global.global.gui().message(
                             "You head out to the campus gardens, hoping to find Kat so you can spend some time together. You aren't searching long before you find her reading "
                                             + "a book in the shade of a tree. She seems pretty absorbed in the book, so you're hesitant to disturb her. Instead of calling out to her, you just sit next to her "
                                             + "quietly. You don't recognize the book she's reading, but judging by the cover, it appears to be an urban fantasy romance novel. It must pretty engaging, because "
@@ -275,18 +265,19 @@ public class KatTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         }
-        Global.gui().choose(this, "Leave");
+        Global.global.gui().choose(this, "Leave");
     }
 
     @Override
     public void subVisit(String choice) {
         if (choice.equals("Must... Fuck...")) {
             if (npc.getAffection(player) == 0) {
-                Global.gui().message("Kat teases you, but eventually you end up fucking like, well, animals. No"
+                Global.global.gui().message("Kat teases you, but eventually you end up fucking like, well, animals. No"
                                 + " surprise there. She also bites you again, which in the end just makes matters worse."
                                 + " This is a placeholder.");
             } else {
-                Global.gui().message("Your cock sits uncomfortably hard in your pants as you clear your throat. You NEED "
+                Global.global.gui()
+                                .message("Your cock sits uncomfortably hard in your pants as you clear your throat. You NEED "
                                 + "to fuck her, but you can't just say that, can you? Kat seems to see right through you, "
                                 + "though. <i>\"Oh boy, I recognize that look. Pins and needles all over? Slight tunnel "
                                 + "vision? Tense muscles? Increased saliva productionya? Enhanced sense of touch and smell? "
@@ -341,12 +332,12 @@ public class KatTime extends BaseNPCTime {
                                 + "If you're not really careful, you're going to get addicted to this for sure. But with sex like"
                                 + " that, is that a bad thing?");
             }
-            Global.gui().choose(this, "Leave");
-            Global.getPlayer().addict(AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
-            Global.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
+            Global.global.gui().choose(this, "Leave");
+            Global.global.getPlayer().addict(AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
+            Global.global.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "Kat sits on her bed and looks at you hesitantly, with red cheeks. <i>\"Are we going to... you know?\"</i> Despite her shy appearance, there's definitely "
                                             + "an eagerness to her voice. You both want the same thing. You give her a quick kiss on the lips and help her remove her shirt. She shyly crosses her arms over her bra "
                                             + "and smiles weakly. <i>\"It's embarrassing if I'm the only one who is naked. Take off your shirt too.\"</i> You obligingly strip of your own top and she helps you remove "
@@ -388,12 +379,12 @@ public class KatTime extends BaseNPCTime {
                 player.add(Trait.affectionate);
                 npc.getGrowth().addTrait(0, Trait.affectionate);
             }
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "Despite your shared intimacy, Kat still has trouble speaking normally when you're alone together. You've turned to games as, not just a form of "
                                             + "strategy training, but also a means of getting her to relax. As you get deep into the game, it seems to be working. It probably helps that she seems to have a "
                                             + "knack for this game. She's practically bouncing in her seat and shadowboxing each time she crashes a gem. <br/><br/>"
@@ -447,16 +438,16 @@ public class KatTime extends BaseNPCTime {
                                             + "As you recover from your orgasm, you notice that Kat is fast asleep, or possibly pretending to be asleep to avoid an embarrassing conversation. You're exhausted, but neither of "
                                             + "you are going to be comfortable napping on the floor. You pick up Kat's petite body and carry her over to the bed.");
             if (!player.has(Trait.tease)) {
-                Global.gui().message("<br/><br/><b>You've learned to take pride in your teasing.</b>");
+                Global.global.gui().message("<br/><br/><b>You've learned to take pride in your teasing.</b>");
                 player.add(Trait.tease);
                 npc.getGrowth().addTrait(0, Trait.tease);
             }
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "You and Kat are able to find a private room with a wrestling mat so you can do some sparring without covering up her cat parts. You spend some time stretching and warming up together, "
                                             + "before you have to figure out how you're going to actually train. You're a lot taller and heavier than her, so an actual sparring match would be problematic. "
                                             + "Instead you offer to show her some simple wrestling takedowns. Kat looks visibly indignant, which is an expression you're not used to on her. <i>\"I have "
@@ -487,18 +478,18 @@ public class KatTime extends BaseNPCTime {
                                             + "convincingly to escape. You quickly locate her clitoris and start rapidly rubbing it with your fingertips. Her back arches and she yowls in ecstasy as she orgasms. "
                                             + "You lightly caress her body as she's recovering from her climax. She giggles softly at the ticklish sensation and looks up at you with a flushed smile. <i>\"You're "
                                             + "good at this kind of sparring. Can I put my clothes on before we continue? This feels nice, but it's really embarrassing.\"</i>");
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
             if (!player.has(Trait.aikidoNovice)) {
-                Global.gui().message("<br/><br/><b>You're now more familiar with the art of counter attacking.</b>");
+                Global.global.gui().message("<br/><br/><b>You're now more familiar with the art of counter attacking.</b>");
                 player.add(Trait.aikidoNovice);
                 npc.getGrowth().addTrait(0, Trait.aikidoNovice);
             }
         } else if (choice.startsWith("Ask about Animal Spirit")) {
-            Global.flag(Flag.catspirit);
-            Global.gui().message("You know that Kat's power comes from an animal spirit "
+            Global.global.flag(Flag.catspirit);
+            Global.global.gui().message("You know that Kat's power comes from an animal spirit "
                             + "inside her, but she never mentioned how that came to be. It seems like "
                             + "that might be a useful ability, so you decide to ask her about it. <i>"
                             + "\"Hmm? My cat spirit? It's something I got from my friend, Aisha. Have "
@@ -518,7 +509,7 @@ public class KatTime extends BaseNPCTime {
                             + "<i>\"I think Aisha may feel bad about how the ritual turned out, "
                             + "even though I keep telling her I don't regret it. If she refuses"
                             + " to give you a spirit, I'll try to  help you talk her into it.\"</i>");
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
         } else if (choice.equals("Leave")) {
             done(true);
         }

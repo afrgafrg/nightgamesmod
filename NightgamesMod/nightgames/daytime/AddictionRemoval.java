@@ -15,18 +15,18 @@ public class AddictionRemoval extends Activity {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.AddictionAdvice) && Global.getPlayer()
+        return Global.global.checkFlag(Flag.AddictionAdvice) && Global.global.getPlayer()
                                                                .checkAddiction();
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui()
+        Global.global.gui()
               .clearText();
-        Global.gui()
+        Global.global.gui()
               .clearCommand();
         if (choice.equals("Start")) {
-            Global.gui()
+            Global.global.gui()
                   .message("You walk to the place Aesop told you about "
                                   + "where you're supposed to be able to get rid of your addictions."
                                   + " An imperious-looking woman in a lab coat is there to meet you, and explains"
@@ -37,36 +37,37 @@ public class AddictionRemoval extends Activity {
                                   + "\n\n(this is a placeholder -- note that these treatments only affect your current"
                                   + " strongest addiction)");
             if (player.money >= 5000) {
-                Global.gui()
+                Global.global.gui()
                       .choose(this, UNSAFE_OPT);
                 if (player.money >= 15000) {
-                    Global.gui()
+                    Global.global.gui()
                           .choose(this, SAFE_OPT);
                 } else {
-                    Global.gui()
+                    Global.global.gui()
                           .message("\n\nA quick look at your finances reveal that only the risky option is"
                                           + " affordable for you right now. That may be a problem.");
                 }
             } else {
-                Global.gui()
+                Global.global.gui()
                       .message("\n\nUnfortunately, you don't have the cash for either option right now.");
             }
         } else if (choice.equals(UNSAFE_OPT)) {
             player.money -= 5000;
-            Global.gui().message("Nervously, you handed over the money for the overload treatment. You don't"
+            Global.global.gui().message("Nervously, you handed over the money for the overload treatment. You don't"
                             + " remember what happened next, but you do know that now your addiction is far"
                             + " stronger than before. Let's hope this works.");
-            Global.getPlayer().getStrongestAddiction().get().overload();
+            Global.global.getPlayer().getStrongestAddiction().get().overload();
         } else if (choice.equals(SAFE_OPT)) {
             player.money -= 15000;
-            Global.gui().message("You dole out the mountain of cash and are taken to the back for your treatment."
+            Global.global.gui()
+                            .message("You dole out the mountain of cash and are taken to the back for your treatment."
                             + " When you emerge, you are completely free of your addiction.");
-            Global.getPlayer().getAddictions().remove(Global.getPlayer().getStrongestAddiction().get());
+            Global.global.getPlayer().getAddictions().remove(Global.global.getPlayer().getStrongestAddiction().get());
         } else if (choice.equals("Leave")) {
             done(true);
             return;
         }
-        Global.gui().choose(this, "Leave");
+        Global.global.gui().choose(this, "Leave");
 
     }
 

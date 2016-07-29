@@ -68,7 +68,7 @@ public class Drain extends Skill {
     public boolean resolve(Combat c, Character target, boolean nocost) {
         int strength = Math.max(10, 1 + getSelf().get(Attribute.Dark) / 4);
         int staminaStrength = 50;
-        int type = Math.max(1, Global.centeredrandom(6, getSelf().get(Attribute.Dark) / 3.0, 3));
+        int type = Math.max(1, Global.global.centeredrandom(6, getSelf().get(Attribute.Dark) / 3.0, 3));
         if (!drainsAttributes(c) && type > 2) {
             type = 1;
             staminaStrength /= 2;
@@ -192,7 +192,7 @@ public class Drain extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         String demon = getSelf().useFemalePronouns() ? "succubus" : "incubus";
-        
+
         if (c.getStance().inserted(target)) {
             String muscDesc = c.getStance().anallyPenetrated(c, getSelf()) ? "anal" : "vaginal";
             String partDesc = c.getStance().anallyPenetrated(c, getSelf())
@@ -203,7 +203,7 @@ public class Drain extends Skill {
                             + "%s starts kneading %s dick, bringing %s immense pleasure and soon"
                             + " %s %s erupt into %s, but %s %s %s %s shooting"
                             + " something far more precious than semen into her %s; "
-                            + "as more of the ethereal fluid leaves %s, %s ", 
+                            + "as more of the ethereal fluid leaves %s, %s ",
                             target.subjectAction("feel"), getSelf().nameOrPossessivePronoun(),
                             muscDesc, target.directObject(), getSelf().subject(),
                             target.possessiveAdjective(), target.directObject(),
@@ -264,7 +264,7 @@ public class Drain extends Skill {
             }
         } else {
             String base = String.format("%s feel %s powerful will drawing some of %s energy into %s cock, ",
-                            target.subjectAction("feel"), getSelf().nameOrPossessivePronoun(), 
+                            target.subjectAction("feel"), getSelf().nameOrPossessivePronoun(),
                             target.possessiveAdjective(), getSelf().possessiveAdjective());
             switch (damage) {
                 case 4:

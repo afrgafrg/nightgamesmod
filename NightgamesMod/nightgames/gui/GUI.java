@@ -1,80 +1,9 @@
 package nightgames.gui;
 
-import static nightgames.requirements.RequirementShortcuts.item;
-
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Panel;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JToggleButton;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultCaret;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-
 import nightgames.Resources.ResourceLoader;
 import nightgames.actions.Action;
 import nightgames.actions.Locate;
-import nightgames.characters.Attribute;
-import nightgames.characters.Character;
-import nightgames.characters.Meter;
-import nightgames.characters.Player;
-import nightgames.characters.Trait;
+import nightgames.characters.*;
 import nightgames.characters.TraitTree;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatSceneChoice;
@@ -92,7 +21,28 @@ import nightgames.skills.TacticGroup;
 import nightgames.skills.Tactics;
 import nightgames.trap.Trap;
 
-@SuppressWarnings("unused")
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static nightgames.requirements.RequirementShortcuts.item;
+
 public class GUI extends JFrame implements Observer {
     private static final long serialVersionUID = 451431916952047183L;
     public Combat combat;
@@ -202,12 +152,12 @@ public class GUI extends JFrame implements Observer {
         mntmNewgame.setHorizontalAlignment(SwingConstants.CENTER);
 
         mntmNewgame.addActionListener(arg0 -> {
-            if (Global.inGame()) {
+            if (Global.global.inGame()) {
                 int result = JOptionPane.showConfirmDialog(GUI.this,
-                                "Do you want to restart the game? You'll lose any unsaved progress.", "Start new game?",
+                                "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    Global.reset();
+                    new Global();
                 }
             }
         });
@@ -223,7 +173,7 @@ public class GUI extends JFrame implements Observer {
         //mntmLoad.setBackground(GUIColors.bgGrey);
         mntmLoad.setHorizontalAlignment(SwingConstants.CENTER);
 
-        mntmLoad.addActionListener(arg0 -> Global.loadWithDialog());
+        mntmLoad.addActionListener(arg0 -> loadWithDialog());
 
         menuBar.add(mntmLoad);
 
@@ -338,7 +288,7 @@ public class GUI extends JFrame implements Observer {
         optionsPanel.add(fontSizeLabel);
         optionsPanel.add(rdfntnorm);
         optionsPanel.add(rdnfntlrg);
-        
+
         JLabel pronounLabel = new JLabel("Pronoun Usage");
         ButtonGroup pronoun = new ButtonGroup();
         JRadioButton rdPronounBody = new JRadioButton("Based on Anatomy");
@@ -371,53 +321,53 @@ public class GUI extends JFrame implements Observer {
                 put(10, new JLabel("Male"));
             }
         });
-        malePrefSlider.setValue(Math.round(Global.getValue(Flag.malePref)));
+        malePrefSlider.setValue(Math.round(Global.global.getValue(Flag.malePref)));
         malePrefSlider.setToolTipText("This setting affects the gender your opponents will gravitate towards once that"
                         + " option becomes available.");
-        malePrefSlider.addChangeListener(e -> Global.setCounter(Flag.malePref, malePrefSlider.getValue()));
+        malePrefSlider.addChangeListener(e -> Global.global.setCounter(Flag.malePref, malePrefSlider.getValue()));
 
         // malePrefPanel - options submenu - visible
         optionsPanel.add(malePrefSlider);
         mntmOptions.addActionListener(arg0 -> {
-            if (Global.checkFlag(Flag.systemMessages)) {
+            if (Global.global.checkFlag(Flag.systemMessages)) {
                 rdMsgOn.setSelected(true);
             } else {
                 rdMsgOff.setSelected(true);
             }
 
-            if (Global.checkFlag(Flag.AutoNext)) {
+            if (Global.global.checkFlag(Flag.AutoNext)) {
                 rdAutoNextOn.setSelected(true);
             } else {
                 rdAutoNextOff.setSelected(true);
             }
 
-            if (Global.checkFlag(Flag.hardmode)) {
+            if (Global.global.checkFlag(Flag.hardmode)) {
                 rdhard.setSelected(true);
             } else {
                 rdeasy.setSelected(true);
             }
 
-            if (Global.checkFlag(Flag.dumbmode)) {
+            if (Global.global.checkFlag(Flag.dumbmode)) {
                 rddumb.setSelected(true);
             } else {
                 rdnormal.setSelected(true);
             }
-            if (Global.checkFlag(Flag.autosave)) {
+            if (Global.global.checkFlag(Flag.autosave)) {
                 rdautosaveon.setSelected(true);
             } else {
                 rdautosaveoff.setSelected(true);
             }
-            if (Global.checkFlag(Flag.noportraits)) {
+            if (Global.global.checkFlag(Flag.noportraits)) {
                 rdporoff.setSelected(true);
             } else {
                 rdporon.setSelected(true);
             }
-            if (Global.checkFlag(Flag.noimage)) {
+            if (Global.global.checkFlag(Flag.noimage)) {
                 rdimgoff.setSelected(true);
             } else {
                 rdimgon.setSelected(true);
             }
-            if (Global.checkFlag(Flag.largefonts)) {
+            if (Global.global.checkFlag(Flag.largefonts)) {
                 rdnfntlrg.setSelected(true);
             } else {
                 rdfntnorm.setSelected(true);
@@ -427,34 +377,34 @@ public class GUI extends JFrame implements Observer {
             } else {
                 rdPronounBody.setSelected(true);
             }
-            malePrefSlider.setValue(Math.round(Global.getValue(Flag.malePref)));
+            malePrefSlider.setValue(Math.round(Global.global.getValue(Flag.malePref)));
             int result = JOptionPane.showConfirmDialog(GUI.this, optionsPanel, "Options", JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
-                Global.setFlag(Flag.systemMessages, rdMsgOn.isSelected());
-                Global.setFlag(Flag.AutoNext, rdAutoNextOn.isSelected());
-                Global.setFlag(Flag.dumbmode, !rdnormal.isSelected());
-                Global.setFlag(Flag.hardmode, rdhard.isSelected());
-                Global.setFlag(Flag.autosave, rdautosaveon.isSelected());
-                Global.setFlag(Flag.noportraits, rdporoff.isSelected());
-                Global.setFlag(Flag.FemalePronounsOnly, rdPronounFemale.isSelected());
+                Global.global.setFlag(Flag.systemMessages, rdMsgOn.isSelected());
+                Global.global.setFlag(Flag.AutoNext, rdAutoNextOn.isSelected());
+                Global.global.setFlag(Flag.dumbmode, !rdnormal.isSelected());
+                Global.global.setFlag(Flag.hardmode, rdhard.isSelected());
+                Global.global.setFlag(Flag.autosave, rdautosaveon.isSelected());
+                Global.global.setFlag(Flag.noportraits, rdporoff.isSelected());
+                Global.global.setFlag(Flag.FemalePronounsOnly, rdPronounFemale.isSelected());
                 if (!rdporon.isSelected()) {
                     showNone();
                 }
                 if (rdimgon.isSelected()) {
-                    Global.unflag(Flag.noimage);
+                    Global.global.unflag(Flag.noimage);
                 } else {
-                    Global.flag(Flag.noimage);
+                    Global.global.flag(Flag.noimage);
                     if (imgLabel != null) {
                         imgPanel.remove(imgLabel);
                     }
                     imgPanel.repaint();
                 }
                 if (rdnfntlrg.isSelected()) {
-                    Global.flag(Flag.largefonts);
+                    Global.global.flag(Flag.largefonts);
                     fontsize = 6;
                 } else {
-                    Global.unflag(Flag.largefonts);
+                    Global.global.unflag(Flag.largefonts);
                     fontsize = 5;
                 }
             }
@@ -478,7 +428,7 @@ public class GUI extends JFrame implements Observer {
                             "Do you want to quit for the night? Your opponents will continue to fight and gain exp.",
                             "Retire early?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
-                Global.getMatch().quit();
+                Global.global.getMatch().quit();
             }
         });
         menuBar.add(mntmQuitMatch);
@@ -499,7 +449,7 @@ public class GUI extends JFrame implements Observer {
             Object[] okOnly = {"OK"};
             int results = JOptionPane.showOptionDialog(GUI.this, panel, "Credits", JOptionPane.DEFAULT_OPTION,
                             JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-            if (results == 1 && Global.inGame()) {
+            if (results == 1 && Global.global.inGame()) {
                 JPanel debugPanel = new DebugGUIPanel();
                 JOptionPane.showOptionDialog(GUI.this, debugPanel, "Debug", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.INFORMATION_MESSAGE, null, okOnly, okOnly[0]);
@@ -599,7 +549,7 @@ public class GUI extends JFrame implements Observer {
         centerPanel.add(clothesPanel, USE_CLOSET_UI);
 
         JButton debug = new JButton("Debug");
-        debug.addActionListener(arg0 -> Global.getMatch().resume());
+        debug.addActionListener(arg0 -> Global.global.getMatch().resume());
 
         // commandPanel - visible, contains the player's command buttons
         groupBox = Box.createHorizontalBox();
@@ -665,10 +615,10 @@ public class GUI extends JFrame implements Observer {
     // image loader
 
     public void displayImage(String path, String artist) {
-        if (Global.checkFlag(Flag.noimage)){ 
+        if (Global.global.checkFlag(Flag.noimage)){
             return;
         }
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Display image: " + path);
         }
         if (!(new File("assets/"+path).canRead())) {
@@ -691,7 +641,7 @@ public class GUI extends JFrame implements Observer {
     // image unloader
 
     public void clearImage() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Reset image");
         }
         imgLabel.setIcon(null);
@@ -708,7 +658,7 @@ public class GUI extends JFrame implements Observer {
                 e.printStackTrace();
             }
             if (face != null) {
-                if (Global.isDebugOn(DebugFlags.DEBUG_IMAGES)) {
+                if (Global.global.isDebugOn(DebugFlags.DEBUG_IMAGES)) {
                     System.out.println("Loading Portrait " + imagepath + " \n");
                 }
                 portrait.setIcon(null);
@@ -728,8 +678,8 @@ public class GUI extends JFrame implements Observer {
 
     // portrait loader
     public void loadPortrait(Combat c, Character player, Character enemy) {
-        if (!Global.checkFlag(Flag.noportraits)) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (!Global.global.checkFlag(Flag.noportraits)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
                 System.out.println("Load portraits");
             }
             String imagepath = null;
@@ -741,14 +691,14 @@ public class GUI extends JFrame implements Observer {
             loadPortrait(imagepath);
         } else {
             clearPortrait();
-            if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
                 System.out.println("No portraits");
             }
         }
     }
 
     public void showMap() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Show map");
         }
         map.setPreferredSize(new Dimension(300, 385));
@@ -757,7 +707,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void showPortrait() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Show portrait");
         }
         CardLayout portraitLayout = (CardLayout) (portraitPanel.getLayout());
@@ -765,7 +715,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void showNone() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Show none");
         }
         CardLayout portraitLayout = (CardLayout) (portraitPanel.getLayout());
@@ -805,7 +755,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void populatePlayer(Player player) {
-        if (Global.checkFlag(Flag.largefonts)) {
+        if (Global.global.checkFlag(Flag.largefonts)) {
             fontsize = 6;
         } else {
             fontsize = 5;
@@ -1065,7 +1015,7 @@ public class GUI extends JFrame implements Observer {
                 addToCommandPanel(button);
             }
         }
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1075,7 +1025,7 @@ public class GUI extends JFrame implements Observer {
 
     public void addAction(Action action, Character user) {
         commandPanel.add(new ActionButton(action, user));
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1088,7 +1038,7 @@ public class GUI extends JFrame implements Observer {
         refresh();
         clearCommand();
         commandPanel.add(nextButton(combat));
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1133,10 +1083,10 @@ public class GUI extends JFrame implements Observer {
         clearCommand();
         commandPanel.add(encounterButton("Fight", enc, target, Encs.fight));
         commandPanel.add(encounterButton("Flee", enc, target, Encs.flee));
-        if (item(Item.SmokeBomb, 1).meets(null, Global.human, null)) {
+        if (item(Item.SmokeBomb, 1).meets(null, Global.global.human, null)) {
             commandPanel.add(encounterButton("Smoke Bomb", enc, target, Encs.smoke));
         }
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1144,7 +1094,7 @@ public class GUI extends JFrame implements Observer {
         clearCommand();
         commandPanel.add(encounterButton("Attack " + target.name(), enc, target, Encs.ambush));
         commandPanel.add(encounterButton("Wait", enc, target, Encs.wait));
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1152,7 +1102,7 @@ public class GUI extends JFrame implements Observer {
         clearCommand();
         commandPanel.add(encounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
         commandPanel.add(encounterButton("Wait", enc, target, Encs.wait));
-        Global.getMatch().pause();
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1162,20 +1112,19 @@ public class GUI extends JFrame implements Observer {
         if (!target.mostlyNude()) {
             commandPanel.add(encounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
         }
-        if (Global.human.has(Item.Aphrodisiac)) {
-            commandPanel.add(encounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
+        if (Global.global.human.has(Item.Aphrodisiac)) {
+            commandPanel.add(new EncounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
         }
-        commandPanel.add(encounterButton("Do Nothing", encounter, target, Encs.wait));
-        Global.getMatch().pause();
+        commandPanel.add(new EncounterButton("Do Nothing", encounter, target, Encs.wait));
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
     public void promptIntervene(IEncounter enc, Character p1, Character p2) {
         clearCommand();
-        commandPanel.add(interveneButton(enc, p1));
-        commandPanel.add(interveneButton(enc, p2));
-        commandPanel.add(watchButton(enc));
-        Global.getMatch().pause();
+        commandPanel.add(new InterveneButton(enc, p1));
+        commandPanel.add(new InterveneButton(enc, p2));
+        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1190,35 +1139,35 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void ding() {
-        Player player = Global.human;
+        Player player = Global.global.human;
         if (player.availableAttributePoints > 0) {
             message(player.availableAttributePoints + " Attribute Points remain.\n");
             clearCommand();
             for (Attribute att : player.att.keySet()) {
                 if (Attribute.isTrainable(player, att) && player.getPure(att) > 0) {
-                    commandPanel.add(attributeButton(att));
+                    commandPanel.add(new AttributeButton(att));
                 }
             }
-            commandPanel.add(attributeButton(Attribute.Willpower));
-            if (Global.getMatch() != null) {
-                Global.getMatch().pause();
+            commandPanel.add(new AttributeButton(Attribute.Willpower));
+            if (Global.global.getMatch() != null) {
+                Global.global.getMatch().pause();
             }
             commandPanel.refresh();
         } else if (player.traitPoints > 0 && !skippedFeat) {
             clearCommand();
             message("You've earned a new perk. Select one below.");
-            for (Trait feat : Global.getFeats(player)) {
+            for (Trait feat : Global.global.getFeats(player)) {
                 if (!player.has(feat)) {
-                    commandPanel.add(featButton(feat));
+                    commandPanel.add(new FeatButton(feat));
                 }
                 commandPanel.refresh();
             }
-            commandPanel.add(skipFeatButton());
+            commandPanel.add(new SkipFeatButton());
             commandPanel.refresh();
         } else {
             skippedFeat = false;
             clearCommand();
-            Global.gui().message(Global.gainSkills(player));
+            Global.global.gui().message(Global.global.gainSkills(player));
             player.finishDing();
             if (player.getLevelsToGain() > 0) {
                 player.actuallyDing();
@@ -1226,26 +1175,26 @@ public class GUI extends JFrame implements Observer {
             } else {
                 if (combat != null) {
                     endCombat();
-                } else if (Global.getMatch() != null) {
-                    Global.getMatch().resume();
-                } else if (Global.day != null) {
-                    Global.getDay().plan();
+                } else if (Global.global.getMatch() != null) {
+                    Global.global.getMatch().resume();
+                } else if (Global.global.day != null) {
+                    Global.global.getDay().plan();
                 } else {
-                    new Prematch(Global.human);
+                    new Prematch(Global.global.human);
                 }
             }
         }
     }
 
     public void endCombat() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("End Combat");
         }
         combat = null;
         clearText();
         clearImage();
         showMap();
-        Global.getMatch().resume();
+        Global.global.getMatch().resume();
     }
 
     // Night match initializer
@@ -1256,20 +1205,19 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void endMatch() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Match end");
         }
         clearCommand();
         showNone();
         mntmQuitMatch.setEnabled(false);
-        Global.endNightForSave();
-        commandPanel.add(sleepButton());
+        commandPanel.add(new SleepButton());
         commandPanel.add(new SaveButton());
         commandPanel.refresh();
     }
 
     public void refresh() {
-        Player player = Global.human;
+        Player player = Global.global.human;
         stamina.setText("Stamina: " + getLabelString(player.getStamina()));
         arousal.setText("Arousal: " + getLabelString(player.getArousal()));
         mojo.setText("Mojo: " + getLabelString(player.getMojo()));
@@ -1289,21 +1237,20 @@ public class GUI extends JFrame implements Observer {
         if (map != null) {
             map.repaint();
         }
-        // We may be in between setting NIGHT and building the Match object
-        if (Global.getTime() == Time.NIGHT && Global.getMatch() != null) {
+        if (Global.global.getTime() == Time.NIGHT) {
             // yup... silverbard pls :D
-            if (Global.getMatch().getHour() == 12 || Global.getMatch().getHour() < 10) {
-                timeLabel.setText(Global.getMatch().getTime() + " am");
+            if (Global.global.getMatch().getHour() == 12 || Global.global.getMatch().getHour() < 10) {
+                timeLabel.setText(Global.global.getMatch().getTime() + " am");
             } else {
-                timeLabel.setText(Global.getMatch().getTime() + " pm");
+                timeLabel.setText(Global.global.getMatch().getTime() + " pm");
             }
 
             timeLabel.setForeground(new Color(51, 101, 202));
-        } else if (Global.getTime() == Time.DAY) { // not updating correctly during daytime
-            timeLabel.setText(Global.getDay().getTime() + " pm");
+        } else if (Global.global.getTime() == Time.DAY) { // not updating correctly during daytime
+            timeLabel.setText(Global.global.getDay().getTime() + " pm");
             timeLabel.setForeground(new Color(253, 184, 19));
         } else {
-            System.err.println("Unknown time of day: " + Global.getTime());
+            throw new RuntimeException("Unknown time of day: " + Global.global.getTime());
         }
         displayStatus();
         List<Item> availItems = player.getInventory().entrySet().stream().filter(entry -> (entry.getValue() > 0))
@@ -1316,7 +1263,7 @@ public class GUI extends JFrame implements Observer {
 
 	    Map<Item, Integer> items = player.getInventory();
 	    int count = 0;
-	
+
 	    for (Item i : availItems) {
 	        JLabel label = new JLabel(i.getName() + ": " + items.get(i) + "\n");
 	        label.setForeground(GUIColors.textColorLight);
@@ -1339,21 +1286,20 @@ public class GUI extends JFrame implements Observer {
     		}
     	});
     }
-    
+
     public void displayStatus() {
         statusPanel.removeAll();
         statusPanel.repaint();
         //statusPanel.setPreferredSize(new Dimension(400, mainPanel.getHeight()));
         statusPanel.setPreferredSize(new Dimension(width/4, mainPanel.getHeight()));
 
-        
         if (width < 720) {
             statusPanel.setMaximumSize(new Dimension(height, width / 6));
             System.out.println("STATUS PANEL");
         }
         JPanel statsPanel = new JPanel(new GridLayout(0, 3));
 
-        Player player = Global.human;
+        Player player = Global.global.human;
 
         statusPanel.add(statsPanel);
         //statsPanel.setPreferredSize(new Dimension(400, 200));
@@ -1409,7 +1355,7 @@ public class GUI extends JFrame implements Observer {
         statusPanel.setPreferredSize(new Dimension(width/4, height));
         currentStatusPanel.setMaximumSize(new Dimension(width/4, 2000));
         currentStatusPanel.setPreferredSize(new Dimension(width/4, 2000));
-        
+
         currentStatusPanel.setBackground(GUIColors.bgLight);
         statusPanel.add(currentStatusPanel);
         currentStatusPanel.add(scrollPane);
@@ -1434,132 +1380,265 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
+    private void loadWithDialog() {
+        JFileChooser dialog = new JFileChooser("./");
+        FileFilter savesFilter = new FileNameExtensionFilter("Nightgame Saves", "ngs");
+        dialog.addChoosableFileFilter(savesFilter);
+        dialog.setFileFilter(savesFilter);
+        dialog.setMultiSelectionEnabled(false);
+        int rv = dialog.showOpenDialog(this);
+        if (rv != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File file = dialog.getSelectedFile();
+        if (!file.isFile()) {
+            file = new File(dialog.getSelectedFile().getAbsolutePath() + ".ngs");
+            if (!file.isFile()) {
+                // not a valid save, abort
+                JOptionPane.showMessageDialog(this, "Nightgames save file not found", "File not found",
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        new Global().load(file);
+    }
+
+    // TODO: Make these buttons keyable
+    private class NextButton extends JButton {
+
+        private static final long serialVersionUID = 6773730244369679822L;
+        private Combat combat;
+
+        public NextButton(Combat combat) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.combat = combat;
+            setText("Next");
+            addActionListener(arg0 -> {
+                clearCommand();
+                if (GUI.NextButton.this.combat.phase == 0) {
+                    GUI.NextButton.this.combat.clear();
+                    clearText();
+                    GUI.NextButton.this.combat.turn();
+                } else if (GUI.NextButton.this.combat.phase == 2) {
+                    clearCommand();
+                    if (!GUI.NextButton.this.combat.end()) {
+                        endCombat();
+                    }
+                }
+            });
+        }
+    }
+    /*
     private KeyableButton nextButton(Combat combat) {
         return new RunnableButton("Next", () -> {
             clearCommand();
             combat.turn();
         });
     }
+    */
 
-    private KeyableButton eventButton(Activity event, String choice, String tooltip) {
-        RunnableButton button = new RunnableButton(choice, () -> {
-            event.visit(choice);
-        });
-        if (tooltip != null) {
-        	button.getButton().setToolTipText(tooltip);
+    private class EventButton extends JButton {
+
+        private static final long serialVersionUID = 7130158464211753531L;
+        protected Activity event;
+        protected String choice;
+
+        public EventButton(Activity event, String choice) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.event = event;
+            this.choice = choice;
+            setText(choice);
+            addActionListener(arg0 -> GUI.EventButton.this.event.visit(GUI.EventButton.this.choice));
         }
-        return button;
     }
 
-    private KeyableButton itemButton(Activity event, Loot i) {
-        RunnableButton button = new RunnableButton(Global.capitalizeFirstLetter(i.getName()), () -> {
-            event.visit(i.getName());
-        });
-        button.getButton().setToolTipText(i.getDesc());
-        return button;
+    private class ItemButton extends GUI.EventButton {
+
+        private static final long serialVersionUID = 3200753975433797292L;
+
+        public ItemButton(Activity event, Item i) {
+            super(event, i.getName());
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setToolTipText(i.getDesc());
+        }
+
+        public ItemButton(Activity event, Clothing i) {
+            super(event, i.getName());
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setToolTipText(i.getToolTip());
+        }
     }
 
-    private KeyableButton attributeButton(Attribute att) {
-        RunnableButton button = new RunnableButton(att.name(), () -> {
-            clearTextIfNeeded();
-            Global.getPlayer().mod(att, 1);
-            Global.getPlayer().availableAttributePoints -= 1;
-            refresh();
-            ding();
-        });
-        return button;
+    private class AttributeButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8860455413688200054L;
+        private Attribute att;
+
+        public AttributeButton(Attribute att) {
+            super();
+            Player player = Global.global.human;
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.att = att;
+            setText(att.name());
+            addActionListener(arg0 -> {
+                clearTextIfNeeded();
+                player.mod(GUI.AttributeButton.this.att, 1);
+                player.availableAttributePoints -= 1;
+                refresh();
+                ding();
+            });
+        }
     }
 
-    private KeyableButton featButton(Trait trait) {
-        RunnableButton button = new RunnableButton(trait.toString(), () -> {
-            clearTextIfNeeded();
-            Global.gui().message("Gained feat: " + trait.toString());
-            Global.getPlayer().add(trait);
-            Global.gui().message(Global.gainSkills(Global.getPlayer()));
-            Global.getPlayer().traitPoints -= 1;
-            refresh();
-            ding();
-        });
-        button.getButton().setToolTipText(trait.getDesc());
-        return button;
+    private class FeatButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 4576009707142466815L;
+        private Trait feat;
+
+        public FeatButton(Trait feat) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.feat = feat;
+            setText(feat.toString());
+            setToolTipText(feat.getDesc());
+            addActionListener(arg0 -> {
+                Player player = Global.global.human;
+                player.add(FeatButton.this.feat);
+                clearTextIfNeeded();
+                Global.global.gui().message("Gained feat: " + FeatButton.this.feat);
+                Global.global.gui().message(Global.global.gainSkills(player));
+                player.traitPoints -= 1;
+                refresh();
+                ding();
+            });
+        }
     }
 
-    private KeyableButton skipFeatButton() {
-        RunnableButton button = new RunnableButton("Skip", () -> {
-            skippedFeat = true;
-            clearTextIfNeeded();
-            ding();
-        });
-        button.getButton().setToolTipText("Save the trait point for later.");
-        return button;
+    private class SkipFeatButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -4949332486895844480L;
+
+        public SkipFeatButton() {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setText("Skip");
+            setToolTipText("Save the trait point for later.");
+            addActionListener(arg0 -> {
+                skippedFeat = true;
+                clearTextIfNeeded();
+                ding();
+            });
+        }
     }
 
-    private KeyableButton interveneButton(IEncounter enc, Character assist) {
-        RunnableButton button = new RunnableButton("Help " + assist.getName(), () -> {
-            enc.intrude(Global.getPlayer(), assist);
-        });
-        return button;
+    private class InterveneButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 7410615523447227147L;
+        private IEncounter enc;
+        private Character assist;
+
+        public InterveneButton(IEncounter enc2, Character assist) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.enc = enc2;
+            this.assist = assist;
+            setText("Help " + assist.name());
+            addActionListener(arg0 -> GUI.InterveneButton.this.enc
+                            .intrude(Global.global.human, GUI.InterveneButton.this.assist));
+        }
     }
 
-    private KeyableButton encounterButton(String label, IEncounter enc, Character target, Encs choice) {
-        RunnableButton button = new RunnableButton(label, () -> {
-            enc.parse(choice, Global.getPlayer(), target);
-            Global.getMatch().resume();
-        });
-        return button;
+     // TODO: Need a "Watch them fight" button
+
+    private class ActivityButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -4459591680742071519L;
+        private Activity act;
+
+        public ActivityButton(Activity act) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            this.act = act;
+            setText(act.toString());
+            addActionListener(arg0 -> GUI.ActivityButton.this.act.visit("Start"));
+        }
     }
 
-    private KeyableButton encounterButton(String label, IEncounter enc, Character target, Encs choice, Trap trap) {
-        RunnableButton button = new RunnableButton(label, () -> {
-            enc.parse(choice, Global.getPlayer(), target, trap);
-            Global.getMatch().resume();
-        });
-        return button;
+    private class SleepButton extends JButton {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1669023447753258615L;
+
+        public SleepButton() {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setText("Go to sleep");
+            addActionListener(arg0 -> Global.global.startDay());
+        }
     }
 
-    private KeyableButton watchButton(IEncounter enc) {
-        RunnableButton button = new RunnableButton("Watch them fight", () -> {
-            enc.watch();
-        });
-        return button;
+
+    @SuppressWarnings("unused") private class MatchButton extends JButton {
+
+        /**
+         *
+         */
+        private static final long serialVersionUID = 3899760251122030064L;
+
+        public MatchButton() {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setText("Start the match");
+            addActionListener(arg0 -> Global.global.setUpMatch(new NoModifier()));
+        }
     }
 
-    private KeyableButton activityButton(Activity act) {
-        RunnableButton button = new RunnableButton(act.toString(), () -> {
-            act.visit("Start");
-        });
-        return button;
+    private class LocatorButton extends JButton {
+
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 8284888109704181827L;
+
+        public LocatorButton(final Action event, final String choice, final Character self) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setText(choice);
+            addActionListener(evt -> ((Locate) event).handleEvent(self, choice));
+        }
     }
 
-    private KeyableButton sleepButton() {
-        RunnableButton button = new RunnableButton("Go to sleep", () -> {
-            Global.startDay();
-        });
-        return button;
-    }
+    private class PageButton extends JButton {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1291939812301193206L;
+        private int page;
 
-    private KeyableButton matchButton() {
-        RunnableButton button = new RunnableButton("Start the match", () -> {
-            Global.setUpMatch(new NoModifier());
-        });
-        return button;
-    }
-
-    private KeyableButton locatorButton(final Action event, final String choice, final Character self) {
-        RunnableButton button = new RunnableButton(choice, () -> {
-            ((Locate) event).handleEvent(self, choice);
-        });
-        return button;
-    }
-
-    private KeyableButton combatSceneButton(String label, Combat c, nightgames.characters.Character npc, CombatSceneChoice choice) {
-        RunnableButton button = new RunnableButton(label, () -> {
-            c.write("<br/>");
-            choice.choose(c, npc);
-            c.updateMessage();
-            Global.gui().next(c);
-        });
-        return button;
+        public PageButton(String label, int page) {
+            super();
+            setFont(new Font("Baskerville Old Face", 0, 18));
+            setText(label);
+            this.page = page;
+            addActionListener(arg0 -> {
+                commandPanel.removeAll();
+                showSkills(PageButton.this.page);
+            });
+        }
     }
 
     public void changeClothes(Character player, Activity event, String backOption) {
@@ -1570,7 +1649,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void removeClosetGUI() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("remove closet gui");
         }
         clothesPanel.removeAll();
@@ -1579,7 +1658,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void systemMessage(String string) {
-        if (Global.checkFlag(Flag.systemMessages)) {
+        if (Global.global.checkFlag(Flag.systemMessages)) {
             message(string);
         }
     }

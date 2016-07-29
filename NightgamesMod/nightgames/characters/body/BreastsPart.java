@@ -1,7 +1,6 @@
 package nightgames.characters.body;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -42,7 +41,7 @@ public enum BreastsPart implements BodyPart {
     @Override
     public void describeLong(StringBuilder b, Character c) {
         if (c.hasPussy() || size > 0) {
-            b.append(Global.capitalizeFirstLetter(describe(c, true)));
+            b.append(Global.global.capitalizeFirstLetter(describe(c, true)));
             b.append(" adorn " + c.nameOrPossessivePronoun() + " chest.");
         }
     }
@@ -60,13 +59,13 @@ public enum BreastsPart implements BodyPart {
     public String describe(Character c, boolean forceAdjective) {
         if (c.hasPussy() || size > 0) {
             if (forceAdjective) {
-                boolean first = Global.random(2) == 0;
-                boolean second = first ? Global.random(2) == 0 : true;
-                return (first ? desc + ' ' : "") + (second ? name + ' ' : "")
-                                + synonyms[Global.random(synonyms.length)];
+                boolean first = Global.global.random(2) == 0;
+                boolean second = first ? Global.global.random(2) == 0 : true;
+                return (first ? desc + ' ' : "") + (second ? name + ' ' : "") + synonyms[Global.global
+                                .random(synonyms.length)];
             } else {
-                return Global.maybeString(desc + ' ') + Global.maybeString(name + ' ')
-                                + synonyms[Global.random(synonyms.length)];
+                return Global.global.maybeString(desc + ' ') + Global.global.maybeString(name + ' ')
+                                + synonyms[Global.global.random(synonyms.length)];
             }
         } else {
             if (c.get(Attribute.Power) > 25) {
@@ -176,7 +175,7 @@ public enum BreastsPart implements BodyPart {
 
     @Override
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
-        return Math.max(5, size) + Global.random(Math.min(0, size - 4));
+        return Math.max(5, size) + Global.global.random(Math.min(0, size - 4));
     }
 
     @Override
@@ -220,42 +219,42 @@ public enum BreastsPart implements BodyPart {
                 if (addictionLevel < Addiction.LOW_THRESHOLD) {
                     // not addicted
                     c.write(opponent,
-                                    Global.format("{self:NAME-POSSESSIVE} milk makes the blood surge from {other:name-possessive} head into {other:possessive} crotch, leaving {other:direct-object} light-headed and horny",
+                                    Global.global.format("{self:NAME-POSSESSIVE} milk makes the blood surge from {other:name-possessive} head into {other:possessive} crotch, leaving {other:direct-object} light-headed and horny",
                                                     self, opponent));
                 } else if (addictionLevel < .3f) {
                     // starting addiction
                     c.write(opponent,
-                                    Global.format("{self:NAME-POSSESSIVE} milk seems sweeter than usual. While {other:subject} know from experience that {self:possessive} saccharine cream is a powerful aphrodisiac, {other:pronoun} can't but help drinking down more.",
+                                    Global.global.format("{self:NAME-POSSESSIVE} milk seems sweeter than usual. While {other:subject} know from experience that {self:possessive} saccharine cream is a powerful aphrodisiac, {other:pronoun} can't but help drinking down more.",
                                                     self, opponent));
                 } else if (addictionLevel < .45f) {
                     // addicted
                     c.write(opponent,
-                                    Global.format("As Cassie's milk dribbles down her breasts, you awake to a powerful need for her cream. Ignoring the potential aphrodisiac effectes, you quickly capture her nipples in your lips and relieve your parched throat with her delicious milk.",
+                                    Global.global.format("As Cassie's milk dribbles down her breasts, you awake to a powerful need for her cream. Ignoring the potential aphrodisiac effectes, you quickly capture her nipples in your lips and relieve your parched throat with her delicious milk.",
                                                     self, opponent));
                 } else if (addictionLevel < Addiction.HIGH_THRESHOLD) {
                     // dependent
                     c.write(opponent,
-                                    Global.format("{other:NAME} desperately {other:action:suck|sucks} at {self:name-possessive} milky teats as soon as they're available. {other:POSSESSIVE} burning need to imbibe {self:possessive} sweet milk is overpowering any other thoughts. "
+                                    Global.global.format("{other:NAME} desperately {other:action:suck|sucks} at {self:name-possessive} milky teats as soon as they're available. {other:POSSESSIVE} burning need to imbibe {self:possessive} sweet milk is overpowering any other thoughts. "
                                                     + "{self:SUBJECT} smiles at {other:direct-object} and gently cradles {other:possessive} head, rocking {other:direct-object} back and forth while {other:subject} drink. "
                                                     + "The warm milk settles in {other:possessive} belly, slowly setting {other:possessive} body on fire with arousal.",
                                     self, opponent));
                 } else {
                     // enslaved
                     c.write(opponent,
-                                    Global.format("{other:SUBJECT} slavishly wrap {other:possessive} lips around {self:name-possessive} immaculate teats and start suckling. "
+                                    Global.global.format("{other:SUBJECT} slavishly wrap {other:possessive} lips around {self:name-possessive} immaculate teats and start suckling. "
                                                     + "{other:POSSESSIVE} vision darkens around the edges and {other:possessive} world is completely focused on draining {self:possessive} wonderful breasts. "
                                                     + "{self:SUBJECT} smiles at {other:direct-object} and gently cradles {other:possessive} head, rocking {other:direct-object} back and forth while {other:subject} drink. "
                                                     + "The warm milk settles in {other:possessive} belly, slowly setting {other:possessive} body on fire with arousal.",
                                     self, opponent));
-    
+
                 }
                 if (addiction != null)
                     opponent.temptNoSkill(c, self, this, (int) (15 + addiction.getMagnitude() * 35));
-    
+
                 if (opponent.is(Stsflag.magicmilkcraving)) {
                     // temporarily relieve craving
                     addiction.alleviateCombat(Addiction.LOW_INCREASE);
-    
+
                 }
                 if (c.getCombatantData(opponent) != null) {
                     int timesDrank = c.getCombatantData(opponent)
@@ -267,7 +266,7 @@ public enum BreastsPart implements BodyPart {
             }
             if (self.has(Trait.sedativecream)) {
                 c.write(opponent,
-                                Global.format("The power seems to leave {other:name-possessive} body as {other:pronoun-action:sip|sips} {self:possessive} cloying cream.",
+                                Global.global.format("The power seems to leave {other:name-possessive} body as {other:pronoun-action:sip|sips} {self:possessive} cloying cream.",
                                                 self, opponent));
                 opponent.weaken(c, opponent.getStamina().max() / 10);
                 opponent.add(c, new Abuff(opponent, Attribute.Power, -Global.random(1, 3), 20));

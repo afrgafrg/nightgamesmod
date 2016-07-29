@@ -1,10 +1,6 @@
 package nightgames.status;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -15,6 +11,9 @@ import nightgames.skills.FootWorship;
 import nightgames.skills.Masturbate;
 import nightgames.stance.Engulfed;
 import nightgames.stance.Kneeling;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Parasited extends Status {
     private Character other;
@@ -38,7 +37,7 @@ public class Parasited extends Status {
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return Global.format(
+        return Global.global.format(
                         "{other:SUBJECT-ACTION:have|has} planted a part of {other:reflective} in {self:name-possessive} head!\n", affected, other);
     }
 
@@ -66,53 +65,51 @@ public class Parasited extends Status {
         if (time >= 3) {
             if (stage < 3) {
                 stage = 3;
-                Global.gui().message(c, other,
-                                Global.format("Suddenly, {self:pronoun-action:hear|hears} a disembodied but familiar voice. \"Testing... testing... Good, looks like it worked.\"",
+                Global.global.gui().message(c, other, Global.global.format(
+                                "Suddenly, {self:pronoun-action:hear|hears} a disembodied but familiar voice. \"Testing... testing... Good, looks like it worked.\"",
                                 affected, other));
-                Global.gui().message(c, affected,
-                                Global.format("{self:SUBJECT}... {self:action:seem|seems} to be hearing {other:name-possessive} voice inside {self:possessive} head. That's not good.",
+                Global.global.gui().message(c, affected, Global.global.format(
+                                "{self:SUBJECT}... {self:action:seem|seems} to be hearing {other:name-possessive} voice inside {self:possessive} head. That's not good.",
                                 affected, other));
-                Global.gui().message(c, other,
-                                Global.format("{other:NAME} gives {self:name-do} a satisfied smile and {other:possessive} disembodied voice echoes again inside {self:possessive} head, \"{self:NAME}, don't worry... I have connected myself with your brain... We will have so much fun together...\"",
+                Global.global.gui().message(c, other, Global.global.format(
+                                "{other:NAME} gives {self:name-do} a satisfied smile and {other:possessive} disembodied voice echoes again inside {self:possessive} head, \"{self:NAME}, don't worry... I have connected myself with your brain... We will have so much fun together...\"",
                                 affected, other));
             }
-            switch(Global.random(8)) {
+            switch (Global.global.random(8)) {
                 case 0:
-                    Global.gui().message(c, other,
-                                    Global.format("\"...You will cum for me...\"",
+                    Global.global.gui().message(c, other, Global.global.format("\"...You will cum for me...\"",
                                     affected, other));
-                    Global.gui().message(c, affected,
-                                    Global.format("With absolutely no warning, {self:subject-action:feel|feels} an incredible orgasm rip through {self:possessive} body.",
+                    Global.global.gui().message(c, affected, Global.global.format(
+                                    "With absolutely no warning, {self:subject-action:feel|feels} an incredible orgasm rip through {self:possessive} body.",
                                     affected, other));
-                    BodyPart part = Global.pickRandom(c.getStance().partsFor(c, affected)).orElse(affected.body.getRandomGenital());
-                    BodyPart otherPart = Global.pickRandom(c.getStance().partsFor(c, other)).orElse(other.body.getRandom("skin"));
+                    BodyPart part = Global.global.pickRandom(c.getStance().partsFor(c, affected))
+                                    .orElse(affected.body.getRandomGenital());
+                    BodyPart otherPart = Global.global.pickRandom(c.getStance().partsFor(c, other))
+                                    .orElse(other.body.getRandom("skin"));
                     affected.doOrgasm(c, other, part, otherPart);
                     break;
                 case 1:
-                    Global.gui().message(c, other,
-                                    Global.format("\"...Give yourself to me...\"",
+                    Global.global.gui().message(c, other, Global.global.format("\"...Give yourself to me...\"",
                                     affected, other));
-                    Global.gui().message(c, affected,
-                                    Global.format("With no input from {self:possessive} consciousness, {self:name-possessive} body mechanically walks up to {self:name-possessive} body and presses itself into {other:possessive} slime. While immobilized by {self:possessive} inability to send signals through {self:possessive} locomotive nerves, {self:name-possessive} body slowly sinks into {other:name-possessive} crystal blue body.",
+                    Global.global.gui().message(c, affected, Global.global.format(
+                                    "With no input from {self:possessive} consciousness, {self:name-possessive} body mechanically walks up to {self:name-possessive} body and presses itself into {other:possessive} slime. While immobilized by {self:possessive} inability to send signals through {self:possessive} locomotive nerves, {self:name-possessive} body slowly sinks into {other:name-possessive} crystal blue body.",
                                     affected, other));
                     c.setStance(new Engulfed(other, affected));
                     affected.add(c, new Frenzied(affected, 2));
                     break;
                 case 2:
                 case 3:
-                    Global.gui().message(c, other,
-                                    Global.format("\"...You will please me...\"",
+                    Global.global.gui().message(c, other, Global.global.format("\"...You will please me...\"",
                                     affected, other));
-                    Global.gui().message(c, affected,
-                                    Global.format("{self:SUBJECT-ACTION:feel|feels} an immense need to service {self:NAME}!",
+                    Global.global.gui().message(c, affected,
+                                    Global.global.format("{self:SUBJECT-ACTION:feel|feels} an immense need to service {self:NAME}!",
                                     affected, other));
                     c.getRandomWorshipSkill(affected, other).orElse(new FootWorship(affected)).resolve(c, other);
                     break;
                 case 4:
                 case 5:
                     if (!c.getStance().dom(affected) && !c.getStance().prone(affected)) {
-                        Global.gui().message(c, other,
-                                        Global.format("\"...You will kneel for me...\"",
+                        Global.global.gui().message(c, other, Global.global.format("\"...You will kneel for me...\"",
                                         affected, other));
                         c.setStance(new Kneeling(other, affected));
                         break;
@@ -120,11 +117,10 @@ public class Parasited extends Status {
                 case 6:
                 case 7:
                 default:
-                    Global.gui().message(c, other,
-                                    Global.format("\"...You will pleasure yourself...\"",
+                    Global.global.gui().message(c, other, Global.global.format("\"...You will pleasure yourself...\"",
                                     affected, other));
-                    Global.gui().message(c, affected,
-                                    Global.format("{self:name-possessive} hands involunarily reach into {self:possessive} crotch and start masturbating!",
+                    Global.global.gui().message(c, affected, Global.global.format(
+                                    "{self:name-possessive} hands involunarily reach into {self:possessive} crotch and start masturbating!",
                                     affected, other));
                     (new Masturbate(affected)).resolve(c, other);
             }
@@ -132,31 +128,32 @@ public class Parasited extends Status {
             if (stage < 2) {
                 stage = 2;
                 if (!c.shouldAutoresolve())
-                Global.gui().message(c, affected,
-                                Global.format("The parasite inside {self:subject} starts moving again. After a long journey, it has somehow reached inside {self:possessive} skull. Even though that part of {self:possessive} body should have no nerves, {self:pronoun-action:swear|swears} {self:pronoun} can feel its cold pseudopods integrating themselves with {self:possessive} brain.",
+                    Global.global.gui().message(c, affected, Global.global.format(
+                                    "The parasite inside {self:subject} starts moving again. After a long journey, it has somehow reached inside {self:possessive} skull. Even though that part of {self:possessive} body should have no nerves, {self:pronoun-action:swear|swears} {self:pronoun} can feel its cold pseudopods integrating themselves with {self:possessive} brain.",
                                 affected, other));
             }
             if (!c.shouldAutoresolve())
-                Global.gui().message(c, affected,
-                                Global.format("{self:NAME-POSSESSIVE} thoughts slow down even further. It's becoming difficult to remember why {self:pronoun-action:are|is} even fighting in the first place.",
+                Global.global.gui().message(c, affected, Global.global.format(
+                                "{self:NAME-POSSESSIVE} thoughts slow down even further. It's becoming difficult to remember why {self:pronoun-action:are|is} even fighting in the first place.",
                                                 affected, other));
             affected.loseWillpower(c, 2);
         } else if (time >= 1) {
             if (stage < 1) {
                 stage = 1;
                 if (!c.shouldAutoresolve())
-                Global.gui().message(c, affected,
-                                Global.format("The slimey parasite inside {self:name-possessive} starts moving again. {self:PRONOUN} can feel it crawling through {self:possessive} head.",
+                    Global.global.gui().message(c, affected, Global.global.format(
+                                    "The slimey parasite inside {self:name-possessive} starts moving again. {self:PRONOUN} can feel it crawling through {self:possessive} head.",
                                                 affected, other));
             }
             if (!c.shouldAutoresolve())
-            Global.gui().message(c, affected,
-                            Global.format("{self:NAME-POSSESSIVE} thoughts slow down. Somehow the parasite is sapping {self:possessive} will to fight.",
+                Global.global.gui().message(c, affected, Global.global.format(
+                                "{self:NAME-POSSESSIVE} thoughts slow down. Somehow the parasite is sapping {self:possessive} will to fight.",
                                             affected, other));
             affected.loseWillpower(c, 1);
         } else {
             if (!c.shouldAutoresolve())
-            Global.gui().message(c, affected, Global.format("A part of {other:name-possessive} slime is lodged inside {self:name-possessive} head. It doesn't feel too uncomfortable, but {self:pronoun-action:are|is} scared of the implications.",
+                Global.global.gui().message(c, affected, Global.global.format(
+                                "A part of {other:name-possessive} slime is lodged inside {self:name-possessive} head. It doesn't feel too uncomfortable, but {self:pronoun-action:are|is} scared of the implications.",
                             affected, other));
             affected.emote(Emotion.desperate, 5);
             affected.emote(Emotion.nervous, 5);

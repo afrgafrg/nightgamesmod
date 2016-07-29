@@ -1,28 +1,18 @@
 package nightgames.start;
 
-import static nightgames.start.ConfigurationUtils.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import nightgames.characters.Attribute;
-import nightgames.characters.Character;
-import nightgames.characters.CharacterSex;
-import nightgames.characters.Growth;
-import nightgames.characters.Trait;
+import nightgames.characters.*;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
 import nightgames.json.JsonUtils;
+
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
+import static nightgames.start.ConfigurationUtils.*;
 
 public abstract class CharacterConfiguration {
 
@@ -118,7 +108,7 @@ public abstract class CharacterConfiguration {
 
     private static void modMeters(Character character, int levels) {
         Growth growth = character.getGrowth();
-        boolean hard = Global.checkFlag(Flag.hardmode);
+        boolean hard = Global.global.checkFlag(Flag.hardmode);
         for (int i = 0; i < levels; i++) {
             character.getStamina().gain(growth.stamina);
             character.getArousal().gain(growth.arousal);

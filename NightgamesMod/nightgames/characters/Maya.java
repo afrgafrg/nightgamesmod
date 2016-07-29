@@ -272,7 +272,7 @@ public class Maya extends BasePersonality {
     public String draw(Combat c, Result flag) {
         Character target = c.getOpponent(character);
         if (target.human()) {
-            Global.flag(Flag.Clue1);
+            Global.global.flag(Flag.Clue1);
         }
         return "You've got her, you're sure of it. Maya let her guard down long enough "
                         + "for you to get her exactly where you want her. She falls to her hands"

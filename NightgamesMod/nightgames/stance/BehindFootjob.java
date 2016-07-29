@@ -11,7 +11,7 @@ public class BehindFootjob extends AbstractBehindStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:are|is} holding {other:name-do} from behind with {self:possessive} legs wrapped around {other:direct-object}",
                         top, bottom);
     }
@@ -93,7 +93,7 @@ public class BehindFootjob extends AbstractBehindStance {
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
-            c.write(bottom, Global.format(
+            c.write(bottom, Global.global.format(
                             "{self:SUBJECT-ACTION:summon what little willpower you have left and grab|grabs} {other:name-possessive} feet and pull them off {self:name-possessive} crotch. Taking advantage of the momentum, {self:subject} push {other:direct-object} back with {self:name-possessive} body and hold {other:direct-object} down while sitting on top of {other:direct-object}.",
                             bottom, top));
         }

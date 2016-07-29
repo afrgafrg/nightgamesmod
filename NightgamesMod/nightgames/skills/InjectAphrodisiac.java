@@ -55,13 +55,13 @@ public class InjectAphrodisiac extends Skill {
     }
 
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "You quickly grab one of your syringes full of potent aphrodisiac before grabbing {other:name-do} and injecting {other:direct-object} with its contents. After you do so you see a bright flush spread across {other:possessive} face and {other:possessive} breathing picks up.",
                         getSelf(), target);
     }
 
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT} grins as {self:pronoun} flashes a hypodermic needle filled with light purple liquid. {other:SUBJECT-ACTION:gasp|gasps} as {self:pronoun} grab {other:possessive} arm before jabbing {other:direct-object} with the needle skillfully, pushing the plunger down to unload its cargo. A warmth floods through {other:name-possessive} body as the drug begins to take effect. It was an aphrodisiac!",
                         getSelf(), target);
     }

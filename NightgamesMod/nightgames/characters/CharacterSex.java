@@ -31,7 +31,7 @@ public enum CharacterSex {
 
     @Override
     public String toString() {
-        return Global.capitalizeFirstLetter(desc);
+        return Global.global.capitalizeFirstLetter(desc);
     }
 
     public boolean considersItselfFeminine() {

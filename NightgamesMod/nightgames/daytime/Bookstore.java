@@ -1,11 +1,11 @@
 package nightgames.daytime;
 
-import java.util.Map;
-
 import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.Item;
+
+import java.util.Map;
 
 public class Bookstore extends Store {
     public Bookstore(Character player) {
@@ -17,13 +17,13 @@ public class Bookstore extends Store {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.basicStores);
+        return Global.global.checkFlag(Flag.basicStores);
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
-        Global.gui().clearCommand();
+        Global.global.gui().clearText();
+        Global.global.gui().clearCommand();
         if (choice.equals("Start")) {
             acted = false;
         }
@@ -33,21 +33,21 @@ public class Bookstore extends Store {
         }
         checkSale(choice);
         if (player.human()) {
-            Global.gui().message(
+            Global.global.gui().message(
                             "In addition to textbooks, the campus bookstore sells assorted items for everyday use.");
             Map<Item, Integer> MyInventory = this.player.getInventory();
             for (Item i : stock.keySet()) {
                 if (MyInventory.get(i) == null || MyInventory.get(i) == 0) {
-                    Global.gui().message(i.getName() + ": $" + i.getPrice());
+                    Global.global.gui().message(i.getName() + ": $" + i.getPrice());
                 } else {
-                    Global.gui().message(
+                    Global.global.gui().message(
                                     i.getName() + ": $" + i.getPrice() + " (you have: " + MyInventory.get(i) + ")");
                 }
             }
-            Global.gui().message("You have : $" + player.money + " to spend.");
+            Global.global.gui().message("You have : $" + player.money + " to spend.");
 
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            Global.global.gui().choose(this, "Leave");
         }
     }
 

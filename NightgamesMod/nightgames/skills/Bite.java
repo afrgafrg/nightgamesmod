@@ -9,7 +9,6 @@ import nightgames.global.Global;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
-@SuppressWarnings("unused")
 public class Bite extends Skill {
 
     public Bite(Character self) {

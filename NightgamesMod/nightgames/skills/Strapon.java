@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
@@ -11,6 +9,8 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.status.Stsflag;
+
+import java.util.List;
 
 public class Strapon extends Skill {
 
@@ -46,9 +46,9 @@ public class Strapon extends Skill {
         List<Clothing> unequipped = getSelf().getOutfit().equip(Clothing.getByID("strapon"));
         if (unequipped.isEmpty()) {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.capitalizeFirstLetter(deal(c, 0, Result.normal, target)));
+                c.write(getSelf(), Global.global.capitalizeFirstLetter(deal(c, 0, Result.normal, target)));
             } else if (!target.is(Stsflag.blinded)) {
-                c.write(getSelf(), Global.capitalizeFirstLetter(receive(c, 0, Result.normal, target)));
+                c.write(getSelf(), Global.global.capitalizeFirstLetter(receive(c, 0, Result.normal, target)));
             } else {
                 printBlinded(c);
             }

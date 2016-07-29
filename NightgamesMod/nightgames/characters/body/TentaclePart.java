@@ -1,14 +1,14 @@
 package nightgames.characters.body;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import nightgames.characters.Character;
 import nightgames.characters.DummyCharacter;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TentaclePart extends GenericBodyPart {
     private static final BodyPartMod TentacleMod = () -> "TentacleMod";
@@ -38,7 +38,7 @@ public class TentaclePart extends GenericBodyPart {
         String type;
         ArrayList<String> availList = new ArrayList<String>(avail);
         if (avail.size() > 0) {
-            type = availList.get(Global.random(availList.size()));
+            type = availList.get(Global.global.random(availList.size()));
         } else {
             type = "back";
         }
@@ -68,7 +68,7 @@ public class TentaclePart extends GenericBodyPart {
     @Override
     public void describeLong(StringBuilder b, Character c) {
         if (printSynonym)
-            b.append("A " + Global.pickRandom(synonyms) + " of ");
+            b.append("A " + Global.global.pickRandom(synonyms) + " of ");
         else
             b.append("A ");
         b.append(describe(c));
@@ -92,8 +92,8 @@ public class TentaclePart extends GenericBodyPart {
     @Override
     public double applySubBonuses(Character self, Character opponent, BodyPart with, BodyPart target, double damage,
                     Combat c) {
-        if (with.isType(attachpoint) && Global.random(3) > -1) {
-            c.write(self, Global.format("Additionally, {self:name-possessive} " + fullDescribe(self)
+        if (with.isType(attachpoint) && Global.global.random(3) > -1) {
+            c.write(self, Global.global.format("Additionally, {self:name-possessive} " + fullDescribe(self)
                             + " take the opportunity to squirm against {other:name-possessive} "
                             + target.fullDescribe(opponent) + ".", self, opponent));
             opponent.body.pleasure(self, this, target, 5, c);

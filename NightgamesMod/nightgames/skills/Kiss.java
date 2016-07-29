@@ -56,7 +56,7 @@ public class Kiss extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = Global.random(6, 10);
+        int m = Global.global.random(6, 10);
         if (!target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.miss, target);
             return false;
@@ -71,7 +71,7 @@ public class Kiss extends Skill {
         }
         Result res = Result.normal;
         if (getSelf().get(Attribute.Seduction) >= 9) {
-            m += Global.random(4, 6);
+            m += Global.global.random(4, 6);
             res = Result.normal;
         } else {
             res = Result.weak;
@@ -99,7 +99,7 @@ public class Kiss extends Skill {
         if (res == Result.divine) {
             target.buildMojo(c, 50);
             target.heal(c, 100);
-            target.loseWillpower(c, Global.random(3) + 2, false);
+            target.loseWillpower(c, Global.global.random(3) + 2, false);
             target.add(c, new Lovestruck(target, getSelf(), 2));
             getSelf().usedAttribute(Attribute.Divinity, c, .5);
         }
@@ -158,7 +158,7 @@ public class Kiss extends Skill {
             return "You aggressively kiss " + target.name()
                             + " on the lips. It catches her off guard for a moment, but she soon responds approvingly.";
         } else {
-            switch (Global.random(4)) {
+            switch (Global.global.random(4)) {
                 case 0:
                     return "You pull " + target.name()
                                     + " close and capture her lips. She returns the kiss enthusiastically and lets out a soft noise of approval when you "
@@ -191,7 +191,7 @@ public class Kiss extends Skill {
                             getSelf().subject(), target.nameDirectObject(), target.pronoun(),
                             target.action("try", "tries"), getSelf().possessiveAdjective(),
                             target.possessiveAdjective(), getSelf().subject(), getSelf().possessiveAdjective(),
-                            target.nameOrPossessivePronoun(), target.possessiveAdjective(), 
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                             target.subjectAction("hold"), getSelf().reflectivePronoun());
         }
         if (modifier == Result.upgrade) {
@@ -206,8 +206,8 @@ public class Kiss extends Skill {
                             target.possessiveAdjective(), target.pronoun(), target.action("are", "is"),
                             Global.capitalizeFirstLetter(target.subjectAction("start")),
                             target.pronoun(), target.action("realize"), getSelf().subject(),
-                            target.directObject(), getSelf().possessiveAdjective(), 
-                            target.nameOrPossessivePronoun(), c.bothPossessive(target), 
+                            target.directObject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), c.bothPossessive(target),
                             Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
                             getSelf().nameOrPossessivePronoun(), target.directObject());
         }
@@ -226,7 +226,7 @@ public class Kiss extends Skill {
                             getSelf().subject(), getSelf().possessiveAdjective(),
                             target.human() ? "yours" : target.nameOrPossessivePronoun());
         } else {
-            switch (Global.random(3)) {
+            switch (Global.global.random(3)) {
                 case 0:
                     return String.format("%s grabs %s and kisses %s passionately on the mouth. "
                                     + "As %s for air, %s gently nibbles on %s bottom lip.",

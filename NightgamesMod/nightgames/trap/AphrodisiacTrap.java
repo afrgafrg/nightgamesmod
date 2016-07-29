@@ -28,18 +28,18 @@ public class AphrodisiacTrap extends Trap {
     public void trigger(Character target) {
         if (!target.check(Attribute.Perception, 20 + target.baseDisarm())) {
             if (target.human()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You spot a liquid spray trap in time to avoid setting it off. You carefully manage to disarm the trap and pocket the potion.");
                 target.gain(Item.Aphrodisiac);
                 target.location().remove(this);
             }
         } else {
             if (target.human()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 "There's a sudden spray of gas in your face and the room seems to get much hotter. Your dick goes rock-hard and you realize you've been "
                                                 + "hit with an aphrodisiac.");
             } else if (target.location().humanPresent()) {
-                Global.gui().message(
+                Global.global.gui().message(
                                 target.name() + " is caught in your trap and sprayed with aphrodisiac. She flushes bright red and presses a hand against her crotch. It seems like "
                                                 + "she'll start masturbating even if you don't do anything.");
             }

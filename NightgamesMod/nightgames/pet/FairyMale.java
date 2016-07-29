@@ -11,7 +11,7 @@ import nightgames.skills.petskills.FairyKick;
 import nightgames.skills.petskills.FairyShield;
 import nightgames.skills.petskills.FairyTease;
 
-public class FairyMale extends Pet {   
+public class FairyMale extends Pet {
     public FairyMale(Character owner) {
         this(owner, 2, 4);
     }

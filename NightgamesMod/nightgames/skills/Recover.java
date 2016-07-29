@@ -37,7 +37,7 @@ public class Recover extends Skill {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         c.setStance(new Neutral(getSelf(), target), getSelf(), true);
-        getSelf().heal(c, Global.random(3));
+        getSelf().heal(c, Global.global.random(3));
         return true;
     }
 

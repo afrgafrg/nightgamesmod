@@ -28,8 +28,8 @@ public class UseSemen extends Skill {
     public boolean resolve(Combat c, Character target) {
         Item used = Item.semen;
         boolean eventful = false;
-        c.write(getSelf(),
-                        Global.format("{self:SUBJECT-ACTION:take|takes} out a bottle of milky white semen and {self:action:gulp|gulps} it down in one breath.",
+        c.write(getSelf(), Global.global.format(
+                        "{self:SUBJECT-ACTION:take|takes} out a bottle of milky white semen and {self:action:gulp|gulps} it down in one breath.",
                                         getSelf(), target));
         for (ItemEffect e : used.getEffects()) {
             eventful = e.use(c, getSelf(), target, used) || eventful;

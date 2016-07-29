@@ -1,7 +1,6 @@
 package nightgames.status;
 
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
@@ -18,7 +17,7 @@ public class Feral extends Status {
     @Override
     public String describe(Combat c) {
         return String.format("%s seems beyond reason in %s feral lust.\n",
-                        Global.capitalizeFirstLetter(affected.subject()), affected.possessiveAdjective());
+                        Global.global.capitalizeFirstLetter(affected.subject()), affected.possessiveAdjective());
     }
 
     @Override
@@ -56,7 +55,7 @@ public class Feral extends Status {
             affected.removelist.add(this);
         }
         int ignoreOrgasmChance = Math.max(5, 10 - affected.get(Attribute.Animism) / 20);
-        if (Global.random(ignoreOrgasmChance) != 0) {
+        if (Global.global.random(ignoreOrgasmChance) != 0) {
             affected.addlist.add(new IgnoreOrgasm(affected, 0));
         }
         return 0;

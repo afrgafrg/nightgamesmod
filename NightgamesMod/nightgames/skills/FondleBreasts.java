@@ -27,7 +27,7 @@ public class FondleBreasts extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 6 + Global.random(4);
+        int m = 6 + Global.global.random(4);
         Result result = Result.normal;
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (target.breastsAvailable()) {

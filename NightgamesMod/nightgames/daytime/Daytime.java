@@ -1,7 +1,5 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
@@ -9,6 +7,8 @@ import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.status.addiction.Addiction;
+
+import java.util.ArrayList;
 
 public class Daytime {
     private ArrayList<Activity> activities;
@@ -21,24 +21,24 @@ public class Daytime {
         this.player = player;
         this.eventMgr = new DaytimeEventManager(player);
         buildActivities();
-        if (Global.checkFlag(Flag.metAlice)) {
-            if (Global.checkFlag(Flag.victory)) {
-                Global.unflag(Flag.AliceAvailable);
+        if (Global.global.checkFlag(Flag.metAlice)) {
+            if (Global.global.checkFlag(Flag.victory)) {
+                Global.global.unflag(Flag.AliceAvailable);
             } else {
-                Global.flag(Flag.AliceAvailable);
+                Global.global.flag(Flag.AliceAvailable);
             }
         }
-        if (Global.checkFlag(Flag.YuiLoyalty)) {
-            Global.flag(Flag.YuiAvailable);
+        if (Global.global.checkFlag(Flag.YuiLoyalty)) {
+            Global.global.flag(Flag.YuiAvailable);
         }
-        if (Global.checkFlag(Flag.YuiUnlocking)) {
-            Global.unflag(Flag.YuiUnlocking);
+        if (Global.global.checkFlag(Flag.YuiUnlocking)) {
+            Global.global.unflag(Flag.YuiUnlocking);
         }
         
         Global.unflag(Flag.threesome);
         time = 10;
         // do NPC day length
-        if (Global.getDate() % 7 == 6 || Global.getDate() % 7 == 0) {
+        if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
             daylength = 10;
         } else {
             daylength = 7;
@@ -46,10 +46,10 @@ public class Daytime {
     }
 
     private boolean morning() {
-        Global.gui()
+        Global.global.gui()
               .clearText();
         Global.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        Global.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(s -> Global.gui().message(s));
+        Global.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(s -> Global.global.gui().message(s));
         if (eventMgr.playMorningScene()) {
             time = 12;
             return true;
@@ -65,7 +65,7 @@ public class Daytime {
                                   + "know someone who sells it.\"</i> There's a click and the call ends.");
             player.rankup();
         } else if (player.getLevel() >= 20 && player.getRank() == 1) {
-            Global.gui()
+            Global.global.gui()
                   .message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
                                   + player.name()
                                   + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
@@ -76,7 +76,7 @@ public class Daytime {
             player.rankup();
             time = 15;
         } else if (player.getLevel() >= 30 && player.getRank() == 2) {
-            Global.gui()
+            Global.global.gui()
                   .message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
                                   + player.name() + ". Have you been keeping busy? You've been putting "
                                   + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
@@ -91,14 +91,14 @@ public class Daytime {
             player.rankup();
             time = 15;
         } else if (player.getLevel() / 10 > player.getRank()) {
-            Global.gui().message("You have advanced to rank " + ++player.rank + "!");
+            Global.global.gui().message("You have advanced to rank " + ++player.rank + "!");
             time = 15;
-        } else if (Global.getDate() % 7 == 6 || Global.getDate() % 7 == 0) {
-            Global.gui()
+        } else if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
+            Global.global.gui()
                   .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
             time = 12;
         } else {
-            Global.gui()
+            Global.global.gui()
                   .message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
             time = 15;
         }
@@ -114,22 +114,22 @@ public class Daytime {
             }
         }
         if (time < 22) {
-            Global.gui()
+            Global.global.gui()
                   .message("It is currently " + displayTime() + ". Your next match starts at 10:00pm.");
-            Global.gui()
+            Global.global.gui()
                   .refresh();
-            Global.gui()
+            Global.global.gui()
                   .clearCommand();
             if (eventMgr.playRegularScene())
                 return;
             for (Activity act : activities) {
                 if (act.known() && act.time() + time <= 22) {
-                    Global.gui()
+                    Global.global.gui()
                           .addActivity(act);
                 }
             }
         } else {
-            for (Character npc : Global.everyone()) {
+            for (Character npc : Global.global.everyone()) {
                 if (!npc.human() && npc instanceof NPC) {
                     if (npc.getLevel() / 10 > npc.getRank()) {
                         npc.rankup();
@@ -137,13 +137,13 @@ public class Daytime {
                     ((NPC) npc).daytime(daylength);
                 }
             }
-            Global.endDay();
+            Global.global.endDay();
 
             /*
-            if (Global.checkFlag(Flag.autosave)) {
-                Global.autoSave();
+            if (Global.global.checkFlag(Flag.autosave)) {
+                Global.global.autoSave();
             }
-            Global.decideMatchType()
+            Global.global.decideMatchType()
                   .buildPrematch(player);
             */
         }
@@ -166,16 +166,16 @@ public class Daytime {
         activities.add(new CassieTime(player));
         activities.add(new JewelTime(player));
         activities.add(new MaraTime(player));
-        if (Global.checkFlag(Flag.Kat)) {
+        if (Global.global.checkFlag(Flag.Kat)) {
             activities.add(new KatTime(player));
         }
         activities.add(new Closet(player));
         activities.add(new ClothingStore(player));
         activities.add(new Boutique(player));
-        if (Global.checkFlag(Flag.Reyka)) {
+        if (Global.global.checkFlag(Flag.Reyka)) {
             activities.add(new ReykaTime(player));
         }
-        if (Global.checkFlag(Flag.YuiLoyalty)) {
+        if (Global.global.checkFlag(Flag.YuiLoyalty)) {
             activities.add(new YuiTime(player));
         }
         activities.add(new MagicTraining(player));
@@ -205,17 +205,17 @@ public class Daytime {
             a = 100 - 2 * one.get(Attribute.Perception);
             b = 100 - 2 * two.get(Attribute.Perception);
         }
-        if (Global.random(100) >= a) {
+        if (Global.global.random(100) >= a) {
             one.mod(att, 1);
             if (one.human()) {
-                Global.gui()
+                Global.global.gui()
                       .message("<b>Your " + att + " has improved.</b>");
             }
         }
-        if (Global.random(100) >= b) {
+        if (Global.global.random(100) >= b) {
             two.mod(att, 1);
             if (two.human()) {
-                Global.gui()
+                Global.global.gui()
                       .message("<b>Your " + att + " has improved.</b>");
             }
         }

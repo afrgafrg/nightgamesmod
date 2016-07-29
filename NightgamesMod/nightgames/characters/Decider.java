@@ -173,8 +173,8 @@ public class Decider {
                     return act;
                 }
             }
-            String workshop = Global.checkFlag(Flag.FTC) ? "Cabin" : "Workshop";
-            Move path = character.findPath(Global.getMatch().gps(workshop));
+            String workshop = Global.global.checkFlag(Flag.FTC) ? "Cabin" : "Workshop";
+            Move path = character.findPath(Global.global.getMatch().gps(workshop));
             if (path != null) {
                 return path;
             }
@@ -205,7 +205,7 @@ public class Decider {
             tactic.addAll(available);
         }
         Action[] actions = tactic.toArray(new Action[tactic.size()]);
-        return actions[Global.random(actions.length)];
+        return actions[Global.global.random(actions.length)];
     }
 
     public static void visit(Character self) {
@@ -215,17 +215,17 @@ public class Decider {
         int max = 0;
         Character bff = null;
         if (!self.attractions.isEmpty()) {
-            for (String key : self.attractions.keySet()) {
-                Character friend = Global.getCharacterByType(key);
+            for (String friendType : self.attractions.keySet()) {
+                Character friend = Global.global.getCharacterByType(friendType);
                 if (self.getAttraction(friend) > max && !friend.human()) {
                     max = self.getAttraction(friend);
                     bff = friend;
                 }
             }
             if (bff != null) {
-                self.gainAffection(bff, Global.random(3) + 1);
-                bff.gainAffection(self, Global.random(3) + 1);
-                switch (Global.random(3)) {
+                self.gainAffection(bff, Global.global.random(3) + 1);
+                bff.gainAffection(self, Global.global.random(3) + 1);
+                switch (Global.global.random(3)) {
                     case 0:
                         Daytime.train(self, bff, Attribute.Power);
                     case 1:

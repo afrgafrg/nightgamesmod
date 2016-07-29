@@ -117,7 +117,7 @@ public class AnalProne extends AnalSexStance {
     public Position reverse(Combat c, boolean writeMessage) {
         if (top.has(Trait.strapped)) {
             if (writeMessage) {
-                c.write(bottom, Global.format(
+                c.write(bottom, Global.global.format(
                                 "As {other:subject-action:are|is} thrusting into {self:name-do} with {other:possessive} strapon, {self:subject-action:suddenly pull|suddenly pulls} {self:possessive} face up towards {other:direct-object}, and kisses {other:direct-object} deeply. "
                                                 + "Taking advantage of {other:possessive} surprise, {self:SUBJECT-ACTION:quickly pushes|quickly pushes} {other:direct-object} down and {self:action:pull|pulls} {other:possessive} fake cock out of {self:reflective}.",
                                 bottom, top));
@@ -125,7 +125,7 @@ public class AnalProne extends AnalSexStance {
             return new Mount(bottom, top);
         } else {
             if (writeMessage) {
-                c.write(bottom, Global.format(
+                c.write(bottom, Global.global.format(
                                 "As {other:subject-action:are|is} thrusting into {self:name-do}, {self:subject-action:suddenly pull|suddenly pulls} {self:possessive} face up towards {other:direct-object}, and kisses {other:direct-object} deeply. "
                                                 + "Taking advantage of {other:possessive} surprise, {self:SUBJECT-ACTION:quickly pushes|quickly pushes} {other:direct-object} down and {self:action:start|starts} fucking {other:direct-object} back on top of {other:direct-object}.",
                                                 bottom, top));

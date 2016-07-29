@@ -1,12 +1,12 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.global.Configuration;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+
+import java.util.ArrayList;
 
 public class Exercise extends Activity {
 
@@ -16,29 +16,29 @@ public class Exercise extends Activity {
 
     @Override
     public boolean known() {
-        return Global.checkFlag(Flag.metBroker);
+        return Global.global.checkFlag(Flag.metBroker);
     }
 
     @Override
     public void visit(String choice) {
-        Global.gui().clearText();
+        Global.global.gui().clearText();
         if (page == 0) {
-            Global.gui().next(this);
+            Global.global.gui().next(this);
             int gain = gainStamina(player);
             showScene(pickScene(gain));
             if (gain > 0) {
-                Global.gui().message("<b>Your maximum stamina has increased by " + gain + ".</b>");
+                Global.global.gui().message("<b>Your maximum stamina has increased by " + gain + ".</b>");
             }
         } else {
             done(true);
         }
     }
-    
+
     private int gainStamina(Character self) {
         int maximumStaminaForLevel = Configuration.getMaximumStaminaPossible(self);
-        int gain = 1 + Global.random(2);
+        int gain = 1 + Global.global.random(2);
         if (player.has(Trait.fitnessNut)) {
-            gain = gain + Global.random(2);
+            gain = gain + Global.global.random(2);
         }
         gain = Math.max(0, (int) (Math.min(maximumStaminaForLevel, self.getStamina().trueMax() + gain) - self.getStamina().trueMax()));
         self.getStamina().gain(gain);
@@ -53,40 +53,42 @@ public class Exercise extends Activity {
     private void showScene(Scene chosen) {
         switch (chosen) {
             case restricted:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You try exercising for a while, but you don't have too much to show for it. Maybe you need to gain some more real world experience?");
                 break;
             case basic1:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You're about halfway through your jog when a sudden downpour leaves you completely soaked. You squelch your way back to the dorm, looking like a drowned rat.");
                 break;
             case basic2:
-                Global.gui().message("You head to the campus gym and spend some time in a variety of exercises.");
+                Global.global.gui()
+                                .message("You head to the campus gym and spend some time in a variety of exercises.");
                 break;
             case basic3:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You decide to take a brief jog around campus to improve your strength and stamina.");
                 break;
             case fail1:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "Maybe you didn't stretch well enough before you started, but a few minutes into your run you feel like you've pulled a muscle in your leg. Better take a break rather than injure yourself before the match.");
                 break;
             case cassie1:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You head over to the campus gym and coincidentally run into Cassie there. <i>\"Hi. I'm not really much of a fitness enthusiast, but I need to get into better shape if I'm going to stay competitive.\"</i><br/>The two of you spend some time doing light exercise and chatting.");
 
-                Global.getNPC("Cassie").gainAffection(player, 1);
-                player.gainAffection(Global.getNPC("Cassie"), 1);
+                Global.global.getNPC("Cassie").gainAffection(player, 1);
+                player.gainAffection(Global.global.getNPC("Cassie"), 1);
                 break;
             case jewel1:
-                Global.gui().message(
+                Global.global.gui().message(
                                 "You're going for a run around the campus and run into Jewel doing the same. She makes an immediate beeline towards you. <i>\"You're not getting out of running today, no matter how tempting the alternative is. We're going to get some real exercise.\"</i> She pushes you a lot harder than you had planned and you're exhausted by the end of it, but you did manage to keep up with her.");
 
-                Global.getNPC("Jewel").gainAffection(player, 1);
-                player.gainAffection(Global.getNPC("Jewel"), 1);
+                Global.global.getNPC("Jewel").gainAffection(player, 1);
+                player.gainAffection(Global.global.getNPC("Jewel"), 1);
                 break;
             case yuiintro1:
-                Global.gui().message("For a change of pace, you decide to try a different jogging route today that takes you outside the campus. There's less foot traffic to worry about here, "
+                Global.global.gui()
+                                .message("For a change of pace, you decide to try a different jogging route today that takes you outside the campus. There's less foot traffic to worry about here, "
                         + "which gives you more opportunity to just take in your surroundings. It's a fairly nice area. There are lots of small shops around, but at this time of day, "
                         + "it's pretty quiet... at first.<br/><br/>"
                         + "You notice raised voices and, despite your better judgement, you take a detour to check it out. You notice a guy in his early twenties arguing with "
@@ -106,12 +108,13 @@ public class Exercise extends Activity {
                         + "you a better look at her lovely face. <i>\"I just moved here and I wasn't sure what to expect from the local culture. That man gave a bit of a poor first impression, "
                         + "but I'm glad to see there are also kind men like you.\"</i><br/><br/>"
                         + "She gives you a little bow before she walks away. After she's gone, you kinda regret not at getting at least her name. Oh well, maybe you'll run into her again.");
-                Global.flag(Flag.metYui);
-                Global.flag(Flag.YuiUnlocking);
-                Global.getNPC("Yui").gainAffection(player, 1);
+                Global.global.flag(Flag.metYui);
+                Global.global.flag(Flag.YuiUnlocking);
+                Global.global.getNPC("Yui").gainAffection(player, 1);
                 break;
             case yuiintro2:
-                Global.gui().message("As you jog around the campus, you stumble onto a wallet sitting on the ground. It's right next to a bench, so it probably fell out of the owner's pocket "
+                Global.global.gui()
+                                .message("As you jog around the campus, you stumble onto a wallet sitting on the ground. It's right next to a bench, so it probably fell out of the owner's pocket "
                         + "when he or she stood up. There's no one nearby who might have dropped it, but you're not "
                         + "particularly busy right now. Maybe you can figure out who the owner is and return it.<br/><br/>"
                         + "You look inside the wallet, which doesn't contain much. There's some cash, but you're not really tempted to take it. You're making plenty off the Games. There's a "
@@ -129,12 +132,13 @@ public class Exercise extends Activity {
                         + "trouble you needlessly after you've helped me so much. Besides, now that I have my ID back, I need to finish my registration.\"</i> She gives you a small, Japanese-style "
                         + "bow, but seems hesistant to leave right away. <i>\"This is the first time I've really regretted not owning a cell phone. If I ever buy one, I promise I'll give you my "
                         + "number.\"</i> She smiles brightly. <i>\"We've had two serendipitous meetings in such a short period of time. I'm sure we'll meet again soon.\"</i>");
-                Global.getNPC("Yui").gainAffection(player, 1);
-                Global.flag(Flag.YuiWalletReturned);
-                Global.flag(Flag.YuiUnlocking);
+                Global.global.getNPC("Yui").gainAffection(player, 1);
+                Global.global.flag(Flag.YuiWalletReturned);
+                Global.global.flag(Flag.YuiUnlocking);
                 break;
             case yuiintro3:
-                Global.gui().message("You take a jog around the campus. You find yourself thinking about the girl you encountered on a couple previous jogs, Yui. You haven't had any way to contact "
+                Global.global.gui()
+                                .message("You take a jog around the campus. You find yourself thinking about the girl you encountered on a couple previous jogs, Yui. You haven't had any way to contact "
                         + "her other than hoping to run into her by chance. Does she really not own a cell phone? She didn't seem to be lying. Aesop, being an information broker, could probably find "
                         + "out more about her, but it feels wrong to ask him to investigate someone unrelated to the Games just to satisfy your curiosity. That would be like hiring a private detective "
                         + "to look into a girl you barely know. Oh well, maybe you'll get lucky and run into her again.<br/><br/>"
@@ -175,7 +179,7 @@ public class Exercise extends Activity {
                         + "People will assume you're in a kinky relationship.<br/><br/>"
                         + "Yui blushes again, but looks determined. <i>\"Please let me call you Master. It's really important to me to show you my commitment. I'll... try not to say it in front of "
                         + "other people.\"</i> Her expression is too sincere to turn down. Fine, she can call you whatever she wants." );
-                Global.getNPC("Yui").gainAffection(player, 1);
+                Global.global.getNPC("Yui").gainAffection(player, 1);
                 Global.flag(Flag.YuiLoyalty);
                 break;
         }
@@ -183,14 +187,14 @@ public class Exercise extends Activity {
 
     private Scene pickScene(int gain) {
         ArrayList<Scene> available = new ArrayList<Scene>();
-        if(player.getRank()>=1&&!Global.checkFlag(Flag.metYui)){
+        if (player.getRank() >= 1 && !Global.global.checkFlag(Flag.metYui)) {
             available.add(Scene.yuiintro1);
         }
 
-        if(Global.checkFlag(Flag.metYui) && !Global.checkFlag(Flag.YuiWalletReturned) && !Global.checkFlag(Flag.YuiUnlocking)){
+        if(Global.global.checkFlag(Flag.metYui) && !Global.global.checkFlag(Flag.YuiWalletReturned) && !Global.global.checkFlag(Flag.YuiUnlocking)){
             available.add(Scene.yuiintro2);
         }
-        if(!Global.checkFlag(Flag.YuiLoyalty) && Global.checkFlag(Flag.YuiWalletReturned) && !Global.checkFlag(Flag.YuiUnlocking)){
+        if(!Global.global.checkFlag(Flag.YuiLoyalty) && Global.global.checkFlag(Flag.YuiWalletReturned) && !Global.global.checkFlag(Flag.YuiUnlocking)){
             available.add(Scene.yuiintro3);
         }
         if (gain == 0) {
@@ -200,14 +204,14 @@ public class Exercise extends Activity {
             available.add(Scene.basic1);
             available.add(Scene.basic2);
             available.add(Scene.basic3);
-            if (Global.getNPC("Cassie").getAffection(player) >= 5) {
+            if (Global.global.getNPC("Cassie").getAffection(player) >= 5) {
                 available.add(Scene.cassie1);
             }
-            if (Global.getNPC("Jewel").getAffection(player) >= 5 && player.getStamina().max() >= 35) {
+            if (Global.global.getNPC("Jewel").getAffection(player) >= 5 && player.getStamina().max() >= 35) {
                 available.add(Scene.jewel1);
             }
         }
-        return available.get(Global.random(available.size()));
+        return available.get(Global.global.random(available.size()));
     }
 
     private static enum Scene {

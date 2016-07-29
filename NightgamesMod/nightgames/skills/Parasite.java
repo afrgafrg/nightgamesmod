@@ -64,7 +64,8 @@ public class Parasite extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("Taking advantage of {other:name-possessive} inability to respond, {self:subject} leans in close to {other:possessive} face and plunges {self:possessive} abnormally long translucent tongue into {other:possessive} ear! "
+        return Global.global
+                        .format("Taking advantage of {other:name-possessive} inability to respond, {self:subject} leans in close to {other:possessive} face and plunges {self:possessive} abnormally long translucent tongue into {other:possessive} ear! "
                         + "{other:PRONOUN-ACTION:moan|moans} as {self:pronoun} briefly explores the folds outside before diving inside {other:possessive} ear canal. Strangely enough {other:subject-action:don't|doesn't} feel anything unpleasant when {self:name-possessive} "
                         + "slimey appendage snakes past {other:possessive} eardrum and embeds itself into {other:possessive} inner ear. Finally, {self:subject} retracts {self:possessive} tongue from {other:direct-object} with an audiable pop and gives {other:direct-object} a smug smile. "
                         + "{other:SUBJECT} briefly {other:action:wonder|wonders} what {self:pronoun} did, before realizing in horror that a cold sensation is still moving inside {other:possessive} head!", getSelf(), target);

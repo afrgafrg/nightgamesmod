@@ -27,7 +27,8 @@ public class MimicAngel extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.getNPC("Angel").has(Trait.divinity);
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && Global.global.getNPC("Angel")
+                        .has(Trait.divinity);
     }
 
     @Override
@@ -76,7 +77,8 @@ public class MimicAngel extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("{self:NAME-POSSESSIVE} amorphous body jiggles violently and she shrinks her body into a sphere. "
+        return Global.global
+                        .format("{self:NAME-POSSESSIVE} amorphous body jiggles violently and she shrinks her body into a sphere. "
                         + "{other:SUBJECT} cautiously {other:action:approach|approaches} the unknown object, but hesistate when {other:pronoun-action:see|sees} it suddenly turns pure white "
                         + "as if someone dumped a bucket of bleach on it. "
                         + "The sphere unwraps itself in layers, with each layer forming a pair of pristine translucent gelatinous feathered wings. "

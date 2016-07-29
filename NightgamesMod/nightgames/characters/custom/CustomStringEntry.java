@@ -1,12 +1,12 @@
 package nightgames.characters.custom;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.requirements.Requirement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomStringEntry {
     /**
@@ -31,7 +31,7 @@ public class CustomStringEntry {
     }
 
     public String getLine(Combat c, Character self, Character other) {
-        return Global.format(line, self, other);
+        return Global.global.format(line, self, other);
     }
     
     public String getRawLine() {

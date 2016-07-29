@@ -76,7 +76,7 @@ public class Match {
         return MatchType.NORMAL;
     }
 
-    public void round() {
+    public void play() {
         while (time < 36) {
             if (index >= combatants.size()) {
                 index = 0;
@@ -104,21 +104,9 @@ public class Match {
                     }
                 }
                 index++;
-                if (pause) {
-                    return;
-                }
             }
         }
         end();
-    }
-
-    public void pause() {
-        pause = true;
-    }
-
-    public void resume() {
-        pause = false;
-        round();
     }
 
     public void end() {
@@ -302,7 +290,6 @@ public class Match {
         }
         human.travel(new Area("Retirement", "", Movement.retire));
         human.state = State.quit;
-        resume();
     }
 
     public Collection<Movement> getResupplyAreas(Character ch) {
@@ -312,11 +299,11 @@ public class Match {
     public Collection<Area> getAreas() {
         return map.values();
     }
-    
+
     public String genericRoomDescription() {
         return "room";
     }
-    
+
     public MatchData getMatchData() {
         return matchData;
     }

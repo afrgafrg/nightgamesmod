@@ -1,6 +1,5 @@
 package nightgames.gui;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,18 +36,14 @@ import java.util.List;
  * to advance the game state when the user chooses to go to sleep. Simply set CommandButton.canUnblock to true on the
  * sleep button and false on the save button, and pass both buttons to BlockingPrompt.block().
  */
-class BlockingPrompt {
-    private boolean blocking;
+class BlockingPrompt implements Prompt {
+    private volatile boolean blocking;
 
     BlockingPrompt() {
         blocking = true;
     }
 
-    void block(CommandButton... choices) {
-        block(Arrays.asList(choices));
-    }
-
-    synchronized void block(List<CommandButton> choices) {
+    @Override public synchronized void prompt(List<CommandButton> choices) {
         // Allows things like unblocking on "Start the Match" but not "Save"
         choices.stream().filter(choice -> choice.canUnblock)
                         .forEach(choice -> choice.addActionListener(e -> unblock()));
@@ -56,11 +51,12 @@ class BlockingPrompt {
             try {
                 wait();
             } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
             }
         }
     }
 
-    synchronized private void unblock() {
+    private synchronized void unblock() {
         blocking = false;
         notifyAll();
     }

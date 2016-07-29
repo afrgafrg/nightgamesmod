@@ -1,6 +1,6 @@
 package nightgames.stance;
 
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.nskills.tags.BothRequirementSkillTag;
 import nightgames.nskills.tags.SkillTag;
 
@@ -35,6 +35,6 @@ public enum Stance {
 
     public SkillTag getSkillTag() {
         return new BothRequirementSkillTag((result, value) -> result.getCombat().getStance().en == this,
-                        Global.global.capitalizeFirstLetter(name()) + "Position");
+                        Grammar.capitalizeFirstLetter(name()) + "Position");
     }
 }

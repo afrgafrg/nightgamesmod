@@ -1,6 +1,5 @@
 package nightgames.global;
 
-import nightgames.gui.GUI;
 import nightgames.gui.TestGUI;
 
 /**
@@ -8,6 +7,7 @@ import nightgames.gui.TestGUI;
  */
 public class TestGlobal extends Global {
     public TestGlobal() {
+        super();
         gui = new TestGUI();
     }
 }

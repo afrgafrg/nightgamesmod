@@ -115,7 +115,7 @@ public class CreationGUI extends JPanel {
         textPane.setBackground(new Color(18, 30, 49));
         textPane.setFont(new Font("Baskerville Old Face", Font.PLAIN, 22));
         textPane.setEditable(false);
-        textPane.setText(Global.global.getIntro());
+        textPane.setText(getIntro());
 
         JPanel panel_2 = new JPanel();
         add(panel_2, BorderLayout.SOUTH);
@@ -436,6 +436,33 @@ public class CreationGUI extends JPanel {
 
     }
 
+    public static String getIntro() {
+        return "You don't really know why you're going to the Student Union in the middle of the night."
+                        + " You'd have to be insane to accept the invitation you received this afternoon."
+                        + " Seriously, someone is offering you money to sexfight a bunch of other students?"
+                        + " You're more likely to get mugged (though you're not carrying any money) or murdered if you show up."
+                        + " Best case scenario, it's probably a prank for gullible freshmen."
+                        + " You have no good reason to believe the invitation is on the level, but here you are, walking into the empty Student Union."
+                        + "\n\n" + "Not quite empty, it turns out."
+                        + " The same woman who approached you this afternoon greets you and brings you to a room near the back of the building."
+                        + " Inside, you're surprised to find three quite attractive girls."
+                        + " After comparing notes, you confirm they're all freshmen like you and received the same invitation today."
+                        + " You're surprised, both that these girls would agree to such an invitation."
+                        + " For the first time, you start to believe that this might actually happen."
+                        + " After a few minutes of awkward small talk (though none of these girls seem self-conscious about being here), the woman walks in again leading another girl."
+                        + " Embarrassingly you recognize the girl, named Cassie, who is a classmate of yours, and who you've become friends with over the past couple weeks."
+                        + " She blushes when she sees you and the two of you consciously avoid eye contact while the woman explains the rules of the competition."
+                        + "\n\n" + "There are a lot of specific points, but the rules basically boil down to this: "
+                        + " competitors move around the empty areas of the campus and engage each other in sexfights."
+                        + " When one competitor orgasms and doesn't have the will to go on, the other gets a point and can claim the loser's clothes."
+                        + " Those two players are forbidden to engage again until the loser gets a replacement set of clothes at either the Student Union or the first floor of the dorm building."
+                        + " It seems to be customary, but not required, for the loser to get the winner off after a fight, when it doesn't count."
+                        + " After three hours, the match ends and each player is paid for each opponent they defeat, each set of clothes turned in, and a bonus for whoever scores the most points."
+                        + "\n\n"
+                        + "After the explanation, she confirms with each participant whether they are still interested in participating."
+                        + " Everyone agrees." + " The first match starts at exactly 10:00.";
+    }
+
     private void advancedStart() {
         Collection<StartConfiguration> starts = StartConfiguration.loadConfigurations();
         configs = new JComboBox<>();
@@ -506,7 +533,7 @@ public class CreationGUI extends JPanel {
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
             Global.global.newGame(name, startConfig, traits, sex, selectedAttributes);
-            Global.global.gameLoop();
+            new GameThread().execute();
         }
     }
 

@@ -10,7 +10,7 @@ import java.awt.*;
 public class CommandButton extends JButton {
     private static final long serialVersionUID = 7083172844328297505L;
     // for use with BlockingPrompt
-    public final boolean canUnblock;
+    final boolean canUnblock;
 
     public CommandButton() {
         this(false);

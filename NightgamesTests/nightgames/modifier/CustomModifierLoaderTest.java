@@ -3,7 +3,7 @@ package nightgames.modifier;
 import com.google.gson.JsonObject;
 import nightgames.actions.Locate;
 import nightgames.characters.Player;
-import nightgames.global.Global;
+import nightgames.global.TestGlobal;
 import nightgames.items.clothing.Clothing;
 import nightgames.json.JsonUtils;
 import nightgames.modifier.status.StatusModifier;
@@ -34,12 +34,9 @@ public class CustomModifierLoaderTest {
     private static Player player;
 
     @BeforeClass public static void setUpClass() throws Exception {
+        new TestGlobal();
         Clothing.buildClothingTable();
-        Global.global.buildParser();
-        Global.global.buildModifierPool();
-        Global.global.buildActionPool();
         player = new Player("player");
-        Global.global.buildSkillPool(player);
     }
 
     @Before public void setUp() throws Exception {

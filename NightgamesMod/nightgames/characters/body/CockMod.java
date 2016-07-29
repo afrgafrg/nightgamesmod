@@ -5,6 +5,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.*;
@@ -273,7 +274,7 @@ public enum CockMod implements BodyPartMod {
                                     opponent.directObject());
                     if (target.moddedPartCountsAs(opponent, PussyPart.feral)) {
                         message += String.format(" %s no resistance to the subversive seed.",
-                                        Global.global.capitalizeFirstLetter(opponent.subjectAction("offer", "offers")));
+                                        Grammar.capitalizeFirstLetter(opponent.subjectAction("offer", "offers")));
                         duration += 2;
                     }
                     opponent.add(c, new Enthralled(opponent, self, duration));

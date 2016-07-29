@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.nskills.tags.SkillTag;
@@ -74,7 +74,7 @@ public class LivingClothingOther extends Skill {
                         + " out of the device. The created tentacles coils around %s body and"
                         + " wrap themselves into a living suit.", target.nameDirectObject(),
                         getSelf().subject(), getSelf().possessiveAdjective(),
-                        Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                        Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                         target.nameOrPossessivePronoun());
         return message;
     }

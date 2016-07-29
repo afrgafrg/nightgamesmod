@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.status.Drowsy;
 import nightgames.status.Horny;
@@ -47,7 +47,7 @@ public class NeedleThrow extends Skill {
                             "%s %s with one of %s drugged needles. "
                                             + "%s %s with arousal and %s it difficult to stay on %s feet.",
                             getSelf().subjectAction("hit"), target.subject(), getSelf().possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(target.pronoun()), target.action("flush", "flushes"),
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.action("flush", "flushes"),
                             target.action("find", target.pronoun() + " is finding"), target.possessiveAdjective()));
             target.add(c, Horny.getWithBiologicalType(getSelf(), target, 3, 4, getSelf().nameOrPossessivePronoun() + " drugged needle"));
             target.add(c, new Drowsy(target));

@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.nskills.tags.SkillTag;
 
 public class Surrender extends Skill {
@@ -55,7 +55,7 @@ public class Surrender extends Skill {
         return String.format(
                         "After giving up on the fight, %s start fantasizing about %s body. %s quickly find %s at the edge.",
                         getSelf().subject(), target.possessiveAdjective(),
-                        Global.global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
+                        Grammar.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Surrender extends Skill {
         return String.format(
                         "After giving up on the fight, %s start fantasizing about %s body. %s quickly find %s at the edge.",
                         getSelf().subject(), target.possessiveAdjective(),
-                        Global.global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
+                        Grammar.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
     }
 
     @Override

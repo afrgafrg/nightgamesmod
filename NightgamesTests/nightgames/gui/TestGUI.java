@@ -1,13 +1,13 @@
 package nightgames.gui;
 
-import java.io.File;
-import java.util.Observable;
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
 import nightgames.skills.Skill;
+
+import java.io.File;
+import java.util.Observable;
+import java.util.Optional;
 
 public class TestGUI extends GUI {
     /**
@@ -16,6 +16,12 @@ public class TestGUI extends GUI {
     private static final long serialVersionUID = 1739250786661411957L;
 
     public TestGUI() {
+    }
+
+    @Override protected Prompt makePrompt() {
+        return choices -> {
+            // do nothing
+        };
     }
 
     @Override public void setVisible(boolean visible) {

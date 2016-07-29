@@ -1,29 +1,26 @@
 package nightgames.gui;
 
 import nightgames.characters.Attribute;
+import nightgames.characters.CharacterSex;
 import nightgames.characters.Trait;
 import nightgames.global.Global;
-import nightgames.global.TestGlobal;
-import org.hamcrest.core.IsCollectionContaining;
-import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests involving the CreationGUI.
  */
 public class CreationGUITest {
-    @Before public void setUp() throws Exception {
-        new TestGlobal();
-    }
-
     @Test public void testSelectPlayerStats() throws Exception {
-        CreationGUI creationGUI = Global.global.gui().creation;
+        Global.global = mock(Global.class);
+        CreationGUI creationGUI = new CreationGUI();
         creationGUI.namefield.setText("TestPlayer");
         creationGUI.StrengthBox.setSelectedItem(Trait.romantic);
         creationGUI.WeaknessBox.setSelectedItem(Trait.insatiable);
@@ -31,8 +28,11 @@ public class CreationGUITest {
         creationGUI.seduction = 11;
         creationGUI.cunning = 9;
         creationGUI.makeGame(Optional.empty());
-        assertThat(Global.global.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
-                        hasEntry(Attribute.Cunning, 9)));
-        assertThat(Global.global.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
+        Map<Attribute, Integer> expectedAttributes = new HashMap<>();
+        expectedAttributes.put(Attribute.Power, 5);
+        expectedAttributes.put(Attribute.Seduction, 11);
+        expectedAttributes.put(Attribute.Cunning, 9);
+        verify(Global.global).newGame("TestPlayer", Optional.empty(), Arrays.asList(Trait.romantic, Trait.insatiable),
+                        CharacterSex.male, expectedAttributes);
     }
 }

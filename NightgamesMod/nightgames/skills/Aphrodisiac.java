@@ -9,6 +9,7 @@ import nightgames.characters.body.PussyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
@@ -106,7 +107,7 @@ public class Aphrodisiac extends Skill {
                             + getSelf().possessiveAdjective() + " juices" + " on " + getSelf().possessiveAdjective()
                             + " fingertip, " + getSelf().subjectAction("pull") + " it out and flicks it at "
                             + target.directObject() + "," + " skillfully depositing it in " + target.possessiveAdjective()
-                            + " open mouth. " + Global.global.capitalizeFirstLetter(target.subject())
+                            + " open mouth. " + Grammar.capitalizeFirstLetter(target.subject())
                             + " immediately feel"
                             + " a flash of heat spread through " + target.directObject()
                             + " and only a small part of it results from the anger caused by "
@@ -144,7 +145,7 @@ public class Aphrodisiac extends Skill {
                             + getSelf().possessiveAdjective() + " juices" + " on " + getSelf().possessiveAdjective()
                             + " fingertip, " + getSelf().subjectAction("pull") + " it out and flicks it at "
                             + target.directObject() + "," + " skillfully depositing it in " + target.possessiveAdjective()
-                            + " open mouth. " + Global.global.capitalizeFirstLetter(target.subject())
+                            + " open mouth. " + Grammar.capitalizeFirstLetter(target.subject())
                             + " immediately feel"
                             + " a flash of heat spread through " + target.directObject()
                             + " and only a small part of it" + " results from the anger caused by "

@@ -6,6 +6,7 @@ import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.*;
 
@@ -32,7 +33,7 @@ public class MouthPart extends GenericBodyPart {
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
         if (target.isErogenous() && opponent.has(Trait.lickable)) {
-            c.write(opponent, Global.global.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
+            c.write(opponent, Grammar.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
                             + " when licked by " + self.directObject() + ".");
             bonus += Global.global.random(2, 4) + opponent.getLevel() / 20;
             if (target.isGenital()) {
@@ -41,13 +42,13 @@ public class MouthPart extends GenericBodyPart {
         }
         String fluid = target.getFluids(opponent);
         if (!fluid.isEmpty() && opponent.has(Trait.lacedjuices)) {
-            c.write(self, Global.global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " drug-laced "
+            c.write(self, Grammar.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " drug-laced "
                             + fluid
                             + " leaves " + self.nameOrPossessivePronoun() + " entire body tingling with arousal.");
             self.arouse(Math.max(opponent.getArousal().get() / 10, 5), c);
         }
         if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Global.global.random(5) == 0) {
-            c.write(self, Global.global.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
+            c.write(self, Grammar.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
                             + fluid + " leaves " + self.nameOrPossessivePronoun() + " in a state of frenzy.");
             self.add(c, new Frenzied(self, 3));
         }
@@ -58,14 +59,14 @@ public class MouthPart extends GenericBodyPart {
                 // pass (addiction was resisted)
             } else if (st.activated()) {
                 if (self.human()) {
-                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                    c.write(self, Grammar.capitalizeFirstLetter(Global.global.format(
                                     "As {other:name-possessive} " + fluid
                                                     + " flow down your throat, your entire mind fogs up. "
                                                     + "You forget where you are, why you're here, and what you're doing. "
                                                     + "The only thing left in you is a primal need to obtain more of {other:possessive} fluids.",
                                     self, opponent)));
                 } else {
-                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                    c.write(self, Grammar.capitalizeFirstLetter(Global.global.format(
                                     "As your " + fluid
                                                     + " slides down {self:name-possessive} throat, you see a shadow pass over {self:possessive} face. "
                                                     + "Whereas {self:name} was playfully teasing you just a few seconds ago, you can now only see a desperate need that {self:pronoun} did not possess before.",
@@ -73,11 +74,11 @@ public class MouthPart extends GenericBodyPart {
                 }
             } else if (!st.isActive()) {
                 if (self.human()) {
-                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                    c.write(self, Grammar.capitalizeFirstLetter(Global.global.format(
                                     "You feel a strange desire to drink down more of {other:name-possessive} "
                                                     + fluid + ".", self, opponent)));
                 } else {
-                    c.write(self, Global.global.capitalizeFirstLetter(Global.global.format(
+                    c.write(self, Grammar.capitalizeFirstLetter(Global.global.format(
                                     "{self:name} drinks down your " + fluid + " and seems to want more.",
                                                     self, opponent)));
                 }

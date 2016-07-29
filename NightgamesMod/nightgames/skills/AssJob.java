@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -238,7 +239,7 @@ public class AssJob extends Skill {
                                                 + "%s sensitive %s.",
                                 getSelf().name(), getSelf().possessiveAdjective(),
                                 target.possessiveAdjective(), target.possessiveAdjective(), target.pronoun(), target.possessiveAdjective(),
-                                Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                                Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                                 target.directObject(), getSelf().possessiveAdjective(),
                                 target.possessiveAdjective(), target.body.getRandomCock().describe(target));
             case miss:

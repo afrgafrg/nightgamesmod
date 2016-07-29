@@ -5,6 +5,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.skills.*;
 
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class FaceSitting extends AbstractBehindStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.global.capitalizeFirstLetter(top.subjectAction("are", "is")) + " sitting on "
+        return Grammar.capitalizeFirstLetter(top.subjectAction("are", "is")) + " sitting on "
                         + bottom.nameOrPossessivePronoun() + " face while holding " + bottom.possessiveAdjective()
                         + " arms so " + bottom.subject() + " cannot escape";
     }

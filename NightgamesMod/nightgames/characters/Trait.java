@@ -1,6 +1,7 @@
 package nightgames.characters;
 
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.status.Lethargic;
@@ -23,7 +24,7 @@ public enum Trait {
     }),
 
     sadist("Sadist", "Skilled at providing pleasure alongside pain",
-                    (b, c, t) -> b.append(Global.global.capitalizeFirstLetter(
+                    (b, c, t) -> b.append(Grammar.capitalizeFirstLetter(
                                     String.format("%s sneers in an unsettling way.", c.subject())))),
     bitingwords("Biting Words", "Knows how to rub salt in the wound."),
     smqueen("SM Queen", "A natural dom."),

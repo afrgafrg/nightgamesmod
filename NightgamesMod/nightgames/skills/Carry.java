@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Standing;
 import nightgames.status.Falling;
@@ -46,7 +47,7 @@ public class Carry extends Fuck {
         String premessage = premessage(c, target);
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.global.capitalizeFirstLetter(
+                c.write(getSelf(), Grammar.capitalizeFirstLetter(
                                 premessage + deal(c, premessage.length(), Result.normal, target)));
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.normal, target));
@@ -61,7 +62,7 @@ public class Carry extends Fuck {
             getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m, c, this);
         } else {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.global.capitalizeFirstLetter(
+                c.write(getSelf(), Grammar.capitalizeFirstLetter(
                                 premessage + deal(c, premessage.length(), Result.miss, target)));
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.miss, target));

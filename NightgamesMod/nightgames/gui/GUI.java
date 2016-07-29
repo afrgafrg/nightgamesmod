@@ -147,23 +147,8 @@ public class GUI extends JFrame implements Observer {
 
         // menu bar - new game
 
-        JMenuItem mntmNewgame = new JMenuItem("New Game");
+        JMenuItem mntmNewgame = new NewGameMenuItem();
 
-        //mntmNewgame.setForeground(Color.WHITE);
-        //mntmNewgame.setBackground(GUIColors.bgGrey);
-        mntmNewgame.setHorizontalAlignment(SwingConstants.CENTER);
-
-        mntmNewgame.addActionListener(arg0 -> {
-            if (Global.global.inGame()) {
-                int result = JOptionPane.showConfirmDialog(GUI.this,
-                                "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if (result == JOptionPane.OK_OPTION) {
-                    Global.global.exit();
-                    new Global();
-                }
-            }
-        });
 
         menuBar.add(mntmNewgame);
 
@@ -305,6 +290,8 @@ public class GUI extends JFrame implements Observer {
         // m/f preference (no (other) males in the games yet... good for
         // modders?)
 
+        // temporarily remove the maleprefslider, as NPCs no longer really use it for anything useful.
+        /*
         // malePrefLabel - options submenu - visible
         JLabel malePrefLabel = new JLabel("Female vs. Male Preference");
         optionsPanel.add(malePrefLabel);
@@ -314,9 +301,6 @@ public class GUI extends JFrame implements Observer {
         malePrefSlider.setPaintTicks(true);
         malePrefSlider.setPaintLabels(true);
         malePrefSlider.setLabelTable(new Hashtable<Integer, JLabel>() {
-            /**
-             * 
-             */
             private static final long serialVersionUID = -4212836698571224221L;
             {
                 put(0, new JLabel("Female"));
@@ -552,7 +536,6 @@ public class GUI extends JFrame implements Observer {
         centerPanel.add(clothesPanel, USE_CLOSET_UI);
 
         CommandButton debug = new CommandButton("Debug", true);
-        debug.addActionListener(arg0 -> Global.global.getMatch().resume());
 
         // commandPanel - visible, contains the player's command buttons
         groupBox = Box.createHorizontalBox();
@@ -597,6 +580,10 @@ public class GUI extends JFrame implements Observer {
 
         // Use this for making save dialogs
         saveFileChooser = new NgsChooser(this);
+    }
+
+    protected Prompt makePrompt() {
+        return new BlockingPrompt();
     }
 
     public Optional<File> askForSaveFile() {
@@ -987,8 +974,7 @@ public class GUI extends JFrame implements Observer {
 
     public void clearCommand() {
         skills.clear();
-        Arrays.stream(TacticGroup.values()).forEach(tactic -> skills.put(tactic, new ArrayList<>()));
-        groupBox.removeAll();
+        commandPanel.removeAll();
         commandPanel.reset();
     }
 
@@ -1044,7 +1030,7 @@ public class GUI extends JFrame implements Observer {
         commandPanel.add(next);
         Global.global.getMatch().pause();
         commandPanel.refresh();
-        new BlockingPrompt().block(next);
+        makePrompt().prompt(next);
         clearCommand();
         if (combat.phase == 0) {
             combat.clear();
@@ -1149,7 +1135,7 @@ public class GUI extends JFrame implements Observer {
         message(message);
         choices.forEach(commandPanel::add);
         commandPanel.refresh();
-        new BlockingPrompt().block(choices);
+        makePrompt().prompt(choices);
     }
 
     public void ding() {
@@ -1229,7 +1215,9 @@ public class GUI extends JFrame implements Observer {
         commandPanel.add(sleepButton);
         commandPanel.add(new SaveButton());
         commandPanel.refresh();
-        new BlockingPrompt().block(sleepButton);
+        makePrompt().prompt(sleepButton);
+        // TODO: work out how to get this to work
+        GameThread.getCurrentGameThread().suspend();
     }
 
     public void refresh() {
@@ -1416,9 +1404,11 @@ public class GUI extends JFrame implements Observer {
                 return;
             }
         }
-        Global.global.exit();
+        if (Global.global != null) {
+            Global.global.exit();
+        }
         new Global().load(file);
-        Global.global.gameLoop();
+        new GameThread().execute();
     }
 
     /*
@@ -1495,7 +1485,7 @@ public class GUI extends JFrame implements Observer {
         private Trait feat;
 
         public FeatButton(Trait feat) {
-            super();    // does not unblock
+            super(true);    // does unblock
             setFont(new Font("Baskerville Old Face", 0, 18));
             this.feat = feat;
             setText(feat.toString());
@@ -1636,6 +1626,30 @@ public class GUI extends JFrame implements Observer {
     public void systemMessage(String string) {
         if (Global.global.checkFlag(Flag.systemMessages)) {
             message(string);
+        }
+    }
+
+    private class NewGameMenuItem extends JMenuItem {
+        private static final long serialVersionUID = 8037073855752178280L;
+
+        NewGameMenuItem() {
+            super("New Game");
+            this.setForeground(Color.WHITE);
+            this.setBackground(GUIColors.bgGrey);
+            this.setHorizontalAlignment(SwingConstants.CENTER);
+
+            this.addActionListener(arg0 -> {
+                if (Global.global.inGame()) {
+                    int result = JOptionPane.showConfirmDialog(GUI.this,
+                                    "Do you want to start a new game? You'll lose any unsaved progress.",
+                                    "Start new game?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                    if (result == JOptionPane.OK_OPTION) {
+                        Global.global.exit();
+                        new Global();
+                        createCharacter();
+                    }
+                }
+            });
         }
     }
 

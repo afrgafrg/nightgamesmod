@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Hypersensitive;
@@ -58,7 +59,7 @@ public class TortoiseWrap extends Skill {
                         "You skillfully tie a rope around %s's torso "
                                         + "in a traditional bondage wrap. %s moans softly as the "
                                         + "rope digs into %s supple skin.", target.name(),
-                        nightgames.global.Global.global.capitalizeFirstLetter(target.pronoun()),
+                        Grammar.capitalizeFirstLetter(target.pronoun()),
                         target.possessiveAdjective());
     }
 

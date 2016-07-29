@@ -8,6 +8,7 @@ import nightgames.characters.body.CockMod;
 import nightgames.characters.body.PussyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 
 public class SlimeMimicry extends DurationStatus {
     private final String mimickedName;
@@ -15,7 +16,7 @@ public class SlimeMimicry extends DurationStatus {
     private final CockMod cockMimicked;
 
     public SlimeMimicry(String name, PussyPart pussyMimicked, CockMod cockMimicked, Character affected, int duration) {
-        super("Mimicry: " + Global.global.capitalizeFirstLetter(name), affected, duration);
+        super("Mimicry: " + Grammar.capitalizeFirstLetter(name), affected, duration);
         this.mimickedName = name;
         this.pussyMimicked = pussyMimicked;
         this.cockMimicked = cockMimicked;

@@ -2,7 +2,6 @@ package nightgames.characters;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import nightgames.actions.Action;
 import nightgames.actions.Move;
 import nightgames.actions.Movement;
@@ -467,7 +466,7 @@ public abstract class Character extends Observable implements Cloneable {
         int bonus = 0;
         if (is(Stsflag.rewired) && physical) {
             String message = String.format("%s pleasured for <font color='rgb(255,50,200)'>%d<font color='white'>\n",
-                            Global.global.capitalizeFirstLetter(subjectWas()), pain);
+                            Grammar.capitalizeFirstLetter(subjectWas()), pain);
             if (c != null) {
                 c.writeSystemMessage(message);
             }
@@ -770,7 +769,7 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         String message = String.format("%s aroused for <font color='rgb(240,100,100)'>%d<font color='white'> %s%s\n",
-                        Global.global.capitalizeFirstLetter(subjectWas()), i, source, extraMsg);
+                        Grammar.capitalizeFirstLetter(subjectWas()), i, source, extraMsg);
         if (c != null) {
             c.writeSystemMessage(message);
         }
@@ -800,7 +799,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void calm(Combat c, int i) {
         if (c != null) {
             String message = String.format("%s calmed down by <font color='rgb(80,145,200)'>%d<font color='white'>\n",
-                            Global.global.capitalizeFirstLetter(subjectAction("have", "has")), i);
+                            Grammar.capitalizeFirstLetter(subjectAction("have", "has")), i);
             c.writeSystemMessage(message);
         }
         arousal.reduce(i);
@@ -843,7 +842,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (x > 0) {
             mojo.restore(x);
             if (c != null) {
-                c.writeSystemMessage(Global.global.capitalizeFirstLetter(
+                c.writeSystemMessage(Grammar.capitalizeFirstLetter(
                                 String.format("%s <font color='rgb(100,200,255)'>%d<font color='white'> mojo%s.",
                                                 subjectAction("built", "built"), x, source)));
             }
@@ -868,7 +867,7 @@ public abstract class Character extends Observable implements Cloneable {
             mojo.set(0);
         }
         if (c != null && i != 0) {
-            c.writeSystemMessage(Global.global.capitalizeFirstLetter(
+            c.writeSystemMessage(Grammar.capitalizeFirstLetter(
                             String.format("%s <font color='rgb(150,150,250)'>%d<font color='white'> mojo%s.",
                                             subjectAction("spent", "spent"), cost, source)));
         }
@@ -885,7 +884,7 @@ public abstract class Character extends Observable implements Cloneable {
             mojo.set(0);
         }
         if (c != null) {
-            c.writeSystemMessage(Global.global.capitalizeFirstLetter(
+            c.writeSystemMessage(Grammar.capitalizeFirstLetter(
                             String.format("%s <font color='rgb(150,150,250)'>%d<font color='white'> mojo%s.",
                                             subjectAction("lost", "lost"), amt, source)));
         }
@@ -1256,7 +1255,7 @@ public abstract class Character extends Observable implements Cloneable {
         }
         if (done) {
             if (!message.isEmpty()) {
-                message = Global.global.capitalizeFirstLetter(message);
+                message = Grammar.capitalizeFirstLetter(message);
                 if (c != null) {
                     if (!c.getOpponent(this).human() || !c.getOpponent(this).is(Stsflag.blinded)) {
                         c.write(this, "<b>" + message + "</b>");
@@ -1827,7 +1826,7 @@ public abstract class Character extends Observable implements Cloneable {
         body.getCurrentParts().forEach(part -> part.onOrgasm(c, this, opponent));
 
         if (opponent.has(Trait.erophage)) {
-            c.write(Global.global.capitalizeFirstLetter("<b>" + opponent.subjectAction("flush", "flushes")
+            c.write(Grammar.capitalizeFirstLetter("<b>" + opponent.subjectAction("flush", "flushes")
                             + " as the feedback from " + nameOrPossessivePronoun() + " orgasm feeds "
                             + opponent.possessiveAdjective() + " divine power.</b>"));
             opponent.add(c, new Alluring(opponent, 5));
@@ -1837,7 +1836,7 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         if (opponent.has(Trait.sexualmomentum)) {
-            c.write(Global.global.capitalizeFirstLetter(
+            c.write(Grammar.capitalizeFirstLetter(
                             "<b>" + opponent.subjectAction("are more composed", "seems more composed") + " as "
                                             + nameOrPossessivePronoun() + " forced orgasm goes straight to "
                                             + opponent.possessiveAdjective() + " ego.</b>"));
@@ -1852,7 +1851,7 @@ public abstract class Character extends Observable implements Cloneable {
                             || Global.global.checkFlag(Flag.hardmode))) {
                 c.getCombatantData(opponent).toggleFlagOn("has_drained", true);
                 if (c.getStance().penetratedBy(c, opponent, this)) {
-                    c.write(opponent, Global.global.capitalizeFirstLetter(
+                    c.write(opponent, Grammar.capitalizeFirstLetter(
                                     String.format("<b>%s %s contracts around %s %s, reinforcing"
                             + " %s orgasm and drawing upon %s very strength and experience. Once it's over, %s"
                                                     + " left considerably more powerful, at %s expense.</b>",
@@ -1888,7 +1887,7 @@ public abstract class Character extends Observable implements Cloneable {
                 }
                 opponent.gainXP(gained);
             } else {
-                c.write(opponent, Global.global.capitalizeFirstLetter(String.format("<b>%s %s pulses, but fails to"
+                c.write(opponent, Grammar.capitalizeFirstLetter(String.format("<b>%s %s pulses, but fails to"
                                                 + " draw in %s experience.</b>", opponent.nameOrPossessivePronoun(),
                                 opponent.body.getRandomPussy().describe(opponent),
                                 nameOrPossessivePronoun())));

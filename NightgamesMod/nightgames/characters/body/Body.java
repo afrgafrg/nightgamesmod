@@ -12,6 +12,7 @@ import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.json.JsonUtils;
@@ -663,7 +664,7 @@ public class Body implements Cloneable {
             String battleString = String.format(
                             "%s%s %s<font color='white'> was pleasured by %s%s<font color='white'> for <font color='rgb(255,50,200)'>%d<font color='white'> "
                                             + "base:%.1f (%.1f%s) x multiplier: %.2f (1 + sen:%.1f + ple:%.1f + per:%.1f %s %s)%s\n",
-                            firstColor, Global.global.capitalizeFirstLetter(character.nameOrPossessivePronoun()),
+                            firstColor, Grammar.capitalizeFirstLetter(character.nameOrPossessivePronoun()),
                             target.describe(character), secondColor, pleasuredBy, result, base, magnitude, bonusString,
                             multiplier, sensitivity - 1, pleasure - 1, perceptionBonus - 1, stageString, dominanceString,
                             staleString);
@@ -683,7 +684,7 @@ public class Body implements Cloneable {
             String battleString = String.format(
                             "%s%s %s<font color='white'> was pleasured for <font color='rgb(255,50,200)'>%d<font color='white'> "
                                             + "base:%.1f (%.2f%s) x multiplier: %.2f (sen:%.1f + ple:%.1f + per:%.1f)\n",
-                            firstColor, Global.global.capitalizeFirstLetter(character.nameOrPossessivePronoun()),
+                            firstColor, Grammar.capitalizeFirstLetter(character.nameOrPossessivePronoun()),
                             target.describe(character), result, base, magnitude, bonusString, multiplier,
                             sensitivity - 1, pleasure - 1, perceptionBonus - 1);
             if (c != null) {
@@ -1152,7 +1153,7 @@ public class Body implements Cloneable {
             part = character.body.getRandom("skin");
         }
         if (character.has(Trait.spiritphage)) {
-            c.write(character, "<br/><b>" + Global.global.capitalizeFirstLetter(character.subjectAction("glow", "glows")
+            c.write(character, "<br/><b>" + Grammar.capitalizeFirstLetter(character.subjectAction("glow", "glows")
                             + " with power as the cum is absorbed by " + character.possessiveAdjective() + " "
                             + part.describe(character) + ".</b>"));
             character.add(c, new Abuff(character, Attribute.Power, 5, 10));

@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.nskills.tags.SkillTag;
@@ -139,8 +140,8 @@ public class Stomp extends Skill {
                                             + " When it lands, you feel a sympathetic jolt run up your spine as %s gonads are crushed beneath your foot."
                                             + " %s whimpers in pain, but not as much as you'd expect from such a magnificent impact.",
                             target.name(), target.body.getRandomCock().describe(target), target.possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(target.pronoun()));
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(target.pronoun()));
         } else if (modifier == Result.weak) {
             return "You step between " + target.name()
                             + "'s legs and stomp down on her groin. Your foot hits something solid and she doesn't seem terribly affected.";
@@ -148,8 +149,7 @@ public class Stomp extends Skill {
             return String.format(
                             "You step between %s's legs and stomp down on %s groin."
                                             + "%s exhales sharply, but does not seem hurt much at all. Somehow.",
-                            target.name(), target.possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(target.pronoun()));
+                            target.name(), target.possessiveAdjective(), Grammar.capitalizeFirstLetter(target.pronoun()));
         } else {
             if (target.hasBalls()) {
                 return "You pull " + target.name()

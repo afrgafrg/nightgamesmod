@@ -21,6 +21,7 @@ import nightgames.ftc.FTCMatch;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -300,12 +301,7 @@ public class Player extends Character {
     public void move() {
         gui.clearCommand();
 
-        if (state == State.combat) {
-            if (!location.fight.battle()) {
-                Global.global.getMatch()
-                      .resume();
-            }
-        } else if (busy > 0) {
+        if (busy > 0) {
             busy--;
         } else if (this.is(Stsflag.enthralled)) {
             Character master;
@@ -583,8 +579,8 @@ public class Player extends Character {
                                             + "moan, <i>\"I'm gonna cum!\"</i> You hastily remove %s dick out of "
                                             + "your mouth and pump it rapidly. %s shoots %s load into the air, barely "
                                             + "missing you.", target.name(),
-                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
-                            Global.global.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
                             target.name(),
                             target.possessiveAdjective()));
         } else {
@@ -705,7 +701,7 @@ public class Player extends Character {
             add(c, Pheromones.getWith(opponent, this, opponent.getPheromonePower(), 10));
         }
         if (opponent.has(Trait.sadist) && !is(Stsflag.masochism)) {
-            c.write("<br/>" + Global.global.capitalizeFirstLetter(
+            c.write("<br/>" + Grammar.capitalizeFirstLetter(
                             String.format("%s seem to shudder in arousal at the thought of pain.", subject())));
             add(c, new Masochistic(this));
         }

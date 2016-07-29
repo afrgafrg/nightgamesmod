@@ -5,6 +5,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -305,7 +306,7 @@ public class Outfit {
                 sb.append("<br/>");
             }
         }
-        return Global.global.capitalizeFirstLetter(Global.global.format(sb.toString(), c, c));
+        return Grammar.capitalizeFirstLetter(Global.global.format(sb.toString(), c, c));
     }
 
     public boolean isNude() {

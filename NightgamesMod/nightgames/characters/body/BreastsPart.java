@@ -7,6 +7,7 @@ import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.status.Abuff;
@@ -41,7 +42,7 @@ public enum BreastsPart implements BodyPart {
     @Override
     public void describeLong(StringBuilder b, Character c) {
         if (c.hasPussy() || size > 0) {
-            b.append(Global.global.capitalizeFirstLetter(describe(c, true)));
+            b.append(Grammar.capitalizeFirstLetter(describe(c, true)));
             b.append(" adorn " + c.nameOrPossessivePronoun() + " chest.");
         }
     }

@@ -5,7 +5,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.status.Stsflag;
@@ -46,9 +46,9 @@ public class Strapon extends Skill {
         List<Clothing> unequipped = getSelf().getOutfit().equip(Clothing.getByID("strapon"));
         if (unequipped.isEmpty()) {
             if (getSelf().human()) {
-                c.write(getSelf(), Global.global.capitalizeFirstLetter(deal(c, 0, Result.normal, target)));
+                c.write(getSelf(), Grammar.capitalizeFirstLetter(deal(c, 0, Result.normal, target)));
             } else if (!target.is(Stsflag.blinded)) {
-                c.write(getSelf(), Global.global.capitalizeFirstLetter(receive(c, 0, Result.normal, target)));
+                c.write(getSelf(), Grammar.capitalizeFirstLetter(receive(c, 0, Result.normal, target)));
             } else {
                 printBlinded(c);
             }

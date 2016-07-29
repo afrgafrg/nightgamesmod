@@ -1,6 +1,6 @@
 package nightgames.nskills.tags;
 
-import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.nskills.struct.SkillResultStruct;
 
 import java.util.Optional;
@@ -16,7 +16,7 @@ public class BodyPartSkillTag extends SkillTag {
     };
     public BodyPartSkillTag(String type) {
         this.type = type;
-        this.name = "Uses" + Global.global.capitalizeFirstLetter(type);
+        this.name = "Uses" + Grammar.capitalizeFirstLetter(type);
     }
 
     @Override

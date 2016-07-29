@@ -4,6 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.Trait;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
@@ -64,7 +65,7 @@ public abstract class BaseNPCTime extends Activity {
         Optional<TransformationOption> optionalOption =
                         options.stream().filter(opt -> choice.equals(opt.option)).findFirst();
         Optional<Loot> optionalGiftOption = giftables.stream()
-                        .filter(gift -> choice.equals(Global.global.capitalizeFirstLetter(gift.getName()))).findFirst();
+                        .filter(gift -> choice.equals(Grammar.capitalizeFirstLetter(gift.getName()))).findFirst();
 
         if (optionalOption.isPresent()) {
             TransformationOption option = optionalOption.get();
@@ -93,7 +94,7 @@ public abstract class BaseNPCTime extends Activity {
         } else if (choice.equals("Gift")) {
             Global.global.gui().message(Global.global.format(giftString, npc, player));
             giftables.stream().forEach(loot -> Global.global.gui()
-                            .choose(this, Global.global.capitalizeFirstLetter(loot.getName())));
+                            .choose(this, Grammar.capitalizeFirstLetter(loot.getName())));
             Global.global.gui().choose(this, "Back");
         } else if (choice.equals("Change Outfit")) {
             Global.global.gui().changeClothes(npc, this, "Back");

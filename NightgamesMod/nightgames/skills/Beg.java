@@ -1,5 +1,6 @@
 package nightgames.skills;
 
+import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -7,6 +8,7 @@ import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.status.Charmed;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
@@ -72,7 +74,7 @@ public class Beg extends Skill {
             return "You throw away your pride and ask " + target.name() + " for mercy. This just seems to encourage "
                             + target.possessiveAdjective() + " sadistic side.";
         }
-        return "You put yourself completely at " + target.name() + "'s mercy. " + Global.global
+        return "You put yourself completely at " + target.name() + "'s mercy. " + Grammar
                         .capitalizeFirstLetter(target.pronoun())
                         + " takes pity on you and gives you a moment to recover.";
     }
@@ -82,7 +84,7 @@ public class Beg extends Skill {
         if (modifier == Result.miss) {
             return String.format("%s gives %s a pleading look and asks %s to go light on %s."+
                             "%s is cute, but %s is not getting away that easily.", getSelf().name(), target.subject(),
-                            target.directObject(), getSelf().directObject(), Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                            target.directObject(), getSelf().directObject(), Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                             getSelf().pronoun());
         }
         return getSelf().name() + " begs you for mercy, looking ready to cry. Maybe you should give "

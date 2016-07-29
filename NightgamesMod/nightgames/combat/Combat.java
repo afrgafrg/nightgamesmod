@@ -9,6 +9,7 @@ import nightgames.characters.body.PussyPart;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -739,11 +740,11 @@ public class Combat extends Observable implements Cloneable {
                             + player.describe(player.get(Attribute.Perception), this) + "<br/><br/>"
                             + other.describe(player.get(Attribute.Perception), this) + "<br/><br/>";
         } else if (!player.is(Stsflag.blinded)) {
-            return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>" + Global.global
+            return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>" + Grammar
                             .capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
                             + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
         } else {
-            return "<b>You are blinded, and cannot see what " + other.name() + " is doing!</b><br/><br/>" + Global.global
+            return "<b>You are blinded, and cannot see what " + other.name() + " is doing!</b><br/><br/>" + Grammar
                             .capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
                             + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
         }
@@ -1109,7 +1110,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(String text) {
-        text = Global.global.capitalizeFirstLetter(text);
+        text = Grammar.capitalizeFirstLetter(text);
         if (text.isEmpty()) {
             return;
         }
@@ -1135,7 +1136,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(Character user, String text) {
-        text = Global.global.capitalizeFirstLetter(text);
+        text = Grammar.capitalizeFirstLetter(text);
         if (text.length() > 0) {
             if (user.human()) {
                 message = message + "<br/><font color='rgb(200,200,255)'>" + text + "<font color='white'>";

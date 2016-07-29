@@ -6,6 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.skills.*;
 
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class BodyFetish extends DurationStatus {
     public double magnitude;
 
     public BodyFetish(Character affected, Character origin, String part, double magnitude) {
-        super(Global.global.capitalizeFirstLetter(part) + " Fetish", affected, 10);
+        super(Grammar.capitalizeFirstLetter(part) + " Fetish", affected, 10);
         flag(Stsflag.bodyfetish);
         this.origin = origin;
         this.part = part;
@@ -56,11 +57,11 @@ public class BodyFetish extends DurationStatus {
         String magString = Global.global.formatDecimal(magnitude);
         if (affected.human()) {
             if (origin != null && c != null && c.getOpponent(affected) == origin) {
-                return Global.global.capitalizeFirstLetter(
+                return Grammar.capitalizeFirstLetter(
                                 desc + "fantasies of worshipping " + origin.nameOrPossessivePronoun() + " " + part
                                                 + " run through your mind (" + magString + ").");
             } else {
-                return Global.global.capitalizeFirstLetter(desc + "fantasies of worshipping " + part
+                return Grammar.capitalizeFirstLetter(desc + "fantasies of worshipping " + part
                                 + " run through your mind (" + magString + ").");
             }
         } else {

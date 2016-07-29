@@ -8,6 +8,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.status.Horny;
 import nightgames.status.Shamed;
 import nightgames.status.addiction.Addiction;
@@ -71,7 +72,7 @@ public class ShamefulDisplay extends Skill {
                                             + " out in a show of submission. %s practically drools at the sight, "
                                             + "while you struggle to bear the shame.",
                             getSelf().body.getRandomCock().describe(getSelf()),
-                            Global.global.capitalizeFirstLetter(target.pronoun()));
+                            Grammar.capitalizeFirstLetter(target.pronoun()));
         } else {
             return String.format(
                             "You spread your legs and dip a hand between them. You stare lustfully"
@@ -90,14 +91,14 @@ public class ShamefulDisplay extends Skill {
                             getSelf().name(), getSelf().possessiveAdjective(),
                             getSelf().body.getRandomCock().describe(getSelf()),
                             target.nameDirectObject(),
-                            Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                            Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                             target.action("do", "does"), target.subject());
         } else {
             return String.format(
                             "%s lifts %s hips and spreads %s pussy lips open. %s's "
                                             + "bright red with shame, but the sight is lewd enough to drive %s wild.",
                             getSelf().name(), getSelf().possessiveAdjective(), getSelf().possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                            Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                             target.nameDirectObject());
         }
     }

@@ -8,6 +8,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.GenericBodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 
 public class Seeded extends Status {
     private String target;
@@ -33,7 +34,7 @@ public class Seeded extends Status {
         if (hole == null) {
             return "";
         }
-        return Global.global.capitalizeFirstLetter(
+        return Grammar.capitalizeFirstLetter(
                         String.format("%s planted a seed in %s %s\n", other.subjectAction("have", "has"),
                                         affected.nameOrPossessivePronoun(), hole.describe(affected)));
     }
@@ -43,25 +44,25 @@ public class Seeded extends Status {
         BodyPart hole = affected.body.getRandom(target);
         if (affected.human()) {
             if (stage > 4) {
-                return Global.global.capitalizeFirstLetter(
+                return Grammar.capitalizeFirstLetter(
                                 String.format("A large white lilly grows from your %s\n", hole.describe(affected)));
             } else if (stage > 3) {
-                return Global.global.capitalizeFirstLetter(
+                return Grammar.capitalizeFirstLetter(
                                 String.format("A small green bud peeks out from your %s\n", hole.describe(affected)));
             }
-            return Global.global.capitalizeFirstLetter(
+            return Grammar.capitalizeFirstLetter(
                             String.format("A lemon-sized seed is lodged firmly in your %s\n", hole.describe(affected)));
         } else {
             if (stage > 4) {
-                return Global.global.capitalizeFirstLetter(String.format(
+                return Grammar.capitalizeFirstLetter(String.format(
                                 "A large white lilly grows from " + affected.possessiveAdjective() + " %s\n",
                                 hole.describe(affected)));
             } else if (stage > 3) {
-                return Global.global.capitalizeFirstLetter(String.format(
+                return Grammar.capitalizeFirstLetter(String.format(
                                 "A small green bud peeks out from " + affected.possessiveAdjective() + " %s\n",
                                 hole.describe(affected)));
             }
-            return Global.global.capitalizeFirstLetter(String.format(
+            return Grammar.capitalizeFirstLetter(String.format(
                             "A lemon-sized seed is lodged firmly in " + affected.possessiveAdjective() + " %s\n",
                             hole.describe(affected)));
         }

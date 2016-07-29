@@ -9,6 +9,7 @@ import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.strategy.FootjobStrategy;
@@ -715,9 +716,9 @@ public class Mara extends BasePersonality {
                             target.name(), target.name(), target.name(), target.possessiveAdjective(),
                             target.possessiveAdjective(), target.possessiveAdjective(), target.name(), target.pronoun(),
                             target.possessiveAdjective(), target.possessiveAdjective(),
-                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
+                            Grammar.capitalizeFirstLetter(target.possessiveAdjective()), target.name(),
                             target.possessiveAdjective(), target.directObject(), target.pronoun(),
-                            Global.global.capitalizeFirstLetter(target.possessiveAdjective()));
+                            Grammar.capitalizeFirstLetter(target.possessiveAdjective()));
         }
         return "Mara approaches " + target.name()
                         + " like a panther claiming its prey. She runs her fingers down the length of " + target.name()

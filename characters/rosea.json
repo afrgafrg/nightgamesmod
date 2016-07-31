@@ -198,7 +198,7 @@
 		"tempt" : [
 			{
 				"requirements": {
-					"inserted": ""
+                  "inserted": ""
 				},
 				"text" : "<b>\"Don't worry cutie, I'll wring out your cum straight away.\"</b>"
 			},
@@ -246,15 +246,15 @@
 		"victory" : [{
 				"requirements" :
 				{
-					"reverse": {
-						"result": "anal"
-					}
+                  "reverse": {
+                    "result": "anal"
+                  }
 				},
 				"text" : "She wins by fucking your ass"
 			}, {
 				"requirements" :
 				{
-					"result" : "anal"
+                  "result": "anal"
 				},
 				"text" : "She wins by you fucking her ass"
 			}, {

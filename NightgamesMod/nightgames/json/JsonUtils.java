@@ -5,16 +5,24 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+
 import nightgames.items.clothing.Clothing;
 
 public class JsonUtils {
-    public static Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(Clothing.class, new ClothingAdaptor())
-                    .create();
+    public static Gson gson =
+                    new GsonBuilder().setPrettyPrinting().registerTypeAdapter(Clothing.class, new ClothingAdaptor())
+                                    .create();
 
 
     public static <T> Collection<T> collectionFromJson(JsonArray array, Class<T> clazz) {
@@ -22,12 +30,13 @@ public class JsonUtils {
         return gson.fromJson(array, type);
     }
 
-    public static JsonArray jsonFromCollection(Collection collection) {
+    public static JsonArray jsonFromCollection(Collection<?> collection) {
         return gson.toJsonTree(collection).getAsJsonArray();
     }
 
     /**
      * Convenience method for turning JsonObjects into maps
+     *
      * @param object A JsonObject with some number of properties and values.
      * @return A map as constructed by Gson
      */
@@ -36,7 +45,7 @@ public class JsonUtils {
         return gson.fromJson(object, type);
     }
 
-    public static JsonObject JsonFromMap(Map map) {
+    public static JsonObject JsonFromMap(Map<?, ?> map) {
         return gson.toJsonTree(map).getAsJsonObject();
     }
 

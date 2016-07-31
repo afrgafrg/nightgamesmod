@@ -23,8 +23,7 @@ public final class ClothingModifierCombiner implements ModifierComponentCombiner
     private static final ClothingModifier NULL_MODIFIER = new ClothingModifier() {
         private static final String name = "null-clothing-modifier";
 
-        @Override
-        public String toString() {
+        @Override public String toString() {
             return name;
         }
 

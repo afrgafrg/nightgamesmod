@@ -104,9 +104,7 @@ public class Shield extends DurationStatus {
         return new Shield(newAffected, strength, getDuration());
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("strength", strength);
@@ -114,8 +112,7 @@ public class Shield extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Shield(null, obj.get("strength").getAsInt(), obj.get("duration").getAsInt());
     }
 }

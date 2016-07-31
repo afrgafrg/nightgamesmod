@@ -132,16 +132,13 @@ public class Shamed extends DurationStatus {
         magnitude += other.magnitude;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Shamed(null);
     }
 }

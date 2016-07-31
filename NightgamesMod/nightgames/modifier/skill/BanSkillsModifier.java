@@ -1,7 +1,11 @@
 package nightgames.modifier.skill;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.gson.JsonElement;
@@ -35,8 +39,7 @@ public class BanSkillsModifier extends SkillModifier implements ModifierComponen
         return name;
     }
 
-    @Override
-    public BanSkillsModifier instance(JsonObject object) {
+    @Override public BanSkillsModifier instance(JsonObject object) {
         Collection<Skill> skillPool = Global.getSkillPool();
         Optional<String> maybeName = JsonUtils.getOptional(object, "skill").map(JsonElement::getAsString);
         if (maybeName.isPresent()) {

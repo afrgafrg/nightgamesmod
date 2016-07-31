@@ -168,17 +168,14 @@ public class Enthralled extends DurationStatus {
         return new Enthralled(newAffected, newOther, getDuration());
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("duration", getDuration());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Enthralled(null, null, obj.get("duration").getAsInt());
     }
 }

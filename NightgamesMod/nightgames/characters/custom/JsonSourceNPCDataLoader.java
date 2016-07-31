@@ -1,24 +1,33 @@
 package nightgames.characters.custom;
 
-import com.google.gson.*;
-import nightgames.characters.*;
-import nightgames.characters.body.Body;
-import nightgames.characters.custom.effect.CustomEffect;
-import nightgames.characters.custom.effect.MoneyModEffect;
-import nightgames.json.JsonUtils;
-import nightgames.items.Item;
-import nightgames.items.ItemAmount;
-import nightgames.items.clothing.Clothing;
-import nightgames.requirements.*;
-import nightgames.skills.Skill;
-import nightgames.stance.Stance;
-import nightgames.status.Stsflag;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+
+import nightgames.characters.Attribute;
+import nightgames.characters.Growth;
+import nightgames.characters.MaxAttribute;
+import nightgames.characters.Plan;
+import nightgames.characters.PreferredAttribute;
+import nightgames.characters.Trait;
+import nightgames.characters.body.Body;
+import nightgames.characters.custom.effect.CustomEffect;
+import nightgames.characters.custom.effect.MoneyModEffect;
+import nightgames.items.Item;
+import nightgames.items.ItemAmount;
+import nightgames.items.clothing.Clothing;
+import nightgames.json.JsonUtils;
+import nightgames.requirements.JsonRequirementLoader;
+import nightgames.skills.Skill;
+import nightgames.stance.Stance;
+import nightgames.status.Stsflag;
 
 public class JsonSourceNPCDataLoader {
     private static JsonRequirementLoader requirementLoader = new JsonRequirementLoader();
@@ -59,12 +68,14 @@ public class JsonSourceNPCDataLoader {
         JsonObject baseStats = stats.getAsJsonObject("base");
         data.stats.level = baseStats.get("level").getAsInt();
         // load attributes
-        data.stats.attributes.putAll(JsonUtils.mapFromJson(baseStats.getAsJsonObject("attributes"), Attribute.class, Integer.class));
+        data.stats.attributes.putAll(JsonUtils
+                        .mapFromJson(baseStats.getAsJsonObject("attributes"), Attribute.class, Integer.class));
 
         loadResources(baseStats.getAsJsonObject("resources"), data.stats);
         loadTraits(baseStats.getAsJsonArray("traits"), data.stats.traits);
         loadGrowth(stats.getAsJsonObject("growth"), data.growth);
-        loadPreferredAttributes(stats.getAsJsonObject("growth").getAsJsonArray("preferredAttributes"), data.preferredAttributes);
+        loadPreferredAttributes(stats.getAsJsonObject("growth").getAsJsonArray("preferredAttributes"),
+                        data.preferredAttributes);
         loadItems(object.getAsJsonObject("items"), data);
         loadAllLines(object.getAsJsonObject("lines"), data.characterLines);
         data.portraits = loadLines(object.getAsJsonArray("portraits"));
@@ -99,7 +110,7 @@ public class JsonSourceNPCDataLoader {
     }
 
     private static void loadAllLines(JsonObject linesObj, Map<String, List<CustomStringEntry>> characterLines) {
-        for (Map.Entry<String, JsonElement> e: linesObj.entrySet()) {
+        for (Map.Entry<String, JsonElement> e : linesObj.entrySet()) {
             String key = e.getKey();
             List<CustomStringEntry> lines = loadLines(linesObj.getAsJsonArray(key));
             characterLines.put(key, lines);
@@ -165,7 +176,7 @@ public class JsonSourceNPCDataLoader {
     }
 
     protected static void loadPreferredAttributes(JsonArray arr, List<PreferredAttribute> preferredAttributes) {
-        for (JsonElement element: arr) {
+        for (JsonElement element : arr) {
             JsonObject obj = element.getAsJsonObject();
             Attribute att = JsonUtils.gson.fromJson(obj.get("attribute"), Attribute.class);
             final int max = JsonUtils.getOptional(obj, "max").map(JsonElement::getAsInt).orElse(Integer.MAX_VALUE);
@@ -174,10 +185,9 @@ public class JsonSourceNPCDataLoader {
     }
 
     private static void loadGrowthTraits(JsonArray arr, Growth growth) {
-        for (JsonElement element: arr) {
+        for (JsonElement element : arr) {
             JsonObject obj = element.getAsJsonObject();
-            growth.addTrait(obj.get("level").getAsInt(),
-                            JsonUtils.gson.fromJson(obj.get("trait"), Trait.class));
+            growth.addTrait(obj.get("level").getAsInt(), JsonUtils.gson.fromJson(obj.get("trait"), Trait.class));
         }
     }
 
@@ -185,7 +195,7 @@ public class JsonSourceNPCDataLoader {
         traits.addAll(JsonUtils.collectionFromJson(array, Trait.class));
     }
 
-    @SuppressWarnings("unchecked")
+     @SuppressWarnings("unchecked")
     protected static void loadAiModifiers(JsonArray arr, AiModifiers mods) {
         for (Object aiMod : arr) {
             JsonObject obj = (JsonObject) aiMod;
@@ -211,14 +221,13 @@ public class JsonSourceNPCDataLoader {
                     break;
                 default:
                     throw new IllegalArgumentException("Type of AiModifier must be one of \"skill\", "
-                                    + "\"position\", \"self-status\", or \"opponent-status\", " + "but was \""
-                                    + type + "\".");
+                                    + "\"position\", \"self-status\", or \"opponent-status\", " + "but was \"" + type
+                                    + "\".");
             }
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static void loadComments(JsonArray arr, DataBackedNPCData data) {
+     private static void loadComments(JsonArray arr, DataBackedNPCData data) {
         arr.forEach(e -> CommentSituation.parseComment(e.getAsJsonObject(), data.comments));
     }
 }

@@ -1,5 +1,15 @@
 package nightgames.characters.custom;
 
+import static nightgames.requirements.RequirementShortcuts.anal;
+import static nightgames.requirements.RequirementShortcuts.dom;
+import static nightgames.requirements.RequirementShortcuts.inserted;
+import static nightgames.requirements.RequirementShortcuts.not;
+import static nightgames.requirements.RequirementShortcuts.position;
+import static nightgames.requirements.RequirementShortcuts.rev;
+import static nightgames.requirements.RequirementShortcuts.status;
+import static nightgames.requirements.RequirementShortcuts.sub;
+import static nightgames.requirements.RequirementShortcuts.winning;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -11,35 +21,34 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 
 import nightgames.Resources.ResourceLoader;
 import nightgames.characters.Character;
+import nightgames.combat.Combat;
 import nightgames.json.JsonUtils;
 import nightgames.requirements.Requirement;
-import nightgames.combat.Combat;
 
-import static nightgames.requirements.RequirementShortcuts.*;
 
-@SuppressWarnings("unchecked")
 public enum CommentSituation {
     // Fucking
-    VAG_DOM_PITCH_WIN(2, inserted(), rev(anal()), dom(), winning()),
-    VAG_DOM_PITCH_LOSE(2, inserted(), rev(not(anal())), dom(), rev(winning())),
-    VAG_DOM_CATCH_WIN(2, rev(inserted()), not(anal()), dom(), winning()),
-    VAG_DOM_CATCH_LOSE(2, rev(inserted()), not(anal()), dom(), rev(winning())),
-    VAG_SUB_PITCH_WIN(2, inserted(), rev(not(anal())), sub(), winning()),
-    VAG_SUB_PITCH_LOSE(2, inserted(), rev(not(anal())), sub(), rev(winning())),
-    VAG_SUB_CATCH_WIN(2, rev(inserted()), not(anal()), sub(), winning()),
-    VAG_SUB_CATCH_LOSE(2, rev(inserted()), not(anal()), sub(), rev(winning())),
-    ANAL_DOM_PITCH_WIN(2, inserted(), rev(anal()), dom(), winning()),
-    ANAL_DOM_PITCH_LOSE(2, inserted(), rev(anal()), dom(), rev(winning())),
-    ANAL_DOM_CATCH_WIN(2, rev(inserted()), anal(), dom(), winning()),
-    ANAL_DOM_CATCH_LOSE(2, rev(inserted()), anal(), dom(), rev(winning())),
-    ANAL_SUB_PITCH_WIN(2, inserted(), rev(anal()), sub(), winning()),
-    ANAL_SUB_PITCH_LOSE(2, inserted(), rev(anal()), sub(), rev(winning())),
-    ANAL_SUB_CATCH_WIN(2, rev(inserted()), anal(), sub(), winning()),
-    ANAL_SUB_CATCH_LOSE(2, rev(inserted()), anal(), sub(), rev(winning())),
+    VAG_DOM_PITCH_WIN(2, inserted(), rev(anal()), dom(), winning()), VAG_DOM_PITCH_LOSE(2, inserted(), rev(not(anal())),
+                    dom(), rev(winning())), VAG_DOM_CATCH_WIN(2, rev(inserted()), not(anal()), dom(),
+                    winning()), VAG_DOM_CATCH_LOSE(2, rev(inserted()), not(anal()), dom(),
+                    rev(winning())), VAG_SUB_PITCH_WIN(2, inserted(), rev(not(anal())), sub(),
+                    winning()), VAG_SUB_PITCH_LOSE(2, inserted(), rev(not(anal())), sub(),
+                    rev(winning())), VAG_SUB_CATCH_WIN(2, rev(inserted()), not(anal()), sub(),
+                    winning()), VAG_SUB_CATCH_LOSE(2, rev(inserted()), not(anal()), sub(),
+                    rev(winning())), ANAL_DOM_PITCH_WIN(2, inserted(), rev(anal()), dom(),
+                    winning()), ANAL_DOM_PITCH_LOSE(2, inserted(), rev(anal()), dom(),
+                    rev(winning())), ANAL_DOM_CATCH_WIN(2, rev(inserted()), anal(), dom(),
+                    winning()), ANAL_DOM_CATCH_LOSE(2, rev(inserted()), anal(), dom(),
+                    rev(winning())), ANAL_SUB_PITCH_WIN(2, inserted(), rev(anal()), sub(),
+                    winning()), ANAL_SUB_PITCH_LOSE(2, inserted(), rev(anal()), sub(),
+                    rev(winning())), ANAL_SUB_CATCH_WIN(2, rev(inserted()), anal(), sub(),
+                    winning()), ANAL_SUB_CATCH_LOSE(2, rev(inserted()), anal(), sub(), rev(winning())),
 
     // Stances
     BEHIND_DOM_WIN(1, position("behind"), dom(), winning()), BEHIND_DOM_LOSE(1, position("behind"), dom(),
@@ -58,19 +67,12 @@ public enum CommentSituation {
                     position("engulfed"), dom()),
 
     // Statuses
-    SELF_BOUND(0, status("bound")),
-    OTHER_BOUND(0, rev(status("bound"))),
-    OTHER_STUNNED(0, rev(status("stunned"))),
-    OTHER_TRANCE(0, rev(status("trance"))),
-    OTHER_CHARMED(0, rev(status("charmed"))),
-    OTHER_ENTHRALLED(0, rev(status("enthralled"))),
-    SELF_HORNY(0, status("horny")),
-    OTHER_HORNY(0, rev(status("horny"))),
-    SELF_OILED(0, status("oiled")),
-    OTHER_OILED(0, rev(status("oiled"))),
-    SELF_COCKBOUND(0, status("cockbound")),
-    OTHER_COCKBOUND(0, rev(status("cockbound"))),
-    OTHER_PARASITED(0, rev(status("parasited"))),
+    SELF_BOUND(0, status("bound")), OTHER_BOUND(0, rev(status("bound"))), OTHER_STUNNED(0,
+                    rev(status("stunned"))), OTHER_TRANCE(0, rev(status("trance"))), OTHER_CHARMED(0,
+                    rev(status("charmed"))), OTHER_ENTHRALLED(0, rev(status("enthralled"))), SELF_HORNY(0,
+                    status("horny")), OTHER_HORNY(0, rev(status("horny"))), SELF_OILED(0, status("oiled")), OTHER_OILED(
+                    0, rev(status("oiled"))), SELF_COCKBOUND(0, status("cockbound")), OTHER_COCKBOUND(0,
+                    rev(status("cockbound"))), OTHER_PARASITED(0, rev(status("parasited"))),
 
     NO_COMMENT(-1);
 

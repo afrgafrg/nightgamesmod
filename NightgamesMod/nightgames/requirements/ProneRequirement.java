@@ -8,8 +8,7 @@ import nightgames.combat.Combat;
  */
 public class ProneRequirement extends BaseRequirement {
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return c != null && c.getStance().prone(self);
     }
 }

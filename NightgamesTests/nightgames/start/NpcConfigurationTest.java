@@ -42,11 +42,13 @@ public class NpcConfigurationTest {
         NpcConfiguration mergedConfig = new NpcConfiguration(angelConfig, startConfig.npcCommon);
         assertThat(mergedConfig.type, equalTo("TestAngel"));
         assertThat(mergedConfig.gender, is(Optional.empty()));
-        assertThat(mergedConfig.attributes, allOf(
-                        IsMapContaining.hasEntry(Attribute.Power, 13), IsMapContaining.hasEntry(Attribute.Seduction, 20),
-                        IsMapContaining.hasEntry(Attribute.Cunning, 15), IsMapContaining.hasEntry(Attribute.Divinity, 10),
+        assertThat(mergedConfig.attributes, allOf(IsMapContaining.hasEntry(Attribute.Power, 13),
+                        IsMapContaining.hasEntry(Attribute.Seduction, 20),
+                        IsMapContaining.hasEntry(Attribute.Cunning, 15),
+                        IsMapContaining.hasEntry(Attribute.Divinity, 10),
                         IsMapContaining.hasEntry(Attribute.Arcane, 2)));
-        assertThat(mergedConfig.body.map(body -> body.type).orElse(Optional.empty()), equalTo(Optional.of(BodyConfiguration.Archetype.ANGEL)));
+        assertThat(mergedConfig.body.map(body -> body.type).orElse(Optional.empty()),
+                        equalTo(Optional.of(BodyConfiguration.Archetype.ANGEL)));
         assertThat(mergedConfig.xp.orElse(0), equalTo(50));
         assertThat(mergedConfig.level.orElse(0), equalTo(5));
         assertThat(mergedConfig.money.orElse(0), equalTo(5000));
@@ -55,12 +57,10 @@ public class NpcConfigurationTest {
     @Test public void testNpcCreation() throws Exception {
         TestAngel angel = new TestAngel(Optional.of(angelConfig), Optional.of(startConfig.npcCommon));
         assertThat(angel.character.getType(), equalTo("TestAngel"));
-        assertThat(angel.character.att, allOf(Arrays.asList(
-                        IsMapContaining.hasEntry(Attribute.Power, 13),
+        assertThat(angel.character.att, allOf(Arrays.asList(IsMapContaining.hasEntry(Attribute.Power, 13),
                         IsMapContaining.hasEntry(Attribute.Seduction, 20),
                         IsMapContaining.hasEntry(Attribute.Cunning, 15),
-                        IsMapContaining.hasEntry(Attribute.Divinity, 10),
-                        IsMapContaining.hasEntry(Attribute.Arcane, 2),
+                        IsMapContaining.hasEntry(Attribute.Divinity, 10), IsMapContaining.hasEntry(Attribute.Arcane, 2),
                         IsMapContaining.hasEntry(Attribute.Perception, 6),
                         IsMapContaining.hasEntry(Attribute.Speed, 5))));
         assertThat(angel.character.xp, equalTo(50));

@@ -37,9 +37,8 @@ public class Pray extends Skill {
                                         + " the knowledge that Angel is there for you reinvigorates your spirit"
                                         + " and strengthens your faith.",
                         target.name()));
-        int amt = Math.round((Global.getPlayer()
-                                    .getAddiction(AddictionType.ZEAL).orElseThrow(() -> new SkillUnusableException(this))
-                                    .getMagnitude() * 5));
+        int amt = Math.round((Global.getPlayer().getAddiction(AddictionType.ZEAL)
+                        .orElseThrow(() -> new SkillUnusableException(this)).getMagnitude() * 5));
         getSelf().restoreWillpower(c, amt);
         Global.getPlayer().addict(AddictionType.ZEAL, Global.getCharacterByType("Angel"), Addiction.LOW_INCREASE);
         return true;

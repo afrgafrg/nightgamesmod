@@ -34,8 +34,7 @@ public class DarkChaos extends Status {
     public void tick(Combat c) {
         if (c == null)
             return;
-        float odds = Global.getPlayer()
-                           .getAddiction(AddictionType.CORRUPTION).map(Addiction::getMagnitude).orElse(0f)
+        float odds = Global.getPlayer().getAddiction(AddictionType.CORRUPTION).map(Addiction::getMagnitude).orElse(0f)
                         / 4;
         if (odds > Math.random()) {
             Effect e = Effect.pick(c);
@@ -108,16 +107,13 @@ public class DarkChaos extends Status {
         return new DarkChaos();
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject saveToJson() {
+     @Override public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new DarkChaos();
     }
 

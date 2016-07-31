@@ -13,8 +13,7 @@ public class LevelRequirement extends BaseRequirement {
         this.level = level;
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return self.getLevel() >= level;
     }
 

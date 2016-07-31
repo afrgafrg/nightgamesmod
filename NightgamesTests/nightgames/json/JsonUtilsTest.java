@@ -39,8 +39,7 @@ public class JsonUtilsTest {
         String sampleText = "{ " + "\"int\": 10," + "\"float\": 5.0," + "\"string\": \"wow\"," + "\"bool\": false,"
                         + "\"manystrings\": [\"foo\", \"bar\", \"baz\"],"
                         + "\"enums\": [\"broody\", \"open\", \"kinky\"]," + "\"extraenums\": [\"female\", \"nodick\"],"
-                        + "\"map\": {\"Power\": 5, \"Seduction\": 15}"
-                        + " }";
+                        + "\"map\": {\"Power\": 5, \"Seduction\": 15}" + " }";
         sampleJSON = parser.parse(sampleText).getAsJsonObject();
     }
 

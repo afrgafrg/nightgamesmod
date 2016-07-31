@@ -92,17 +92,14 @@ public class Detected extends DurationStatus {
         return new Detected(newAffected, getDuration());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject saveToJson() {
+     @Override public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("duration", getDuration());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Detected(null, obj.get("duration").getAsInt());
     }
 }

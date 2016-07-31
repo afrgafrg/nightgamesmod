@@ -25,6 +25,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.json.JsonUtils;
+import nightgames.skills.Skill;
 import nightgames.status.Abuff;
 import nightgames.status.BodyFetish;
 import nightgames.status.Status;
@@ -471,15 +472,15 @@ public class Body implements Cloneable {
     }
 
     public int pleasure(Character opponent, BodyPart with, BodyPart target, double magnitude, Combat c) {
-        return pleasure(opponent, with, target, magnitude, 0, c, false);
+        return pleasure(opponent, with, target, magnitude, 0, c, false, null);
     }
 
-    public int pleasure(Character opponent, BodyPart with, BodyPart target, double magnitude, int bonus, Combat c) {
-        return pleasure(opponent, with, target, magnitude, bonus, c, false);
+    public int pleasure(Character opponent, BodyPart with, BodyPart target, double magnitude, Combat c, Skill skill) {
+        return pleasure(opponent, with, target, magnitude, 0, c, false, skill);
     }
 
     public int pleasure(Character opponent, BodyPart with, BodyPart target, double magnitude, int bonus, Combat c,
-                    boolean sub) {
+                    boolean sub, Skill skill) {
         if (target == null) {
             target = nonePart;
         }
@@ -548,6 +549,10 @@ public class Body implements Cloneable {
         double base = (magnitude + bonusDamage);
         double multiplier = Math.max(0, 1 + ((sensitivity - 1) + (pleasure - 1) + (perceptionBonus - 1)));
 
+        if (skill != null) {
+            multiplier = Math.max(0, multiplier + skill.multiplierForStage(character));
+        }
+
         double damage = base * multiplier;
         double perceptionlessDamage = base * (multiplier - (perceptionBonus - 1));
 
@@ -568,12 +573,13 @@ public class Body implements Cloneable {
             String bonusString = bonusDamage > 0
                             ? String.format(" + <font color='rgb(255,100,50)'>%.1f<font color='white'>", bonusDamage)
                             : "";
+            String stageString = skill == null ? "" : String.format(" + stage:%.2f", skill.multiplierForStage(character));
             String battleString = String.format(
                             "%s%s %s<font color='white'> was pleasured by %s%s<font color='white'> for <font color='rgb(255,50,200)'>%d<font color='white'> "
-                                            + "base:%.1f (%.1f%s) x multiplier: %.2f (1 + sen:%.1f + ple:%.1f + per:%.1f)\n",
+                                            + "base:%.1f (%.1f%s) x multiplier: %.2f (1 + sen:%.1f + ple:%.1f + per:%.1f %s)\n",
                             firstColor, Global.capitalizeFirstLetter(character.nameOrPossessivePronoun()),
                             target.describe(character), secondColor, pleasuredBy, result, base, magnitude, bonusString,
-                            multiplier, sensitivity - 1, pleasure - 1, perceptionBonus - 1);
+                            multiplier, sensitivity - 1, pleasure - 1, perceptionBonus - 1, stageString);
             if (c != null) {
                 c.writeSystemMessage(battleString);
             }
@@ -727,8 +733,7 @@ public class Body implements Cloneable {
         return newBody;
     }
 
-    @SuppressWarnings("unchecked")
-    public JsonObject save() {
+     public JsonObject save() {
         JsonObject bodyObj = new JsonObject();
         bodyObj.addProperty("hotness", hotness);
         bodyObj.addProperty("femininity", baseFemininity);
@@ -767,7 +772,8 @@ public class Body implements Cloneable {
         if (body.has("cock")) {
             defaultFemininity -= 2;
         }
-        body.baseFemininity = JsonUtils.getOptional(bodyObj, "femininity").map(JsonElement::getAsDouble).orElse(defaultFemininity);
+        body.baseFemininity = JsonUtils.getOptional(bodyObj, "femininity").map(JsonElement::getAsDouble)
+                        .orElse(defaultFemininity);
         body.updateCurrentParts();
         return body;
     }

@@ -1,15 +1,89 @@
 package nightgames.global;
 
-import com.google.gson.*;
+import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+
 import nightgames.Resources.ResourceLoader;
 import nightgames.actions.Action;
-import nightgames.actions.*;
+import nightgames.actions.Bathe;
+import nightgames.actions.BushAmbush;
+import nightgames.actions.Craft;
+import nightgames.actions.Energize;
+import nightgames.actions.Hide;
+import nightgames.actions.Locate;
+import nightgames.actions.MasturbateAction;
+import nightgames.actions.Movement;
+import nightgames.actions.PassAmbush;
+import nightgames.actions.Recharge;
+import nightgames.actions.Resupply;
+import nightgames.actions.Scavenge;
+import nightgames.actions.SetTrap;
+import nightgames.actions.TreeAmbush;
+import nightgames.actions.Use;
 import nightgames.actions.Wait;
 import nightgames.areas.Area;
 import nightgames.areas.MapDrawHint;
-import nightgames.characters.*;
+import nightgames.characters.Airi;
+import nightgames.characters.Angel;
+import nightgames.characters.Attribute;
+import nightgames.characters.Cassie;
 import nightgames.characters.Character;
+import nightgames.characters.CharacterSex;
+import nightgames.characters.Eve;
+import nightgames.characters.Jewel;
+import nightgames.characters.Kat;
+import nightgames.characters.Mara;
+import nightgames.characters.Maya;
+import nightgames.characters.NPC;
+import nightgames.characters.Personality;
+import nightgames.characters.Player;
+import nightgames.characters.Reyka;
+import nightgames.characters.Trait;
+import nightgames.characters.TraitTree;
+import nightgames.characters.Yui;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.StraponPart;
 import nightgames.characters.custom.CustomNPC;
@@ -18,37 +92,41 @@ import nightgames.characters.custom.NPCData;
 import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
 import nightgames.ftc.FTCMatch;
-import nightgames.json.JsonUtils;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+import nightgames.json.JsonUtils;
 import nightgames.modifier.CustomModifierLoader;
 import nightgames.modifier.Modifier;
-import nightgames.modifier.standard.*;
+import nightgames.modifier.standard.FTCModifier;
+import nightgames.modifier.standard.NoItemsModifier;
+import nightgames.modifier.standard.NoModifier;
+import nightgames.modifier.standard.NoRecoveryModifier;
+import nightgames.modifier.standard.NoToysModifier;
+import nightgames.modifier.standard.NudistModifier;
+import nightgames.modifier.standard.PacifistModifier;
+import nightgames.modifier.standard.UnderwearOnlyModifier;
+import nightgames.modifier.standard.VibrationModifier;
+import nightgames.modifier.standard.VulnerableModifier;
 import nightgames.pet.Ptype;
 import nightgames.skills.*;
 import nightgames.start.NpcConfiguration;
 import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
 import nightgames.status.Status;
-import nightgames.trap.*;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.util.*;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import nightgames.trap.Alarm;
+import nightgames.trap.AphrodisiacTrap;
+import nightgames.trap.Decoy;
+import nightgames.trap.DissolvingTrap;
+import nightgames.trap.EnthrallingTrap;
+import nightgames.trap.IllusionTrap;
+import nightgames.trap.Snare;
+import nightgames.trap.Spiderweb;
+import nightgames.trap.SpringTrap;
+import nightgames.trap.StripMine;
+import nightgames.trap.TentacleTrap;
+import nightgames.trap.Trap;
+import nightgames.trap.Tripline;
 
 public class Global {
     private static Random rng;
@@ -286,6 +364,7 @@ public class Global {
         getSkillPool().add(new SpawnImp(ch, Ptype.impfem));
         getSkillPool().add(new SpawnFaerie(ch, Ptype.fairymale));
         getSkillPool().add(new SpawnImp(ch, Ptype.impmale));
+        getSkillPool().add(new SpawnFGoblin(ch, Ptype.fgoblin));
         getSkillPool().add(new SpawnSlime(ch));
         getSkillPool().add(new StunBlast(ch));
         getSkillPool().add(new Fly(ch));
@@ -408,6 +487,20 @@ public class Global {
         getSkillPool().add(new PlaceBlindfold(ch));
         getSkillPool().add(new RipBlindfold(ch));
         getSkillPool().add(new ToggleBlindfold(ch));
+        getSkillPool().add(new BunshinAssault(ch));
+        getSkillPool().add(new BunshinService(ch));
+        getSkillPool().add(new GoodnightKiss(ch));
+        getSkillPool().add(new NeedleThrow(ch));
+        getSkillPool().add(new StealClothes(ch));
+        getSkillPool().add(new Substitute(ch));
+        getSkillPool().add(new AttireShift(ch));
+        getSkillPool().add(new CheapShot(ch));
+        getSkillPool().add(new EmergencyJump(ch));
+        getSkillPool().add(new Haste(ch));
+        getSkillPool().add(new Rewind(ch));
+        getSkillPool().add(new Unstrip(ch));
+        getSkillPool().add(new WindUp(ch));
+
 
         if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
             getSkillPool().add(new SelfStun(ch));
@@ -521,6 +614,10 @@ public class Global {
         return null;
     }
 
+    public static Time getTime() {
+        return time;
+    }
+
     public static Match getMatch() {
         return match;
     }
@@ -572,7 +669,7 @@ public class Global {
         if (Global.checkFlag(Flag.autosave)) {
             Global.autoSave();
         }
-        startDay();
+        Global.gui().endMatch();
     }
     
     private static Set<Character> pickCharacters(Set<Character> avail, Set<Character> added, int size) {
@@ -624,12 +721,9 @@ public class Global {
         for (Character c : players) {
             // Disabling the player wouldn't make much sense, and there's no PlayerDisabled flag.
             Flag disabledFlag = null;
-            if (!c.getType().equals("Player")) {
-                try {
-                    disabledFlag = Flag.valueOf(c.getType() + "Disabled");
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
+            String flagName = c.getType() + "Disabled";
+            if (!c.getType().equals("Player") && Flag.exists(flagName)) {
+                disabledFlag = Flag.valueOf(flagName);
             }
             if (disabledFlag == null || !Global.checkFlag(disabledFlag)) {
                 // TODO: DEBUG
@@ -658,7 +752,8 @@ public class Global {
                 newChallenger(new Maya(human.getLevel()));
                 flag(Flag.Maya);
             }
-            NPC maya = Optional.ofNullable(getNPC("Maya")).orElseThrow(() -> new IllegalStateException("Maya data unavailable when attempting to add her to lineup."));
+            NPC maya = Optional.ofNullable(getNPC("Maya")).orElseThrow(() -> new IllegalStateException(
+                            "Maya data unavailable when attempting to add her to lineup."));
             lineup.add(maya);
             resting = new HashSet<>(players);
             resting.removeAll(lineup);
@@ -853,6 +948,7 @@ public class Global {
         workshop.link(engineering);
         lab.link(engineering);
         lab.link(bridge);
+        lab.jump(dining);
         libarts.link(quad);
         libarts.link(library);
         libarts.link(pool);
@@ -872,6 +968,7 @@ public class Global {
         tunnel.link(laundry);
         bridge.link(lab);
         bridge.link(library);
+        bridge.jump(quad);
         sau.link(pool);
         sau.link(quad);
         workshop.shortcut(pool);
@@ -965,8 +1062,9 @@ public class Global {
         JsonObject saveJson = data.toJson();
 
         try (JsonWriter saver = new JsonWriter(new FileWriter(file))) {
+            saver.setIndent("  ");
             JsonUtils.gson.toJson(saveJson, saver);
-        } catch (IOException|JsonIOException e) {
+        } catch (IOException | JsonIOException e) {
             System.err.println("Could not save file " + file + ": " + e.getMessage());
             e.printStackTrace();
         }
@@ -983,7 +1081,8 @@ public class Global {
         Optional<NpcConfiguration> commonConfig =
                         startConfig.isPresent() ? Optional.of(startConfig.get().npcCommon) : Optional.empty();
 
-        try (InputStreamReader reader = new InputStreamReader(ResourceLoader.getFileResourceAsStream("characters/included.json"))) {
+        try (InputStreamReader reader = new InputStreamReader(
+                        ResourceLoader.getFileResourceAsStream("characters/included.json"))) {
             JsonArray characterSet = JsonUtils.rootJson(reader).getAsJsonArray();
             for (JsonElement element : characterSet) {
                 String name = element.getAsString();
@@ -1014,6 +1113,7 @@ public class Global {
         Personality airi = new Airi(findNpcConfig("Airi", startConfig), commonConfig);
         Personality eve = new Eve(findNpcConfig("Eve", startConfig), commonConfig);
         Personality maya = new Maya(1, findNpcConfig("Maya", startConfig), commonConfig);
+        Personality yui = new Yui(findNpcConfig("Yui", startConfig), commonConfig);
         characterPool.put(cassie.getCharacter().getType(), cassie.getCharacter());
         characterPool.put(angel.getCharacter().getType(), angel.getCharacter());
         characterPool.put(reyka.getCharacter().getType(), reyka.getCharacter());
@@ -1023,6 +1123,8 @@ public class Global {
         characterPool.put(airi.getCharacter().getType(), airi.getCharacter());
         characterPool.put(eve.getCharacter().getType(), eve.getCharacter());
         characterPool.put(maya.getCharacter().getType(), maya.getCharacter());
+        characterPool.put(yui.getCharacter().getType(), yui.getCharacter());
+
 
         //debugChars.add(mara.getCharacter());
     }
@@ -1059,13 +1161,14 @@ public class Global {
         buildSkillPool(human);
         Clothing.buildClothingTable();
         rebuildCharacterPool(Optional.empty());
+        day = null;
     }
 
     public static void load(File file) {
         resetForLoad();
 
         JsonObject object;
-        try (Reader loader = new InputStreamReader(new FileInputStream(file))){
+        try (Reader loader = new InputStreamReader(new FileInputStream(file))) {
             object = new JsonParser().parse(loader).getAsJsonObject();
 
         } catch (IOException e) {
@@ -1085,6 +1188,7 @@ public class Global {
 
     /**
      * Loads game state data into static fields from SaveData object.
+     *
      * @param data A SaveData object, as loaded from save files.
      */
     protected static void loadData(SaveData data) {
@@ -1164,6 +1268,8 @@ public class Global {
     public static void reset() {
         players.clear();
         flags.clear();
+        day = null;
+        match = null;
         human = new Player("Dummy");
         gui.purgePlayer();
         gui.createCharacter();

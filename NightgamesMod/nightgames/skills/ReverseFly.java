@@ -57,8 +57,8 @@ public class ReverseFly extends Fly {
             if (getSelf().has(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
             }
-            target.body.pleasure(getSelf(), getSelfOrgan(), getTargetOrgan(target), m, c);
-            getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), otherm, c);
+            target.body.pleasure(getSelf(), getSelfOrgan(), getTargetOrgan(target), m, c, this);
+            getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), otherm, c, this);
             c.setStance(new FlyingCowgirl(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());
         } else {
             getSelf().add(c, new Falling(getSelf()));
@@ -88,12 +88,17 @@ public class ReverseFly extends Fly {
                             + getSelf().body.getRandomWings().describe(target) + " hard and before you know it"
                             + " you are twenty feet in the sky held up by her arms and legs."
                             + " Somehow, your dick ended up inside of her in the process and"
-                            + " the rhythmic movements of her flying arouse you to no end";
+                            + " the rhythmic movements of her flying arouse you to no end.";
         }
     }
 
     @Override
     public boolean makesContact() {
         return true;
+    }
+    
+    @Override
+    public Stage getStage() {
+        return Stage.FINISHER;
     }
 }

@@ -31,8 +31,7 @@ public class BanConsumablesModifier extends ItemModifier implements ModifierComp
         return name;
     }
 
-    @Override
-    public BanConsumablesModifier instance(JsonObject object) {
+    @Override public BanConsumablesModifier instance(JsonObject object) {
         return new BanConsumablesModifier();
     }
 

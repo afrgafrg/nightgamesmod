@@ -9,13 +9,11 @@ public class ActionModifierCombiner implements ModifierComponentCombiner<ActionM
     private static final ActionModifier NULL_MODIFIER = new ActionModifier() {
         private final String name = "null-action-modifier";
 
-        @Override
-        public String toString() {
+        @Override public String toString() {
             return name;
         }
 
-        @Override
-        public String name() {
+        @Override public String name() {
             return name;
         }
     };

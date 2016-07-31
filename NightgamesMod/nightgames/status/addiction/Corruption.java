@@ -282,8 +282,7 @@ public class Corruption extends Addiction {
         return new Corruption(newOther, magnitude);
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Corruption(Global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }

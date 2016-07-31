@@ -138,8 +138,10 @@ public class RequirementTest {
         ItemRequirement sixpack = item(Item.Beer.amount(6));
         assertThat(sixpack.meets(combat, self, other), is(true));
         assertThat(sixpack.meets(combat, other, self), is(false));
+        assertThat(sixpack.meets(null, self, null), is(true));
         self.consume(Item.Beer, 1);
         assertThat(sixpack.meets(combat, self, other), is(false));
+        assertThat(sixpack.meets(null, self, null), is(false));
     }
 
     @Test public void levelTest() throws Exception {

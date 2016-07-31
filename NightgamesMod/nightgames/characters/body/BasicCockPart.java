@@ -133,16 +133,13 @@ public enum BasicCockPart implements CockPart {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject save() {
+     @Override public JsonObject save() {
         JsonObject obj = new JsonObject();
         obj.addProperty("enum", name());
         return obj;
     }
 
-    @Override
-    public BodyPart load(JsonObject object) {
+    @Override public BodyPart load(JsonObject object) {
         String enumName = object.get("enum").getAsString();
         // some compatibility for old versions
         Optional<CockMod> mod =

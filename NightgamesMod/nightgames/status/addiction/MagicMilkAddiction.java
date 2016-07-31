@@ -205,8 +205,7 @@ public class MagicMilkAddiction extends Addiction {
         return new MagicMilkAddiction(newOther, magnitude);
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new MagicMilkAddiction(Global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }

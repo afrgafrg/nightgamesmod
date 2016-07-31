@@ -26,8 +26,7 @@ public class BanToysModifier extends ItemModifier implements ModifierComponentLo
         return name;
     }
 
-    @Override
-    public BanToysModifier instance(JsonObject object) {
+    @Override public BanToysModifier instance(JsonObject object) {
         return new BanToysModifier();
     }
 

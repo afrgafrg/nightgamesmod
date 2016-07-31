@@ -152,16 +152,13 @@ public enum BreastsPart implements BodyPart {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject save() {
+     @Override public JsonObject save() {
         JsonObject obj = new JsonObject();
         obj.addProperty("enum", name());
         return obj;
     }
 
-    @Override
-    public BodyPart load(JsonObject obj) {
+    @Override public BodyPart load(JsonObject obj) {
         return BreastsPart.valueOf(obj.get("enum").getAsString());
     }
 
@@ -201,8 +198,7 @@ public enum BreastsPart implements BodyPart {
             Addiction addiction;
             if (opponent.human()) {
                 Global.getPlayer().addict(AddictionType.MAGIC_MILK, opponent, Addiction.LOW_INCREASE);
-                addiction = Global.getPlayer()
-                                  .getAddiction(AddictionType.MAGIC_MILK).get();
+                addiction = Global.getPlayer().getAddiction(AddictionType.MAGIC_MILK).get();
                 addictionLevel = addiction.getMagnitude();
             } else {
                 addictionLevel = 0;

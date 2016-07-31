@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -21,7 +22,6 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
-import nightgames.modifier.Modifier;
 
 public class Outfit {
     private Map<ClothingSlot, List<Clothing>> outfit;
@@ -39,8 +39,7 @@ public class Outfit {
 
     public Outfit(Outfit other) {
         outfit = new EnumMap<>(ClothingSlot.class);
-        Arrays.stream(ClothingSlot.values())
-                        .forEach(slot -> outfit.put(slot, new ArrayList<>(other.outfit.get(slot))));
+        Arrays.stream(ClothingSlot.values()).forEach(slot -> outfit.put(slot, new ArrayList<>(other.outfit.get(slot))));
         equipped = new HashSet<>(other.equipped);
     }
 
@@ -367,6 +366,15 @@ public class Outfit {
     public boolean hasNoShoes() {
         Clothing feetSlot = getTopOfSlot(ClothingSlot.feet);
         return feetSlot == null || feetSlot.getLayer() < 2;
+    }
+
+    public boolean canEquip(Clothing c) {
+        return c.getSlots()
+                    .stream()
+                    .map(this::getTopOfSlot)
+                    .filter(Objects::nonNull)
+                    .mapToInt(Clothing::getLayer)
+                    .allMatch(i -> c.getLayer() < i);
     }
 
     @Override public boolean equals(Object o) {

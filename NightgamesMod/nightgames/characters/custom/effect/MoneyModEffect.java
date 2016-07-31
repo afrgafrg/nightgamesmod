@@ -20,9 +20,7 @@ public class MoneyModEffect implements CustomEffect {
     }
 
     @Override public String toString() {
-        return "MoneyModEffect{" +
-                        "amount=" + amount +
-                        '}';
+        return "MoneyModEffect{" + "amount=" + amount + '}';
     }
 
     @Override public boolean equals(Object o) {

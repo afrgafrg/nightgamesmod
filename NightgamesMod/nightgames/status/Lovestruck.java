@@ -112,16 +112,13 @@ public class Lovestruck extends DurationStatus {
         return new Lovestruck(newAffected, null, getDuration());
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Lovestruck(null, null, getDuration());
     }
 }

@@ -38,7 +38,6 @@ public class ForceClothingModifier extends ClothingModifier implements ModifierC
         if (element.isJsonPrimitive()) {
             return new ForceClothingModifier(element.getAsString());
         }
-        return new ForceClothingModifier(
-                        JsonUtils.stringsFromJson(element.getAsJsonArray()).toArray(new String[] {}));
+        return new ForceClothingModifier(JsonUtils.stringsFromJson(element.getAsJsonArray()).toArray(new String[] {}));
     }
 }

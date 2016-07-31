@@ -157,16 +157,13 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                                                   .percent() >= wetThreshold;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject save() {
+     @Override public JsonObject save() {
         JsonObject obj = new JsonObject();
         obj.addProperty("enum", name());
         return obj;
     }
 
-    @Override
-    public BodyPart load(JsonObject obj) {
+    @Override public BodyPart load(JsonObject obj) {
         return PussyPart.valueOf(obj.get("enum").getAsString());
     }
 
@@ -425,7 +422,8 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                             + ", preventing any escape.\n");
         }
         if ((self.has(Trait.tight) || self.has(Trait.holecontrol)) && c.getStance()
-                                                                       .vaginallyPenetrated(self)) {
+                                                                       .vaginallyPenetrated(self)
+                                                                       && opponent.body.has("cock")) {
             String desc = "";
             if (self.has(Trait.tight)) {
                 desc += "powerful ";
@@ -595,7 +593,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                                 "{self:NAME-POSSESSIVE} {self:body-part:pussy} clenches down hard"
                                                 + " on {other:name-possessive} {other:body-part:cock}. The suction is so strong that the cum"
                                                 + " leaves the shaft in a constant flow rather than spurts. When {other:possessive} orgasm is"
-                                                + " over, {other:possessive} is much more drained of cum than usual.",
+                                                + " over, {other:subject-action:are|is} much more drained of cum than usual.",
                                 self, opponent));
                 opponent.loseWillpower(c, 10 + Global.random(Math.min(20, self.get(Attribute.Bio))));
             } else if (countsAs(self, divine) && self.has(Trait.zealinspiring) && opponent.human()

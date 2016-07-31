@@ -128,13 +128,11 @@ public class TailSucked extends Status {
         return new TailSucked(newAffected, newOther, power);
     }
 
-    @Override
-    public JsonObject saveToJson() {
+    @Override public JsonObject saveToJson() {
         return null;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return null;
     }
 

@@ -159,9 +159,7 @@ public class Abuff extends DurationStatus {
         return new Abuff(newAffected, modded, value, getDuration());
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("modded", modded.name());
@@ -170,9 +168,8 @@ public class Abuff extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
-        return new Abuff(null, Attribute.valueOf(obj.get("modded").getAsString()),
-                        obj.get("value").getAsInt(), obj.get("duration").getAsInt());
+    @Override public Status loadFromJson(JsonObject obj) {
+        return new Abuff(null, Attribute.valueOf(obj.get("modded").getAsString()), obj.get("value").getAsInt(),
+                        obj.get("duration").getAsInt());
     }
 }

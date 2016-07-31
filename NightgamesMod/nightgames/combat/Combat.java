@@ -398,7 +398,7 @@ public class Combat extends Observable implements Cloneable {
             p1.act(this);
         } else if (p2act == null) {
             p2.act(this);
-        } else if (p1act != null && p2act != null) {
+        } else {
             clear();
             if (p1.human() || p2.human()) {
                 Global.gui()
@@ -479,7 +479,8 @@ public class Combat extends Observable implements Cloneable {
 
         Character sub = getStance().getOther(self);
         if (self.has(Trait.smqueen)) {
-            write(self, Global.format("{self:NAME-POSSESSIVE} cold gaze in {self:possessive} dominant position makes {other:direct-object} shiver.",
+            write(self,
+                            Global.format("{self:NAME-POSSESSIVE} cold gaze in {self:possessive} dominant position makes {other:direct-object} shiver.",
                                             self, sub));
             sub.loseWillpower(this, stanceDominance, 0, false, " (SM Queen)");
         } else {
@@ -796,6 +797,8 @@ public class Combat extends Observable implements Cloneable {
         p2.state = State.ready;
         p1.endofbattle();
         p2.endofbattle();
+        p1Data.getRemovedItems().forEach(p1::gain);
+        p2Data.getRemovedItems().forEach(p2::gain);
         location.endEncounter();
         // it's a little ugly, but we must be mindful of lazy evaluation
         boolean ding = p1.levelUpIfPossible() && p1.human();

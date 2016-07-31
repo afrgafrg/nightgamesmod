@@ -11,8 +11,7 @@ public class InsertedRequirement extends BaseRequirement {
     public InsertedRequirement() {
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return c != null && c.getStance().inserted(self);
     }
 }

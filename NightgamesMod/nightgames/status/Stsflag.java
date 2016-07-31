@@ -59,5 +59,8 @@ public enum Stsflag {
     magicmilkcraving,
     partiallyCorrupted,
     parasited,
-    mimicry, blinded,
+    mimicry, 
+    blinded,
+    victimComplex, 
+    primed
 }

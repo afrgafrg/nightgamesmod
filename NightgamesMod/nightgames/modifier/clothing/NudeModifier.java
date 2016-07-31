@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.google.gson.JsonObject;
+
 import nightgames.modifier.ModifierComponentLoader;
 
 public class NudeModifier extends ClothingModifier implements ModifierComponentLoader<ClothingModifier> {
@@ -19,8 +20,7 @@ public class NudeModifier extends ClothingModifier implements ModifierComponentL
         return name;
     }
 
-    @Override
-    public NudeModifier instance(JsonObject object) {
+    @Override public NudeModifier instance(JsonObject object) {
         return new NudeModifier();
     }
 

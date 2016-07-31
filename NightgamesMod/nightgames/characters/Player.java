@@ -1,13 +1,18 @@
 package nightgames.characters;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.gson.JsonObject;
-import nightgames.start.PlayerConfiguration;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import nightgames.actions.Action;
+import nightgames.actions.Leap;
 import nightgames.actions.Move;
 import nightgames.actions.Shortcut;
 import nightgames.areas.Area;
@@ -24,10 +29,12 @@ import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Skill;
+import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
 import nightgames.stance.Behind;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
+import nightgames.start.PlayerConfiguration;
 import nightgames.status.Enthralled;
 import nightgames.status.Horny;
 import nightgames.status.Masochistic;
@@ -142,6 +149,8 @@ public class Player extends Character {
             }
             description += "</i><br>";
         }
+        description += Stage.describe(this);
+        
         return description;
     }
 
@@ -352,6 +361,12 @@ public class Player extends Character {
                         gui.addAction(new Shortcut(path), this);
                     }
                 }
+
+                if(getPure(Attribute.Ninjutsu)>=5){
+                    for(Area path:location.jump){
+                        gui.addAction(new Leap(path),this);
+                    }
+                }
                 for (Action act : Global.getActions()) {
                     if (act.usable(this) && Global.getMatch().condition.allowAction(act, this, Global.getMatch())) {
                         gui.addAction(act, this);
@@ -389,7 +404,7 @@ public class Player extends Character {
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
         Area destination = adjacent[Global.random(adjacent.length)];
-        gui.message("You dash away and escape into the <b>" + destination.name + "</b>");
+        gui.message("You dash away and escape into the <b>" + destination.name + ".</b>");
         travel(destination);
         location2.endEncounter();
     }
@@ -556,10 +571,10 @@ public class Player extends Character {
                                             + "reaction.<p>You continue your oral assault until you hear a breathy "
                                             + "moan, <i>\"I'm gonna cum!\"</i> You hastily remove %s dick out of "
                                             + "your mouth and pump it rapidly. %s shoots %s load into the air, barely "
-                                            + "missing you.",
-                            target.name(), Global.capitalizeFirstLetter(target.possessivePronoun()),
-                            target.name(), Global.capitalizeFirstLetter(target.pronoun()), target.possessivePronoun(),
-                            target.name(), target.possessivePronoun()));
+                                            + "missing you.", target.name(),
+                            Global.capitalizeFirstLetter(target.possessivePronoun()), target.name(),
+                            Global.capitalizeFirstLetter(target.pronoun()), target.possessivePronoun(), target.name(),
+                            target.possessivePronoun()));
         } else {
             c.write(target.name()
                             + "'s arms are firmly pinned, so she tries to kick you ineffectually. You catch her ankles and slowly begin kissing and licking your way "
@@ -859,7 +874,8 @@ public class Player extends Character {
         Optional<Addiction> addict = getAddiction(type);
         if (addict.isPresent()) {
             if (dbg) {
-                System.out.printf("Alleviating %s on player by %.3f (Combat vs %s)\n", type.name(), mag, cause.getName());
+                System.out.printf("Alleviating %s on player by %.3f (Combat vs %s)\n", type.name(), mag,
+                                cause.getName());
             }
             addict.get().alleviateCombat(mag);
         }
@@ -887,23 +903,20 @@ public class Player extends Character {
         addictions.forEach(Addiction::refreshWithdrawal);
     }
     
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void saveInternal(JsonObject object) {
+     @Override protected void saveInternal(JsonObject object) {
         JsonArray addictions = new JsonArray();
         this.addictions.stream().map(Status::saveToJson).forEach(addictions::add);
         object.add("addictions", addictions);
     }
 
-    @Override
-    protected void loadInternal(JsonObject object) {
+    @Override protected void loadInternal(JsonObject object) {
         JsonArray addictions = object.getAsJsonArray("addictions");
         if (addictions == null)
             return;
         for (Object a : addictions) {
             JsonObject json = (JsonObject) a;
-            AddictionType type = AddictionType.valueOf(json.get("type").toString());
-            Character cause = Global.getCharacterByType(json.get("cause").toString());
+            AddictionType type = AddictionType.valueOf(json.get("type").getAsString());
+            Character cause = Global.getCharacterByType(json.get("cause").getAsString());
             float mag = json.get("magnitude").getAsFloat();
             float combat = json.get("combat").getAsFloat();
             Addiction addiction = Addiction.load(type, cause, mag, combat);

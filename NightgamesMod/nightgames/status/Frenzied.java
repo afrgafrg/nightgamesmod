@@ -168,7 +168,7 @@ public class Frenzied extends DurationStatus {
         if (c == null) {
             affected.removelist.add(this);
             affected.removeStatusNoSideEffects();
-        } else if (c == null || !c.getStance().inserted(affected)) {
+        } else if (!c.getStance().inserted(affected)) {
             affected.removelist.add(this);
         } else {
             setDuration(getDuration() + 2);
@@ -188,17 +188,14 @@ public class Frenzied extends DurationStatus {
                         .map(s -> s.copy(affected)).collect(Collectors.toSet());
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("duration", getDuration());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Frenzied(null, obj.get("duration").getAsInt());
     }
 }

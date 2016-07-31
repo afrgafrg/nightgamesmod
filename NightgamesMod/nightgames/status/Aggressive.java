@@ -113,9 +113,7 @@ public class Aggressive extends DurationStatus {
         return new Aggressive(newAffected, cause, getDuration());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject saveToJson() {
+     @Override public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("duration", getDuration());
@@ -123,8 +121,7 @@ public class Aggressive extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Aggressive(null, obj.get("cause").getAsString(), obj.get("duration").getAsInt());
     }
 }

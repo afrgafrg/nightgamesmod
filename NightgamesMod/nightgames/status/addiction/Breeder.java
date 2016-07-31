@@ -229,8 +229,7 @@ public class Breeder extends Addiction {
         return new Breeder(newAffected);
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Breeder(Global.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }

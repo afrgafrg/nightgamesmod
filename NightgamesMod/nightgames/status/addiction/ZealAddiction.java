@@ -262,8 +262,7 @@ public class ZealAddiction extends Addiction {
         return new ZealAddiction(newAffected);
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return null;
     }
 

@@ -13,8 +13,7 @@ public class BodyPartRequirement extends BaseRequirement {
         this.type = type;
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return self.body.has(type);
     }
 

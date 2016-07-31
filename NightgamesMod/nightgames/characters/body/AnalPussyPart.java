@@ -38,8 +38,7 @@ public class AnalPussyPart extends AssPart {
         }
     }
 
-    @Override
-    public BodyPart fromJson(JsonObject object) {
+    @Override public BodyPart fromJson(JsonObject object) {
         return new AnalPussyPart(JsonUtils.getOptional(object, "size").map(JsonElement::getAsDouble)
                         .orElse(AssPart.SIZE_NORMAL));
     }

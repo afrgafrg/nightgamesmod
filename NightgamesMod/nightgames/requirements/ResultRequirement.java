@@ -18,8 +18,7 @@ public class ResultRequirement extends BaseRequirement {
         this(Result.valueOf(result));
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return c != null && c.state == result;
     }
 }

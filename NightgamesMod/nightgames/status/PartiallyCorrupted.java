@@ -121,9 +121,7 @@ public class PartiallyCorrupted extends DurationStatus {
         return new PartiallyCorrupted(newOther);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("counter", counter);
@@ -131,8 +129,7 @@ public class PartiallyCorrupted extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         PartiallyCorrupted pc = new PartiallyCorrupted(Global.getCharacterByType(obj.get("cause").getAsString()));
         pc.counter = obj.get("counter").getAsInt();
         return pc;

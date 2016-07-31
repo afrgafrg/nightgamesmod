@@ -30,8 +30,7 @@ public class DurationRequirement extends BaseRequirement {
         duration = Math.max(0, i);
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return duration > 0;
     }
 

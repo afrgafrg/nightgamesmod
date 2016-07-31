@@ -155,17 +155,14 @@ public class DivineCharge extends Status {
         return new DivineCharge(newAffected, magnitude);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("magnitude", magnitude);
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new DivineCharge(null, obj.get("magnitude").getAsFloat());
     }
 

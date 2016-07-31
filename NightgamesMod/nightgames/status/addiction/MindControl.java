@@ -10,7 +10,6 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
-import nightgames.json.JsonUtils;
 import nightgames.stance.Anal;
 import nightgames.stance.AnalCowgirl;
 import nightgames.stance.Position;
@@ -263,6 +262,7 @@ public class MindControl extends Addiction {
                         } else if (pos instanceof Anal) {
                             succeeded = false;
                             description = "Since you're not facing Mara, her hypnotic eyes cannot affect you.";
+                            break;
                         }
                         // Fall-through intentional -- AnalProne
                     case mount:

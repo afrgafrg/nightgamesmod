@@ -1,6 +1,11 @@
 package nightgames.items.clothing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.google.gson.JsonArray;
@@ -26,9 +31,11 @@ public class JsonClothingLoader {
         clothing.exposure = clothingObj.get("exposure").getAsFloat();
         clothing.dc = clothingObj.get("toughness").getAsInt();
         clothing.buffs = new HashSet<>(JsonUtils.collectionFromJson(clothingObj.getAsJsonArray("buffs"), Trait.class));
-        clothing.attributes = new HashSet<>(JsonUtils.collectionFromJson(clothingObj.getAsJsonArray("attributes"), ClothingTrait.class));
+        clothing.attributes = new HashSet<>(JsonUtils
+                        .collectionFromJson(clothingObj.getAsJsonArray("attributes"), ClothingTrait.class));
         clothing.sex = new HashSet<>(loadGenderWhitelist(clothingObj.getAsJsonArray("sex")));
-        clothing.slots = new HashSet<>(JsonUtils.collectionFromJson(clothingObj.getAsJsonArray("slots"), ClothingSlot.class));
+        clothing.slots = new HashSet<>(JsonUtils
+                        .collectionFromJson(clothingObj.getAsJsonArray("slots"), ClothingSlot.class));
         clothing.stores = new HashSet<>(JsonUtils.stringsFromJson(clothingObj.getAsJsonArray("shops")));
         return clothing;
     }
@@ -44,7 +51,7 @@ public class JsonClothingLoader {
 
     public static List<Clothing> loadClothingListFromJson(JsonArray clothingArr) {
         List<Clothing> results = new ArrayList<>();
-        for (JsonElement element: clothingArr) {
+        for (JsonElement element : clothingArr) {
             results.add(loadClothingFromJson(element.getAsJsonObject()));
         }
         return results;

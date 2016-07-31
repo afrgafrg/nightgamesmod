@@ -1,5 +1,7 @@
 package nightgames.gui;
 
+import static nightgames.requirements.RequirementShortcuts.item;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -28,7 +30,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JSlider;
+import javax.swing.JTextPane;
+import javax.swing.JToggleButton;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.text.BadLocationException;
@@ -49,11 +72,7 @@ import nightgames.combat.IEncounter;
 import nightgames.daytime.Activity;
 import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
-import nightgames.global.DebugFlags;
-import nightgames.global.Encs;
-import nightgames.global.Flag;
-import nightgames.global.Global;
-import nightgames.global.Prematch;
+import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.modifier.standard.NoModifier;
@@ -694,7 +713,7 @@ public class GUI extends JFrame implements Observer {
 
     // portrait loader
     public void loadPortrait(Combat c, Character player, Character enemy) {
-        if (!Global.checkFlag(Flag.noimage) && !Global.checkFlag(Flag.noportraits)) {
+        if (!Global.checkFlag(Flag.noportraits)) {
             if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
                 System.out.println("Load portraits");
             }
@@ -706,8 +725,9 @@ public class GUI extends JFrame implements Observer {
             }
             loadPortrait(imagepath);
         } else {
+            clearPortrait();
             if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
-                System.out.println("No images/portraits");
+                System.out.println("No portraits");
             }
         }
     }
@@ -1071,6 +1091,9 @@ public class GUI extends JFrame implements Observer {
         clearCommand();
         commandPanel.add(new EncounterButton("Fight", enc, target, Encs.fight));
         commandPanel.add(new EncounterButton("Flee", enc, target, Encs.flee));
+        if (item(Item.SmokeBomb, 1).meets(null, Global.human, null)) {
+            commandPanel.add(new EncounterButton("Smoke Bomb", enc, target, Encs.smoke));
+        }
         Global.getMatch().pause();
         commandPanel.revalidate();
     }
@@ -1216,7 +1239,7 @@ public class GUI extends JFrame implements Observer {
         if (map != null) {
             map.repaint();
         }
-        if (Global.getMatch() != null) {
+        if (Global.getTime() == Time.NIGHT) {
             // yup... silverbard pls :D
             if (Global.getMatch().getHour() == 12 || Global.getMatch().getHour() < 10) {
                 timeLabel.setText(Global.getMatch().getTime() + " am");
@@ -1225,10 +1248,11 @@ public class GUI extends JFrame implements Observer {
             }
 
             timeLabel.setForeground(new Color(51, 101, 202));
-        }
-        if (Global.getDay() != null) { // not updating correctly during daytime
+        } else if (Global.getTime() == Time.DAY) { // not updating correctly during daytime
             timeLabel.setText(Global.getDay().getTime() + " pm");
             timeLabel.setForeground(new Color(253, 184, 19));
+        } else {
+            throw new RuntimeException("Unknown time of day: " + Global.getTime());
         }
         displayStatus();
     }
@@ -1499,7 +1523,8 @@ public class GUI extends JFrame implements Observer {
             this.enc = enc2;
             this.assist = assist;
             setText("Help " + assist.name());
-            addActionListener(arg0 -> GUI.InterveneButton.this.enc.intrude(Global.human, GUI.InterveneButton.this.assist));
+            addActionListener(arg0 -> GUI.InterveneButton.this.enc
+                            .intrude(Global.human, GUI.InterveneButton.this.assist));
         }
     }
 
@@ -1530,7 +1555,7 @@ public class GUI extends JFrame implements Observer {
             super();
             setFont(new Font("Baskerville Old Face", 0, 18));
             setText("Go to sleep");
-            addActionListener(arg0 -> Global.endNight());
+            addActionListener(arg0 -> Global.startDay());
         }
     }
 

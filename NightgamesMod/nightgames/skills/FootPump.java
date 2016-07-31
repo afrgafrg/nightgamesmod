@@ -20,7 +20,8 @@ public class FootPump extends Skill {
     }
 
     @Override public boolean usable(Combat c, Character target) {
-        return c.getStance().behind(getSelf()) && target.crotchAvailable() && getSelf().canAct() && !c.getStance().inserted() && target.hasDick() && getSelf().outfit.hasNoShoes();
+        return c.getStance().behind(getSelf()) && target.crotchAvailable() && getSelf().canAct() && !c.getStance()
+                        .inserted() && target.hasDick() && getSelf().outfit.hasNoShoes();
     }
 
     @Override public float priorityMod(Combat c) {
@@ -45,8 +46,8 @@ public class FootPump extends Skill {
         } else if (target.human()) {
             c.write(getSelf(), receive(c, m, Result.normal, target));
         }
-        target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("cock"), m, c);
-        target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("breasts"), m2, c);
+        target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("cock"), m, c, this);
+        target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("breasts"), m2, c, this);
         if (c.getStance().en != Stance.behindfootjob) {
             c.setStance(new BehindFootjob(getSelf(), target));
         }

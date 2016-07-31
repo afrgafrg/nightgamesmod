@@ -121,9 +121,7 @@ public class CockBound extends Status {
         return new CockBound(newAffected, toughness, binding);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("toughness", toughness);
@@ -131,8 +129,7 @@ public class CockBound extends Status {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new CockBound(null, obj.get("toughness").getAsFloat(), obj.get("binding").getAsString());
     }
 }

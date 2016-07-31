@@ -67,8 +67,7 @@ public class EncourageSkillsModifier extends SkillModifier implements ModifierCo
         return name;
     }
 
-    @Override
-    public EncourageSkillsModifier instance(JsonObject object) {
+    @Override public EncourageSkillsModifier instance(JsonObject object) {
         if (object.has("list")) {
             JsonArray arr = (JsonArray) object.get("list");
             Map<Skill, Double> encs = new HashMap<>();

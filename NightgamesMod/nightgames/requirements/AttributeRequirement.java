@@ -21,8 +21,7 @@ public class AttributeRequirement extends BaseRequirement {
         this.amount = amount;
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return self.get(att) >= amount;
     }
 }

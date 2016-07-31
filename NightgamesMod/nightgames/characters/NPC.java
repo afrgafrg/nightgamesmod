@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import nightgames.actions.Action;
+import nightgames.actions.Leap;
 import nightgames.actions.Move;
 import nightgames.actions.Movement;
 import nightgames.actions.Resupply;
@@ -31,6 +32,7 @@ import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.skills.Nothing;
 import nightgames.skills.Skill;
+import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
 import nightgames.stance.Behind;
 import nightgames.stance.Neutral;
@@ -112,10 +114,10 @@ public class NPC extends Character {
             }
         }
         if (per >= 6 && per < 8) {
-            if (stamina.percent() <= 66) {
-                visible = visible + "She's starting to look tired<br>";
-            } else if (stamina.percent() <= 33) {
+            if (stamina.percent() <= 33) {
                 visible = visible + "She looks a bit unsteady on her feet<br>";
+            } else if (stamina.percent() <= 66) {
+                visible = visible + "She's starting to look tired<br>";
             }
         }
         if (per >= 3 && per < 7) {
@@ -133,6 +135,10 @@ public class NPC extends Character {
             }
         }
 
+        if (per >= 5) {
+            visible += Stage.describe(this);
+        }
+        
         if (per >= 6 && status.size() > 0) {
             visible += "List of statuses:<br><i>";
             for (Status s : status) {
@@ -140,6 +146,7 @@ public class NPC extends Character {
             }
             visible += "</i><br>";
         }
+        
         return visible;
     }
 
@@ -431,6 +438,11 @@ public class NPC extends Character {
                             available.add(new Shortcut(path));
                         }
                     }
+                    if(getPure(Attribute.Ninjutsu)>=5){
+                        for(Area path:location.jump){
+                            available.add(new Leap(path));
+                        }
+                    }
                 }
                 for (Action act : Global.getActions()) {
                     if (act.usable(this)) {
@@ -449,8 +461,16 @@ public class NPC extends Character {
 
     @Override
     public void faceOff(Character opponent, IEncounter enc) {
-        // enc.fightOrFlight(this, ai.fightFlight(opponent));
-        enc.parse(ai.fightFlight(opponent) ? Encs.fight : Encs.flee, this, opponent);
+        Encs encType;
+        if (ai.fightFlight(opponent)) {
+            encType = Encs.fight;
+        } else if (has(Item.SmokeBomb)) {
+            encType = Encs.smoke;
+            remove(Item.SmokeBomb);
+        } else {
+            encType = Encs.flee;
+        }
+        enc.parse(encType, this, opponent);
     }
 
     @Override
@@ -879,5 +899,44 @@ public class NPC extends Character {
         if (comments.isEmpty() || comments.size() == 1 && comments.containsKey(CommentSituation.NO_COMMENT))
             return Optional.empty();
         return Optional.of((String) Global.pickRandom(comments.values().toArray()));
+    }
+    
+    public Emotion moodSwing() {
+        Emotion current = mood;
+        int max=emotes.get(current);
+        for(Emotion e: emotes.keySet()){
+            if(emotes.get(e)>max){
+                mood=e;
+                max=emotes.get(e);
+            }
+        }
+        return mood;
+    }
+    
+    public void decayMood(){
+        for(Emotion e: emotes.keySet()){
+            if(mostlyNude()&&!has(Trait.exhibitionist)&&!has(Trait.shameless)&& e==Emotion.nervous){
+                emotes.put(e, emotes.get(e)-((emotes.get(e)-50)/2));
+            }else if(mostlyNude()&&!has(Trait.exhibitionist)&& e==Emotion.horny){
+                emotes.put(e, emotes.get(e)-((emotes.get(e)-50)/2));
+            }
+            else if(!mostlyNude()&&e==Emotion.confident){
+                emotes.put(e, emotes.get(e)-((emotes.get(e)-50)/2));
+            }
+            else{
+                if(emotes.get(e)>=5){
+                    emotes.put(e, emotes.get(e)-(emotes.get(e)/2));
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void upkeep() {
+        super.upkeep();
+        moodSwing();
+        decayMood();
+        update();
+        notifyObservers();
     }
 }

@@ -3,9 +3,8 @@ package nightgames.global;
 /**
  * Indicates whether it is daytime (shopping and talking) or nighttime (sex-fighting).
  */
-enum Time {
-    DAY("day"),
-    NIGHT("night");
+public enum Time {
+    DAY("day"), NIGHT("night");
 
     final String desc;
 
@@ -20,8 +19,9 @@ enum Time {
 
     /**
      * Maps old descriptors to current descriptors to maintain save file compatibility.
-     *
+     * <p>
      * Older save files used different descriptors for DAY and NIGHT (and different enum constants).
+     *
      * @param oldDesc A description that may or may not be from an old version.
      * @return A current description suitable for use in fromDesc().
      */

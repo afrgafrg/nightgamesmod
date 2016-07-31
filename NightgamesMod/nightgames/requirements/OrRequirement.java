@@ -15,8 +15,7 @@ public class OrRequirement extends BaseRequirement {
         this.reqs = reqs;
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return reqs.stream().anyMatch(r -> r.meets(c, self, other));
     }
 }

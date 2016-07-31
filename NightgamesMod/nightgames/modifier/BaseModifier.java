@@ -40,8 +40,9 @@ public abstract class BaseModifier implements Modifier {
     }
 
     protected BaseModifier() {
-        this(ClothingModifier.combiner.nullModifier(), ItemModifier.combiner.nullModifier(), StatusModifier.combiner.nullModifier(),
-                        SkillModifier.combiner.nullModifier(), ActionModifier.combiner.nullModifier(), EMPTY_CONSUMER);
+        this(ClothingModifier.combiner.nullModifier(), ItemModifier.combiner.nullModifier(),
+                        StatusModifier.combiner.nullModifier(), SkillModifier.combiner.nullModifier(),
+                        ActionModifier.combiner.nullModifier(), EMPTY_CONSUMER);
     }
 
     @Override

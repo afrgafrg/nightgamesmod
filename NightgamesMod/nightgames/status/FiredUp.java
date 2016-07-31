@@ -18,6 +18,7 @@ public class FiredUp extends DurationStatus {
         super("Fired Up", affected, 2);
         this.part = part;
         stack = 1;
+        this.other = other;
         flag(Stsflag.firedup);
         flag(Stsflag.purgable);
     }
@@ -149,9 +150,7 @@ public class FiredUp extends DurationStatus {
         setDuration(2);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject saveToJson() {
+     @Override public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("part", part);
@@ -159,8 +158,7 @@ public class FiredUp extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         FiredUp fu = new FiredUp(null, null, obj.get("part").getAsString());
         fu.stack = obj.get("stack").getAsInt();
         return fu;

@@ -40,8 +40,7 @@ public class MouthPussyPart extends MouthPart {
         return pleasureMod;
     }
 
-    @Override
-    public BodyPart fromJson(JsonObject object) {
+    @Override public BodyPart fromJson(JsonObject object) {
         try {
             GenericBodyPart part = new MouthPussyPart();
             return part;

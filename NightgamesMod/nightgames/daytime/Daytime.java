@@ -14,11 +14,12 @@ public class Daytime {
     private ArrayList<Activity> activities;
     private Player player;
     private int time;
-    private Threesomes threesome;
     private int daylength;
+    private DaytimeEventManager eventMgr;
 
     public Daytime(Player player) {
         this.player = player;
+        this.eventMgr = new DaytimeEventManager(player);
         buildActivities();
         if (Global.checkFlag(Flag.metAlice)) {
             if (Global.checkFlag(Flag.victory)) {
@@ -27,8 +28,14 @@ public class Daytime {
                 Global.flag(Flag.AliceAvailable);
             }
         }
+        if (Global.checkFlag(Flag.YuiLoyalty)) {
+            Global.flag(Flag.YuiAvailable);
+        }
+        if (Global.checkFlag(Flag.YuiUnlocking)) {
+            Global.unflag(Flag.YuiUnlocking);
+        }
+        
         Global.unflag(Flag.threesome);
-        threesome = new Threesomes(player);
         time = 10;
         // do NPC day length
         if (Global.getDate() % 7 == 6 || Global.getDate() % 7 == 0) {
@@ -43,7 +50,10 @@ public class Daytime {
               .clearText();
         Global.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
         Global.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(s -> Global.gui().message(s));
-        if (player.getLevel() >= 10 && player.getRank() == 0) {
+        if (eventMgr.playMorningScene()) {
+            time = 12;
+            return true;
+        } else if (player.getLevel() >= 10 && player.getRank() == 0) {
             Global.gui()
                   .message("The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
                                   + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
@@ -80,7 +90,9 @@ public class Daytime {
                                   + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
             player.rankup();
             time = 15;
-
+        } else if (player.getLevel() / 10 > player.getRank()) {
+            Global.gui().message("You have advanced to rank " + ++player.rank + "!");
+            time = 15;
         } else if (Global.getDate() % 7 == 6 || Global.getDate() % 7 == 0) {
             Global.gui()
                   .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
@@ -94,7 +106,6 @@ public class Daytime {
     }
 
     public void plan() {
-        String threescene;
         boolean special = false;
         if (time == 10) {
             special = morning();
@@ -109,13 +120,8 @@ public class Daytime {
                   .refresh();
             Global.gui()
                   .clearCommand();
-            if (!Global.checkFlag(Flag.threesome)) {
-                threescene = threesome.getScene();
-                if (!threescene.equals("")) {
-                    threesome.visit(threescene);
-                    return;
-                }
-            }
+            if (eventMgr.playRegularScene())
+                return;
             for (Activity act : activities) {
                 if (act.known() && act.time() + time <= 22) {
                     Global.gui()
@@ -125,7 +131,7 @@ public class Daytime {
         } else {
             for (Character npc : Global.everyone()) {
                 if (!npc.human()) {
-                    if (npc.getLevel() >= 10 && npc.getRank() == 0 || npc.getLevel() >= 20 && npc.getRank() == 1) {
+                    if (npc.getLevel() / 10 > npc.getRank()) {
                         npc.rankup();
                     }
                     ((NPC) npc).daytime(daylength);
@@ -169,6 +175,9 @@ public class Daytime {
         if (Global.checkFlag(Flag.Reyka)) {
             activities.add(new ReykaTime(player));
         }
+        if (Global.checkFlag(Flag.YuiLoyalty)) {
+            activities.add(new YuiTime(player));
+        }
         activities.add(new MagicTraining(player));
         activities.add(new Workshop(player));
         activities.add(new AddictionRemoval(player));
@@ -180,6 +189,7 @@ public class Daytime {
 
     public void advance(int t) {
         time += t;
+        buildActivities();
     }
 
     public static void train(Character one, Character two, Attribute att) {

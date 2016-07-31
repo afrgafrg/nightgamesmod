@@ -1,6 +1,10 @@
 package nightgames.modifier.skill;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -28,8 +32,7 @@ public class BanTacticsModifier extends SkillModifier implements ModifierCompone
         return name;
     }
 
-    @Override
-    public BanTacticsModifier instance(JsonObject object) {
+    @Override public BanTacticsModifier instance(JsonObject object) {
         Optional<BanTacticsModifier> maybeBan =
                         JsonUtils.getOptional(object, "tactic").map(JsonElement::getAsString).map(Tactics::valueOf)
                                         .map(BanTacticsModifier::new);

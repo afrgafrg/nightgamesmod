@@ -50,9 +50,7 @@ public class ModdedCockPart implements CockPart {
         return mod.isReady(self, getBase());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public JsonObject save() {
+     @Override public JsonObject save() {
         JsonObject object = new JsonObject();
         object.add("base", getBase().save());
         object.add("mod", mod.save());
@@ -139,8 +137,7 @@ public class ModdedCockPart implements CockPart {
         return mod.mod(a, total, getBase());
     }
 
-    @Override
-    public BodyPart load(JsonObject obj) {
+    @Override public BodyPart load(JsonObject obj) {
         JsonObject baseObj = obj.getAsJsonObject("base");
         JsonObject modObj = obj.getAsJsonObject("mod");
         BasicCockPart base = (BasicCockPart) getBase().load(baseObj);

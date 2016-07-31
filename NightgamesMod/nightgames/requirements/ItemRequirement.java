@@ -2,7 +2,6 @@ package nightgames.requirements;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.items.Item;
 import nightgames.items.ItemAmount;
 
 /**
@@ -19,8 +18,7 @@ public class ItemRequirement extends BaseRequirement {
         this.item = new ItemAmount(name, amount);
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return self.has(item.item, item.amount);
     }
 

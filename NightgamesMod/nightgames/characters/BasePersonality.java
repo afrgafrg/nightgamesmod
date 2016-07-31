@@ -1,5 +1,15 @@
 package nightgames.characters;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BodyPart;
@@ -14,9 +24,6 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class BasePersonality implements Personality {
     /**
@@ -93,7 +100,7 @@ public abstract class BasePersonality implements Personality {
 
     @Override
     public Skill act(HashSet<Skill> available, Combat c) {
-        HashSet<Skill> tactic = new HashSet<Skill>();
+        HashSet<Skill> tactic;
         Skill chosen;
         ArrayList<WeightedSkill> priority = Decider.parseSkills(available, c, character);
         if (!Global.checkFlag(Flag.dumbmode)) {
@@ -150,9 +157,14 @@ public abstract class BasePersonality implements Personality {
     @Override
     public void ding() {
         growth.levelUp(character);
+        onLevelUp();
         distributePoints();
     }
 
+    protected void onLevelUp() {
+        // NOP
+    }
+    
     @Override
     public String describeAll(Combat c) {
         StringBuilder b = new StringBuilder();

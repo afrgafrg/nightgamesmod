@@ -1,12 +1,16 @@
 package nightgames.global;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import nightgames.characters.Character;
 import nightgames.json.JsonUtils;
-
-import java.util.*;
 
 /**
  * SaveData specifies a schema for data that will be saved and loaded.
@@ -20,11 +24,7 @@ public class SaveData {
 
 
     private enum JSONKey {
-        PLAYERS("characters"),
-        FLAGS("flags"),
-        COUNTERS("counters"),
-        TIME("time"),
-        DATE("date");
+        PLAYERS("characters"), FLAGS("flags"), COUNTERS("counters"), TIME("time"), DATE("date");
 
         final String key;
 
@@ -118,12 +118,7 @@ public class SaveData {
     }
 
     @Override public String toString() {
-        return "SaveData{" +
-                        "players=" + players +
-                        ", flags=" + flags +
-                        ", counters=" + counters +
-                        ", time=" + time +
-                        ", date=" + date +
-                        '}';
+        return "SaveData{" + "players=" + players + ", flags=" + flags + ", counters=" + counters + ", time=" + time
+                        + ", date=" + date + '}';
     }
 }

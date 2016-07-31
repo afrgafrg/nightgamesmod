@@ -202,9 +202,7 @@ public class FluidAddiction extends DurationStatus {
         }
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("magnitude", magnitude);
@@ -212,8 +210,7 @@ public class FluidAddiction extends DurationStatus {
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new FluidAddiction(null, null, obj.get("magnitude").getAsInt(), obj.get("duration").getAsInt());
     }
 }

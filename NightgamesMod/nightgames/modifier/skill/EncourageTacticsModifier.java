@@ -48,8 +48,7 @@ public class EncourageTacticsModifier extends SkillModifier implements ModifierC
         return name;
     }
 
-    @Override
-    public EncourageTacticsModifier instance(JsonObject object) {
+    @Override public EncourageTacticsModifier instance(JsonObject object) {
         if (object.has("tactic") && object.has("weight")) {
             Tactics tact = Tactics.valueOf(object.get("tactic").getAsString());
             double weight = object.get("weight").getAsFloat();

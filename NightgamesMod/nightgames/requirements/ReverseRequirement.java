@@ -13,8 +13,7 @@ public class ReverseRequirement extends BaseRequirement {
         this.req = req;
     }
 
-    @Override
-    public boolean meets(Combat c, Character self, Character other) {
+    @Override public boolean meets(Combat c, Character self, Character other) {
         return other != null && req.meets(c, other, self);
     }
 }

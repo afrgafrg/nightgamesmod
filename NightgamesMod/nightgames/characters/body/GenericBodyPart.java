@@ -7,9 +7,9 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
-import nightgames.json.JsonUtils;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
+import nightgames.json.JsonUtils;
 
 public class GenericBodyPart implements BodyPart {
     /**
@@ -148,13 +148,11 @@ public class GenericBodyPart implements BodyPart {
         return JsonUtils.gson.fromJson(object, this.getClass());
     }
 
-    @Override
-    public JsonObject save() {
+    @Override public JsonObject save() {
         return toJson();
     }
 
-    @Override
-    public BodyPart load(JsonObject obj) {
+    @Override public BodyPart load(JsonObject obj) {
         return fromJson(obj);
     }
 

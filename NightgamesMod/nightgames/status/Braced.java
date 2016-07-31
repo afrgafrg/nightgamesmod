@@ -10,7 +10,7 @@ import nightgames.combat.Combat;
 public class Braced extends DurationStatus {
 
     public Braced(Character affected) {
-        super("Braced", affected, 3);
+        super("Braced", affected, 4);
         flag(Stsflag.braced);
     }
 
@@ -94,16 +94,13 @@ public class Braced extends DurationStatus {
         return new Braced(newAffected);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public JsonObject saveToJson() {
+    @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         return obj;
     }
 
-    @Override
-    public Status loadFromJson(JsonObject obj) {
+    @Override public Status loadFromJson(JsonObject obj) {
         return new Braced(null);
     }
 }

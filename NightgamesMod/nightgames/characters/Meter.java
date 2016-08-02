@@ -3,8 +3,9 @@ package nightgames.characters;
 import nightgames.global.Global;
 
 import java.io.Serializable;
+import java.util.Observable;
 
-public class Meter implements Serializable, Cloneable {
+public class Meter extends Observable implements Serializable, Cloneable {
     /**
      *
      */
@@ -48,18 +49,11 @@ public class Meter implements Serializable, Cloneable {
     }
     
     public void reduce(int i) {
-        if (i > 0) {
-            current -= i;
-        }
-        if (current < 0) {
-            current = 0;
-        }
+        current = Math.max(0, current - i);
     }
 
     public void restore(int i) {
-        if (current < max()) {
-            current = Math.min(max(), current + i);
-        }
+        current = Math.min(max(), current + i);
     }
 
     public void restoreNoLimit(int i) {

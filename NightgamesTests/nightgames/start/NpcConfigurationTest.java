@@ -2,18 +2,13 @@ package nightgames.start;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
-import nightgames.json.JsonUtils;
+import nightgames.characters.TestAngel;
 import nightgames.items.clothing.Clothing;
+import nightgames.json.JsonUtils;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import nightgames.characters.TestAngel;
-import nightgames.global.Global;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -36,8 +31,6 @@ public class NpcConfigurationTest {
         startConfig = StartConfiguration.parse(JsonUtils.rootJson(file).getAsJsonObject());
         angelConfig = startConfig.findNpcConfig("TestAngel")
                         .orElseThrow(() -> new NoSuchElementException("TestAngel not found in test config."));
-        new Global(true);
-        Global.newGame("Dummy", Optional.empty(), Collections.emptyList(), CharacterSex.asexual, Collections.emptyMap());
     }
 
     @Test public void testConfigMerge() throws Exception {

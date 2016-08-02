@@ -109,8 +109,8 @@ public class ClothesChangeGUI extends JPanel {
     public ClothesChangeGUI(Character character, Activity event, String doneOption) {
         this.character = character;
         resume = event;
-        setBackground(GUIColors.bgDark);
-        setForeground(GUIColors.textColorLight);
+        setBackground(GUIColors.bgDark.color);
+        setForeground(GUIColors.textColorLight.color);
         setLayout(new BorderLayout());
 
         int width = Global.global.gui().getWidth();
@@ -121,11 +121,11 @@ public class ClothesChangeGUI extends JPanel {
         Box closetBox = Box.createVerticalBox();
         closetListModel = new DefaultListModel<>();
         closetList = new ClothingList(closetListModel);
-        closetList.setBackground(GUIColors.bgLight);
-        closetList.setForeground(GUIColors.textColorLight);
+        closetList.setBackground(GUIColors.bgLight.color);
+        closetList.setForeground(GUIColors.textColorLight.color);
         closetList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JLabel closetLabel = new JLabel("Closet");
-        closetLabel.setForeground(GUIColors.textColorLight);
+        closetLabel.setForeground(GUIColors.textColorLight.color);
         closetBox.add(closetLabel);
         JScrollPane closetListPane = new JScrollPane(closetList);
         closetListPane.setMinimumSize(new Dimension(listWidth, 0));
@@ -154,15 +154,15 @@ public class ClothesChangeGUI extends JPanel {
         outfitBox.setOpaque(false);
         outfitListModel = new DefaultListModel<>();
         outfitList = new ClothingList(outfitListModel);
-        outfitList.setBackground(GUIColors.bgLight);
-        outfitList.setForeground(GUIColors.textColorLight);
+        outfitList.setBackground(GUIColors.bgLight.color);
+        outfitList.setForeground(GUIColors.textColorLight.color);
         outfitList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane outfitListPane = new JScrollPane(outfitList);
         outfitListPane.setMinimumSize(new Dimension(listWidth, 0));
         outfitListPane.setPreferredSize(new Dimension(listWidth, height));
 
         JLabel outfitLabel = new JLabel("Current Outfit");
-        outfitLabel.setForeground(GUIColors.textColorLight);
+        outfitLabel.setForeground(GUIColors.textColorLight.color);
         outfitBox.add(outfitLabel);
         outfitBox.add(outfitListPane);
 
@@ -202,8 +202,8 @@ public class ClothesChangeGUI extends JPanel {
         exposureLabel.setToolTipText("How much of your natural body charisma and hotness is exposed");
         labelPanel.add(appearanceLabel);
         labelPanel.add(exposureLabel);
-        appearanceLabel.setForeground(GUIColors.textColorLight);
-        exposureLabel.setForeground(GUIColors.textColorLight);
+        appearanceLabel.setForeground(GUIColors.textColorLight.color);
+        exposureLabel.setForeground(GUIColors.textColorLight.color);
 
         Box miscPanel = Box.createHorizontalBox();
         miscPanel.add(labelPanel);

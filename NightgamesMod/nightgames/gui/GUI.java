@@ -3,7 +3,10 @@ package nightgames.gui;
 import nightgames.Resources.ResourceLoader;
 import nightgames.actions.Action;
 import nightgames.actions.Locate;
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
+import nightgames.characters.Character;
+import nightgames.characters.Player;
+import nightgames.characters.Trait;
 import nightgames.characters.TraitTree;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatSceneChoice;
@@ -13,6 +16,7 @@ import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
 import nightgames.gui.button.*;
+import nightgames.gui.resources.ResourcesPanel;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
@@ -23,6 +27,7 @@ import nightgames.trap.Trap;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
@@ -51,22 +56,14 @@ public class GUI extends JFrame implements Observer {
     private TacticGroup currentTactics;
     CommandPanel commandPanel;
     private JTextPane textPane;
-    private JLabel stamina;
-    private JLabel arousal;
-    private JLabel mojo;
-    private JLabel willpower;
     private JLabel lvl;
     private JLabel xp;
-    private JProgressBar staminaBar;
-    private JProgressBar arousalBar;
-    private JProgressBar mojoBar;
-    private JProgressBar willpowerBar;
     private JPanel topPanel;
     private JLabel loclbl;
     private JLabel timeLabel;
     private JLabel cashLabel;
     private Panel panel0;
-    protected CreationGUI creation;
+    CreationGUI creation;
     private JScrollPane textScroll;
     private JPanel gamePanel;
     private JToggleButton stsbtn;
@@ -157,7 +154,7 @@ public class GUI extends JFrame implements Observer {
         JMenuItem mntmLoad = new JMenuItem("Load"); // Initializer
 
         //mntmLoad.setForeground(Color.WHITE); // Formatting
-        //mntmLoad.setBackground(GUIColors.bgGrey);
+        //mntmLoad.setBackground(GUIColors.bgGrey.color);
         mntmLoad.setHorizontalAlignment(SwingConstants.CENTER);
 
         mntmLoad.addActionListener(arg0 -> loadWithDialog());
@@ -168,7 +165,7 @@ public class GUI extends JFrame implements Observer {
 
         JMenuItem mntmOptions = new JMenuItem("Options");
         //mntmOptions.setForeground(Color.WHITE);
-        //mntmOptions.setBackground(GUIColors.bgGrey);
+        //mntmOptions.setBackground(GUIColors.bgGrey.color);
 
         menuBar.add(mntmOptions);
 
@@ -289,8 +286,6 @@ public class GUI extends JFrame implements Observer {
         // m/f preference (no (other) males in the games yet... good for
         // modders?)
 
-        // temporarily remove the maleprefslider, as NPCs no longer really use it for anything useful.
-        /*
         // malePrefLabel - options submenu - visible
         JLabel malePrefLabel = new JLabel("Female vs. Male Preference");
         optionsPanel.add(malePrefLabel);
@@ -401,7 +396,7 @@ public class GUI extends JFrame implements Observer {
 
         JMenuItem mntmCredits = new JMenuItem("Credits");
         //mntmCredits.setForeground(Color.WHITE);
-        //mntmCredits.setBackground(GUIColors.bgGrey);
+        //mntmCredits.setBackground(GUIColors.bgGrey.color);
         menuBar.add(mntmCredits);
 
         // menu bar - quit match
@@ -409,7 +404,7 @@ public class GUI extends JFrame implements Observer {
         mntmQuitMatch = new JMenuItem("Quit Match");
         mntmQuitMatch.setEnabled(false);
         //mntmQuitMatch.setForeground(Color.WHITE);
-        //mntmQuitMatch.setBackground(GUIColors.bgGrey);
+        //mntmQuitMatch.setBackground(GUIColors.bgGrey.color);
         mntmQuitMatch.addActionListener(arg0 -> {
             int result = JOptionPane.showConfirmDialog(GUI.this,
                             "Do you want to quit for the night? Your opponents will continue to fight and gain exp.",
@@ -485,7 +480,7 @@ public class GUI extends JFrame implements Observer {
 
         portraitPanel.setLayout(new ShrinkingCardLayout());
 
-        portraitPanel.setBackground(GUIColors.bgDark);
+        portraitPanel.setBackground(GUIColors.bgDark.color);
         portrait = new JLabel("");
         portrait.setVerticalAlignment(SwingConstants.TOP);
         portraitPanel.add(portrait, USE_PORTRAIT);
@@ -505,8 +500,8 @@ public class GUI extends JFrame implements Observer {
         textPane = new JTextPane();
         DefaultCaret caret = (DefaultCaret) textPane.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        textPane.setForeground(GUIColors.textColorLight);
-        textPane.setBackground(GUIColors.bgLight);
+        textPane.setForeground(GUIColors.textColorLight.color);
+        textPane.setBackground(GUIColors.bgLight.color);
         textPane.setPreferredSize(new Dimension(width, 400));
         textPane.setEditable(false);
         textPane.setContentType("text/html");
@@ -525,7 +520,7 @@ public class GUI extends JFrame implements Observer {
         textAreaPanel.setLayout(new BoxLayout(textAreaPanel, BoxLayout.PAGE_AXIS));
         textAreaPanel.add(imgLabel);
         textAreaPanel.add(textScroll);
-        textAreaPanel.setBackground(GUIColors.bgDark);
+        textAreaPanel.setBackground(GUIColors.bgDark.color);
 
         centerPanel.add(textAreaPanel, USE_MAIN_TEXT_UI);
 
@@ -739,11 +734,16 @@ public class GUI extends JFrame implements Observer {
         getContentPane().validate();
         player.gui = this;
         player.addObserver(this);
-        JPanel meter = new JPanel();
-        meter.setBackground(GUIColors.bgDark);
-        topPanel.add(meter);
-        meter.setLayout(new GridLayout(0, 4, 0, 0));
 
+        // TODO: Reconcile these implementations
+        // the stamina, arousal, etc. bars and labels
+        topPanel.add(new ResourcesPanel(player));
+        player.getStamina().fill();
+        player.getArousal().empty();
+        player.getMojo().empty();
+        player.getWillpower().fill();
+
+        /*
         stamina = new JLabel("Stamina: " + getLabelString(player.getStamina()));
         stamina.setFont(new Font("Sylfaen", 1, 15));
         stamina.setHorizontalAlignment(SwingConstants.CENTER);
@@ -818,24 +818,25 @@ public class GUI extends JFrame implements Observer {
                         | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
+        */
         JPanel bio = new JPanel();
         topPanel.add(bio);
         bio.setLayout(new GridLayout(2, 0, 0, 0));
-        bio.setBackground(GUIColors.bgDark);
+        bio.setBackground(GUIColors.bgDark.color);
 
         JLabel name = new JLabel(player.name());
         name.setHorizontalAlignment(SwingConstants.LEFT);
         name.setFont(new Font("Sylfaen", 1, 15));
-        name.setForeground(GUIColors.textColorLight);
+        name.setForeground(GUIColors.textColorLight.color);
         bio.add(name);
         lvl = new JLabel("Lvl: " + player.getLevel());
         lvl.setFont(new Font("Sylfaen", 1, 15));
-        lvl.setForeground(GUIColors.textColorLight);
+        lvl.setForeground(GUIColors.textColorLight.color);
 
         bio.add(lvl);
         xp = new JLabel("XP: " + player.getXP());
         xp.setFont(new Font("Sylfaen", 1, 15));
-        xp.setForeground(GUIColors.textColorLight);
+        xp.setForeground(GUIColors.textColorLight.color);
         bio.add(xp);
 
         UIManager.put("ToggleButton.select", new Color(75, 88, 102));
@@ -864,15 +865,15 @@ public class GUI extends JFrame implements Observer {
         });
         loclbl = new JLabel();
         loclbl.setFont(new Font("Sylfaen", 1, 16));
-        loclbl.setForeground(GUIColors.textColorLight);
+        loclbl.setForeground(GUIColors.textColorLight.color);
 
         //stsbtn.setBackground(new Color(85, 98, 112));
-        //stsbtn.setForeground(GUIColors.textColorLight);
+        //stsbtn.setForeground(GUIColors.textColorLight.color);
         bio.add(loclbl);
 
         timeLabel = new JLabel();
         timeLabel.setFont(new Font("Sylfaen", 1, 16));
-        timeLabel.setForeground(GUIColors.textColorLight);
+        timeLabel.setForeground(GUIColors.textColorLight.color);
         bio.add(timeLabel);
         cashLabel = new JLabel();
         cashLabel.setFont(new Font("Sylfaen", 1, 16));
@@ -1196,27 +1197,15 @@ public class GUI extends JFrame implements Observer {
 
     public void refresh() {
         Player player = Global.global.human;
-        stamina.setText("Stamina: " + getLabelString(player.getStamina()));
-        arousal.setText("Arousal: " + getLabelString(player.getArousal()));
-        mojo.setText("Mojo: " + getLabelString(player.getMojo()));
-        willpower.setText("Willpower: " + getLabelString(player.getWillpower()));
         lvl.setText("Lvl: " + player.getLevel());
         xp.setText("XP: " + player.getXP());
-        staminaBar.setMaximum(player.getStamina().max());
-        staminaBar.setValue(player.getStamina().get());
-        arousalBar.setMaximum(player.getArousal().max());
-        arousalBar.setValue(player.getArousal().get());
-        mojoBar.setMaximum(player.getMojo().max());
-        mojoBar.setValue(player.getMojo().get());
-        willpowerBar.setMaximum(player.getWillpower().max());
-        willpowerBar.setValue(player.getWillpower().get());
         loclbl.setText(player.location().name);
         cashLabel.setText("$" + player.money);
         if (map != null) {
             map.repaint();
         }
         if (Global.global.getTime() == Time.NIGHT) {
-            // yup... silverbard pls :D
+            // TODO: a Match should know how to am/pm.
             if (Global.global.getMatch().getHour() == 12 || Global.global.getMatch().getHour() < 10) {
                 timeLabel.setText(Global.global.getMatch().getTime() + " am");
             } else {
@@ -1224,7 +1213,8 @@ public class GUI extends JFrame implements Observer {
             }
 
             timeLabel.setForeground(new Color(51, 101, 202));
-        } else if (Global.global.getTime() == Time.DAY) { // not updating correctly during daytime
+        } else if (Global.global.getTime() == Time.DAY) {
+            // TODO: a DayTime should know how to am/pm.
             timeLabel.setText(Global.global.getDay().getTime() + " pm");
             timeLabel.setForeground(new Color(253, 184, 19));
         } else {
@@ -1294,7 +1284,7 @@ public class GUI extends JFrame implements Observer {
             if (amt > 0) {
                 JLabel dirtyTrick = new JLabel(a.name() + ": " + amt);
 
-                dirtyTrick.setForeground(GUIColors.textColorLight);
+                dirtyTrick.setForeground(GUIColors.textColorLight.color);
 
                 attlbls.add(count, dirtyTrick);
 
@@ -1307,7 +1297,7 @@ public class GUI extends JFrame implements Observer {
         JTextPane statusText = new JTextPane();
         DefaultCaret caret = (DefaultCaret) statusText.getCaret();
         caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
-        statusText.setBackground(GUIColors.bgLight);
+        statusText.setBackground(GUIColors.bgLight.color);
         statusText.setEditable(false);
         statusText.setContentType("text/html");
         HTMLDocument doc = (HTMLDocument) statusText.getDocument();

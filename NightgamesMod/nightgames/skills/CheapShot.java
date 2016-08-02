@@ -43,11 +43,11 @@ public class CheapShot extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().add(c, new Primed(getSelf(), -3));
         writeOutput(c, Result.normal, target);
-        if (target.human() && Global.random(5) >= 3) {
+        if (target.human() && Global.global.random(5) >= 3) {
             c.write(getSelf(), getSelf().bbLiner(c, target));
         }
         c.setStance(new Behind(getSelf(), target), getSelf(), true);
-        target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(8, 20)));
+        target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(8, 20)));
         getSelf().buildMojo(c, 10);
 
         getSelf().emote(Emotion.confident, 15);

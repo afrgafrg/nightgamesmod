@@ -12,36 +12,28 @@ public class Threesomes extends DaytimeEvent {
     public Threesomes(Character player) {
         super(player);
         if (Global.global.getNPC("Cassie")
-                  .getAffection(player) >= 20
-                        && Global.global.getNPC("Jewel")
+                  .getAffection(player) >= 20 && Global.global.getNPC("Jewel")
                                  .getAffection(player) >= 20
-                        && Global.global.getNPC("Jewel")
-                                 .getAffection(Global.global.getNPC("Cassie")) >= 5) {
+                        && Global.global.getNPC("Jewel").getAffection(Global.global.getNPC("Cassie")) >= 5) {
                         //TODO && Global.global.getValue(Flag.CassieDWV) >= 5) {
             register("CassieJewel", 5);
         }
         if (Global.global.getNPC("Mara")
-                  .getAffection(player) >= 20
-                        && Global.global.getNPC("Jewel")
+                  .getAffection(player) >= 20 && Global.global.getNPC("Jewel")
                                  .getAffection(player) >= 20
-                        && Global.global.getNPC("Jewel")
-                                 .getAffection(Global.global.getNPC("Mara")) >= 5) {
+                        && Global.global.getNPC("Jewel").getAffection(Global.global.getNPC("Mara")) >= 5) {
             register("MaraJewel", 5);
         }
         if (Global.global.getNPC("Mara")
-                  .getAffection(player) >= 15
-                        && Global.global.getNPC("Angel")
+                  .getAffection(player) >= 15 && Global.global.getNPC("Angel")
                                  .getAffection(player) >= 15
-                        && Global.global.getNPC("Angel")
-                                 .getAffection(Global.global.getNPC("Mara")) >= 10) {
+                        && Global.global.getNPC("Angel").getAffection(Global.global.getNPC("Mara")) >= 10) {
             register("AngelMara", 5);
         }
-        if (Global.getNPC("Mara")
-                  .getAffection(player) >= 15
-                        && Global.getNPC("Cassie")
+        if (Global.global.getNPC("Mara")
+                  .getAffection(player) >= 15 && Global.global.getNPC("Cassie")
                                  .getAffection(player) >= 15
-                        && Global.getNPC("Cassie")
-                                 .getAffection(Global.getNPC("Mara")) >= 10) {
+                        && Global.global.getNPC("Cassie").getAffection(Global.global.getNPC("Mara")) >= 10) {
             register("CassieMara", 5);
         }
     }
@@ -288,7 +280,7 @@ public class Threesomes extends DaytimeEvent {
     }
 
     @Override boolean available() {
-        return !Global.checkFlag(Flag.threesome);
+        return !Global.global.checkFlag(Flag.threesome);
     }
 
 }

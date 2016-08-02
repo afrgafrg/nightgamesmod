@@ -3,6 +3,7 @@ package nightgames.start;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import nightgames.characters.*;
+import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
@@ -74,7 +75,7 @@ public abstract class CharacterConfiguration {
             base.level = l;
             modMeters(base, l * 2); // multiplication to compensate for missed daytime gains
         });
-        xp.ifPresent(x -> base.gainXP(x));
+        xp.ifPresent(base::gainXP);
         traits.ifPresent(t -> base.traits = new CopyOnWriteArrayList<>(t));
         if (clothing.isPresent()) {
             List<Clothing> clothes = clothing.get().stream().map(Clothing::getByID).collect(Collectors.toList());

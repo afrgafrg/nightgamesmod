@@ -10,6 +10,8 @@ import nightgames.areas.NinjaStash;
 import nightgames.characters.body.*;
 import nightgames.characters.custom.AiModifiers;
 import nightgames.characters.custom.CharacterLine;
+import nightgames.characters.resources.Meter;
+import nightgames.characters.resources.Resource;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatantData;
 import nightgames.combat.IEncounter;
@@ -24,6 +26,7 @@ import nightgames.items.clothing.Outfit;
 import nightgames.json.JsonUtils;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.CharacterPet;
+import nightgames.pet.Pet;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.ArmType;
 import nightgames.pet.arms.RoboArmManager;
@@ -111,11 +114,11 @@ public abstract class Character extends Observable implements Cloneable {
         att.put(Attribute.Perception, 5);
         att.put(Attribute.Speed, 5);
         money = 0;
-        stamina = new Meter(22 + 3 * level, name, toolTipText);
+        stamina = new Meter(Resource.STAMINA, 22 + 3 * level, name, toolTipText);
         stamina.fill();
-        arousal = new Meter(90 + 10 * level, name, toolTipText);
-        mojo = new Meter(100, name, toolTipText);
-        willpower = new Meter(40, name, toolTipText);
+        arousal = new Meter(Resource.AROUSAL, 90 + 10 * level, name, toolTipText);
+        mojo = new Meter(Resource.MOJO, 100, name, toolTipText);
+        willpower = new Meter(Resource.WILLPOWER, 40, name, toolTipText);
         orgasmed = false;
         pleasured = false;
 
@@ -1493,9 +1496,15 @@ public abstract class Character extends Observable implements Cloneable {
         saveObj.addProperty("money", money);
         {
             JsonObject resources = new JsonObject();
+            // TODO: pick one of these implementations
+            resources.addProperty("stamina", stamina.intTrueMax());
+            resources.addProperty("arousal", arousal.intTrueMax());
+            resources.addProperty("mojo", mojo.intTrueMax());
+            /*
             resources.addProperty("stamina", stamina.trueMax());
             resources.addProperty("arousal", arousal.trueMax());
             resources.addProperty("mojo", mojo.trueMax());
+            */
             resources.addProperty("willpower", willpower.trueMax());
             saveObj.add("resources", resources);
         }
@@ -2308,7 +2317,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void resupply() {
         for (String victorType : mercy) {
-            Character victor = Global.getCharacterByType(victorType);
+            Character victor = Global.global.getCharacterByType(victorType);
             victor.bounty(has(Trait.event) ? 5 : 1, victor);
         }
         mercy.clear();
@@ -2351,7 +2360,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void finishMatch() {
         for (String victorType : mercy) {
-            Character victor = Global.getCharacterByType(victorType);
+            Character victor = Global.global.getCharacterByType(victorType);
             victor.bounty(has(Trait.event) ? 5 : 1, victor);
         }
         Global.global.gui().clearImage();
@@ -3580,7 +3589,9 @@ public abstract class Character extends Observable implements Cloneable {
         }
         m.gps(location).place(new NinjaStash(this));
         if(human()){
-            Global.gui().message("<b>You've arranged for a hidden stash to be placed in the "+m.gps(location).name+".</b>");
+            Global.global.gui()
+                            .message("<b>You've arranged for a hidden stash to be placed in the " + m.gps(location).name
+                                            + ".</b>");
         }
     }
 

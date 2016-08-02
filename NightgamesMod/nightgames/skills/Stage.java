@@ -62,10 +62,11 @@ public enum Stage {
             return "";
         } else {
             if (stage == FOREPLAY) {
-                return Global.capitalizeFirstLetter(ch.pronoun()) + " does not seem particularly passionate yet.<br/>";
+                return Global.global.capitalizeFirstLetter(ch.pronoun())
+                                + " does not seem particularly passionate yet.<br/>";
             }
             if (stage == FINISHER) {
-                return Global.capitalizeFirstLetter(ch.pronoun()) + 
+                return Global.global.capitalizeFirstLetter(ch.pronoun()) +
                                 " is completely absorbed in the fight, giving it " + ch.possessiveAdjective()
                                 + " all.<br/>";
             }

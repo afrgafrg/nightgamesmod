@@ -235,7 +235,7 @@ public class AngelTime extends BaseNPCTime {
             Global.global.gui()
                   .choose(this, "Sex");
             if (npc.has(Trait.zealinspiring)) {
-                Global.gui()
+                Global.global.gui()
                       .choose(this, "Worship");
             }
         }

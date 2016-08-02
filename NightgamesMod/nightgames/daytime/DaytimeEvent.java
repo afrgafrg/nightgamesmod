@@ -1,12 +1,12 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import nightgames.characters.Character;
 import nightgames.global.Global;
 import nightgames.global.Scene;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 abstract class DaytimeEvent implements Scene {
 
@@ -43,7 +43,7 @@ abstract class DaytimeEvent implements Scene {
     
     public boolean playAny() {
         for (EventVariation scene : scenes) {
-            if (Global.random(100) < scene.priority) {
+            if (Global.global.random(100) < scene.priority) {
                 runScene(scene.getName());
                 return true;
             }
@@ -53,14 +53,14 @@ abstract class DaytimeEvent implements Scene {
     
     @Override
     public final void respond(String response) {
-        Global.getDay().advance(1);
-        Global.getDay().plan();
+        Global.global.getDay().advance(1);
+        Global.global.getDay().plan();
     }
     
     private void runScene(String scene) {
         play(scene);
-        Global.current = this;
-        Global.gui().choose("Next");
+        Global.global.current = this;
+        Global.global.gui().choose("Next");
     }
     
     abstract boolean available();

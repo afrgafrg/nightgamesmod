@@ -15,6 +15,8 @@ import nightgames.skills.petskills.GoblinFaceFuck;
 import nightgames.skills.petskills.GoblinMasochism;
 import nightgames.skills.petskills.GoblinTease;
 
+import java.util.ArrayList;
+
 public class FGoblin extends Pet {
     public FGoblin(Character owner, int pow, int ac) {
         super("fetish goblin", owner, Ptype.fgoblin, pow, ac);

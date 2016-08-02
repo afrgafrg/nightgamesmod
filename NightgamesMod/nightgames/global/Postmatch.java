@@ -2,11 +2,10 @@ package nightgames.global;
 
 import nightgames.characters.Character;
 import nightgames.characters.Player;
-import nightgames.gui.CommandButton;
-import nightgames.gui.SceneButton;
+import nightgames.gui.button.GameButton;
+import nightgames.gui.button.SceneButton;
 import nightgames.status.addiction.Addiction;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -45,7 +44,7 @@ public class Postmatch implements Scene {
 
     private void events() {
         String message = "";
-        ArrayList<CommandButton> choice = new ArrayList<>();
+        ArrayList<GameButton> choice = new ArrayList<>();
         if (Global.global.checkFlag(Flag.metLilly) && !Global.global.checkFlag(Flag.challengeAccepted)
                         && Global.global.random(10) >= 7) {
             message = message

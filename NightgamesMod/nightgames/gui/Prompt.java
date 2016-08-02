@@ -1,15 +1,29 @@
 package nightgames.gui;
 
-import java.util.Arrays;
+import nightgames.gui.button.FutureButton;
+
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * TODO: Write class-level documentation.
  */
-interface Prompt {
-    default void prompt(CommandButton... choices) {
-        prompt(Arrays.asList(choices));
+public class Prompt<T> {
+    private CompletableFuture<T> future;
+
+    public Prompt(List<? extends FutureButton<T>> choices) {
+        this.future = new CompletableFuture<>();
+        choices.forEach(choice -> choice.addActionListener(l -> choice.completeOrCancel(future)));
     }
 
-    void prompt(List<CommandButton> choices);
+    public Optional<T> response() throws InterruptedException, ExecutionException {
+        try {
+            return Optional.of(future.get());
+        } catch (CancellationException e) {
+            return Optional.empty();
+        }
+    }
 }

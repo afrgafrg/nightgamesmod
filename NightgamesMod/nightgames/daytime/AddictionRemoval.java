@@ -23,8 +23,7 @@ public class AddictionRemoval extends Activity {
     public void visit(String choice) {
         Global.global.gui()
               .clearText();
-        Global.global.gui()
-              .clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (choice.equals("Start")) {
             Global.global.gui()
                   .message("You walk to the place Aesop told you about "

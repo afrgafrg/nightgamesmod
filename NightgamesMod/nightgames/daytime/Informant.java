@@ -29,8 +29,7 @@ public class Informant extends Activity {
     public void visit(String choice) {
         Global.global.gui()
               .clearText();
-        Global.global.gui()
-              .clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (!Global.global.checkFlag(Flag.metBroker)) {
             Global.global.gui()
                   .message("It's almost strange seeing the Quad bustling with people knowing how completely deserted it is at night. Of course, you've been here more "

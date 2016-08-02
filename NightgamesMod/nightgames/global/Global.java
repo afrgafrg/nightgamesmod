@@ -1,22 +1,14 @@
 package nightgames.global;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
-
 import nightgames.Resources.ResourceLoader;
 import nightgames.actions.*;
 import nightgames.actions.Wait;
 import nightgames.areas.Area;
 import nightgames.areas.MapDrawHint;
 import nightgames.characters.*;
+import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.StraponPart;
 import nightgames.characters.custom.CustomNPC;
@@ -40,13 +32,14 @@ import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
 import nightgames.status.Status;
 import nightgames.trap.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -1437,12 +1430,6 @@ public class Global implements Runnable {
         return characterPool.values();
     }
 
-    private DecimalFormat formatter = new DecimalFormat("#.##");
-
-    public String formatDecimal(double val) {
-        return formatter.format(val);
-    }
-
     public Set<Skill> getSkillPool() {
         return skillPool;
     }
@@ -1489,6 +1476,12 @@ public class Global implements Runnable {
         return new HashSet<>(players);
     }
 
+    /**
+     * @param number
+     * @param min
+     * @param max
+     * @return
+     */
     public int clamp(int number, int min, int max) {
         return Math.min(Math.max(number, min), max);
     }
@@ -1552,6 +1545,7 @@ public class Global implements Runnable {
                 // pass
             }
         }
+        GameThread gameThread = new GameThread(new Global());
         new GUI();
     }
 }

@@ -6,7 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Formatter;
 import nightgames.skills.damage.DamageType;
 
 public class Horny extends DurationStatus {
@@ -19,7 +19,7 @@ public class Horny extends DurationStatus {
     public static Horny getWithBiologicalType(Character from, Character target, float magnitude, int duration, String source) {
         return new Horny(target, (float) from.modifyDamage(DamageType.biological, target, magnitude), duration, source);
     }
-    
+
     public Horny(Character affected, float magnitude, int duration, String source) {
         super("Horny", affected, duration);
         this.source = source;
@@ -31,7 +31,7 @@ public class Horny extends DurationStatus {
 
     @Override
     public String toString() {
-        return "Aroused from " + source + " (" + Global.global.formatDecimal(magnitude) + " x " + getDuration() + ")";
+        return "Aroused from " + source + " (" + Formatter.formatDecimal(magnitude) + " x " + getDuration() + ")";
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Horny extends DurationStatus {
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         return String.format("%s %saroused by %s.\n", affected.subjectAction("are", "is"), replaced ? "" : "now ",
-                        source + " (" + Global.global.formatDecimal(magnitude) + " x " + getDuration() + ")");
+                        source + " (" + Formatter.formatDecimal(magnitude) + " x " + getDuration() + ")");
     }
 
     @Override

@@ -481,7 +481,7 @@ public class BodyShop extends Activity {
     public void visit(String choice) {
         if (choice.equals("Start")) {
             Global.global.gui().clearText();
-            Global.global.gui().clearCommand();
+            Global.global.gui().commandPanel.clearCommand(Global.global.gui());
             Global.global.gui().message(
                             "While wondering why you're even here, you walk into the rundown shack named \"The Body Shop\". The proprietor looks at you strangely then mutely points to the sign.");
             displaySelection();

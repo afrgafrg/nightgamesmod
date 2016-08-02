@@ -12,6 +12,7 @@ import nightgames.daytime.Activity;
 import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
+import nightgames.gui.button.*;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
@@ -22,8 +23,6 @@ import nightgames.trap.Trap;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
@@ -46,6 +45,7 @@ public class GUI extends JFrame implements Observer {
     public static GUI gui;
 
     private static final long serialVersionUID = 451431916952047183L;
+    public final CommandPanel commandPanel;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private TacticGroup currentTactics;
@@ -101,7 +101,6 @@ public class GUI extends JFrame implements Observer {
     private int height;
     public int fontsize;
     private JMenuItem mntmQuitMatch;
-    private boolean skippedFeat;
     public NgsChooser saveFileChooser;
     private Box groupBox;
 	private JFrame inventoryFrame;
@@ -365,6 +364,7 @@ public class GUI extends JFrame implements Observer {
                 rdPronounBody.setSelected(true);
             }
             malePrefSlider.setValue(Math.round(Global.global.getValue(Flag.malePref)));
+            */
             int result = JOptionPane.showConfirmDialog(GUI.this, optionsPanel, "Options", JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
@@ -535,21 +535,18 @@ public class GUI extends JFrame implements Observer {
         clothesPanel.setBackground(new Color(25, 25, 50));
         centerPanel.add(clothesPanel, USE_CLOSET_UI);
 
-        CommandButton debug = new CommandButton("Debug", true);
+        GameButton debug = new GameButton("Debug");
 
         // commandPanel - visible, contains the player's command buttons
+        // TODO: reconcile the two CommandPanel implementations
         groupBox = Box.createHorizontalBox();
         groupBox.setBackground(GUIColors.bgDark);
         groupBox.setBorder(new CompoundBorder());
         JPanel groupPanel = new JPanel();
         gamePanel.add(groupPanel);
 
-        commandPanel = new CommandPanel(width);
-        groupPanel.add(groupBox);
-        groupPanel.add(commandPanel.getPanel());
-        gamePanel.add(groupPanel);
-        groupPanel.setBackground(GUIColors.bgDark);
-        groupPanel.setBorder(new CompoundBorder());
+        commandPanel = new CommandPanel(120, width);
+        gamePanel.add(commandPanel);
 
         skills = new HashMap<>();
         clearCommand();
@@ -580,10 +577,6 @@ public class GUI extends JFrame implements Observer {
 
         // Use this for making save dialogs
         saveFileChooser = new NgsChooser(this);
-    }
-
-    protected Prompt makePrompt() {
-        return new BlockingPrompt();
     }
 
     public Optional<File> askForSaveFile() {
@@ -733,15 +726,6 @@ public class GUI extends JFrame implements Observer {
         c.setBeingObserved(true);
         loadPortrait(c, c.p1, c.p2);
         showPortrait();
-    }
-
-    // getLabelString - handles all the meters (bars)
-
-    public String getLabelString(Meter meter) {
-        if (meter.getOverflow() > 0) {
-            return "(" + Integer.toString(meter.get() + meter.getOverflow()) + ")/" + meter.max();
-        }
-        return Integer.toString(meter.get()) + "/" + meter.max();
     }
 
     public void populatePlayer(Player player) {
@@ -910,7 +894,7 @@ public class GUI extends JFrame implements Observer {
     public void purgePlayer() {
         getContentPane().remove(gamePanel);
         clearText();
-        clearCommand();
+        gamePanel.remove(commandPanel);
         showNone();
         clearImage();
         mntmQuitMatch.setEnabled(false);
@@ -972,49 +956,8 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void clearCommand() {
-        skills.clear();
-        commandPanel.removeAll();
-        commandPanel.reset();
-    }
-
-    public void addSkill(Combat com, Skill action, Character target) {
-        SkillButton btn = new SkillButton(com, action, target);
-        skills.get(action.type(com).getGroup()).add(btn);
-    }
-
-    public void showSkills() {
-        commandPanel.reset();
-        int i = 1;
-        for (TacticGroup group : TacticGroup.values()) {
-            SwitchTacticsButton tacticsButton = new SwitchTacticsButton(group);
-            commandPanel.register(java.lang.Character.forDigit(i % 10, 10), tacticsButton);
-            groupBox.add(tacticsButton);
-            groupBox.add(Box.createHorizontalStrut(4));
-            i += 1;
-        }
-        List<SkillButton> flatList = new ArrayList<>();
-        for (TacticGroup group : TacticGroup.values()) {
-            skills.get(group).forEach(flatList::add);
-        }
-        if (currentTactics == TacticGroup.all || flatList.size() <= 6 || skills.get(currentTactics).size() == 0) {
-            flatList.forEach(this::addToCommandPanel);
-        } else {
-            for (SkillButton button : skills.get(currentTactics)) {
-                addToCommandPanel(button);
-            }
-        }
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
-    }
-
-    private void addToCommandPanel(KeyableButton button) {
-        commandPanel.add(button);
-    }
-
     public void addAction(Action action, Character user) {
         commandPanel.add(new ActionButton(action, user));
-        Global.global.getMatch().pause();
         commandPanel.refresh();
     }
 
@@ -1025,13 +968,12 @@ public class GUI extends JFrame implements Observer {
 
     public void next(Combat combat) {
         refresh();
-        clearCommand();
+        commandPanel.clearCommand(this);
         ContinueButton.NextButton next = new ContinueButton.NextButton();
-        commandPanel.add(next);
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
-        makePrompt().prompt(next);
-        clearCommand();
+        commandPanel.commandPanel.add(next);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(next);
+        commandPanel.clearCommand(this);
         if (combat.phase == 0) {
             combat.clear();
             clearText();
@@ -1046,23 +988,26 @@ public class GUI extends JFrame implements Observer {
     public void next(Activity event) {
         event.next();
         clearCommand();
-        commandPanel.add(new EventButton(event, "Next", null));
+        EventButton next = new EventButton(event, "Next", null);
+        commandPanel.commandPanel.add(next);
         commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(next);
     }
 
     public void choose(Combat c, Character npc, String message, CombatSceneChoice choice) {
         commandPanel.add(new CombatSceneButton(message, c, npc, choice));
         commandPanel.refresh();
+        commandPanel.clearCommand(this);
     }
 
     public void choose(String choice) {
-        commandPanel.add(new SceneButton(choice));
-        commandPanel.refresh();
+        commandPanel.commandPanel.add(new SceneButton(choice));
+        commandPanel.commandPanel.refresh();
     }
 
     public void choose(Activity event, String choice) {
-        commandPanel.add(new EventButton(event, choice, null));
-        commandPanel.refresh();
+        commandPanel.commandPanel.add(new EventButton(event, choice, null));
+        commandPanel.commandPanel.refresh();
     }
 
     public void choose(Activity event, String choice, String tooltip) {
@@ -1071,97 +1016,127 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void choose(Action event, String choice, Character self) {
-        commandPanel.add(new LocatorButton(event, choice, self));
-        commandPanel.refresh();
+        commandPanel.commandPanel.add(new CharacterButton(self));
+        commandPanel.commandPanel.refresh();
     }
 
     public void sale(Store shop, Loot i) {
-        commandPanel.add(new ItemButton(shop, i));
+        commandPanel.commandPanel.add(new ItemButton(shop, i));
         commandPanel.refresh();
     }
 
     public void promptFF(IEncounter enc, Character target) {
-        clearCommand();
-        commandPanel.add(new EncounterButton("Fight", enc, target, Encs.fight));
-        commandPanel.add(new EncounterButton("Flee", enc, target, Encs.flee));
+        commandPanel.clearCommand(this);
+        List<GameButton> buttons = new ArrayList<>();
+        buttons.add(new EncounterButton("Fight", enc, target, Encs.fight));
+        buttons.add(new EncounterButton("Flee", enc, target, Encs.flee));
         if (item(Item.SmokeBomb, 1).meets(null, Global.global.human, null)) {
-            commandPanel.add(new EncounterButton("Smoke Bomb", enc, target, Encs.smoke));
+            buttons.add(new EncounterButton("Smoke Bomb", enc, target, Encs.smoke));
         }
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
     public void promptAmbush(IEncounter enc, Character target) {
-        clearCommand();
-        commandPanel.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.ambush));
-        commandPanel.add(new EncounterButton("Wait", enc, target, Encs.wait));
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
+        commandPanel.clearCommand(this);
+        List<GameButton> buttons = new ArrayList<>();
+        buttons.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.ambush));
+        buttons.add(new EncounterButton("Wait", enc, target, Encs.wait));
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
     public void promptOpportunity(IEncounter enc, Character target, Trap trap) {
-        clearCommand();
-        commandPanel.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
-        commandPanel.add(new EncounterButton("Wait", enc, target, Encs.wait));
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
+        commandPanel.clearCommand(this);
+        List<GameButton> buttons = new ArrayList<>();
+        buttons.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
+        buttons.add(new EncounterButton("Wait", enc, target, Encs.wait));
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
     public void promptShower(IEncounter encounter, Character target) {
-        clearCommand();
-        commandPanel.add(new EncounterButton("Suprise Her", encounter, target, Encs.showerattack));
+        commandPanel.clearCommand(this);
+        List<GameButton> buttons = new ArrayList<>();
+        buttons.add(new EncounterButton("Suprise Her", encounter, target, Encs.showerattack));
         if (!target.mostlyNude()) {
-            commandPanel.add(new EncounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
+            buttons.add(new EncounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
         }
         if (Global.global.human.has(Item.Aphrodisiac)) {
-            commandPanel.add(new EncounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
+            buttons.add(new EncounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
         }
-        commandPanel.add(new EncounterButton("Do Nothing", encounter, target, Encs.wait));
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
+        buttons.add(new EncounterButton("Do Nothing", encounter, target, Encs.wait));
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
     public void promptIntervene(IEncounter enc, Character p1, Character p2) {
-        clearCommand();
-        commandPanel.add(new InterveneButton(enc, p1));
-        commandPanel.add(new InterveneButton(enc, p2));
-        Global.global.getMatch().pause();
-        commandPanel.refresh();
+        commandPanel.clearCommand(this);
+        List<GameButton> buttons = new ArrayList<>();
+        buttons.add(new CharacterButton(p1));
+        buttons.add(new CharacterButton(p2));
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
-    public void prompt(String message, List<CommandButton> choices) {
+    public void prompt(String message, List<GameButton> buttons) {
         clearText();
-        clearCommand();
+        commandPanel.clearCommand(this);
         message(message);
-        choices.forEach(commandPanel::add);
-        commandPanel.refresh();
-        makePrompt().prompt(choices);
+        buttons.forEach(commandPanel.commandPanel::add);
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(buttons);
     }
 
     public void ding() {
-        Player player = Global.global.human;
-        if (player.availableAttributePoints > 0) {
+        ding(Global.global.human);
+    }
+
+    public void ding(Player player) {
+        spendAttributePoints(player);
+        spendTraitPoints(player);
+    }
+
+    private void spendAttributePoints(Player player) {
+        while (player.availableAttributePoints > 0) {
             message(player.availableAttributePoints + " Attribute Points remain.\n");
-            clearCommand();
+            commandPanel.clearCommand(this);
+            List<GameButton> buttons = new ArrayList<>();
             for (Attribute att : player.att.keySet()) {
                 if (Attribute.isTrainable(player, att) && player.getPure(att) > 0) {
-                    commandPanel.add(new AttributeButton(att));
+                    buttons.add(new AttributeButton(att));
                 }
             }
-            commandPanel.add(new AttributeButton(Attribute.Willpower));
-            if (Global.global.getMatch() != null) {
-                Global.global.getMatch().pause();
-            }
-            commandPanel.refresh();
-        } else if (player.traitPoints > 0 && !skippedFeat) {
-            clearCommand();
+            buttons.add(new AttributeButton(Attribute.Willpower));
+            buttons.forEach(commandPanel.commandPanel::add);
+            commandPanel.commandPanel.refresh();
+            commandPanel.controller.makePrompt().prompt(buttons);
+        }
+    }
+
+    private void spendTraitPoints(Player player) {
+        boolean skipFeat = false;
+        while (player.traitPoints > 0 && !skipFeat) {
+            commandPanel.clearCommand(this);
             message("You've earned a new perk. Select one below.");
+            List<FutureButton<Trait>> buttons = new ArrayList<>();
             for (Trait feat : Global.global.getFeats(player)) {
                 if (!player.has(feat)) {
-                    commandPanel.add(new FeatButton(feat));
+                    buttons.add(new FeatButton(feat));
                 }
-                commandPanel.refresh();
             }
+            FutureButton<Trait> skipButton = new SkipFeatButton();
+            buttons.add(skipButton);
+            buttons.forEach(commandPanel.commandPanel::add);
+            commandPanel.commandPanel.revalidate();
+            commandPanel.controller.makePrompt().prompt();
+            // TODO: Reconcile implementations of level gain
+            /*
             commandPanel.add(new SkipFeatButton());
             commandPanel.refresh();
         } else {
@@ -1183,6 +1158,7 @@ public class GUI extends JFrame implements Observer {
                     new Prematch(Global.global.human);
                 }
             }
+            */
         }
     }
 
@@ -1208,16 +1184,14 @@ public class GUI extends JFrame implements Observer {
         if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Night End");
         }
-        clearCommand();
+        commandPanel.clearCommand(this);
         showNone();
         mntmQuitMatch.setEnabled(false);
-        SleepButton sleepButton = new SleepButton();
-        commandPanel.add(sleepButton);
-        commandPanel.add(new SaveButton());
-        commandPanel.refresh();
-        makePrompt().prompt(sleepButton);
-        // TODO: work out how to get this to work
-        GameThread.getCurrentGameThread().suspend();
+        ContinueButton.SleepButton sleepButton = new ContinueButton.SleepButton();
+        commandPanel.commandPanel.add(sleepButton);
+        commandPanel.commandPanel.add(new SaveButton());
+        commandPanel.commandPanel.refresh();
+        commandPanel.controller.makePrompt().prompt(sleepButton);
     }
 
     public void refresh() {
@@ -1411,201 +1385,6 @@ public class GUI extends JFrame implements Observer {
         new GameThread().execute();
     }
 
-    /*
-    private KeyableButton nextButton(Combat combat) {
-        return new RunnableButton("Next", () -> {
-            clearCommand();
-            combat.turn();
-        });
-    }
-    */
-
-    // TODO: Make these buttons keyable
-    private class EventButton extends CommandButton {
-
-        private static final long serialVersionUID = 7130158464211753531L;
-        protected Activity event;
-        protected String choice;
-
-        public EventButton(Activity event, String choice) {
-            super(true);    // Can unblock
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.event = event;
-            this.choice = choice;
-            setText(choice);
-            addActionListener(arg0 -> EventButton.this.event.visit(EventButton.this.choice));
-        }
-    }
-
-    private class ItemButton extends EventButton {
-
-        private static final long serialVersionUID = 3200753975433797292L;
-
-        public ItemButton(Activity event, Item i) {
-            super(event, i.getName());
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setToolTipText(i.getDesc());
-        }
-
-        public ItemButton(Activity event, Clothing i) {
-            super(event, i.getName());
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setToolTipText(i.getToolTip());
-        }
-    }
-
-    private class AttributeButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -8860455413688200054L;
-        private Attribute att;
-
-        public AttributeButton(Attribute att) {
-            super(); // does not unblock
-            Player player = Global.global.human;
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.att = att;
-            setText(att.name());
-            addActionListener(arg0 -> {
-                clearTextIfNeeded();
-                player.mod(GUI.AttributeButton.this.att, 1);
-                player.availableAttributePoints -= 1;
-                refresh();
-                ding();
-            });
-        }
-    }
-
-    private class FeatButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 4576009707142466815L;
-        private Trait feat;
-
-        public FeatButton(Trait feat) {
-            super(true);    // does unblock
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.feat = feat;
-            setText(feat.toString());
-            setToolTipText(feat.getDesc());
-            addActionListener(arg0 -> {
-                Player player = Global.global.human;
-                player.add(FeatButton.this.feat);
-                clearTextIfNeeded();
-                Global.global.gui().message("Gained feat: " + FeatButton.this.feat);
-                Global.global.gui().message(Global.global.gainSkills(player));
-                player.traitPoints -= 1;
-                refresh();
-                ding();
-            });
-        }
-    }
-
-    private class SkipFeatButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -4949332486895844480L;
-
-        public SkipFeatButton() {
-            super();    // does not unblock
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setText("Skip");
-            setToolTipText("Save the trait point for later.");
-            addActionListener(arg0 -> {
-                skippedFeat = true;
-                clearTextIfNeeded();
-                ding();
-            });
-        }
-    }
-
-    private class InterveneButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 7410615523447227147L;
-        private IEncounter enc;
-        private Character assist;
-
-        public InterveneButton(IEncounter enc2, Character assist) {
-            super(true);
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.enc = enc2;
-            this.assist = assist;
-            setText("Help " + assist.name());
-            addActionListener(arg0 -> GUI.InterveneButton.this.enc
-                            .intrude(Global.global.human, GUI.InterveneButton.this.assist));
-        }
-    }
-
-     // TODO: Need a "Watch them fight" button
-
-    private class ActivityButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -4459591680742071519L;
-        private Activity act;
-
-        public ActivityButton(Activity act) {
-            super(true);    // can unblock
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            this.act = act;
-            setText(act.toString());
-            addActionListener(arg0 -> GUI.ActivityButton.this.act.visit("Start"));
-        }
-    }
-
-    private class SleepButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1669023447753258615L;
-
-        SleepButton() {
-            super(true);
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setText("Go to sleep");
-        }
-    }
-
-
-    private class LocatorButton extends CommandButton {
-
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 8284888109704181827L;
-
-        public LocatorButton(final Action event, final String choice, final Character self) {
-            super();
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setText(choice);
-            addActionListener(evt -> ((Locate) event).handleEvent(self, choice));
-        }
-    }
-
-    private class PageButton extends CommandButton {
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 1291939812301193206L;
-        private int page;
-
-        public PageButton(String label, int page) {
-            super();
-            setFont(new Font("Baskerville Old Face", 0, 18));
-            setText(label);
-            this.page = page;
-            addActionListener(arg0 -> {
-                commandPanel.removeAll();
-                showSkills(PageButton.this.page);
-            });
-        }
-    }
 
     public void changeClothes(Character player, Activity event, String backOption) {
         clothesPanel.removeAll();

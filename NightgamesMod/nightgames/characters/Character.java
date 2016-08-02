@@ -111,11 +111,11 @@ public abstract class Character extends Observable implements Cloneable {
         att.put(Attribute.Perception, 5);
         att.put(Attribute.Speed, 5);
         money = 0;
-        stamina = new Meter(22 + 3 * level);
+        stamina = new Meter(22 + 3 * level, name, toolTipText);
         stamina.fill();
-        arousal = new Meter(90 + 10 * level);
-        mojo = new Meter(100);
-        willpower = new Meter(40);
+        arousal = new Meter(90 + 10 * level, name, toolTipText);
+        mojo = new Meter(100, name, toolTipText);
+        willpower = new Meter(40, name, toolTipText);
         orgasmed = false;
         pleasured = false;
 
@@ -1532,10 +1532,10 @@ public abstract class Character extends Observable implements Cloneable {
         money = object.get("money").getAsInt();
         {
             JsonObject resources = object.getAsJsonObject("resources");
-            stamina.setMax(resources.get("stamina").getAsFloat());
-            arousal.setMax(resources.get("arousal").getAsFloat());
-            mojo.setMax(resources.get("mojo").getAsFloat());
-            willpower.setMax(resources.get("willpower").getAsFloat());
+            stamina.setMax(resources.get("stamina").getAsInt());
+            arousal.setMax(resources.get("arousal").getAsInt());
+            mojo.setMax(resources.get("mojo").getAsInt());
+            willpower.setMax(resources.get("willpower").getAsInt());
         }
 
         affections = JsonUtils.mapFromJson(object.getAsJsonObject("affections"), String.class, Integer.class);
@@ -2885,7 +2885,7 @@ public abstract class Character extends Observable implements Cloneable {
             available.add(new Nothing(this));
         }
         available.addAll(cds);
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         Skill lastUsed = null;
         for (Skill a : available) {
             if (a.getName().equals(c.getCombatantData(this).getLastUsedSkillName())) {
@@ -2911,34 +2911,34 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         if (lastUsed != null) {
-            Global.global.gui().addSkill(c, lastUsed, target);
+            Global.global.gui().commandPanel.addSkill(c, lastUsed, target);
         }
         for (Skill a : stripping) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : position) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : fucking) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : pleasure) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : damage) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : debuff) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : summoning) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : recovery) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         for (Skill a : misc) {
-            Global.global.gui().addSkill(c, a, target);
+            Global.global.gui().commandPanel.addSkill(c, a, target);
         }
         Global.global.gui().showSkills();
     }

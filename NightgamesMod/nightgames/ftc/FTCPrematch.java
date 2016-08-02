@@ -5,7 +5,10 @@ import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Prematch;
-import nightgames.gui.*;
+import nightgames.gui.button.ContinueButton;
+import nightgames.gui.button.GameButton;
+import nightgames.gui.button.SaveButton;
+import nightgames.gui.button.SceneButton;
 import nightgames.modifier.standard.FTCModifier;
 
 import java.util.ArrayList;
@@ -19,7 +22,7 @@ public class FTCPrematch extends Prematch {
     public FTCPrematch(Player player) {
         Global.global.currentScene = this;
         Global.global.unflag(Flag.victory);
-        List<CommandButton> choice = new ArrayList<>();
+        List<GameButton> choice = new ArrayList<>();
         String message = "";
         if (!Global.global.checkFlag(Flag.didFTC)) {
             message += "When you get to the student union, you find it deserted save for"

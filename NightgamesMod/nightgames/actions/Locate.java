@@ -35,7 +35,7 @@ public class Locate extends Action {
     @Override
     public Movement execute(Character self) {
         GUI gui = Global.global.gui();
-        gui.clearCommand();
+        gui.commandPanel.clearCommand(gui);
         gui.clearText();
         gui.validate();
         if (self.human()) {
@@ -57,7 +57,7 @@ public class Locate extends Action {
             gui.choose(this, "Leave", self);
         } else if (choice.equals("Leave")) {
             gui.clearText();
-            gui.clearCommand();
+            gui.commandPanel.clearCommand(gui);
             Global.global.getMatch().resume();
         } else if ((target = Global.global.getNPC(choice)) != null) {
             Area area = target.location();
@@ -78,7 +78,7 @@ public class Locate extends Action {
                                 + "purple flames, the smoke flowing from your nose straight to your crotch and setting another fire there.");
             }
             self.addNonCombat(new Horny(self, self.getArousal().max() / 10, 10, "Scrying Ritual"));
-            gui.clearCommand();
+            gui.commandPanel.clearCommand(gui);
             gui.choose(this, "Leave", self);
         } else {
             StringWriter writer = new StringWriter();
@@ -89,7 +89,7 @@ public class Locate extends Action {
                             + " below to The Silver Bard at his wordpress blog or Fenoxo's Forum: " + "\n\nSelf: "
                             + self.name() + "(" + self.human() + ")\n" + "Choice: " + choice + "\nStacktrace:\n"
                             + writer.toString());
-            gui.clearCommand();
+            gui.commandPanel.clearCommand(gui);
             gui.choose(this, "Leave", self);
         }
     }

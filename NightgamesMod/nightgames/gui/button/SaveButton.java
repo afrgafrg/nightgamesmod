@@ -1,14 +1,13 @@
-package nightgames.gui;
+package nightgames.gui.button;
 
 import nightgames.global.Global;
 
-import javax.swing.*;
 import java.awt.*;
 
-public class SaveButton extends CommandButton {
+public class SaveButton extends GameButton {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 5665392145091151054L;
 

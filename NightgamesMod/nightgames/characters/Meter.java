@@ -1,6 +1,6 @@
 package nightgames.characters;
 
-import nightgames.global.Global;
+import nightgames.global.Formatter;
 
 import java.io.Serializable;
 import java.util.Observable;
@@ -114,8 +114,7 @@ public class Meter extends Observable implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return String.format("current: %s / max: %s", Global.global.formatDecimal(current),
-                        Global.global.formatDecimal(max()));
+        return String.format("current: %s / max: %s", Formatter.formatDecimal(current), Formatter.formatDecimal(max()));
     }
 
     public double remaining() {

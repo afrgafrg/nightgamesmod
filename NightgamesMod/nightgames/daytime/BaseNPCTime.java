@@ -58,7 +58,7 @@ public abstract class BaseNPCTime extends Activity {
     @Override
     public void visit(String choice) {
         Global.global.gui().clearText();
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         List<Loot> giftables = getGiftables();
         Map<Item, Integer> MyInventory = this.player.getInventory();
 

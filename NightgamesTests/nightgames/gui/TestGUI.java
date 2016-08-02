@@ -3,7 +3,6 @@ package nightgames.gui;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
-import nightgames.skills.Skill;
 
 import java.io.File;
 import java.util.Observable;
@@ -16,12 +15,6 @@ public class TestGUI extends GUI {
     private static final long serialVersionUID = 1739250786661411957L;
 
     public TestGUI() {
-    }
-
-    @Override protected Prompt makePrompt() {
-        return choices -> {
-            // do nothing
-        };
     }
 
     @Override public void setVisible(boolean visible) {
@@ -46,12 +39,6 @@ public class TestGUI extends GUI {
 
     @Override
     public void message(String text) {}
-
-    @Override
-    public void clearCommand() {}
-
-    @Override
-    public void addSkill(Combat com, Skill action, Character target) {}
 
     @Override
     public void next(Combat combat) {}

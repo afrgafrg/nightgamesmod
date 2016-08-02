@@ -25,7 +25,7 @@ public class Meditation extends Activity {
             acted = false;
         }
         Global.global.gui().clearText();
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (Global.global.checkFlag(Flag.dojo) && choice.equals("Start")) {
             if (!Global.global.checkFlag(Flag.metSuzume)) {
                 Global.global.gui().message(

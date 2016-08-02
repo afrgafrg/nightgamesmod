@@ -5,7 +5,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Formatter;
 import nightgames.global.Grammar;
 import nightgames.skills.*;
 
@@ -54,7 +54,7 @@ public class BodyFetish extends DurationStatus {
         } else {
             desc = "overwhelming ";
         }
-        String magString = Global.global.formatDecimal(magnitude);
+        String magString = Formatter.formatDecimal(magnitude);
         if (affected.human()) {
             if (origin != null && c != null && c.getOpponent(affected) == origin) {
                 return Grammar.capitalizeFirstLetter(

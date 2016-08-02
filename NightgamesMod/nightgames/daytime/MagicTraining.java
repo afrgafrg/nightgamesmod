@@ -23,7 +23,7 @@ public class MagicTraining extends Activity {
     @Override
     public void visit(String choice) {
         Global.global.gui().clearText();
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (!Global.global.checkFlag(Flag.metAisha)) {
             Global.global.gui().message(
                             "Aisha apparently spends most of her time in a mostly abandoned creative writing reference room in the back of the liberal arts building. On paper, she "

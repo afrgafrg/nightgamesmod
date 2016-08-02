@@ -23,7 +23,7 @@ public class Bookstore extends Store {
     @Override
     public void visit(String choice) {
         Global.global.gui().clearText();
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (choice.equals("Start")) {
             acted = false;
         }

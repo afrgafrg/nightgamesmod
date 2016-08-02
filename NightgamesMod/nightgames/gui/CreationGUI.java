@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.Trait;
 import nightgames.global.Flag;
+import nightgames.global.GameThread;
 import nightgames.global.Global;
 import nightgames.start.StartConfiguration;
 
@@ -532,8 +533,9 @@ public class CreationGUI extends JPanel {
             selectedAttributes.put(Attribute.Power, power);
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
-            Global.global.newGame(name, startConfig, traits, sex, selectedAttributes);
-            new GameThread().execute();
+            Global gameState = new Global();
+            gameState.newGame(name, startConfig, traits, sex, selectedAttributes);
+            new GameThread(gameState).start();
         }
     }
 

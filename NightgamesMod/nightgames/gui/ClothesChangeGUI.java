@@ -166,7 +166,7 @@ public class ClothesChangeGUI extends JPanel {
         outfitBox.add(outfitLabel);
         outfitBox.add(outfitListPane);
 
-        CommandButton btnOk = new CommandButton("OK", true);  // can unblock
+        CommandButton btnOk = new CommandButton("OK");  // can unblock
         btnOk.addActionListener(arg0 -> {
             ClothesChangeGUI.this.character.change();
             Global.global.gui().removeClosetGUI();

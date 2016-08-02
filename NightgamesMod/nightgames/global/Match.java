@@ -19,7 +19,6 @@ public class Match {
     public ArrayList<Character> combatants;
     protected HashMap<Character, Integer> score;
     protected int index;
-    protected boolean pause;
     public Modifier condition;
     public MatchData matchData;
 
@@ -40,7 +39,6 @@ public class Match {
         }
         time = 0;
         dropOffTime = 0;
-        pause = false;
         Deque<Area> areaList = new ArrayDeque<>();
         areaList.add(map.get("Dorm"));
         areaList.add(map.get("Engineering"));

@@ -194,19 +194,19 @@ public class TestAngel extends BasePersonality {
             r = Global.global.random(4);
             if (r == 1) {
                 if (character.has(Trait.fitnessNut)) {
-                    character.getStamina().gain(1);
+                    character.getStamina().permanentMaxIncrease(1);
                 }
-                character.getStamina().gain(1);
+                character.getStamina().permanentMaxIncrease(1);
             } else if (r == 3) {
                 if (character.has(Trait.expertGoogler)) {
-                    character.getArousal().gain(4);
+                    character.getArousal().permanentMaxIncrease(4);
                 }
-                character.getArousal().gain(6);
+                character.getArousal().permanentMaxIncrease(6);
             } else if (r == 2) {
                 if (character.has(Trait.mojoMaster)) {
-                    character.getMojo().gain(1);
+                    character.getMojo().permanentMaxIncrease(1);
                 }
-                character.getMojo().gain(1);
+                character.getMojo().permanentMaxIncrease(1);
             }
         }
     }

@@ -1,5 +1,6 @@
 package nightgames.gui;
 
+<<<<<<< HEAD
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -129,5 +130,64 @@ public class CommandPanel {
     public void register(Character hotkey, KeyableButton button) {
         button.setHotkeyTextTo(hotkey.toString().toUpperCase());
         hotkeyMapping.put(hotkey, button);
+=======
+import nightgames.gui.button.ButtonList;
+import nightgames.gui.button.FutureButton;
+import nightgames.gui.button.PageButton;
+
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import java.awt.*;
+import java.io.Serializable;
+import java.util.List;
+
+public class CommandPanel extends JPanel implements Serializable {
+    private static final long serialVersionUID = 3539791525124851677L;
+    private ButtonList<?> buttons;
+    private int page;
+
+    CommandPanel(int height, int width) {
+        this.setBackground(GUIColors.bgDark);
+        this.setPreferredSize(new Dimension(width, height));
+        this.setMinimumSize(new Dimension(width, height));
+        this.page = 0;
+
+        this.setBorder(new CompoundBorder());
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+        showButtons();
+    }
+
+    public <T> void setButtons(List<FutureButton<T>> buttons) {
+        this.buttons = new ButtonList<>(buttons);
+        setPage(0);
+    }
+
+    public void showButtons() {
+        removeAll();
+        if (!buttons.isFirstPage(page)) {
+            add(new PageButton("<-", page - 1, this));
+        }
+        buttons.page(page).forEach(this::add);
+        if (!buttons.isLastPage(page)) {
+            add(new PageButton("->", page + 1, this));
+        }
+        repaint();
+        revalidate();
+    }
+
+    @Override public Component add(Component comp) {
+        return super.add(comp);
+    }
+
+    @Override public void removeAll() {
+        super.removeAll();
+    }
+
+    public Prompt<?> prompt() {
+        return buttons.makePrompt();
+>>>>>>> e1fc2a8... Redefined Prompts around the notion of CompleteableFutures set by value-holding buttons. Adjusted Button definitions to accommodate. Moved Button definitions to their own subpackage.
     }
 }

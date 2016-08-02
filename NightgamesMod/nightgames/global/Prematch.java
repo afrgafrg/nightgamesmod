@@ -2,7 +2,10 @@ package nightgames.global;
 
 import nightgames.characters.Airi;
 import nightgames.characters.Player;
-import nightgames.gui.*;
+import nightgames.gui.button.ContinueButton;
+import nightgames.gui.button.GameButton;
+import nightgames.gui.button.SaveButton;
+import nightgames.gui.button.SceneButton;
 import nightgames.modifier.Modifier;
 import nightgames.modifier.standard.MayaModifier;
 import nightgames.modifier.standard.NoModifier;
@@ -24,7 +27,7 @@ public class Prematch implements Scene {
         Global.global.currentScene = this;
         Global.global.unflag(Flag.victory);
         player.getAddictions().forEach(addiction -> addiction.startNight().ifPresent(player::add));
-        List<CommandButton> choice = new ArrayList<>();
+        List<GameButton> choice = new ArrayList<>();
         String message = "";
         if (player.getLevel() < 5) {
             message += "You arrive at the student union a few minutes before the start of the match. "

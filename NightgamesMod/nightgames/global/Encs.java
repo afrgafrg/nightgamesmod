@@ -8,7 +8,7 @@ public enum Encs {
     stealclothes,
     fight,
     flee,
-    wait,
+    wait, intervene,
     smoke,
 
     // FTC-specific

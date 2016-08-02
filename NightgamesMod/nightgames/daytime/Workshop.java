@@ -23,7 +23,7 @@ public class Workshop extends Activity {
     @Override
     public void visit(String choice) {
         Global.global.gui().clearText();
-        Global.global.gui().clearCommand();
+        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (!Global.global.checkFlag(Flag.metJett)) {
             Global.global.gui().message(
                             "You head to Jett's workshop. Apparently he has an implicit claim on this workshop in the same way that Mara does on her computer room. "

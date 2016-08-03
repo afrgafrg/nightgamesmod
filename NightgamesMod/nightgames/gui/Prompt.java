@@ -19,11 +19,13 @@ public class Prompt<T> {
         choices.forEach(choice -> choice.addActionListener(l -> choice.completeOrCancel(future)));
     }
 
-    public Optional<T> response() throws InterruptedException, ExecutionException {
+    public Optional<T> response() throws InterruptedException {
         try {
             return Optional.of(future.get());
         } catch (CancellationException e) {
             return Optional.empty();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 }

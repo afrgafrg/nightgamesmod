@@ -10,6 +10,6 @@ public class PageButton extends GameButton {
 
     public PageButton(String label, int newPage, CommandPanel commandPanel) {
         super(label);
-        addActionListener(arg0 -> commandPanel.setPage(newPage));
+        addActionListener(arg0 -> commandPanel.showButtons(newPage));
     }
 }

@@ -22,7 +22,7 @@ public class CommandPanel {
     private static final List<Character> POSSIBLE_HOTKEYS = Arrays.asList(
                     'q', 'w', 'e', 'r', 't', 'y',
                     'a', 's', 'd', 'f' , 'g', 'h',
-                    'z', 'x', 'c', 'v', 'b', 'n'); 
+                    'z', 'x', 'c', 'v', 'b', 'n');
     private static final Set<String> DEFAULT_CHOICES = new HashSet<>(Arrays.asList("Wait", "Nothing", "Next", "Leave", "Back"));
     private static final int ROW_LIMIT = 6;
 
@@ -78,7 +78,7 @@ public class CommandPanel {
             row.removeAll();
         }
         POSSIBLE_HOTKEYS.forEach(hotkeyMapping::remove);
-        index = 0;  
+        index = 0;
     }
 
     public void refresh() {
@@ -102,7 +102,7 @@ public class CommandPanel {
             Character hotkey = POSSIBLE_HOTKEYS.get(effectiveIndex);
             register(hotkey, button);
             if (DEFAULT_CHOICES.contains(button.getText()) && !hotkeyMapping.containsKey(' ')) {
-                hotkeyMapping.put(' ', button); 
+                hotkeyMapping.put(' ', button);
             }
         } else if (effectiveIndex == -1) {
             KeyableButton leftPage = new RunnableButton("<<<", () -> setPage(currentPage - 1));
@@ -133,61 +133,69 @@ public class CommandPanel {
 =======
 import nightgames.gui.button.ButtonList;
 import nightgames.gui.button.FutureButton;
+import nightgames.gui.button.GameButton;
 import nightgames.gui.button.PageButton;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandPanel extends JPanel implements Serializable {
     private static final long serialVersionUID = 3539791525124851677L;
-    private ButtonList<?> buttons;
-    private int page;
+    private List<GameButton> buttons;
 
-    CommandPanel(int height, int width) {
-        this.setBackground(GUIColors.bgDark);
-        this.setPreferredSize(new Dimension(width, height));
-        this.setMinimumSize(new Dimension(width, height));
-        this.page = 0;
+    private static final int MAX_BUTTONS_PER_PAGE = 25;
+
+    private CommandPanel(Dimension dimension) {
+        this.setBackground(GUIColors.bgDark.color);
+        this.setPreferredSize(dimension);
+        this.setMinimumSize(dimension);
 
         this.setBorder(new CompoundBorder());
     }
 
-    public void setPage(int page) {
-        this.page = page;
-        showButtons();
+    CommandPanel(int height, int width) {
+        this(new Dimension(width, height));
     }
 
-    public <T> void setButtons(List<FutureButton<T>> buttons) {
-        this.buttons = new ButtonList<>(buttons);
-        setPage(0);
+    public void setButtons(List<GameButton> buttons) {
+        this.buttons = buttons;
     }
 
-    public void showButtons() {
+    public void showButtons(int page) {
         removeAll();
-        if (!buttons.isFirstPage(page)) {
+        if (!isFirstPage(page)) {
             add(new PageButton("<-", page - 1, this));
         }
-        buttons.page(page).forEach(this::add);
-        if (!buttons.isLastPage(page)) {
+        page(page).forEach(this::add);
+        if (!isLastPage(page)) {
             add(new PageButton("->", page + 1, this));
         }
         repaint();
         revalidate();
     }
 
-    @Override public Component add(Component comp) {
-        return super.add(comp);
+    private List<GameButton> page(int page) {
+        return buttons.subList(startIndex(page), endIndex(page));
     }
 
-    @Override public void removeAll() {
-        super.removeAll();
+    private int startIndex(int page) {
+        return page * MAX_BUTTONS_PER_PAGE;
     }
 
-    public Prompt<?> prompt() {
-        return buttons.makePrompt();
+    private int endIndex(int page) {
+        return Math.min(buttons.size(), startIndex(page + 1));
+    }
+
+    private boolean isFirstPage(int page) {
+        return page == 0;
+    }
+
+    private boolean isLastPage(int page) {
+        return startIndex(page + 1) > buttons.size();
 >>>>>>> e1fc2a8... Redefined Prompts around the notion of CompleteableFutures set by value-holding buttons. Adjusted Button definitions to accommodate. Moved Button definitions to their own subpackage.
     }
 }

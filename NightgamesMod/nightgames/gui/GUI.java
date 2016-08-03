@@ -50,7 +50,7 @@ public class GUI extends JFrame implements Observer {
     public static GUI gui;
 
     private static final long serialVersionUID = 451431916952047183L;
-    public final CommandPanel commandPanel;
+    public CommandPanel commandPanel;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private TacticGroup currentTactics;
@@ -957,14 +957,18 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void addAction(Action action, Character user) {
-        commandPanel.add(new ActionButton(action, user));
-        commandPanel.refresh();
+    public void setChoices(List<GameButton> buttons) {
+        commandPanel.setButtons(buttons);
+        commandPanel.showButtons(0);
     }
 
-    public void addActivity(Activity act) {
-        commandPanel.add(new ActivityButton(act));
-        commandPanel.refresh();
+    public void next() throws InterruptedException {
+        ArrayList<FutureButton<Void>> buttons = new ArrayList<>();
+        buttons.add(new ContinueButton.NextButton());
+        setChoices(new ArrayList<>(buttons));
+        Prompt<Void> prompt = new Prompt<>(buttons);
+        prompt.response().orElseThrow(() -> new RuntimeException(
+                        "It should not be possible to cancel a \"next\" prompt."));
     }
 
     public void next(Combat combat) {
@@ -1404,7 +1408,7 @@ public class GUI extends JFrame implements Observer {
         NewGameMenuItem() {
             super("New Game");
             this.setForeground(Color.WHITE);
-            this.setBackground(GUIColors.bgGrey);
+            this.setBackground(GUIColors.bgGrey.color);
             this.setHorizontalAlignment(SwingConstants.CENTER);
 
             this.addActionListener(arg0 -> {

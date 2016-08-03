@@ -702,7 +702,6 @@ public class GUI extends JFrame implements Observer {
         getContentPane().remove(creation);
         getContentPane().add(gamePanel);
         getContentPane().validate();
-        player.gui = this;
         player.addObserver(this);
 
         // TODO: Reconcile these implementations
@@ -939,75 +938,6 @@ public class GUI extends JFrame implements Observer {
         Prompt<Void> prompt = new Prompt<>(buttons);
         prompt.response().orElseThrow(() -> new RuntimeException(
                         "It should not be possible to cancel a \"next\" prompt."));
-    }
-
-    public void ding() {
-        ding(Global.global.human);
-    }
-
-    public void ding(Player player) {
-        spendAttributePoints(player);
-        spendTraitPoints(player);
-    }
-
-    private void spendAttributePoints(Player player) {
-        while (player.availableAttributePoints > 0) {
-            message(player.availableAttributePoints + " Attribute Points remain.\n");
-            commandPanel.clearCommand(this);
-            List<GameButton> buttons = new ArrayList<>();
-            for (Attribute att : player.att.keySet()) {
-                if (Attribute.isTrainable(player, att) && player.getPure(att) > 0) {
-                    buttons.add(new AttributeButton(att));
-                }
-            }
-            buttons.add(new AttributeButton(Attribute.Willpower));
-            buttons.forEach(commandPanel.commandPanel::add);
-            commandPanel.commandPanel.refresh();
-            commandPanel.controller.makePrompt().prompt(buttons);
-        }
-    }
-
-    private void spendTraitPoints(Player player) {
-        boolean skipFeat = false;
-        while (player.traitPoints > 0 && !skipFeat) {
-            commandPanel.clearCommand(this);
-            message("You've earned a new perk. Select one below.");
-            List<FutureButton<Trait>> buttons = new ArrayList<>();
-            for (Trait feat : Global.global.getFeats(player)) {
-                if (!player.has(feat)) {
-                    buttons.add(new FeatButton(feat));
-                }
-            }
-            FutureButton<Trait> skipButton = new SkipFeatButton();
-            buttons.add(skipButton);
-            buttons.forEach(commandPanel.commandPanel::add);
-            commandPanel.commandPanel.revalidate();
-            commandPanel.controller.makePrompt().prompt();
-            // TODO: Reconcile implementations of level gain
-            /*
-            commandPanel.add(new SkipFeatButton());
-            commandPanel.refresh();
-        } else {
-            skippedFeat = false;
-            clearCommand();
-            Global.global.gui().message(Global.global.gainSkills(player));
-            player.finishDing();
-            if (player.getLevelsToGain() > 0) {
-                player.actuallyDing();
-                ding();
-            } else {
-                if (combat != null) {
-                    endCombat();
-                } else if (Global.global.getMatch() != null) {
-                    Global.global.getMatch().resume();
-                } else if (Global.global.day != null) {
-                    Global.global.getDay().plan();
-                } else {
-                    new Prematch(Global.global.human);
-                }
-            }
-            */
-        }
     }
 
     // Night match initializer

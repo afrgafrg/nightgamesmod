@@ -23,7 +23,6 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
-import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Skill;
@@ -46,10 +45,11 @@ import java.util.stream.Collectors;
 public class Player extends Character {
     public static final String type = "Player";
 
-    public GUI gui;
+    private Growth growth;
     public int traitPoints;
     private int levelsToGain;
     private List<Addiction> addictions;
+    private PlayerController controller;
 
     public Player(String name) {
         this(name, CharacterSex.male, Optional.empty(), new ArrayList<>(), new HashMap<>());
@@ -97,6 +97,19 @@ public class Player extends Character {
         outfitPlan.add(Clothing.getByID("jeans"));
         outfitPlan.add(Clothing.getByID("socks"));
         outfitPlan.add(Clothing.getByID("sneakers"));
+        config.ifPresent(this::applyConfigStats);
+        finishCharacter(pickedTraits, selectedAttributes);
+
+        controller = new PlayerController(Global.global.gui());
+    }
+
+    private void applyBasicStats() {
+        willpower.setMax(willpower.max());
+        availableAttributePoints = 0;
+        setTrophy(Item.PlayerTrophy);
+        growth = new Growth();
+        setGrowth();
+        addictions = new ArrayList<>();
     }
 
     private void applyConfigStats(PlayerConfiguration config) {
@@ -244,7 +257,7 @@ public class Player extends Character {
 
     @Override
     public void faceOff(Character opponent, IEncounter enc) {
-        gui.message("You run into <b>" + opponent.name
+        Global.global.gui().message("You run into <b>" + opponent.name
                         + "</b> and you both hesitate for a moment, deciding whether to attack or retreat.");
         assessOpponent(opponent);
         enc.promptFF(opponent, Global.global.gui());
@@ -254,21 +267,21 @@ public class Player extends Character {
         String arousal;
         String stamina;
         if (opponent.state == State.webbed) {
-            gui.message("She is naked and helpless.<br/>");
+            Global.global.gui().message("She is naked and helpless.<br/>");
             return;
         }
         if (get(Attribute.Perception) >= 6) {
-            gui.message("She is level " + opponent.getLevel());
+            Global.global.gui().message("She is level " + opponent.getLevel());
         }
         if (get(Attribute.Perception) >= 8) {
-            gui.message("Her Power is " + opponent.get(Attribute.Power) + ", her Cunning is "
+            Global.global.gui().message("Her Power is " + opponent.get(Attribute.Power) + ", her Cunning is "
                             + opponent.get(Attribute.Cunning) + ", and her Seduction is "
                             + opponent.get(Attribute.Seduction));
         }
         if (opponent.mostlyNude() || opponent.state == State.shower) {
-            gui.message("She is completely naked.");
+            Global.global.gui().message("She is completely naked.");
         } else {
-            gui.message("She is dressed and ready to fight.");
+            Global.global.gui().message("She is dressed and ready to fight.");
         }
         if (get(Attribute.Perception) >= 4) {
             if (opponent.getArousal()
@@ -286,13 +299,13 @@ public class Player extends Character {
             } else {
                 stamina = "eager";
             }
-            gui.message("She looks " + stamina + " and " + arousal + ".");
+            Global.global.gui().message("She looks " + stamina + " and " + arousal + ".");
         }
     }
 
     @Override
     public void spy(Character opponent, IEncounter enc) {
-        gui.message("You spot <b>" + opponent.name
+        Global.global.gui().message("You spot <b>" + opponent.name
                         + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
         assessOpponent(opponent);
         enc.promptAmbush(opponent, Global.global.gui());
@@ -300,7 +313,7 @@ public class Player extends Character {
 
     @Override
     public void move() {
-        gui.clearCommand();
+        Global.global.gui().clearCommand();
 
         if (busy > 0) {
             busy--;
@@ -309,9 +322,9 @@ public class Player extends Character {
             master = ((Enthralled) getStatus(Stsflag.enthralled)).master;
             if (master != null) {
                 Move compelled = findPath(master.location());
-                gui.message("You feel an irresistible compulsion to head to the <b>" + master.location().name + "</b>");
+                Global.global.gui().message("You feel an irresistible compulsion to head to the <b>" + master.location().name + "</b>");
                 if (compelled != null) {
-                    gui.addAction(compelled, this);
+                    Global.global.gui().addAction(compelled, this);
                 }
             }
         } else if (state == State.shower || state == State.lostclothes) {
@@ -323,7 +336,7 @@ public class Player extends Character {
         } else if (state == State.resupplying) {
             resupply();
         } else if (state == State.webbed) {
-            gui.message("You eventually manage to get an arm free, which you then use to extract yourself from the trap.");
+            Global.global.gui().message("You eventually manage to get an arm free, which you then use to extract yourself from the trap.");
             state = State.ready;
         } else if (state == State.masturbating) {
             masturbate();
@@ -331,27 +344,27 @@ public class Player extends Character {
             if (Global.global.checkFlag(Flag.FTC)) {
                 Character holder = ((FTCMatch) Global.global.getMatch()).getFlagHolder();
                 if (holder != null && !holder.human()) {
-                    gui.message("<b>" + holder.name + " currently holds the Flag.</b></br>");
+                    Global.global.gui().message("<b>" + holder.name + " currently holds the Flag.</b></br>");
                 }
             }
-            gui.message(location.description + "<br/><br/>");
+            Global.global.gui().message(location.description + "<br/><br/>");
             for (Deployable trap : location.env) {
                 if (trap.owner() == this) {
-                    gui.message("You've set a " + trap.toString() + " here.");
+                    Global.global.gui().message("You've set a " + trap.toString() + " here.");
                 }
             }
             if (state == State.inTree)
-                gui.message("You are hiding in a tree, waiting to drop down on an unwitting foe.");
+                Global.global.gui().message("You are hiding in a tree, waiting to drop down on an unwitting foe.");
             else if (state == State.inBushes)
-                gui.message("You are hiding in dense bushes, waiting for someone to pass by.");
+                Global.global.gui().message("You are hiding in dense bushes, waiting for someone to pass by.");
             else if (state == State.inPass)
-                gui.message("You are hiding in an alcove in the pass.");
+                Global.global.gui().message("You are hiding in an alcove in the pass.");
             else if (state == State.hidden)
-                gui.message("You have found a hiding spot and are waiting for someone to pounce upon.");
+                Global.global.gui().message("You have found a hiding spot and are waiting for someone to pounce upon.");
             detect();
             if (!location.encounter(this)) {
                 if (!allowedActions().isEmpty()) {
-                    allowedActions().forEach(a -> gui.addAction(a, this));
+                    allowedActions().forEach(a -> Global.global.gui().addAction(a, this));
                 } else {
                     List<Action> possibleActions = new ArrayList<>();
                     for (Area path : location.adjacent) {
@@ -372,7 +385,7 @@ public class Player extends Character {
                     for (Action act : possibleActions) {
                         if (act.usable(this)
                                         && Global.global.getMatch().condition.allowAction(act, this, Global.global.getMatch())) {
-                            gui.addAction(act, this);
+                            Global.global.gui().addAction(act, this);
                         }
                     }
                 }
@@ -385,7 +398,7 @@ public class Player extends Character {
         levelsToGain += 1;
         if (levelsToGain == 1) {
             actuallyDing();
-            gui.ding();
+            Global.global.gui().ding();
         }
     }
 
@@ -409,7 +422,7 @@ public class Player extends Character {
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
         Area destination = adjacent[Global.global.random(adjacent.length)];
-        gui.message("You dash away and escape into the <b>" + destination.name + ".</b>");
+        Global.global.gui().message("You dash away and escape into the <b>" + destination.name + ".</b>");
         travel(destination);
         location2.endEncounter();
     }
@@ -419,13 +432,13 @@ public class Player extends Character {
         status.removeIf(s -> !s.isAddiction());
         stamina.fill();
         if (location.name.equals("Showers")) {
-            gui.message("You let the hot water wash away your exhaustion and soon you're back to peak condition.");
+            Global.global.gui().message("You let the hot water wash away your exhaustion and soon you're back to peak condition.");
         }
         if (location.name.equals("Pool")) {
-            gui.message("The hot water soothes and relaxes your muscles. You feel a bit exposed, skinny-dipping in such an open area. You decide it's time to get moving.");
+            Global.global.gui().message("The hot water soothes and relaxes your muscles. You feel a bit exposed, skinny-dipping in such an open area. You decide it's time to get moving.");
         }
         if (state == State.lostclothes) {
-            gui.message("Your clothes aren't where you left them. Someone must have come by and taken them.");
+            Global.global.gui().message("Your clothes aren't where you left them. Someone must have come by and taken them.");
         }
         state = State.ready;
     }
@@ -433,7 +446,7 @@ public class Player extends Character {
     @Override
     public void craft() {
         int roll = Global.global.random(10);
-        Global.gui().message("You spend some time crafting some potions with the equipment.");
+        Global.global.gui().message("You spend some time crafting some potions with the equipment.");
         if (check(Attribute.Cunning, 25)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
@@ -466,7 +479,7 @@ public class Player extends Character {
             } else if (roll >= 6) {
                 gain(Item.EnergyDrink);
             } else {
-                gui.message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
+                Global.global.gui().message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
             }
         } else {
             if (roll >= 7) {
@@ -474,7 +487,7 @@ public class Player extends Character {
             } else if (roll >= 5) {
                 gain(Item.Sedative);
             } else {
-                gui.message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
+                Global.global.gui().message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
             }
         }
         state = State.ready;
@@ -503,14 +516,14 @@ public class Player extends Character {
                 gain(Item.Spring);
                 break;
             default:
-                gui.message("You don't find anything useful.");
+                Global.global.gui().message("You don't find anything useful.");
         }
         state = State.ready;
     }
 
     @Override
     public void masturbate() {
-        gui.message("You hurriedly stroke yourself off, eager to finish before someone catches you. After what seems like an eternity, you ejaculate into a tissue and "
+        Global.global.gui().message("You hurriedly stroke yourself off, eager to finish before someone catches you. After what seems like an eternity, you ejaculate into a tissue and "
                         + "throw it in the trash. Looks like you got away with it.");
         arousal.empty();
         state = State.ready;
@@ -519,12 +532,12 @@ public class Player extends Character {
     @Override
     public void showerScene(Character target, IEncounter encounter) {
         if (target.location().name.equals("Showers")) {
-            gui.message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
+            Global.global.gui().message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
                             + "of your opponents. You peek inside and sure enough, <b>" + target.name()
                             + "</b> is taking a shower and looking quite vulnerable. Do you take advantage "
                             + "of her carelessness?");
         } else if (target.location().name.equals("Pool")) {
-            gui.message("You stumble upon <b>" + target.name
+            Global.global.gui().message("You stumble upon <b>" + target.name
                             + "</b> skinny dipping in the pool. She hasn't noticed you yet. It would be pretty easy to catch her off-guard.");
         }
         assessOpponent(target);
@@ -533,7 +546,7 @@ public class Player extends Character {
 
     @Override
     public void intervene(IEncounter enc, Character p1, Character p2) {
-        gui.message("You find <b>" + p1.name() + "</b> and <b>" + p2.name()
+        Global.global.gui().message("You find <b>" + p1.name() + "</b> and <b>" + p2.name()
                         + "</b> fighting too intensely to notice your arrival. If you intervene now, it'll essentially decide the winner.");
         gui.message("Then again, you could just wait and see which one of them comes out on top. It'd be entertaining,"
                         + " at the very least.");

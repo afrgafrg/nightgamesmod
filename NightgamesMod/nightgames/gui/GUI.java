@@ -693,29 +693,6 @@ public class GUI extends JFrame implements Observer {
         portraitLayout.show(portraitPanel, USE_NONE);
     }
 
-    // Combat GUI
-
-    public Combat beginCombat(Character player, Character enemy, int code) {
-        showPortrait();
-        combat = new Combat(player, enemy, player.location(), code);
-        combat.addObserver(this);
-        combat.setBeingObserved(true);
-        message(combat.getMessage());
-        loadPortrait(combat, player, enemy);
-        showPortrait();
-        return combat;
-    }
-
-    // Combat spectate ???
-    public void watchCombat(Combat c) {
-        showPortrait();
-        combat = c;
-        combat.addObserver(this);
-        c.setBeingObserved(true);
-        loadPortrait(c, c.p1, c.p2);
-        showPortrait();
-    }
-
     public void populatePlayer(Player player) {
         if (Global.global.checkFlag(Flag.largefonts)) {
             fontsize = 6;
@@ -964,25 +941,6 @@ public class GUI extends JFrame implements Observer {
                         "It should not be possible to cancel a \"next\" prompt."));
     }
 
-    public void next(Combat combat) {
-        refresh();
-        commandPanel.clearCommand(this);
-        ContinueButton.NextButton next = new ContinueButton.NextButton();
-        commandPanel.commandPanel.add(next);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(next);
-        commandPanel.clearCommand(this);
-        if (combat.phase == 0) {
-            combat.clear();
-            clearText();
-            combat.turn();
-        } else if (combat.phase == 2) {
-            if (!combat.end()) {
-                endCombat();
-            }
-        }
-    }
-
     public void ding() {
         ding(Global.global.human);
     }
@@ -1050,17 +1008,6 @@ public class GUI extends JFrame implements Observer {
             }
             */
         }
-    }
-
-    public void endCombat() {
-        if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
-            System.out.println("End Combat");
-        }
-        combat = null;
-        clearText();
-        clearImage();
-        showMap();
-        Global.global.getMatch().resume();
     }
 
     // Night match initializer
@@ -1228,12 +1175,6 @@ public class GUI extends JFrame implements Observer {
     @Override
     public void update(Observable arg0, Object arg1) {
         refresh();
-        if (combat != null) {
-            if (combat.combatMessageChanged) {
-                combatMessage(combat.getMessage());
-                combat.combatMessageChanged = false;
-            }
-        }
     }
 
     private void loadWithDialog() {

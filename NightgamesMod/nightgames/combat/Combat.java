@@ -1248,8 +1248,8 @@ public class Combat extends Observable implements Cloneable {
             phase = CombatPhase.RESULTS_SCENE;
             if (!(p1.human() || p2.human() || intruder.human())) {
                 end();
-            } else {
-                Global.global.gui().watchCombat(this);
+            } else  {
+                watchCombat(Global.global.gui());
                 next();
             }
         }

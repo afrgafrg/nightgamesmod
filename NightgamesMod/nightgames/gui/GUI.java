@@ -1408,7 +1408,7 @@ public class GUI extends JFrame implements Observer {
         NewGameMenuItem() {
             super("New Game");
             this.setForeground(Color.WHITE);
-            this.setBackground(GUIColors.bgGrey.color);
+            this.setBackground(GUIColors.bgGrey);
             this.setHorizontalAlignment(SwingConstants.CENTER);
 
             this.addActionListener(arg0 -> {

@@ -1,8 +1,6 @@
 package nightgames.gui;
 
 import nightgames.Resources.ResourceLoader;
-import nightgames.actions.Action;
-import nightgames.actions.Locate;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -11,7 +9,6 @@ import nightgames.characters.TraitTree;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatSceneChoice;
 import nightgames.daytime.Activity;
-import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
 import nightgames.gui.button.*;
@@ -26,7 +23,6 @@ import nightgames.trap.Trap;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
@@ -42,8 +38,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static nightgames.requirements.RequirementShortcuts.item;
 
 public class GUI extends JFrame implements Observer {
     public static GUI gui;
@@ -989,56 +983,6 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void next(Activity event) {
-        event.next();
-        clearCommand();
-        EventButton next = new EventButton(event, "Next", null);
-        commandPanel.commandPanel.add(next);
-        commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(next);
-    }
-
-    public void choose(Combat c, Character npc, String message, CombatSceneChoice choice) {
-        commandPanel.add(new CombatSceneButton(message, c, npc, choice));
-        commandPanel.refresh();
-        commandPanel.clearCommand(this);
-    }
-
-    public void choose(String choice) {
-        commandPanel.commandPanel.add(new SceneButton(choice));
-        commandPanel.commandPanel.refresh();
-    }
-
-    public void choose(Activity event, String choice) {
-        commandPanel.commandPanel.add(new EventButton(event, choice, null));
-        commandPanel.commandPanel.refresh();
-    }
-
-    public void choose(Activity event, String choice, String tooltip) {
-        commandPanel.add(new EventButton(event, choice, tooltip));
-        commandPanel.refresh();
-    }
-
-    public void choose(Action event, String choice, Character self) {
-        commandPanel.commandPanel.add(new CharacterButton(self));
-        commandPanel.commandPanel.refresh();
-    }
-
-    public void sale(Store shop, Loot i) {
-        commandPanel.commandPanel.add(new ItemButton(shop, i));
-        commandPanel.refresh();
-    }
-
-
-    public void prompt(String message, List<GameButton> buttons) {
-        clearText();
-        commandPanel.clearCommand(this);
-        message(message);
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
-
     public void ding() {
         ding(Global.global.human);
     }
@@ -1130,14 +1074,13 @@ public class GUI extends JFrame implements Observer {
         if (Global.global.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("Night End");
         }
-        commandPanel.clearCommand(this);
         showNone();
         mntmQuitMatch.setEnabled(false);
-        ContinueButton.SleepButton sleepButton = new ContinueButton.SleepButton();
-        commandPanel.commandPanel.add(sleepButton);
-        commandPanel.commandPanel.add(new SaveButton());
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(sleepButton);
+        List<FutureButton<Void>> buttons = new ArrayList<>();
+        buttons.add(new ContinueButton.SleepButton());
+        List<GameButton> allButtons = new ArrayList<>(buttons);
+        allButtons.add(new SaveButton());
+        setChoices(allButtons);
     }
 
     public void refresh() {
@@ -1316,8 +1259,9 @@ public class GUI extends JFrame implements Observer {
         if (Global.global != null) {
             Global.global.exit();
         }
-        new Global().load(file);
-        new GameThread().execute();
+        Global global = new Global();
+        global.load(file);
+        new GameThread(global).start();
     }
 
 
@@ -1349,7 +1293,7 @@ public class GUI extends JFrame implements Observer {
         NewGameMenuItem() {
             super("New Game");
             this.setForeground(Color.WHITE);
-            this.setBackground(GUIColors.bgGrey);
+            this.setBackground(GUIColors.bgGrey.color);
             this.setHorizontalAlignment(SwingConstants.CENTER);
 
             this.addActionListener(arg0 -> {

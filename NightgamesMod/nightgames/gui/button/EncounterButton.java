@@ -1,6 +1,6 @@
 package nightgames.gui.button;
 
-import nightgames.global.Encs;
+import nightgames.encounter.Encs;
 
 public class EncounterButton extends ValueButton<Encs> {
     private static final long serialVersionUID = 6203417731879208074L;

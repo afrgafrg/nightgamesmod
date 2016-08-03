@@ -6,11 +6,11 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 
 public class Alarm extends Trap {
-    
+
     public Alarm() {
         this(null);
     }
-    
+
     public Alarm(Character owner) {
         super("Alarm", owner);
     }

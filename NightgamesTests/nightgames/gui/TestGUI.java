@@ -2,7 +2,7 @@ package nightgames.gui;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.IEncounter;
 
 import java.io.File;
 import java.util.Observable;

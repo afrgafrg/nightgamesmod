@@ -3,7 +3,7 @@ package nightgames.trap;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.IEncounter;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.stance.StandingOver;

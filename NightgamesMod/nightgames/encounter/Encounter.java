@@ -1,4 +1,4 @@
-package nightgames.combat;
+package nightgames.encounter;
 
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
@@ -6,8 +6,8 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
-import nightgames.global.Encs;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.status.*;
@@ -514,7 +514,7 @@ public class Encounter implements Serializable, IEncounter {
     public void engage(Combat fight) {
         this.fight = fight;
         if (fight.p1.human() || fight.p2.human()) {
-            Global.global.gui().watchCombat(fight);
+            fight.watchCombat(Global.global.gui());
         }
     }
 

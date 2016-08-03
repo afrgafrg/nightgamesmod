@@ -2,7 +2,7 @@ package nightgames.areas;
 
 import nightgames.actions.Movement;
 import nightgames.characters.Character;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.IEncounter;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.status.Stsflag;

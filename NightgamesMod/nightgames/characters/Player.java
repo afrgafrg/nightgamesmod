@@ -16,7 +16,7 @@ import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TentaclePart;
 import nightgames.characters.resources.Meter;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
 import nightgames.match.ftc.FTCMatch;
 import nightgames.global.DebugFlags;
@@ -247,7 +247,7 @@ public class Player extends Character {
         gui.message("You run into <b>" + opponent.name
                         + "</b> and you both hesitate for a moment, deciding whether to attack or retreat.");
         assessOpponent(opponent);
-        gui.promptFF(enc, opponent);
+        enc.promptFF(opponent, Global.global.gui());
     }
 
     private void assessOpponent(Character opponent) {
@@ -295,7 +295,7 @@ public class Player extends Character {
         gui.message("You spot <b>" + opponent.name
                         + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
         assessOpponent(opponent);
-        gui.promptAmbush(enc, opponent);
+        enc.promptAmbush(opponent, Global.global.gui());
     }
 
     @Override
@@ -528,7 +528,7 @@ public class Player extends Character {
                             + "</b> skinny dipping in the pool. She hasn't noticed you yet. It would be pretty easy to catch her off-guard.");
         }
         assessOpponent(target);
-        gui.promptShower(encounter, target);
+        encounter.promptShower(target, Global.global.gui());
     }
 
     @Override
@@ -538,6 +538,7 @@ public class Player extends Character {
         gui.message("Then again, you could just wait and see which one of them comes out on top. It'd be entertaining,"
                         + " at the very least.");
         gui.promptIntervene(enc, p1, p2);
+        enc.promptIntervene(p1, p2, Global.global.gui());
     }
 
     @Override
@@ -612,7 +613,7 @@ public class Player extends Character {
         Global.global.gui()
               .message("Do you want to take the opportunity to ambush <b>" + target.name() + "</b>?");
         assessOpponent(target);
-        gui.promptOpportunity(enc, target, trap);
+        enc.promptOpportunity(target, trap, Global.global.gui());
     }
 
     @Override

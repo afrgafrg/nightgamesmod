@@ -10,7 +10,6 @@ import nightgames.characters.Trait;
 import nightgames.characters.TraitTree;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatSceneChoice;
-import nightgames.combat.IEncounter;
 import nightgames.daytime.Activity;
 import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
@@ -1030,64 +1029,6 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void promptFF(IEncounter enc, Character target) {
-        commandPanel.clearCommand(this);
-        List<GameButton> buttons = new ArrayList<>();
-        buttons.add(new EncounterButton("Fight", enc, target, Encs.fight));
-        buttons.add(new EncounterButton("Flee", enc, target, Encs.flee));
-        if (item(Item.SmokeBomb, 1).meets(null, Global.global.human, null)) {
-            buttons.add(new EncounterButton("Smoke Bomb", enc, target, Encs.smoke));
-        }
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
-
-    public void promptAmbush(IEncounter enc, Character target) {
-        commandPanel.clearCommand(this);
-        List<GameButton> buttons = new ArrayList<>();
-        buttons.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.ambush));
-        buttons.add(new EncounterButton("Wait", enc, target, Encs.wait));
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
-
-    public void promptOpportunity(IEncounter enc, Character target, Trap trap) {
-        commandPanel.clearCommand(this);
-        List<GameButton> buttons = new ArrayList<>();
-        buttons.add(new EncounterButton("Attack " + target.name(), enc, target, Encs.capitalize, trap));
-        buttons.add(new EncounterButton("Wait", enc, target, Encs.wait));
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
-
-    public void promptShower(IEncounter encounter, Character target) {
-        commandPanel.clearCommand(this);
-        List<GameButton> buttons = new ArrayList<>();
-        buttons.add(new EncounterButton("Suprise Her", encounter, target, Encs.showerattack));
-        if (!target.mostlyNude()) {
-            buttons.add(new EncounterButton("Steal Clothes", encounter, target, Encs.stealclothes));
-        }
-        if (Global.global.human.has(Item.Aphrodisiac)) {
-            buttons.add(new EncounterButton("Use Aphrodisiac", encounter, target, Encs.aphrodisiactrick));
-        }
-        buttons.add(new EncounterButton("Do Nothing", encounter, target, Encs.wait));
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
-
-    public void promptIntervene(IEncounter enc, Character p1, Character p2) {
-        commandPanel.clearCommand(this);
-        List<GameButton> buttons = new ArrayList<>();
-        buttons.add(new CharacterButton(p1));
-        buttons.add(new CharacterButton(p2));
-        buttons.forEach(commandPanel.commandPanel::add);
-        commandPanel.commandPanel.refresh();
-        commandPanel.controller.makePrompt().prompt(buttons);
-    }
 
     public void prompt(String message, List<GameButton> buttons) {
         clearText();

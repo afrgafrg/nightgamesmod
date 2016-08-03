@@ -1,7 +1,7 @@
-package nightgames.combat;
+package nightgames.encounter;
 
 import nightgames.characters.Character;
-import nightgames.global.Encs;
+import nightgames.combat.Combat;
 import nightgames.trap.Trap;
 
 // C# naming convention, I know, I know

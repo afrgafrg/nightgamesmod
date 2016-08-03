@@ -14,7 +14,7 @@ import nightgames.characters.resources.Meter;
 import nightgames.characters.resources.Resource;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatantData;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
 import nightgames.match.ftc.FTCMatch;
 import nightgames.global.*;

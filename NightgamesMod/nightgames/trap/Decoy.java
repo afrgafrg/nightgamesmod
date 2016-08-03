@@ -11,11 +11,11 @@ public class Decoy extends Trap {
     public Decoy() {
         this(null);
     }
-    
+
     public Decoy(Character owner) {
         super("Decoy", owner);
     }
-    
+
     @Override
     public void trigger(Character target) {
         if (target.human()) {

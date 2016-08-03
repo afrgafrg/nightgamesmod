@@ -1,4 +1,4 @@
-package nightgames.global;
+package nightgames.match;
 
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
@@ -7,6 +7,9 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.global.DebugFlags;
+import nightgames.global.Flag;
+import nightgames.global.Global;
 import nightgames.modifier.Modifier;
 import nightgames.status.addiction.Addiction;
 

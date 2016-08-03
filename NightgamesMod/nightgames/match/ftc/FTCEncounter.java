@@ -1,12 +1,12 @@
-package nightgames.ftc;
+package nightgames.match.ftc;
 
 import nightgames.areas.Area;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.combat.Combat;
-import nightgames.combat.Encounter;
-import nightgames.global.Encs;
+import nightgames.encounter.Encounter;
+import nightgames.encounter.Encs;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.stance.Mount;

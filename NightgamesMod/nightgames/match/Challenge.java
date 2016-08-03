@@ -1,4 +1,4 @@
-package nightgames.global;
+package nightgames.match;
 
 import nightgames.areas.Deployable;
 import nightgames.characters.Attribute;

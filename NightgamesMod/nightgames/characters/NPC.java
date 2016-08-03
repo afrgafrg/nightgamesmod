@@ -10,7 +10,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
-import nightgames.ftc.FTCMatch;
+import nightgames.match.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;

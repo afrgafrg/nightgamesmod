@@ -1,7 +1,7 @@
 package nightgames.modifier.item;
 
 import nightgames.characters.Character;
-import nightgames.ftc.FTCMatch;
+import nightgames.match.ftc.FTCMatch;
 import nightgames.global.Global;
 import nightgames.items.Item;
 

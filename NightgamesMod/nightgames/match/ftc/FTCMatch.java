@@ -1,4 +1,4 @@
-package nightgames.ftc;
+package nightgames.match.ftc;
 
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
@@ -6,8 +6,8 @@ import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.global.Flag;
 import nightgames.global.Global;
-import nightgames.global.Match;
-import nightgames.global.MatchType;
+import nightgames.match.Match;
+import nightgames.match.MatchType;
 import nightgames.items.Item;
 import nightgames.modifier.standard.FTCModifier;
 

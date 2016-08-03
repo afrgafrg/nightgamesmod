@@ -5,7 +5,7 @@ import nightgames.actions.Action;
 import nightgames.characters.Character;
 import nightgames.global.Global;
 import nightgames.json.JsonUtils;
-import nightgames.global.Match;
+import nightgames.match.Match;
 import nightgames.modifier.ModifierComponentLoader;
 
 import java.util.*;

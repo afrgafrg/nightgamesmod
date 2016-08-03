@@ -1,7 +1,10 @@
-package nightgames.global;
+package nightgames.match;
 
 import nightgames.characters.Airi;
 import nightgames.characters.Player;
+import nightgames.global.Flag;
+import nightgames.global.Global;
+import nightgames.global.Scene;
 import nightgames.gui.button.ContinueButton;
 import nightgames.gui.button.GameButton;
 import nightgames.gui.button.SaveButton;

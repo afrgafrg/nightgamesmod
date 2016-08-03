@@ -1,4 +1,4 @@
-package nightgames.global;
+package nightgames.match;
 
 import java.util.Collection;
 import java.util.HashMap;

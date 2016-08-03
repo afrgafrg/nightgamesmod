@@ -1,10 +1,10 @@
-package nightgames.ftc;
+package nightgames.match.ftc;
 
 import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
-import nightgames.global.Prematch;
+import nightgames.match.Prematch;
 import nightgames.gui.button.ContinueButton;
 import nightgames.gui.button.GameButton;
 import nightgames.gui.button.SaveButton;

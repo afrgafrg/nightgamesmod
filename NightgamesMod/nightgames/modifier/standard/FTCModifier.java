@@ -37,7 +37,7 @@ public class FTCModifier extends BaseModifier {
         return prey;
     }
 
-    // NOTE: scenes are in nightgames.ftc.FTCPrematch
+    // NOTE: scenes are in nightgames.match.ftc.FTCPrematch
     // This Modifier should not be in Global.global.modifierPool
 
     @Override

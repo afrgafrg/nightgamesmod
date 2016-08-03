@@ -1,12 +1,12 @@
-package nightgames.global;
+package nightgames.match;
 
 import nightgames.areas.Area;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
-import nightgames.combat.Encounter;
-import nightgames.combat.IEncounter;
-import nightgames.ftc.FTCEncounter;
-import nightgames.ftc.FTCPrematch;
+import nightgames.encounter.Encounter;
+import nightgames.encounter.IEncounter;
+import nightgames.match.ftc.FTCEncounter;
+import nightgames.match.ftc.FTCPrematch;
 
 public enum MatchType {
     NORMAL,

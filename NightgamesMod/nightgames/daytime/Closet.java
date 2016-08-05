@@ -15,7 +15,7 @@ public class Closet extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (choice.equals("Start")) {
@@ -25,7 +25,6 @@ public class Closet extends Activity {
         }
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         // TODO Auto-generated method stub
 

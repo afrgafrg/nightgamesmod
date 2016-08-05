@@ -2,6 +2,7 @@ package nightgames.daytime;
 
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
@@ -25,8 +26,9 @@ public abstract class BaseNPCTime extends Activity {
     String transformationIntro = "[Placeholder]<br/>TransformationIntro";
     String transformationFlag = "";
     Trait advTrait = null;
+    List<TransformationOption> options;
 
-    public BaseNPCTime(Character player, NPC npc) {
+    public BaseNPCTime(Player player, NPC npc) {
         super(npc.getName(), player);
         this.npc = npc;
         buildTransformationPool();
@@ -37,13 +39,12 @@ public abstract class BaseNPCTime extends Activity {
         return knownFlag.isEmpty() || Global.global.checkFlag(knownFlag);
     }
 
-    List<TransformationOption> options;
 
     public abstract void buildTransformationPool();
 
     public List<Loot> getGiftables() {
         List<Loot> giftables = new ArrayList<>();
-        player.closet.stream().filter(article -> !npc.has(article)).forEach(article -> giftables.add(article));
+        player.closet.stream().filter(article -> !npc.has(article)).forEach(giftables::add);
         return giftables;
     }
 
@@ -54,9 +55,24 @@ public abstract class BaseNPCTime extends Activity {
     public Optional<String> getAddictionOption() {
         return Optional.empty();
     }
-    
+
+    enum VisitChoice {
+        GAMES,
+        SPARRING,
+        SEX,
+        SHOP,
+        GIFT,
+        OUTFIT,
+        ADDICTION,
+        LEAVE;
+    }
+
+    String getLabel(VisitChoice choice) {
+        return choice.name();
+    }
+
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         List<Loot> giftables = getGiftables();
@@ -154,7 +170,6 @@ public abstract class BaseNPCTime extends Activity {
         }
     }
 
-    @Override
     public void shop(Character paramCharacter, int paramInt) {
         paramCharacter.gainAffection(npc, 1);
         npc.gainAffection(paramCharacter, 1);

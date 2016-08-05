@@ -1,6 +1,7 @@
 package nightgames.daytime;
 
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.global.DebugFlags;
@@ -15,7 +16,7 @@ import java.util.Optional;
 public class BodyShop extends Activity {
     private List<ShopSelection> selection;
 
-    public BodyShop(Character player) {
+    public BodyShop(Player player) {
         super("Body Shop", player);
         selection = new ArrayList<>();
         populateSelection();
@@ -479,7 +480,7 @@ public class BodyShop extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         if (choice.equals("Start")) {
             Global.global.gui().clearText();
             Global.global.gui().commandPanel.clearCommand(Global.global.gui());
@@ -503,7 +504,6 @@ public class BodyShop extends Activity {
         done(false);
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         int chance = 100;
         while (budget > 0) {

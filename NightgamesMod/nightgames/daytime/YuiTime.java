@@ -28,7 +28,7 @@ public class YuiTime extends BaseNPCTime {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui()
               .clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());

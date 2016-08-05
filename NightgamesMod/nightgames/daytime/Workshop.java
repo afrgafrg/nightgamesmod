@@ -21,7 +21,7 @@ public class Workshop extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (!Global.global.checkFlag(Flag.metJett)) {
@@ -164,7 +164,6 @@ public class Workshop extends Activity {
 
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         int remaining = budget;
         if (npc.getPure(Attribute.Science) > 0 && remaining >= 1000) {

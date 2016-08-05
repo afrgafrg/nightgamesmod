@@ -21,7 +21,7 @@ public class Meditation extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         if (choice.equals("Start")) {
             acted = false;
         }
@@ -168,7 +168,6 @@ public class Meditation extends Activity {
         }
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         if (npc.getPure(Attribute.Ki) > 0 && budget >= 1000 * (npc.getPure(Attribute.Ki) + 1)) {
             if (budget >= 2000 * (npc.getPure(Attribute.Ki) + 2)) {

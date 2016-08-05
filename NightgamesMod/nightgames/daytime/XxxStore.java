@@ -30,7 +30,7 @@ public class XxxStore extends Store {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         if (choice.equals("Start")) {
             acted = false;
         }

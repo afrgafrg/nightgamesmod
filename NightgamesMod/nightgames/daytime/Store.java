@@ -23,7 +23,7 @@ public abstract class Store extends Activity {
     public abstract boolean known();
 
     @Override
-    public abstract void visit(String choice);
+    public abstract void start();
 
     public void add(Item item) {
         stock.put(item, item.getPrice());
@@ -100,4 +100,5 @@ public abstract class Store extends Activity {
         }
 
     }
+
 }

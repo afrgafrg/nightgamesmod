@@ -22,7 +22,7 @@ public class MagicTraining extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (!Global.global.checkFlag(Flag.metAisha)) {
@@ -359,7 +359,6 @@ public class MagicTraining extends Activity {
         }
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         if (npc.getPure(Attribute.Arcane) > 0 && budget >= 1000 * (npc.getPure(Attribute.Arcane) + 1)) {
             if (budget >= 2000 * (npc.getPure(Attribute.Arcane) + 2)) {

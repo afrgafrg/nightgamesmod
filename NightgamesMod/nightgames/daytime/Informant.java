@@ -26,7 +26,7 @@ public class Informant extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui()
               .clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
@@ -606,7 +606,6 @@ public class Informant extends Activity {
               .choose(this, "Leave");
     }
 
-    @Override
     public void shop(Character npc, int budget) {
 
     }

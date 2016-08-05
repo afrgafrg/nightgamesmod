@@ -20,7 +20,7 @@ public class VideoGames extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         Global.global.gui().commandPanel.clearCommand(Global.global.gui());
         if (choice.equals("Start")) {
@@ -30,7 +30,7 @@ public class VideoGames extends Activity {
                 Global.global.gui().choose(this, "Yes: $50");
                 Global.global.gui().choose(this, "No");
             } else {
-                visit("No");
+                start();
             }
         } else if (choice.equals("Leave")) {
             done(true);

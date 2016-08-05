@@ -20,7 +20,7 @@ public class Porn extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void start() {
         Global.global.gui().clearText();
         if (page == 0) {
             int gain = gainArousal(player);
@@ -34,16 +34,15 @@ public class Porn extends Activity {
 
     private int gainArousal(Character self) {
         int maximumArousalForLevel = Configuration.getMaximumArousalPossible(self);
-        int gain = 1 + Global.random(2);
+        int gain = 1 + Rng.rng.random(2);
         if (player.has(Trait.expertGoogler)) {
-            gain = gain + Global.random(2);
+            gain = gain + Rng.rng.random(2);
         }
         gain = (int) Math.max(0, (int) Math.min(maximumArousalForLevel, self.getArousal().trueMax() + gain) - self.getArousal().trueMax());
         self.getArousal().gain(gain);
         return gain;
     }
 
-    @Override
     public void shop(Character npc, int budget) {
         gainArousal(npc);
     }

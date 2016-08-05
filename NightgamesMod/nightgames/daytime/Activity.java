@@ -1,42 +1,37 @@
 package nightgames.daytime;
 
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.global.Global;
+import nightgames.global.SceneController;
 
 public abstract class Activity {
-    protected String name;
-    protected int time;
-    protected Character player;
+    protected final String name;
+    protected final int duration;
+    protected final Player player;
+    final SceneController controller;
     protected int page;
 
-    public Activity(String name, Character player) {
+    public Activity(String name, Player player) {
         this.name = name;
-        time = 1;
         this.player = player;
+        duration = 1;
         page = 0;
+        controller = new SceneController(Global.global.gui());
     }
 
     public abstract boolean known();
 
-    public abstract void visit(String choice);
+    public abstract void start() throws InterruptedException;
 
-    public int time() {
-        return time;
+    public int duration() {
+        return duration;
     }
 
     public void next() {
         page++;
     }
 
-    public void done(boolean acted) {
-        if (acted) {
-            Global.global.getDay().advance(time);
-        }
-        page = 0;
-        Global.global.gui().clearImage();
-        Global.global.gui().clearPortrait();
-        Global.global.getDay().plan();
-    }
 
     @Override
     public String toString() {

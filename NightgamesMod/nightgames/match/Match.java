@@ -7,31 +7,36 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.global.time.Clock;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.time.Clockable;
 import nightgames.modifier.Modifier;
 import nightgames.status.addiction.Addiction;
 
 import java.util.*;
 
-public class Match {
-    protected int time;
-    protected int dropOffTime;
-    protected HashMap<String, Area> map;
-    public ArrayList<Character> combatants;
-    protected HashMap<Character, Integer> score;
-    protected int index;
+public class Match implements Clockable {
+    private static final int MATCH_LENGTH = 36; // 3 hours
+    private static final int CHALLENGE_INTERVAL = 6; // Challenges dropped off every 30 minutes
+    private final MatchTime matchTime;
+    private int dropOffTime;
+    protected Map<String, Area> map;
+    public List<Character> combatants;
+    protected Map<Character, Integer> score;
+    private int index;
     public Modifier condition;
-    public MatchData matchData;
+    private MatchData matchData;
+
 
     public Match(Collection<Character> combatants, Modifier condition) {
-        this.combatants = new ArrayList<Character>();
+        this.combatants = new ArrayList<>();
         for (Character c : combatants) {
             this.combatants.add(c);
         }
         matchData = new MatchData(combatants);
-        score = new HashMap<Character, Integer>();
+        score = new HashMap<>();
         this.condition = condition;
         map = Global.global.buildMap();
         for (Character combatant : combatants) {
@@ -40,7 +45,6 @@ public class Match {
             Global.global.learnSkills(combatant);
             combatant.matchPrep(this);
         }
-        time = 0;
         dropOffTime = 0;
         Deque<Area> areaList = new ArrayDeque<>();
         areaList.add(map.get("Dorm"));
@@ -71,6 +75,7 @@ public class Match {
             }
             manageConditions(player);
         }
+        matchTime = new MatchTime();
     }
 
     public MatchType getType() {
@@ -78,18 +83,17 @@ public class Match {
     }
 
     public void play() {
-        while (time < 36) {
+        while (matchTime.time() < MATCH_LENGTH) {
             if (index >= combatants.size()) {
                 index = 0;
                 if (meanLvl() > 3 && Global.global.random(10) + dropOffTime >= 12) {
                     dropPackage();
                     dropOffTime = 0;
                 }
-                if (Global.global.checkFlag(Flag.challengeAccepted) && (time == 6 || time == 12 || time == 18
-                                || time == 24)) {
+                if (Global.global.checkFlag(Flag.challengeAccepted) && matchTime.time() % CHALLENGE_INTERVAL == 0) {
                     dropChallenge();
                 }
-                time++;
+                matchTime.tick();
                 dropOffTime++;
             }
             getAreas().forEach(area -> area.setPinged(false));
@@ -211,20 +215,8 @@ public class Match {
         }
     }
 
-    public int getHour() {
-        return 10 + time / 12;
-    }
-
-    public String getTime() {
-        int hour = getHour();
-        if (hour > 12) {
-            hour = hour % 12;
-        }
-        if (time % 12 < 2) {
-            return hour + ":0" + time % 12 * 5;
-        } else {
-            return hour + ":" + time % 12 * 5;
-        }
+    public Clock getClock() {
+        return matchTime;
     }
 
     public Area gps(String name) {

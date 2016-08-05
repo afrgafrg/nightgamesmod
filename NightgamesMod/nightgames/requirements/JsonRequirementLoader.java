@@ -19,10 +19,14 @@ public class JsonRequirementLoader implements RequirementLoader<JsonElement> {
 
     @Override public Requirement loadRequirement(String key, JsonElement reqData) {
         switch (key) {
+            case "affection":
+                return loadAffection(reqData);
             case "anal":
                 return loadAnal(reqData);
             case "and":
                 return loadAnd(reqData);
+            case "attraction":
+                return loadAttraction(reqData);
             case "attribute":
                 return loadAttribute(reqData);
             case "bodypart":
@@ -73,6 +77,10 @@ public class JsonRequirementLoader implements RequirementLoader<JsonElement> {
         }
     }
 
+    @Override public AffectionRequirement loadAffection(JsonElement reqData) {
+        return new AffectionRequirement(reqData.getAsInt());
+    }
+
     @Override public AnalRequirement loadAnal(JsonElement reqData) {
         return new AnalRequirement();
     }
@@ -85,6 +93,10 @@ public class JsonRequirementLoader implements RequirementLoader<JsonElement> {
             subReqs = loadSubReqs(reqData.getAsJsonObject());
         }
         return new AndRequirement(subReqs);
+    }
+
+    @Override public AttractionRequirement loadAttraction(JsonElement reqData) {
+        return new AttractionRequirement(reqData.getAsInt());
     }
 
     @Override public AttributeRequirement loadAttribute(JsonElement reqData) {

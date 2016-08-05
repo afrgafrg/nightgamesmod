@@ -15,12 +15,20 @@ import nightgames.status.Stsflag;
  * Shortcut functions for requirements creation
  */
 public class RequirementShortcuts {
+    public static AffectionRequirement affection(int threshold) {
+        return new AffectionRequirement(threshold);
+    }
+
     public static AnalRequirement anal() {
         return new AnalRequirement();
     }
 
     public static AndRequirement and(Requirement... subReqs) {
         return new AndRequirement(Arrays.asList(subReqs));
+    }
+
+    public static AttractionRequirement attraction(int threshold) {
+        return new AttractionRequirement(threshold);
     }
 
     public static AttributeRequirement attribute(Attribute att, int amount) {

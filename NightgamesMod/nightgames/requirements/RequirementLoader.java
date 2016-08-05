@@ -6,9 +6,13 @@ package nightgames.requirements;
 public interface RequirementLoader<T> {
     Requirement loadRequirement(String key, T reqData);
 
+    AffectionRequirement loadAffection(T reqData);
+
     AnalRequirement loadAnal(T reqData);
 
     AndRequirement loadAnd(T reqData);
+
+    AttractionRequirement loadAttraction(T reqData);
 
     AttributeRequirement loadAttribute(T reqData);
 

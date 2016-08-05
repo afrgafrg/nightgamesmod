@@ -145,7 +145,7 @@ import java.util.List;
 
 public class CommandPanel extends JPanel implements Serializable {
     private static final long serialVersionUID = 3539791525124851677L;
-    private List<GameButton> buttons;
+    private List<? extends GameButton> buttons;
 
     private static final int MAX_BUTTONS_PER_PAGE = 25;
 
@@ -161,7 +161,7 @@ public class CommandPanel extends JPanel implements Serializable {
         this(new Dimension(width, height));
     }
 
-    public void setButtons(List<GameButton> buttons) {
+    public void setButtons(List<? extends GameButton> buttons) {
         this.buttons = buttons;
     }
 
@@ -178,7 +178,7 @@ public class CommandPanel extends JPanel implements Serializable {
         revalidate();
     }
 
-    private List<GameButton> page(int page) {
+    private List<? extends GameButton> page(int page) {
         return buttons.subList(startIndex(page), endIndex(page));
     }
 

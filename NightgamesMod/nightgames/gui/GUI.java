@@ -11,6 +11,7 @@ import nightgames.combat.CombatSceneChoice;
 import nightgames.daytime.Activity;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
+import nightgames.global.time.Time;
 import nightgames.gui.button.*;
 import nightgames.gui.resources.ResourcesPanel;
 import nightgames.items.Item;
@@ -926,7 +927,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void setChoices(List<GameButton> buttons) {
+    public void setChoices(List<? extends GameButton> buttons) {
         commandPanel.setButtons(buttons);
         commandPanel.showButtons(0);
     }
@@ -969,19 +970,11 @@ public class GUI extends JFrame implements Observer {
         if (map != null) {
             map.repaint();
         }
+        timeLabel.setText(Global.global.getClock().clockString());
         if (Global.global.getTime() == Time.NIGHT) {
-            // TODO: a Match should know how to am/pm.
-            if (Global.global.getMatch().getHour() == 12 || Global.global.getMatch().getHour() < 10) {
-                timeLabel.setText(Global.global.getMatch().getTime() + " am");
-            } else {
-                timeLabel.setText(Global.global.getMatch().getTime() + " pm");
-            }
-
-            timeLabel.setForeground(new Color(51, 101, 202));
+            timeLabel.setForeground(GUIColors.clockLabelNight.color);
         } else if (Global.global.getTime() == Time.DAY) {
-            // TODO: a DayTime should know how to am/pm.
-            timeLabel.setText(Global.global.getDay().getTime() + " pm");
-            timeLabel.setForeground(new Color(253, 184, 19));
+            timeLabel.setForeground(GUIColors.clockLabelDay.color);
         } else {
             throw new RuntimeException("Unknown time of day: " + Global.global.getTime());
         }

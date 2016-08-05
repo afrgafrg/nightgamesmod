@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import nightgames.characters.Character;
+import nightgames.global.time.Time;
 import nightgames.json.JsonUtils;
 
 import java.util.HashMap;

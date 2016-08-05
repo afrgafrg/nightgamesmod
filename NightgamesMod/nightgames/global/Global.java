@@ -16,6 +16,10 @@ import nightgames.characters.custom.JsonSourceNPCDataLoader;
 import nightgames.characters.custom.NPCData;
 import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
+import nightgames.global.time.Clock;
+import nightgames.global.time.Clockable;
+import nightgames.global.time.NgsDate;
+import nightgames.global.time.Time;
 import nightgames.match.ftc.FTCMatch;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -50,9 +54,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Global implements Runnable {
+public class Global implements Runnable, Clockable {
     public static Global global;
     public static boolean debug[] = new boolean[DebugFlags.values().length];
+    public final NgsDate date = new NgsDate();
 
     private Random rng;
     public GUI gui;
@@ -70,9 +75,7 @@ public class Global implements Runnable {
     public Player human;
     private Match match;
     public Daytime day;
-    protected int date;
     private Time time;
-    private Date jdate;
     private TraitTree traitRequirements;
     public Scene currentScene;
     public int debugSimulation = 0;
@@ -95,7 +98,7 @@ public class Global implements Runnable {
         debugChars = new HashSet<>();
         resting = new HashSet<>();
         counters = new HashMap<>();
-        jdate = new Date();
+        Date jdate = new Date();
         counters.put(Flag.malePref.name(), 0.f);
         Clothing.buildClothingTable();
         PrintStream fstream;
@@ -179,7 +182,7 @@ public class Global implements Runnable {
         saveWithDialog();
     }
 
-    public void gameLoop() {
+    public void gameLoop() throws InterruptedException {
         while (run) {
             // Nighttime
             if (time == Time.NIGHT) {
@@ -194,7 +197,7 @@ public class Global implements Runnable {
                 // end match
                 new Postmatch(human, lineup);
                 processCharactersAfterMatch();
-                date++;
+                date.advance();
                 time = Time.DAY;
                 autoSave();
                 gui().endNight();
@@ -211,11 +214,21 @@ public class Global implements Runnable {
         }
     }
 
+    public Clock getClock() {
+        switch (time) {
+            case DAY:
+                return this.day.getClock();
+            case NIGHT:
+                return this.match.getClock();
+        }
+        throw new RuntimeException("Unknown time of day: " + time);
+    }
+
     public int random(int start, int end) {
         return rng.nextInt(end - start) + start;
     }
 
-    public int random(int d) {
+    public static int random(int d) {
         if (d <= 0) {
             return 0;
         }
@@ -1014,7 +1027,7 @@ public class Global implements Runnable {
         data.flags.addAll(flags);
         data.counters.putAll(counters);
         data.time = time;
-        data.date = date;
+        data.date = date.getDate();
         return data;
     }
 
@@ -1116,13 +1129,13 @@ public class Global implements Runnable {
      *
      * @param data A SaveData object, as loaded from save files.
      */
-    protected void loadData(SaveData data) {
+    private void loadData(SaveData data) {
         players.addAll(data.players);
         players.stream().filter(c -> c instanceof NPC).forEach(
                         c -> characterPool.put(c.getType(), (NPC) c));
         flags.addAll(data.flags);
         counters.putAll(data.counters);
-        date = data.date;
+        date.setDate(data.date);
         time = data.time;
     }
 
@@ -1197,7 +1210,11 @@ public class Global implements Runnable {
         }
     }
 
-    public int getDate() {
+    public int rawDate() {
+        return date.getDate();
+    }
+
+    public NgsDate getDate() {
         return date;
     }
 
@@ -1206,7 +1223,11 @@ public class Global implements Runnable {
     }
 
     @Override public void run() {
-        gameLoop();
+        try {
+            gameLoop();
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Game loop interrupted", e);
+        }
     }
 
     interface MatchAction {

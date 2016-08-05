@@ -50,7 +50,7 @@ public class MayaModifier extends BaseModifier {
 
     @Override
     public boolean isApplicable() {
-        return Global.global.getPlayer().getRank() > 0 && Global.global.getDate() % 15 == 0;
+        return Global.global.getPlayer().getRank() > 0 && Global.global.rawDate() % 15 == 0;
     }
 
 }

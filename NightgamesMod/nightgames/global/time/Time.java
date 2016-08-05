@@ -1,4 +1,4 @@
-package nightgames.global;
+package nightgames.global.time;
 
 /**
  * Indicates whether it is daytime (shopping and talking) or nighttime (sex-fighting).
@@ -6,13 +6,13 @@ package nightgames.global;
 public enum Time {
     DAY("day"), NIGHT("night");
 
-    final String desc;
+    public final String desc;
 
     Time(String desc) {
         this.desc = desc;
     }
 
-    static Time fromDesc(String desc) {
+    public static Time fromDesc(String desc) {
         desc = compatibility(desc);
         return Time.valueOf(desc.toUpperCase());
     }

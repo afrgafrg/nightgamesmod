@@ -170,7 +170,7 @@ public class ClothesChangeGUI extends JPanel {
         btnOk.addActionListener(arg0 -> {
             ClothesChangeGUI.this.character.change();
             Global.global.gui().removeClosetGUI();
-            resume.visit(doneOption);
+            resume.start();
         });
         styleButton(btnOk);
         btnOk.setAlignmentX(CENTER_ALIGNMENT);

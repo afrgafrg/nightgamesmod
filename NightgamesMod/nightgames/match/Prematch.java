@@ -4,6 +4,7 @@ import nightgames.characters.Airi;
 import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.global.Scene;
 import nightgames.gui.button.ContinueButton;
 import nightgames.gui.button.GameButton;
@@ -62,7 +63,7 @@ public class Prematch implements Scene {
             Global.global.flag(Flag.metLilly);
             choice.add(new SceneButton("Do it"));
             choice.add(new SceneButton("Not interested"));
-        } else if (player.getRank() > 0 && Global.global.getDate() % 30 == 0) {
+        } else if (player.getRank() > 0 && Global.global.rawDate() % 30 == 0) {
             message = message + "When you arrive at the student union, you notice the girls have all "
                             + "gathered around Lilly. As you get closer, you notice Maya, the recruiter"
                             + ", standing next to her. She isn't usually present during a match, or at"
@@ -113,12 +114,12 @@ public class Prematch implements Scene {
     }
 
     private Modifier offer(Player player) {
-        if (Global.global.random(10) > 4) {
+        if (Rng.rng.random(10) > 4) {
             return new NoModifier();
         }
         Set<Modifier> modifiers = new HashSet<>(Global.global.getModifierPool());
         modifiers.removeIf(mod -> !mod.isApplicable() || mod.name().equals("normal"));
-        return Global.global.pickRandom(modifiers.toArray(new Modifier[] {})).get();
+        return Rng.rng.pickRandom(modifiers.toArray(new Modifier[] {})).get();
     }
 
     @Override

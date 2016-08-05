@@ -7,6 +7,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 
@@ -43,7 +44,7 @@ public class EngulfedFuck extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         Pairing pair = Pairing.findPairing(getSelf(), target);
-        double base = 20.0 + Global.global
+        double base = 20.0 + Rng.rng
                         .random(getSelf().get(Attribute.Slime) + getSelf().get(Attribute.Seduction) / 2);
         int selfDmg = (int) ((base * pair.modPleasure(true)) / (getSelf().has(Trait.experienced) ? 2.0 : 3.0));
         int targetDmg = (int) (base * pair.modPleasure(false));

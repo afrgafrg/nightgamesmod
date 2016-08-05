@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 
 import java.util.Arrays;
@@ -42,7 +42,7 @@ public class CommandGive extends PlayerCommand {
     @Override
     public boolean resolve(Combat c, Character target) {
         do {
-            transfer = Item.values()[Global.global.random(Item.values().length)];
+            transfer = Item.values()[Rng.rng.random(Item.values().length)];
             if (!(target.has(transfer) && TRANSFERABLES.contains(transfer))) {
                 transfer = null;
             }

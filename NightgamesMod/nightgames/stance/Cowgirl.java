@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class Cowgirl extends FemdomSexStance {
 
@@ -85,7 +86,7 @@ public class Cowgirl extends FemdomSexStance {
     }
 
     public static Position similarInstance(Character top, Character bottom) {
-        if (top.get(Attribute.Power) > 25 && Global.global.random(2) == 0) {
+        if (top.get(Attribute.Power) > 25 && Rng.rng.random(2) == 0) {
             return new UpsideDownFemdom(top, bottom);
         }
         return new Cowgirl(top, bottom);

@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.FlowerSex;
 
@@ -22,7 +23,7 @@ public class CounterFlower extends CounterBase {
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.global.randomfloat() * 2;
+        return Rng.rng.randomfloat() * 2;
     }
 
     @Override

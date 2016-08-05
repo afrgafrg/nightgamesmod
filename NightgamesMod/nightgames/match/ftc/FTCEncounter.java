@@ -8,6 +8,7 @@ import nightgames.combat.Combat;
 import nightgames.encounter.Encounter;
 import nightgames.encounter.Encs;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.stance.Mount;
 import nightgames.stance.Pin;
@@ -127,8 +128,8 @@ public class FTCEncounter extends Encounter {
 
     private void passAmbush(Character attacker, Character victim) {
         int attackerScore = 30 + attacker.get(Attribute.Speed) * 10 + attacker.get(Attribute.Perception) * 5
-                        + Global.global.random(30);
-        int victimScore = victim.get(Attribute.Speed) * 10 + victim.get(Attribute.Perception) * 5 + Global.global
+                        + Rng.rng.random(30);
+        int victimScore = victim.get(Attribute.Speed) * 10 + victim.get(Attribute.Perception) * 5 + Rng.rng
                         .random(30);
         String message = "";
         if (attackerScore > victimScore) {

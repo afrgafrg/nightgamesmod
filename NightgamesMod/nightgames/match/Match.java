@@ -7,10 +7,11 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
-import nightgames.global.time.Clock;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
+import nightgames.global.time.Clock;
 import nightgames.global.time.Clockable;
 import nightgames.modifier.Modifier;
 import nightgames.status.addiction.Addiction;
@@ -86,7 +87,7 @@ public class Match implements Clockable {
         while (matchTime.time() < MATCH_LENGTH) {
             if (index >= combatants.size()) {
                 index = 0;
-                if (meanLvl() > 3 && Global.global.random(10) + dropOffTime >= 12) {
+                if (meanLvl() > 3 && Rng.rng.random(10) + dropOffTime >= 12) {
                     dropPackage();
                     dropOffTime = 0;
                 }
@@ -180,7 +181,7 @@ public class Match implements Clockable {
             }
         }
         if (Global.global.checkFlag(Flag.metLilly) && !Global.global.checkFlag(Flag.challengeAccepted)
-                        && Global.global.random(10) >= 7) {
+                        && Rng.rng.random(10) >= 7) {
             Global.global.gui().message(
                             "\nWhen you gather after the match to collect your reward money, you notice Jewel is holding a crumpled up piece of paper and ask about it. "
                                             + "<i>\"This? I found it lying on the ground during the match. It seems to be a worthless piece of trash, but I didn't want to litter.\"</i> Jewel's face is expressionless, "
@@ -255,9 +256,9 @@ public class Match implements Clockable {
         ArrayList<Area> areas = new ArrayList<Area>();
         areas.addAll(map.values());
         for (int i = 0; i < 10; i++) {
-            Area target = areas.get(Global.global.random(areas.size()));
+            Area target = areas.get(Rng.rng.random(areas.size()));
             if (!target.corridor() && !target.open() && target.env.size() < 5) {
-                target.place(new Cache(meanLvl() + Global.global.random(11) - 4));
+                target.place(new Cache(meanLvl() + Rng.rng.random(11) - 4));
                 Global.global.gui().message("<br/><b>A new cache has been dropped off at " + target.name + "!</b>");
                 break;
             }
@@ -267,7 +268,7 @@ public class Match implements Clockable {
     public void dropChallenge() {
         ArrayList<Area> areas = new ArrayList<Area>();
         areas.addAll(map.values());
-        Area target = areas.get(Global.global.random(areas.size()));
+        Area target = areas.get(Rng.rng.random(areas.size()));
         if (!target.open() && target.env.size() < 5) {
             target.place(new Challenge());
         }

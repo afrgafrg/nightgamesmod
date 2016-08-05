@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.BodyFetish;
 import nightgames.status.Shamed;
@@ -58,8 +58,8 @@ public class FaceFuck extends Skill {
         if (targetMouth.isErogenous()) {
             targetDamage += 10;
         }
-        selfDamage += Global.global.random(selfDamage * 2 / 3);
-        targetDamage += Global.global.random(targetDamage * 2 / 3);
+        selfDamage += Rng.rng.random(selfDamage * 2 / 3);
+        targetDamage += Rng.rng.random(targetDamage * 2 / 3);
 
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, res, target));
@@ -74,7 +74,7 @@ public class FaceFuck extends Skill {
         if (targetDamage > 0) {
             target.body.pleasure(target, getSelf().body.getRandomInsertable(), targetMouth, targetDamage, c, this);
         }
-        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) && !getSelf().has(Trait.strapped)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) && !getSelf().has(Trait.strapped)) {
             target.add(c, new BodyFetish(target, getSelf(), "cock", .25));
         }
         target.loseMojo(c, Global.random(10, 20));

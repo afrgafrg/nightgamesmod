@@ -4,11 +4,12 @@ import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
-import nightgames.match.Prematch;
+import nightgames.global.Rng;
 import nightgames.gui.button.ContinueButton;
 import nightgames.gui.button.GameButton;
 import nightgames.gui.button.SaveButton;
 import nightgames.gui.button.SceneButton;
+import nightgames.match.Prematch;
 import nightgames.modifier.standard.FTCModifier;
 
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class FTCPrematch extends Prematch {
             }
         } else {
             do {
-                prey = (Character) Global.global.pickRandom(Global.global.getCharacters().toArray()).get();
+                prey = (Character) Rng.rng.pickRandom(Global.global.getCharacters().toArray()).get();
             } while (prey.human());
             if (!Global.global.checkFlag(Flag.didFTC)) {
                 message = "\"No one? Really? Fine, then I'll pick someone. Let's see... " + prey.name()

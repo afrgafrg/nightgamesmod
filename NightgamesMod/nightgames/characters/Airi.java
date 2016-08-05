@@ -6,6 +6,7 @@ import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Skill;
@@ -282,7 +283,7 @@ public class Airi extends BasePersonality {
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {

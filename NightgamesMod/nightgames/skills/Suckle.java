@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 
@@ -26,7 +26,7 @@ public class Suckle extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
-        int m = (getSelf().get(Attribute.Seduction) > 10 ? 8 : 4) + Global.global.random(6);
+        int m = (getSelf().get(Attribute.Seduction) > 10 ? 8 : 4) + Rng.rng.random(6);
         writeOutput(c, Result.normal, target);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;

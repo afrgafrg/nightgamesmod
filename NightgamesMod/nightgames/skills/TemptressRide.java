@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.FiredUp;
 
 public class TemptressRide extends Thrust {
@@ -53,7 +53,7 @@ public class TemptressRide extends Thrust {
         if (c.getStance().anallyPenetrated(c, getSelf())) {
             return super.resolve(c, target);
         }
-        int targetDmg = 10 + Global.global.random(Math.max(10, getSelf().get(Attribute.Technique)));
+        int targetDmg = 10 + Rng.rng.random(Math.max(10, getSelf().get(Attribute.Technique)));
         int selfDmg = (int) Math.max(1f, targetDmg / 3f);
         if (getSelf().has(Trait.experienced)) {
             selfDmg *= 0.67;

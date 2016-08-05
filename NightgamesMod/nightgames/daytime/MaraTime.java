@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
 import nightgames.status.addiction.Addiction;
@@ -270,7 +271,7 @@ public class MaraTime extends BaseNPCTime {
             Global.global.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You invite Mara to your room some fun. As soon as you get there she walks up behind you, shoves her hand down the front of your pants, and grabs you penis. "
                                       + "You're taken by surprise, but it doesn't stop you from getting hard in her hand. <i>\"You said we're here to have fun and I've decided you're my toy today,\"</i> she whispers "
@@ -340,7 +341,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spider) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spider) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Mara is too damn good at these games. She moves her third spider next to your queen, trapping it in place. You don't lose until she fills in all six spaces "
                                       + "adjacent to your queen, but even with just those three pieces, you don't have enough room to move out of there. For the rest of the game, you try to block off her access "
@@ -406,7 +407,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.heeldrop) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.heeldrop) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You and Mara prepare for some sparring practice by getting undressed. She tosses her clothes aside and is so eager that she's actually bouncing noticeably, "
                                       + "unconcerned about her nudity. You finish stretching and square off with her, but she raises a hand to stop you. <i>\"Wait! Can I have a kiss before we start?\"</i> You hesitate "

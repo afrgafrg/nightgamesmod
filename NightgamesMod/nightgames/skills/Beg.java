@@ -1,6 +1,5 @@
 package nightgames.skills;
 
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -9,6 +8,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.status.Charmed;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
@@ -38,7 +38,7 @@ public class Beg extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if ((Global.global.random(30) <= getSelf().get(Attribute.Submissive) - target.get(Attribute.Cunning) / 2
+        if ((Rng.rng.random(30) <= getSelf().get(Attribute.Submissive) - target.get(Attribute.Cunning) / 2
                         && !target.is(Stsflag.cynical) || target.getMood() == Emotion.dominant)
                         && target.getMood() != Emotion.angry && target.getMood() != Emotion.desperate) {
             target.add(c, new Charmed(target));

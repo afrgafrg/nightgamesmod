@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -35,7 +35,7 @@ public class UseOnahole extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 5 + Global.global.random(10);
+        int m = 5 + Rng.rng.random(10);
 
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (getSelf().has(Item.Onahole2)) {

@@ -11,6 +11,7 @@ import nightgames.characters.body.CockMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.arms.skills.Grab;
 import nightgames.skills.damage.DamageType;
@@ -305,7 +306,7 @@ public class Struggle extends Skill {
                     } else {
                         new Anilingus(getSelf()).resolve(c, target);
                     }
-                    target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(5, 10)));
+                    target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(5, 10)));
                     getSelf().struggle();
                     return false;
                 } else {
@@ -317,7 +318,7 @@ public class Struggle extends Skill {
                                         String.format("%s struggles against %s, but %s %s %s position.",
                     getSelf().subject(), target.nameDirectObject(), target.pronoun(),
                                     target.action("maintain"), target.possessiveAdjective()));}
-                    target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(5, 10)));
+                    target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(5, 10)));
                     getSelf().struggle();
                     return false;
                 }}

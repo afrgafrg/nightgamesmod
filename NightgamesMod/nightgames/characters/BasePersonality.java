@@ -1,13 +1,5 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BodyPart;
@@ -19,9 +11,13 @@ import nightgames.characters.custom.RecruitmentData;
 import nightgames.combat.Combat;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class BasePersonality implements Personality {
     /**
@@ -116,7 +112,7 @@ public abstract class BasePersonality implements Personality {
         if (chosen == null) {
             tactic = available;
             Skill[] actions = tactic.toArray(new Skill[tactic.size()]);
-            return actions[Global.global.random(actions.length)];
+            return actions[Rng.rng.random(actions.length)];
         } else {
             return chosen;
         }
@@ -139,7 +135,7 @@ public abstract class BasePersonality implements Personality {
         if (available.size() == 0) {
             return;
         }
-        character.add((Trait) available.toArray()[Global.global.random(available.size())]);
+        character.add((Trait) available.toArray()[Rng.rng.random(available.size())]);
     }
 
     @Override

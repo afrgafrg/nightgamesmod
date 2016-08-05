@@ -8,7 +8,7 @@ import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.CockPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Shamed;
 
@@ -42,7 +42,7 @@ public class ShrinkRay extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
-        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || target.human())
+        boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || target.human())
                         && !target.has(Trait.stableform);
         if (getSelf().human()) {
             if (target.hasDick()) {

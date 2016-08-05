@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Alluring;
 import nightgames.status.Stsflag;
@@ -62,7 +62,7 @@ public class StripTease extends Skill {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         if (!target.is(Stsflag.blinded)) {
-            int m = 15 + Global.global.random(5);
+            int m = 15 + Rng.rng.random(5);
             target.temptNoSource(c, getSelf(), m, this);
             getSelf().add(c, new Alluring(getSelf(), 5));
         }

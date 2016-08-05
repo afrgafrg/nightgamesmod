@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Rewired;
 
@@ -34,7 +34,7 @@ public class ShortCircuit extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 3);
         writeOutput(c, Result.normal, target);
-        target.add(c, new Rewired(target, 4 + Global.global.random(3)));
+        target.add(c, new Rewired(target, 4 + Rng.rng.random(3)));
         return true;
     }
 

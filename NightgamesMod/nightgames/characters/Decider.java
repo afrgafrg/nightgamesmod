@@ -15,6 +15,7 @@ import nightgames.daytime.Daytime;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.Skill;
@@ -205,7 +206,7 @@ public class Decider {
             tactic.addAll(available);
         }
         Action[] actions = tactic.toArray(new Action[tactic.size()]);
-        return actions[Global.global.random(actions.length)];
+        return actions[Rng.rng.random(actions.length)];
     }
 
     public static void visit(Character self) {
@@ -223,9 +224,9 @@ public class Decider {
                 }
             }
             if (bff != null) {
-                self.gainAffection(bff, Global.global.random(3) + 1);
-                bff.gainAffection(self, Global.global.random(3) + 1);
-                switch (Global.global.random(3)) {
+                self.gainAffection(bff, Rng.rng.random(3) + 1);
+                bff.gainAffection(self, Rng.rng.random(3) + 1);
+                switch (Rng.rng.random(3)) {
                     case 0:
                         Daytime.train(self, bff, Attribute.Power);
                     case 1:

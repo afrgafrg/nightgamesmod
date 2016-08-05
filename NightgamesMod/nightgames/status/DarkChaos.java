@@ -9,6 +9,7 @@ import nightgames.characters.Player;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.stance.Stance;
 import nightgames.stance.StandingOver;
 import nightgames.status.addiction.Addiction;
@@ -161,7 +162,7 @@ public class DarkChaos extends Status {
                 return FRENZIED;
             Effect picked;
             do {
-                picked = Global.global.pickRandom(values()).get();
+                picked = Rng.rng.pickRandom(values()).get();
             } while (!picked.possible(c));
             return picked;
         }

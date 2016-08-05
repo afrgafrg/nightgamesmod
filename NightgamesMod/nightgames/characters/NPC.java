@@ -8,14 +8,14 @@ import nightgames.characters.custom.CommentSituation;
 import nightgames.characters.custom.RecruitmentData;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
-import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
-import nightgames.match.ftc.FTCMatch;
+import nightgames.encounter.Encs;
+import nightgames.encounter.IEncounter;
 import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
-import nightgames.encounter.Encs;
+import nightgames.match.ftc.FTCMatch;
 import nightgames.pet.arms.RoboArmManager;
 import nightgames.skills.Nothing;
 import nightgames.skills.Skill;
@@ -586,7 +586,7 @@ public class NPC extends Character {
         if (this.has(Item.Aphrodisiac)) {
             // encounter.aphrodisiactrick(this, target);
             response = Encs.aphrodisiactrick;
-        } else if (!target.mostlyNude() && Global.global.random(3) >= 2) {
+        } else if (!target.mostlyNude() && Rng.rng.random(3) >= 2) {
             // encounter.steal(this, target);
             response = Encs.stealclothes;
         } else {
@@ -598,8 +598,8 @@ public class NPC extends Character {
 
     @Override
     public void intervene(IEncounter enc, Character p1, Character p2) {
-        if (Global.global.random(20) + getAffection(p1) + (p1.has(Trait.sympathetic) ? 10 : 0)
-                        >= Global.global.random(20)
+        if (Rng.rng.random(20) + getAffection(p1) + (p1.has(Trait.sympathetic) ? 10 : 0)
+                        >= Rng.rng.random(20)
                         + getAffection(p2) + (p2.has(Trait.sympathetic) ? 10 : 0)) {
             enc.intrude(this, p1);
         } else {
@@ -627,6 +627,9 @@ public class NPC extends Character {
     }
 
     public void daytime(int time) {
+        if (getLevel() / 10 > getRank()) {
+            rankup();
+        }
         ai.rest(time);
     }
 
@@ -640,25 +643,25 @@ public class NPC extends Character {
         switch (type) {
             case damage:
                 c.write(this, name() + " avoids your clumsy attack and swings her fist into your nuts.");
-                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
                 break;
             case pleasure:
                 if (target.hasDick()) {
                     if (target.crotchAvailable()) {
                         c.write(this, name() + " catches you by the penis and rubs your sensitive glans.");
                         target.body.pleasure(this, body.getRandom("hands"), target.body.getRandom("cock"),
-                                        4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                        4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                     } else {
                         c.write(this, name() + " catches you as you approach and grinds her knee into the tent in your "
                                         + target.getOutfit().getTopOfSlot(ClothingSlot.bottom) +".");
                         target.body.pleasure(this, body.getRandom("legs"), target.body.getRandom("cock"),
-                                        4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                        4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                     }
                 } else {
                     c.write(this, name()
                                     + " pulls you off balance and licks your sensitive ear. You tremble as she nibbles on your earlobe.");
                     target.body.pleasure(this, body.getRandom("tongue"), target.body.getRandom("ears"),
-                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                 }
                 break;
             case fucking:
@@ -674,7 +677,7 @@ public class NPC extends Character {
                     }
                 } else {
                     target.body.pleasure(this, body.getRandom("hands"), target.body.getRandomBreasts(),
-                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                     c.write(this, Global.global.format(
                                     "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} nipples with {self:possessive} hands as {other:subject-action:try|tries} to fuck {self:direct-object}. "
                                                     + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to pleasure {other:possessive} body",
@@ -691,7 +694,7 @@ public class NPC extends Character {
                 } else {
                     c.write(this, name()
                                     + " manages to dodge your groping hands and gives a retaliating slap in return.");
-                    target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                    target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
                 }
                 break;
             case positioning:
@@ -705,7 +708,7 @@ public class NPC extends Character {
                 break;
             default:
                 c.write(this, name() + " manages to dodge your attack and gives a retaliating slap in return.");
-                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
         }
     }
 
@@ -726,7 +729,7 @@ public class NPC extends Character {
         if (wlist.isEmpty()) {
             return null;
         }
-        double s = Global.global.randomdouble() * sum;
+        double s = Rng.rng.randomdouble() * sum;
         for (WeightedSkill wskill : wlist) {
             if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
                 System.out.printf("%.1f/%.1f %s\n", wskill.weight, s, wskill.skill);
@@ -869,7 +872,7 @@ public class NPC extends Character {
         forbidden.forEach(comments::remove);
         if (comments.isEmpty() || comments.size() == 1 && comments.containsKey(CommentSituation.NO_COMMENT))
             return Optional.empty();
-        return Global.global.pickRandom(new ArrayList<>(comments.values()));
+        return Rng.rng.pickRandom(new ArrayList<>(comments.values()));
     }
     
     public Emotion moodSwing() {

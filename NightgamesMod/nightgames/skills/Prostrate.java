@@ -5,6 +5,7 @@ import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.stance.Behind;
 import nightgames.stance.Mount;
 import nightgames.stance.Stance;
@@ -42,7 +43,7 @@ public class Prostrate extends Skill {
     public boolean resolve(Combat c, Character target) {
         c.write(getSelf(), "You kneel and bend forward in front of Angel, touching your forehead to the ground."
                         + " You say nothing, wordlessly offering yourself to whatever She wants for you.");
-        if (!target.hasDick() || Global.global.random(2) == 0) {
+        if (!target.hasDick() || Rng.rng.random(2) == 0) {
             c.write(target, "Angel lays a hand on the back of your head and then softly pushes to the side."
                             + " Understanding Her intent, you roll over onto your back, and she sits down on top of you,"
                             + " smiling kindly.");

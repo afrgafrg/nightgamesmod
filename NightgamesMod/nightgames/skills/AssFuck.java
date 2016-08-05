@@ -8,6 +8,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.stance.Anal;
 import nightgames.stance.AnalProne;
@@ -68,7 +69,7 @@ public class AssFuck extends Fuck {
         }
         c.write(getSelf(), Global.global.format(premessage, getSelf(), target));
 
-        int m = Global.global.random(10, 15);
+        int m = Rng.rng.random(10, 15);
         if (getSelf().has(Trait.strapped) && getSelf().has(Item.Strapon2)) {
             m += 3;
         }

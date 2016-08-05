@@ -8,6 +8,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Anal;
 import nightgames.stance.AnalCowgirl;
@@ -164,7 +165,7 @@ public class MindControl extends Addiction {
     @Override
     public void tick(Combat c) {
         super.tick(c);
-        if (!affected.is(Stsflag.enthralled) && Global.global.randomdouble() < magnitude / 3) {
+        if (!affected.is(Stsflag.enthralled) && Rng.rng.randomdouble() < magnitude / 3) {
             affected.addlist.add(new Enthralled(affected, cause, 3));
             c.write(cause, cause.name() + "'s constant urging overcomes your defences, washing away all of your resistance.");
         }
@@ -395,7 +396,7 @@ public class MindControl extends Addiction {
         public void tick(Combat c) {
             if (affected.getStamina()
                         .percent() > 5) {
-                int amt = getSeverity().ordinal() * (Global.global.random(6) + 1);
+                int amt = getSeverity().ordinal() * (Rng.rng.random(6) + 1);
                 affected.weaken(c, (int) cause.modifyDamage(DamageType.temptation, affected, amt));
                 Global.writeIfCombat(c, affected, "You keep fighting your own body to do as you want, and it's tiring you rapidly.");
             }

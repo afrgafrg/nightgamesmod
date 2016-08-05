@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Mount;
@@ -45,10 +45,10 @@ public class Tackle extends Skill {
                         && getSelf().check(Attribute.Power, target.knockdownDC() - getSelf().get(Attribute.Animism))) {
             if (getSelf().get(Attribute.Animism) >= 1) {
                 writeOutput(c, Result.special, target);
-                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(15, 30)));
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(15, 30)));
             } else {
                 writeOutput(c, Result.normal, target);
-                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(10, 25)));
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(10, 25)));
             }
             c.setStance(new Mount(getSelf(), target), getSelf(), true);
         } else {

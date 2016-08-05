@@ -6,6 +6,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class LeechEnergy extends Skill {
             List<String> targets = new ArrayList<String>(
                             Arrays.asList("hands", "feet", "skin", "mouth", "cock", "pussy", "balls"));
             while (!targets.isEmpty()) {
-                String type = targets.remove(Global.global.random(targets.size()));
+                String type = targets.remove(Rng.rng.random(targets.size()));
                 part = target.body.getRandom(type);
                 if (part != null) {
                     lastPart = type;
@@ -104,8 +105,8 @@ public class LeechEnergy extends Skill {
             } else {
                 c.write(getSelf(), "Wtf happened");
             }
-            target.drainStaminaAsMojo(c, getSelf(), 10 + Global.global.random(20), 1.5f);
-            target.body.pleasure(getSelf(), selfPart, part, 10 + Global.global.random(20), c, this);
+            target.drainStaminaAsMojo(c, getSelf(), 10 + Rng.rng.random(20), 1.5f);
+            target.body.pleasure(getSelf(), selfPart, part, 10 + Rng.rng.random(20), c, this);
         } else {
             writeOutput(c, Result.miss, target);
             return false;

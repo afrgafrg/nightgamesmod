@@ -7,6 +7,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Jumped;
 import nightgames.status.Falling;
@@ -42,7 +43,7 @@ public class ReverseCarry extends Carry {
             } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), premessage + receive(c, premessage.length(), Result.normal, target));
             }
-            int m = 5 + Global.global.random(5);
+            int m = 5 + Rng.rng.random(5);
             int otherm = m;
             if (getSelf().has(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);

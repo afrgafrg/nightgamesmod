@@ -6,6 +6,7 @@ import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
 
@@ -136,8 +137,8 @@ public abstract class Addiction extends Status {
 
     public Optional<Status> startNight() {
         if (!didDaytime || overloading) {
-            if (!overloading) {
-                float amount = Global.global.randomfloat() / 4.f;
+            if (!overloading)
+                alleviate(Rng.rng.randomfloat() / 4.f);
                 if (Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
                     System.out.println("Alleviating addiction " + this.getType() + " by " + amount);
                 }

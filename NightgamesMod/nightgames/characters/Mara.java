@@ -10,6 +10,7 @@ import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.strategy.FootjobStrategy;
@@ -397,33 +398,33 @@ public class Mara extends BasePersonality {
         }
         if (character.money > 0 && character.rank >= 1) {
             Global.global.getDay()
-                  .visit("Body Shop", character, Global.global.random(character.money));
+                  .visit("Body Shop", character, Rng.rng.random(character.money));
         }
         if (character.money > 0 && character.rank >= 1) {
             Global.global.getDay()
-                  .visit("Workshop", character, Global.global.random(character.money));
+                  .visit("Workshop", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("Hardware Store", character, Global.global.random(character.money));
+                  .visit("Hardware Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("Black Market", character, Global.global.random(character.money));
+                  .visit("Black Market", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("XXX Store", character, Global.global.random(character.money));
+                  .visit("XXX Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("Bookstore", character, Global.global.random(character.money));
+                  .visit("Bookstore", character, Rng.rng.random(character.money));
         }
         Decider.visit(character);
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
                 Global.global.getDay()
                       .visit("Exercise", this.character, 0);
@@ -496,7 +497,7 @@ public class Mara extends BasePersonality {
         }
         if (c.getStance()
              .vaginallyPenetrated(c, character)) {
-            if (character.has(Item.ShockGlove) && Global.global.random(2) == 0) {
+            if (character.has(Item.ShockGlove) && Rng.rng.random(2) == 0) {
                 return "You've got Mara just where you want her. Your arms are wrapped around her, holding her in place as you thrust your cock into her tight pussy over and over. Her moans are getting louder and louder, and you can feel her breath "
                                 + "quickening. You're getting close to cumming, but she's definitely closer. She returns your embrace, squeezing her body against yours, stroking your back with her hands. Her hands creep down to grasp your buttocks. "
                                 + "All of a sudden, she grins deviously, and she whispers...<br/><br/>"

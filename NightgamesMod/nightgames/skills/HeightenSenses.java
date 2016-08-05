@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Stsflag;
 
@@ -35,14 +35,14 @@ public class HeightenSenses extends Skill {
     public boolean resolve(Combat c, Character target) {
         boolean alreadyTranced =
                         target.is(Stsflag.charmed) || target.is(Stsflag.enthralled) || target.is(Stsflag.trance);
-        if (!alreadyTranced && Global.global.random(3) == 0) {
+        if (!alreadyTranced && Rng.rng.random(3) == 0) {
             if (getSelf().human()) {
                 c.write(getSelf(), deal(c, 0, Result.miss, target));
             } else {
                 c.write(getSelf(), receive(c, 0, Result.miss, target));
             }
             return false;
-        } else if (target.is(Stsflag.hypersensitive) && Global.global.random(2) == 0) {
+        } else if (target.is(Stsflag.hypersensitive) && Rng.rng.random(2) == 0) {
             if (getSelf().human()) {
                 c.write(getSelf(), deal(c, 0, Result.strong, target));
             } else {

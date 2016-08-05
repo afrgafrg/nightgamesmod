@@ -7,6 +7,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.FootWorship;
 import nightgames.skills.Masturbate;
 import nightgames.stance.Engulfed;
@@ -75,16 +76,16 @@ public class Parasited extends Status {
                                 "{other:NAME} gives {self:name-do} a satisfied smile and {other:possessive} disembodied voice echoes again inside {self:possessive} head, \"{self:NAME}, don't worry... I have connected myself with your brain... We will have so much fun together...\"",
                                 affected, other));
             }
-            switch (Global.global.random(8)) {
+            switch (Rng.rng.random(8)) {
                 case 0:
                     Global.global.gui().message(c, other, Global.global.format("\"...You will cum for me...\"",
                                     affected, other));
                     Global.global.gui().message(c, affected, Global.global.format(
                                     "With absolutely no warning, {self:subject-action:feel|feels} an incredible orgasm rip through {self:possessive} body.",
                                     affected, other));
-                    BodyPart part = Global.global.pickRandom(c.getStance().partsFor(c, affected))
+                    BodyPart part = Rng.rng.pickRandom(c.getStance().partsFor(c, affected))
                                     .orElse(affected.body.getRandomGenital());
-                    BodyPart otherPart = Global.global.pickRandom(c.getStance().partsFor(c, other))
+                    BodyPart otherPart = Rng.rng.pickRandom(c.getStance().partsFor(c, other))
                                     .orElse(other.body.getRandom("skin"));
                     affected.doOrgasm(c, other, part, otherPart);
                     break;

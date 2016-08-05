@@ -5,6 +5,7 @@ import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.strategy.FacesitStrategy;
@@ -119,25 +120,25 @@ public class Reyka extends BasePersonality {
             character.money -= 600;
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Body Shop", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Rng.rng.random(character.money));
         }
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
                 Global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
                 Global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
-        character.gain(Item.semen, Global.global.random(3) + 1);
+        character.gain(Item.semen, Rng.rng.random(3) + 1);
         buyUpTo(Item.semen, 5);
     }
 
@@ -403,12 +404,12 @@ public class Reyka extends BasePersonality {
 
     @Override
     public boolean fightFlight(Character paramCharacter) {
-        return !character.mostlyNude() || Global.global.random(3) == 1;
+        return !character.mostlyNude() || Rng.rng.random(3) == 1;
     }
 
     @Override
     public boolean attack(Character paramCharacter) {
-        return !character.mostlyNude() || Global.global.random(3) == 1;
+        return !character.mostlyNude() || Rng.rng.random(3) == 1;
     }
 
     public double dickPreference() {
@@ -417,7 +418,7 @@ public class Reyka extends BasePersonality {
 
     @Override
     public boolean fit() {
-        return (!character.mostlyNude() || Global.global.random(3) == 1) && character.getStamina().percent() >= 50
+        return (!character.mostlyNude() || Rng.rng.random(3) == 1) && character.getStamina().percent() >= 50
                         && character.getArousal().percent() <= 50;
     }
 

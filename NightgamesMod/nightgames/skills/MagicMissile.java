@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 
@@ -41,7 +41,7 @@ public class MagicMissile extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            double m = Global.global.random(10, 20);
+            double m = Rng.rng.random(10, 20);
             if (target.mostlyNude() && Global.random(3) == 2) {
                 writeOutput(c, Result.critical, target);
                 m *= 2;

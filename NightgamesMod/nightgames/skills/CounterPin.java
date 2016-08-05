@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 
 public class CounterPin extends CounterBase {
@@ -15,7 +16,7 @@ public class CounterPin extends CounterBase {
 
     @Override
     public float priorityMod(Combat c) {
-        return Global.global.randomfloat();
+        return Rng.rng.randomfloat();
     }
 
     @Override

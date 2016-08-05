@@ -7,6 +7,7 @@ import nightgames.characters.Player;
 import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Abuff;
 import nightgames.status.DarkChaos;
 import nightgames.status.Status;
@@ -108,7 +109,7 @@ public class Corruption extends Addiction {
     }
     
     private Attribute getDrainAttr() {
-        return Global.global.pickRandom(Arrays.stream(Attribute.values())
+        return Rng.rng.pickRandom(Arrays.stream(Attribute.values())
                         .filter(a -> a != Attribute.Dark && affected.get(a) >= 10).toArray(Attribute[]::new)).get();
     }
 

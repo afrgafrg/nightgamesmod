@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.encounter.IEncounter;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Flatfooted;
 
@@ -36,7 +37,7 @@ public class StripMine extends Trap {
                             .message("You're startled by a flash of light not far away. Standing there is a half-naked "
                             + target.name() + ", looking surprised.");
         }
-        IntStream.range(0, 2 + Global.global.random(4)).forEach(i -> target.shredRandom());
+        IntStream.range(0, 2 + Rng.rng.random(4)).forEach(i -> target.shredRandom());
         target.location().opportunity(target, this);
     }
 

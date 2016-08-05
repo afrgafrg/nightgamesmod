@@ -14,9 +14,8 @@ import nightgames.characters.resources.Meter;
 import nightgames.characters.resources.Resource;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatantData;
-import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
-import nightgames.match.ftc.FTCMatch;
+import nightgames.encounter.IEncounter;
 import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -26,6 +25,7 @@ import nightgames.items.clothing.Outfit;
 import nightgames.json.JsonUtils;
 import nightgames.match.Challenge;
 import nightgames.match.Match;
+import nightgames.match.ftc.FTCMatch;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.CharacterPet;
 import nightgames.pet.Pet;
@@ -323,7 +323,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean check(Attribute a, int dc) {
-        int rand = Global.global.random(20);
+        int rand = Rng.rng.random(20);
         if (Global.global.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
             System.out.println("Checked " + a + " = " + get(a) + " against " + dc + ", rolled " + rand);
         }
@@ -901,7 +901,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public int init() {
-        return att.get(Attribute.Speed) + Global.global.random(10);
+        return att.get(Attribute.Speed) + Rng.rng.random(10);
     }
 
     public boolean reallyNude() {
@@ -1287,7 +1287,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public boolean rollPheromones(Combat c) {
         double chance = getPheromonesChance(c);
-        double roll = Global.global.randomdouble();
+        double roll = Rng.rng.randomdouble();
         return roll < chance;
     }
 
@@ -1851,7 +1851,7 @@ public abstract class Character extends Observable implements Cloneable {
                             "<b>" + opponent.subjectAction("are more composed", "seems more composed") + " as "
                                             + nameOrPossessivePronoun() + " forced orgasm goes straight to "
                                             + opponent.possessiveAdjective() + " ego.</b>"));
-            opponent.restoreWillpower(c, 10 + Global.global.random(10));
+            opponent.restoreWillpower(c, 10 + Rng.rng.random(10));
         }
         if (opponent.has(Trait.leveldrainer) && !has(Trait.leveldrainer)
                         && (((c.getStance().penetratedBy(c, opponent, this) || c.getStance().penetratedBy(c, this, opponent))
@@ -1997,7 +1997,7 @@ public abstract class Character extends Observable implements Cloneable {
                                 "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained into {self:possessive} "
                                                 + selfOrgan.describe(this) + " through your connection.",
                                 this, opponent));
-                int m = Global.global.random(5) + 5;
+                int m = Rng.rng.random(5) + 5;
                 opponent.drain(c, this, (int) this.modifyDamage(DamageType.drain, opponent, m));
             }
             // TODO this works weirdly when both have both organs.
@@ -2174,7 +2174,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean stealthCheck(int perception) {
-        return check(Attribute.Cunning, Global.global.random(20) + perception) || state == State.hidden;
+        return check(Attribute.Cunning, Rng.rng.random(20) + perception) || state == State.hidden;
     }
 
     public boolean spotCheck(Character checked) {
@@ -2201,7 +2201,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
-        travel(adjacent[Global.global.random(adjacent.length)]);
+        travel(adjacent[Rng.rng.random(adjacent.length)]);
         location2.endEncounter();
     }
 
@@ -2291,7 +2291,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void consume(Item item, int quantity, boolean canBeResourceful) {
-        if (canBeResourceful && has(Trait.resourceful) && Global.global.random(5) == 0) {
+        if (canBeResourceful && has(Trait.resourceful) && Rng.rng.random(5) == 0) {
             quantity--;
         }
         if (inventory.containsKey(item)) {
@@ -2431,7 +2431,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void craft() {
-        int roll = Global.global.random(15);
+        int roll = Rng.rng.random(15);
         if (check(Attribute.Cunning, 25)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
@@ -2476,7 +2476,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void search() {
-        int roll = Global.global.random(15);
+        int roll = Rng.rng.random(15);
         switch (roll) {
             case 9:
                 gain(Item.Tripwire);
@@ -2863,7 +2863,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean taintedFluids() {
-        return Global.global.random(get(Attribute.Dark) / 4 + 5) >= 4;
+        return Rng.rng.random(get(Attribute.Dark) / 4 + 5) >= 4;
     }
 
     protected void pickSkillsWithGUI(Combat c, Character target) {
@@ -3484,7 +3484,7 @@ public abstract class Character extends Observable implements Cloneable {
      */
     public void usedAttribute(Attribute att, Combat c, double baseChance) {
         // divine recoil applies at 20% per magnitude
-        if (att == Attribute.Divinity && Global.global.randomdouble() < baseChance) {
+        if (att == Attribute.Divinity && Rng.rng.randomdouble() < baseChance) {
             add(c, new DivineRecoil(this, 1));
         }
     }
@@ -3569,7 +3569,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     private void placeNinjaStash(Match m) {
         String location;
-        switch (Global.global.random(6)) {
+        switch (Rng.rng.random(6)) {
         case 0:
             location = "Library";
             break;

@@ -2,6 +2,7 @@ package nightgames.characters;
 
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.status.Lethargic;
@@ -540,7 +541,7 @@ public enum Trait {
         resistances.put(Trait.freeSpirit, (combat, c, s) -> {
             // 30% to resist enthrall and bound
             if ((s.flags().contains(Stsflag.enthralled) || s.flags().contains(Stsflag.bound))
-                            && Global.global.random(100) < 30) {
+                            && Rng.rng.random(100) < 30) {
                 return "Free Spirit";
             }
             return "";
@@ -548,7 +549,7 @@ public enum Trait {
         resistances.put(Trait.calm, (combat, c, s) -> {
             // 50% to resist horny and hypersensitive
             if ((s.flags().contains(Stsflag.horny) || s.flags().contains(Stsflag.hypersensitive))
-                            && Global.global.random(100) < 50) {
+                            && Rng.rng.random(100) < 50) {
                 if (s.flags().contains(Stsflag.piercingOdor) && s instanceof Pheromones) {
                     Pheromones pheromones = ((Pheromones)s);
                     pheromones.setMagnitude(pheromones.getMagnitude() / 2);
@@ -561,21 +562,21 @@ public enum Trait {
         });
         resistances.put(Trait.skeptical, (combat, c, s) -> {
             // 30% to resist mindgames
-            if (s.mindgames() && Global.global.random(100) < 30) {
+            if (s.mindgames() && Rng.rng.random(100) < 30) {
                 return "Skeptical";
             }
             return "";
         });
         resistances.put(Trait.masterheels, (combat, c, s) -> {
             // 33% to resist falling wearing heels
-            if (c.has(ClothingTrait.heels) && s.flags().contains(Stsflag.falling) && Global.global.random(100) < 33) {
+            if (c.has(ClothingTrait.heels) && s.flags().contains(Stsflag.falling) && Rng.rng.random(100) < 33) {
                 return "Heels Master";
             }
             return "";
         });
         resistances.put(Trait.graceful, (combat, c, s) -> {
             // 25% to resist falling
-            if (s.flags().contains(Stsflag.falling) && Global.global.random(100) < 25) {
+            if (s.flags().contains(Stsflag.falling) && Rng.rng.random(100) < 25) {
                 return "Graceful";
             }
             return "";
@@ -589,7 +590,7 @@ public enum Trait {
         });
         resistances.put(Trait.naive, (combat, c, s) -> {
             // 50% to resist Cynical
-            if (s.flags().contains(Stsflag.cynical) && Global.global.random(100) < 50) {
+            if (s.flags().contains(Stsflag.cynical) && Rng.rng.random(100) < 50) {
                 return "Naive";
             }
             return "";
@@ -600,7 +601,7 @@ public enum Trait {
                    float magnitude = ((Player)c).getAddiction(AddictionType.MIND_CONTROL).map(Addiction::getMagnitude)
                                                    .orElse(0f);
                    float threshold = 40 * magnitude;
-                   if (Global.global.random(100) < threshold) {
+                   if (Rng.rng.random(100) < threshold) {
                        return "Mara's Control";
                    }
                }

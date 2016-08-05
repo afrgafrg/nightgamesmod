@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Blinded;
 import nightgames.status.Stsflag;
@@ -63,7 +63,7 @@ public class ToggleBlindfold extends Skill {
                                 getSelf().subjectAction("take"), target.subjectAction("snatch", "snatches"),
                                 getSelf().possessiveAdjective(), getSelf().action("throw")));
             }
-        } else if (c.getStance().sub(getSelf()) && target.canAct() && Global.global.random(2) == 0) {
+        } else if (c.getStance().sub(getSelf()) && target.canAct() && Rng.rng.random(2) == 0) {
             c.write(getSelf(),
                             String.format("%s to take off %s blindfold, but %s %s hands away.",
                                             getSelf().subjectAction("try", "tries"), getSelf().possessiveAdjective(),

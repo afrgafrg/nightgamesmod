@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 
 public class Wait extends Skill {
@@ -35,18 +35,18 @@ public class Wait extends Skill {
         if (channel(c)) {
             writeOutput(c, Result.special, target);
             if (focused(c)) {
-                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.global.random(8, 16)));
-                getSelf().calm(c, Global.global.random(8, 14));
+                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(8, 16)));
+                getSelf().calm(c, Rng.rng.random(8, 14));
             } else {
-                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.random(4, 8)));
+                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(4, 8)));
             }
         } else if (focused(c)) {
             writeOutput(c, Result.strong, target);
-            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.random(8, 16)));
-            getSelf().calm(c, Global.random(8, 14));
+            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(8, 16)));
+            getSelf().calm(c, Rng.rng.random(8, 14));
         } else {
             writeOutput(c, Result.normal, target);
-            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Global.global.random(4, 8)));
+            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(4, 8)));
         }
         return true;
     }

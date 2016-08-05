@@ -2,7 +2,7 @@ package nightgames.stance;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class Neutral extends Position {
 
@@ -86,7 +86,7 @@ public class Neutral extends Position {
         boolean fuckPossible = dom.hasDick() && other.hasPussy();
         boolean reversePossible = other.hasDick() && dom.hasPussy();
         if (fuckPossible && reversePossible) {
-            if (Global.global.random(2) == 0) {
+            if (Rng.rng.random(2) == 0) {
                 return new Standing(dom, other);
             } else {
                 return new Jumped(dom, other);
@@ -125,7 +125,7 @@ public class Neutral extends Position {
     public double pheromoneMod(Character self) {
         return .5;
     }
-    
+
     @Override
     public int distance() {
         return 3;

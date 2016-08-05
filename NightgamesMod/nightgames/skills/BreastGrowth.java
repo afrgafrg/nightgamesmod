@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Hypersensitive;
 
 public class BreastGrowth extends Skill {
@@ -59,7 +59,7 @@ public class BreastGrowth extends Skill {
         } else {
             res = Result.miss;
         }
-        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
+        boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
         writeOutput(c, permanent ? 1 : 0, res, target);
         if (res != Result.miss) {

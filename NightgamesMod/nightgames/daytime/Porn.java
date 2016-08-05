@@ -5,6 +5,7 @@ import nightgames.characters.Trait;
 import nightgames.global.Configuration;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 import java.util.ArrayList;
 
@@ -104,7 +105,7 @@ public class Porn extends Activity {
                 available.add(Scene.reyka1);
             }
         }
-        return available.get(Global.global.random(available.size()));
+        return available.get(Rng.rng.random(available.size()));
     }
 
     private static enum Scene {

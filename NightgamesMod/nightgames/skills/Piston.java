@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class Piston extends Thrust {
     public Piston(Character self) {
@@ -32,8 +33,8 @@ public class Piston extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 15 + Global.global.random(8);
-        int mt = 10 + Global.global.random(5);
+        int m = 15 + Rng.rng.random(8);
+        int mt = 10 + Rng.rng.random(5);
         if (getSelf().has(Trait.experienced)) {
             mt = mt * 2 / 3;
         }

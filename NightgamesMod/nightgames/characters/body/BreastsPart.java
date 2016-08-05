@@ -8,6 +8,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.status.Abuff;
@@ -60,13 +61,13 @@ public enum BreastsPart implements BodyPart {
     public String describe(Character c, boolean forceAdjective) {
         if (c.hasPussy() || size > 0) {
             if (forceAdjective) {
-                boolean first = Global.global.random(2) == 0;
-                boolean second = first ? Global.global.random(2) == 0 : true;
-                return (first ? desc + ' ' : "") + (second ? name + ' ' : "") + synonyms[Global.global
+                boolean first = Rng.rng.random(2) == 0;
+                boolean second = first ? Rng.rng.random(2) == 0 : true;
+                return (first ? desc + ' ' : "") + (second ? name + ' ' : "") + synonyms[Rng.rng
                                 .random(synonyms.length)];
             } else {
-                return Global.global.maybeString(desc + ' ') + Global.global.maybeString(name + ' ')
-                                + synonyms[Global.global.random(synonyms.length)];
+                return Rng.rng.maybeString(desc + ' ') + Rng.rng.maybeString(name + ' ') + synonyms[Rng.rng
+                                .random(synonyms.length)];
             }
         } else {
             if (c.get(Attribute.Power) > 25) {
@@ -176,7 +177,7 @@ public enum BreastsPart implements BodyPart {
 
     @Override
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
-        return Math.max(5, size) + Global.global.random(Math.min(0, size - 4));
+        return Math.max(5, size) + Rng.rng.random(Math.min(0, size - 4));
     }
 
     @Override

@@ -6,6 +6,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.*;
@@ -77,7 +78,7 @@ public enum CockMod implements BodyPartMod {
                                 opponent.possessiveAdjective(), target.describe(opponent));
                 bonus += damage * 0.5; // +50% damage
             }
-            if (Global.global.random(8) == 0 && !opponent.wary()) {
+            if (Rng.rng.random(8) == 0 && !opponent.wary()) {
                 message += String.format("Power radiates out from %s %s, seeping into %s and subverting %s will. ",
                                 self.nameOrPossessivePronoun(), part.describe(self), opponent.nameOrPossessivePronoun(),
                                 opponent.directObject());
@@ -107,7 +108,7 @@ public enum CockMod implements BodyPartMod {
                                 " %s %s does not oblige, instead sending a pulse of electricity through %s %s and up %s spine",
                                 opponent.nameOrPossessivePronoun(), target.describe(opponent),
                                 self.nameOrPossessivePronoun(), part.describe(self), self.possessiveAdjective());
-                self.pain(c, opponent, Global.global.random(9) + 4);
+                self.pain(c, opponent, Rng.rng.random(9) + 4);
                 amtDrained = 0;
             } else {
                 message += String.format(" Despite %s best efforts, some of the elusive energy passes into %s.",
@@ -127,7 +128,7 @@ public enum CockMod implements BodyPartMod {
             c.write(self, message);
         } else if (this.countsAs(self, bionic)) {
             String message = "";
-            if (Global.global.random(5) == 0 && target.getType().equals("pussy")) {
+            if (Rng.rng.random(5) == 0 && target.getType().equals("pussy")) {
                 message += String.format(
                                 "%s %s out inside %s %s, pressing the metallic head of %s %s tightly against %s cervix. "
                                                 + "Then, a thin tube extends from %s uthera and into %s womb, pumping in a powerful aphrodisiac that soon has %s sensitive and"
@@ -148,7 +149,7 @@ public enum CockMod implements BodyPartMod {
                                 self.nameOrPossessivePronoun(), part.describe(self), opponent.nameOrPossessivePronoun(),
                                 target.describe(opponent));
                 bonus += 5;
-                if (Global.global.random(5) == 0) {
+                if (Rng.rng.random(5) == 0) {
                     message += String.format(
                                     " The intense sensations cause %s to forget to breathe for a moment, leaving %s literally breathless.",
                                     opponent.subject(), opponent.directObject());
@@ -179,7 +180,7 @@ public enum CockMod implements BodyPartMod {
                                                                                            // 24->29->20,
                                                                                            // 25->30->30
                     Attribute attr = new Attribute[] {Attribute.Power, Attribute.Cunning,
-                                    Attribute.Seduction}[Global.global.random(3)];
+                                    Attribute.Seduction}[Rng.rng.random(3)];
                     self.add(c, new Abuff(self, attr, 1, 10));
                 }
                 self.buildMojo(c, 5);
@@ -236,7 +237,7 @@ public enum CockMod implements BodyPartMod {
         } else {
             description = name() + (c.hasPussy() ? " girl-" : " ");
         }
-        String syn = Global.global.pickRandom(BasicCockPart.synonyms).get();
+        String syn = Rng.rng.pickRandom(BasicCockPart.synonyms).get();
         return base.desc + " " + description + syn;
     }
 
@@ -249,8 +250,8 @@ public enum CockMod implements BodyPartMod {
         } else {
             description = name() + (c.hasPussy() ? " girl-" : " ");
         }
-        String syn = Global.global.pickRandom(BasicCockPart.synonyms).get();
-        return Global.global.maybeString(base.desc) + " " + description + syn;
+        String syn = Rng.rng.pickRandom(BasicCockPart.synonyms).get();
+        return Rng.rng.maybeString(base.desc) + " " + description + syn;
     }
 
     public double priority(Character c, BasicCockPart base) {
@@ -267,7 +268,7 @@ public enum CockMod implements BodyPartMod {
                                     self.nameOrPossessivePronoun(), opponent.nameOrPossessivePronoun(),
                                     target.describe(opponent), self.possessiveAdjective()));
                 } else {
-                    int duration = Global.global.random(3) + 2;
+                    int duration = Rng.rng.random(3) + 2;
                     String message = String.format(
                                     "The moment %s erupts inside %s, %s mind goes completely blank, leaving %s pliant and ready.",
                                     self.subject(), opponent.subject(), opponent.possessiveAdjective(),
@@ -305,7 +306,7 @@ public enum CockMod implements BodyPartMod {
             c.write(self, String.format("Raw sexual energy flows from %s %s into %s %s, enflaming %s lust",
                             self.nameOrPossessivePronoun(), part.describe(self), opponent.nameOrPossessivePronoun(),
                             otherOrgan.describe(opponent), opponent.possessiveAdjective()));
-            opponent.add(c, Pheromones.getWith(self, opponent, Global.global.random(3) + 1, 3, " primal passion"));
+            opponent.add(c, Pheromones.getWith(self, opponent, Rng.rng.random(3) + 1, 3, " primal passion"));
         }
     }
 

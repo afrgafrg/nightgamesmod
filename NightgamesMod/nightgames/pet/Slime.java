@@ -9,7 +9,7 @@ import nightgames.characters.body.ModdedCockPart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TentaclePart;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.Grind;
 import nightgames.skills.Piston;
 import nightgames.skills.PussyGrind;

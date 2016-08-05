@@ -4,8 +4,8 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 
 public class FaerieSwarm extends Skill {
@@ -35,7 +35,7 @@ public class FaerieSwarm extends Skill {
         getSelf().consume(Item.MinorScroll, 1);
         if (target.getOutfit().isNude()) {
             writeOutput(c, Result.normal, target);
-            target.body.pleasure(getSelf(), null, null, 25 + Global.global.random(getSelf().get(Attribute.Arcane)), c,
+            target.body.pleasure(getSelf(), null, null, 25 + Rng.rng.random(getSelf().get(Attribute.Arcane)), c,
                             this);
         } else {
             writeOutput(c, Result.weak, target);

@@ -5,6 +5,7 @@ import nightgames.characters.Trait;
 import nightgames.global.Configuration;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 import java.util.ArrayList;
 
@@ -180,7 +181,7 @@ public class Exercise extends Activity {
                         + "Yui blushes again, but looks determined. <i>\"Please let me call you Master. It's really important to me to show you my commitment. I'll... try not to say it in front of "
                         + "other people.\"</i> Her expression is too sincere to turn down. Fine, she can call you whatever she wants." );
                 Global.global.getNPC("Yui").gainAffection(player, 1);
-                Global.flag(Flag.YuiLoyalty);
+                Global.global.flag(Flag.YuiLoyalty);
                 break;
         }
     }
@@ -211,7 +212,7 @@ public class Exercise extends Activity {
                 available.add(Scene.jewel1);
             }
         }
-        return available.get(Global.global.random(available.size()));
+        return available.get(Rng.rng.random(available.size()));
     }
 
     private static enum Scene {

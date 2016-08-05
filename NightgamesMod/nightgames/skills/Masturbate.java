@@ -9,6 +9,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
@@ -60,7 +61,7 @@ public class Masturbate extends Skill {
             return Body.nonePart;
         }
 
-        return parts.get(Global.global.random(parts.size()));
+        return parts.get(Rng.rng.random(parts.size()));
     }
 
     private BodyPart withO = Body.nonePart;

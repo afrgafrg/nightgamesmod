@@ -4,7 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class CommandOral extends PlayerCommand {
 
@@ -31,7 +31,7 @@ public class CommandOral extends PlayerCommand {
     public boolean resolve(Combat c, Character target) {
         boolean silvertongue = target.has(Trait.silvertongue);
         boolean lowStart = getSelf().getArousal().get() < 15;
-        int m = (silvertongue ? 8 : 5) + Global.global.random(10);
+        int m = (silvertongue ? 8 : 5) + Rng.rng.random(10);
         if (getSelf().human()) {
             if (lowStart) {
                 if (m < 8) {

@@ -2,7 +2,7 @@ package nightgames.items;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class MaybeEffect extends ItemEffect {
     private ItemEffect effect;
@@ -16,7 +16,7 @@ public class MaybeEffect extends ItemEffect {
 
     @Override
     public boolean use(Combat c, Character user, Character opponent, Item item) {
-        if (Global.global.randomdouble() < probability) {
+        if (Rng.rng.randomdouble() < probability) {
             return effect.use(c, user, opponent, item);
         }
         return false;

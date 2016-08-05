@@ -5,6 +5,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Kneeling;
 import nightgames.status.BodyFetish;
@@ -44,7 +45,7 @@ public class FootWorship extends Skill {
         Result result = Result.normal;
         int m = 0;
         int n = 0;
-        m = 8 + Global.global.random(6);
+        m = 8 + Rng.rng.random(6);
         n = 20;
         BodyPart mouth = getSelf().body.getRandom("mouth");
         BodyPart feet = target.body.getRandom("feet");

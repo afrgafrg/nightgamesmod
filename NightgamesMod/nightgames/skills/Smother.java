@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Smothering;
@@ -54,7 +55,7 @@ public class Smother extends Skill {
             m = m * 3 / 2;
         }
         getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandom("ass"), m, c, this);
-        double n = 14 + Global.global.random(4);
+        double n = 14 + Rng.rng.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
             n += 3 * getSelf().body.getHotness(target);
@@ -71,7 +72,7 @@ public class Smother extends Skill {
         if (c.getStance().enumerate() != Stance.smothering) {
             c.setStance(new Smothering(getSelf(), target), getSelf(), true);
         }
-        if (Global.global.random(100) < 25 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 25 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .35));
         }
         return true;

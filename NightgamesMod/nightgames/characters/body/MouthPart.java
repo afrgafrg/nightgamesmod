@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.*;
 
@@ -35,7 +36,7 @@ public class MouthPart extends GenericBodyPart {
         if (target.isErogenous() && opponent.has(Trait.lickable)) {
             c.write(opponent, Grammar.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
                             + " when licked by " + self.directObject() + ".");
-            bonus += Global.global.random(2, 4) + opponent.getLevel() / 20;
+            bonus += Rng.rng.random(2, 4) + opponent.getLevel() / 20;
             if (target.isGenital()) {
                 bonus += Global.random(2, 4) + Math.max(0, opponent.getLevel() / 20 - 2);
             }
@@ -47,7 +48,7 @@ public class MouthPart extends GenericBodyPart {
                             + " leaves " + self.nameOrPossessivePronoun() + " entire body tingling with arousal.");
             self.arouse(Math.max(opponent.getArousal().get() / 10, 5), c);
         }
-        if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Global.global.random(5) == 0) {
+        if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Rng.rng.random(5) == 0) {
             c.write(self, Grammar.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
                             + fluid + " leaves " + self.nameOrPossessivePronoun() + " in a state of frenzy.");
             self.add(c, new Frenzied(self, 3));
@@ -85,7 +86,7 @@ public class MouthPart extends GenericBodyPart {
             }
         }
         if (self.has(Trait.experttongue)) {
-            if (Global.global.random(6) == 0 && !opponent.wary() && damage > 5) {
+            if (Rng.rng.random(6) == 0 && !opponent.wary() && damage > 5) {
                 if (!self.human()) {
                     c.write(opponent, "<br/>Your mind falls into a pink colored fog from the tongue lashing.");
                 } else {
@@ -94,7 +95,7 @@ public class MouthPart extends GenericBodyPart {
                 }
                 opponent.add(c, new Trance(opponent));
             }
-            bonus += Global.global.random(3) + Global.global.clamp(self.get(Attribute.Seduction) / 3, 10, 30)
+            bonus += Rng.rng.random(3) + Global.global.clamp(self.get(Attribute.Seduction) / 3, 10, 30)
                             * self.getArousal().percent() / 100.0;
         }
         if (self.has(Trait.sweetlips) && c.getStance().sub(self)) {
@@ -107,8 +108,8 @@ public class MouthPart extends GenericBodyPart {
                             "<br/>{self:name-possessive} abrasive tongue produces an unique sensation.",
                             self, opponent));
 
-            bonus += Global.global.random(3) + 4;
-            opponent.pain(c, opponent, 8 + Global.global.random(10), false, true);
+            bonus += Rng.rng.random(3) + 4;
+            opponent.pain(c, opponent, 8 + Rng.rng.random(10), false, true);
         }
         if (self.has(Trait.corrupting) && opponent.human()) {
             opponent.add(c, new PartiallyCorrupted((Player) opponent, self));
@@ -124,7 +125,7 @@ public class MouthPart extends GenericBodyPart {
                                                 + ", you instinctively draw in her spirit, forcing her energy through "
                                                 + target.describe(opponent) + " into your mouth.");
             }
-            bonus += Global.global.random(3) + 2;
+            bonus += Rng.rng.random(3) + 2;
             opponent.drainWillpowerAsMojo(c, self, (int) self.modifyDamage(DamageType.drain, opponent, 2), 2);
         }
         return bonus;

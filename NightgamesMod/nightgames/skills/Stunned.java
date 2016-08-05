@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 public class Stunned extends Skill {
 
@@ -21,7 +21,7 @@ public class Stunned extends Skill {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
         } else if (c.shouldPrintReceive(target, c)) {
-            if (Global.global.random(3) >= 2) {
+            if (Rng.rng.random(3) >= 2) {
                 c.write(getSelf(), getSelf().stunLiner(c, target));
             } else {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));

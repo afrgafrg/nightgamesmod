@@ -1,7 +1,5 @@
 package nightgames.skills;
 
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
@@ -9,8 +7,11 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
+
+import java.util.Optional;
 
 public class WildThrust extends Thrust {
     public WildThrust(Character self) {
@@ -50,9 +51,9 @@ public class WildThrust extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 5 + Global.global.random(20) + Math
+        int m = 5 + Rng.rng.random(20) + Math
                         .min(getSelf().get(Attribute.Animism), getSelf().getArousal().getReal() / 30);
-        int mt = 5 + Global.global.random(20);
+        int mt = 5 + Rng.rng.random(20);
         mt = Math.max(1, mt);
 
         results[0] = m;

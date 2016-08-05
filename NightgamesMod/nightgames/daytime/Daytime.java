@@ -6,9 +6,12 @@ import nightgames.characters.NPC;
 import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.addiction.Addiction;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Daytime {
     private ArrayList<Activity> activities;
@@ -194,13 +197,13 @@ public class Daytime {
             a = 100 - 2 * one.get(Attribute.Perception);
             b = 100 - 2 * two.get(Attribute.Perception);
         }
-        if (Global.global.random(100) >= a) {
+        if (Rng.rng.random(100) >= a) {
             one.mod(att, 1);
             if (one.human()) {
                 Global.global.gui().message("<b>Your " + att + " has improved.</b>");
             }
         }
-        if (Global.global.random(100) >= b) {
+        if (Rng.rng.random(100) >= b) {
             two.mod(att, 1);
             if (two.human()) {
                 Global.global.gui().message("<b>Your " + att + " has improved.</b>");

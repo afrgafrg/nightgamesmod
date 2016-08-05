@@ -16,15 +16,12 @@ import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TentaclePart;
 import nightgames.characters.resources.Meter;
 import nightgames.combat.Combat;
-import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
-import nightgames.match.ftc.FTCMatch;
-import nightgames.global.DebugFlags;
-import nightgames.global.Flag;
-import nightgames.global.Global;
-import nightgames.global.Grammar;
+import nightgames.encounter.IEncounter;
+import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+import nightgames.match.ftc.FTCMatch;
 import nightgames.skills.Skill;
 import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
@@ -421,7 +418,7 @@ public class Player extends Character {
     @Override
     public void flee(Area location2) {
         Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
-        Area destination = adjacent[Global.global.random(adjacent.length)];
+        Area destination = adjacent[Rng.rng.random(adjacent.length)];
         Global.global.gui().message("You dash away and escape into the <b>" + destination.name + ".</b>");
         travel(destination);
         location2.endEncounter();
@@ -445,7 +442,7 @@ public class Player extends Character {
 
     @Override
     public void craft() {
-        int roll = Global.global.random(10);
+        int roll = Rng.rng.random(10);
         Global.global.gui().message("You spend some time crafting some potions with the equipment.");
         if (check(Attribute.Cunning, 25)) {
             if (roll == 9) {
@@ -495,7 +492,7 @@ public class Player extends Character {
 
     @Override
     public void search() {
-        int roll = Global.global.random(10);
+        int roll = Rng.rng.random(10);
         switch (roll) {
             case 9:
                 gain(Item.Tripwire);
@@ -639,18 +636,18 @@ public class Player extends Character {
             case damage:
                 c.write(this, "You dodge " + target.name()
                                 + "'s slow attack and hit her sensitive tit to stagger her.");
-                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
                 break;
             case pleasure:
                 if (!target.crotchAvailable() || !target.hasPussy()) {
                     c.write(this, "You pull " + target.name()
                                     + " off balance and lick her sensitive ear. She trembles as you nibble on her earlobe.");
                     target.body.pleasure(this, body.getRandom("tongue"), target.body.getRandom("ears"),
-                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                 } else {
                     c.write(this, "You pull " + target.name() + " to you and rub your thigh against her girl parts.");
                     target.body.pleasure(this, body.getRandom("feet"), target.body.getRandomPussy(),
-                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                 }
                 break;
             case fucking:
@@ -668,7 +665,7 @@ public class Player extends Character {
                     }
                 } else {
                     target.body.pleasure(this, body.getRandom("hands"), target.body.getRandomBreasts(),
-                                    4 + Math.min(Global.global.random(get(Attribute.Seduction)), 20), c);
+                                    4 + Math.min(Rng.rng.random(get(Attribute.Seduction)), 20), c);
                     c.write(this, Global.global.format(
                                     "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} nipples with {self:possessive} hands as {other:subject-action:try|tries} to fuck {self:direct-object}. "
                                                     + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to pleasure {other:possessive} body.",
@@ -684,7 +681,7 @@ public class Player extends Character {
                 } else {
                     c.write(this, "You manage to dodge " + target.possessiveAdjective()
                                     + " groping hands and give a retaliating slap in return.");
-                    target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                    target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
                 }
                 break;
             case positioning:
@@ -701,7 +698,7 @@ public class Player extends Character {
             default:
                 c.write(this, "You manage to dodge " + target.possessiveAdjective()
                                 + " attack and give a retaliating slap in return.");
-                target.pain(c, target, 4 + Math.min(Global.global.random(get(Attribute.Power)), 20));
+                target.pain(c, target, 4 + Math.min(Rng.rng.random(get(Attribute.Power)), 20));
         }
     }
 

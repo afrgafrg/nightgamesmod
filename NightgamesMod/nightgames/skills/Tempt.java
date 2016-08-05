@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Enthralled;
 import nightgames.status.Trance;
 
@@ -24,7 +25,7 @@ public class Tempt extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         writeOutput(c, Result.normal, target);
-        double m = 4 + Global.global.random(4);
+        double m = 4 + Rng.rng.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
             m += 2 * getSelf().body.getHotness(target);
@@ -36,7 +37,7 @@ public class Tempt extends Skill {
 
         int n = (int) Math.round(m);
 
-        boolean tempted = Global.global.random(5) == 0;
+        boolean tempted = Rng.rng.random(5) == 0;
         if (getSelf().has(Trait.darkpromises) && tempted && !target.wary() && getSelf().canSpend(15)) {
             getSelf().spendMojo(c, 15);
             c.write(getSelf(), Global.global.format(

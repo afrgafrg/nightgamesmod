@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.FiredUp;
 
@@ -29,7 +29,7 @@ public class TemptressHandjob extends Handjob {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 7 + Global.global.random(getSelf().get(Attribute.Technique) / 2);
+        int m = 7 + Rng.rng.random(getSelf().get(Attribute.Technique) / 2);
 
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (!target.body.getRandomCock().isReady(target)) {

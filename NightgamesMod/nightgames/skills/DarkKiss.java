@@ -5,6 +5,7 @@ import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
@@ -51,7 +52,7 @@ public class DarkKiss extends Skill {
         float mag = add.getMagnitude();
         int min = (int) (mag * 3);
         int mod = (int) (mag * 8);
-        int amt = min + Global.global.random(mod);
+        int amt = min + Rng.rng.random(mod);
         target.loseWillpower(c, amt, false);
         add.alleviateCombat(Addiction.HIGH_INCREASE);
         ((Player)getSelf()).addict(AddictionType.CORRUPTION, null, Addiction.LOW_INCREASE);

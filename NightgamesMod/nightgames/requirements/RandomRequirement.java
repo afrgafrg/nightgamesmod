@@ -2,7 +2,7 @@ package nightgames.requirements;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 /**
  * Returns true based on a random variable between 0.0 and 1.0, with probability equal to the threshold.
@@ -21,7 +21,7 @@ public class RandomRequirement extends BaseRequirement {
     }
 
     @Override public boolean meets(Combat c, Character self, Character other) {
-        return Global.global.randomfloat() < threshold;
+        return Rng.rng.randomfloat() < threshold;
     }
 
     @Override public boolean equals(Object o) {

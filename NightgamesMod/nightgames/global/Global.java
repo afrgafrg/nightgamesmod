@@ -59,7 +59,6 @@ public class Global implements Runnable, Clockable {
     public static boolean debug[] = new boolean[DebugFlags.values().length];
     public final NgsDate date = new NgsDate();
 
-    private Random rng;
     public GUI gui;
     private Set<Skill> skillPool = new HashSet<>();
     private Map<String, NPC> characterPool;
@@ -92,7 +91,6 @@ public class Global implements Runnable, Clockable {
     public Global() {
         global = this;
         run = true;
-        rng = new Random();
         flags = new HashSet<>();
         players = new HashSet<>();
         debugChars = new HashSet<>();
@@ -222,31 +220,6 @@ public class Global implements Runnable, Clockable {
                 return this.match.getClock();
         }
         throw new RuntimeException("Unknown time of day: " + time);
-    }
-
-    public int random(int start, int end) {
-        return rng.nextInt(end - start) + start;
-    }
-
-    public static int random(int d) {
-        if (d <= 0) {
-            return 0;
-        }
-        return rng.nextInt(d);
-    }
-
-    // finds a centered random number from [0, d] (inclusive)
-    public int centeredrandom(int d, double center, double sigma) {
-        int val = 0;
-        center = Math.max(0, Math.min(d, center));
-        for (int i = 0; i < 10; i++) {
-            double f = rng.nextGaussian() * sigma + center;
-            val = (int) Math.round(f);
-            if (val >= 0 && val <= d) {
-                return val;
-            }
-        }
-        return Math.max(0, Math.min(d, val));
     }
 
     public GUI gui() {
@@ -1180,36 +1153,6 @@ public class Global implements Runnable, Clockable {
         return !players.isEmpty();
     }
 
-    public boolean characterTypeInGame(String type) {
-        return players.stream().anyMatch(c -> type.equals(c.getType()));
-    }
-
-    public float randomfloat() {
-        return (float) rng.nextDouble();
-    }
-
-    public String maybeString(String string) {
-        if (Global.global.random(2) == 0) {
-            return string;
-        } else {
-            return "";
-        }
-    }
-
-    @SafeVarargs
-    public <T> Optional<T> pickRandom(T ... arr) {
-        if (arr.length == 0) return Optional.empty();
-        return Optional.of(arr[Global.global.random(arr.length)]);
-    }
-
-    public <T> Optional<T> pickRandom(List<T> list) {
-        if (list.size() == 0) {
-            return Optional.empty();
-        } else {
-            return Optional.of(list.get(random(list.size())));
-        }
-    }
-
     public int rawDate() {
         return date.getDate();
     }
@@ -1436,14 +1379,6 @@ public class Global implements Runnable, Clockable {
     }
 
 
-    public double randomdouble() {
-        return rng.nextDouble();
-    }
-
-    public double randomdouble(double to) {
-        return rng.nextDouble() * to;
-    }
-
     public String prependPrefix(String prefix, String fullDescribe) {
         if (prefix.equals("a ") && "aeiou".contains(fullDescribe.substring(0, 1).toLowerCase())) {
             return "an " + fullDescribe;
@@ -1481,7 +1416,7 @@ public class Global implements Runnable, Clockable {
             return MatchType.NORMAL;
         if (!checkFlag(Flag.didFTC))
             return MatchType.FTC;
-        return isDebugOn(DebugFlags.DEBUG_FTC) || Global.global.random(10) == 0 ? MatchType.FTC : MatchType.NORMAL;
+        return isDebugOn(DebugFlags.DEBUG_FTC) || Rng.rng.random(10) == 0 ? MatchType.FTC : MatchType.NORMAL;
         */
     }
 
@@ -1513,10 +1448,6 @@ public class Global implements Runnable, Clockable {
 
     public double clamp(double number, double min, double max) {
         return Math.min(Math.max(number, min), max);
-    }
-
-    public long randomlong() {
-        return rng.nextLong();
     }
 
     public Character getCharacterByName(String name) {

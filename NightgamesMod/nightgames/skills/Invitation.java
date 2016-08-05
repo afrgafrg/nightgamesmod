@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.ArmLocked;
@@ -138,7 +139,7 @@ public class Invitation extends Skill {
         int strength = getSelf().getLevel() + getSelf().get(Attribute.Seduction)
                         * (getSelf().has(Trait.submissive) ? 2 : 1) * (hasDivinity() ? 2 : 1);
 
-        boolean success = Global.global.random(Math.min(Math.max(difficulty - strength, 1), 10)) == 0;
+        boolean success = Rng.rng.random(Math.min(Math.max(difficulty - strength, 1), 10)) == 0;
         Result result = Result.normal;
         if (!success) {
             result = Result.miss;

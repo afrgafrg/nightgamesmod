@@ -2,7 +2,7 @@ package nightgames.stance;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public abstract class AbstractBehindStance extends Position {
         if (possibleResults.isEmpty()) {
             return this;
         } else {
-            return possibleResults.get(Global.global.random(possibleResults.size()));
+            return possibleResults.get(Rng.rng.random(possibleResults.size()));
         }
     }
 

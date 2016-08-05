@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Hypersensitive;
 
@@ -39,7 +39,7 @@ public class BreastRay extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
-        boolean permanent = Global.global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
+        boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
         writeOutput(c, permanent ? 1 : 0, Result.normal, target);
         target.add(c, new Hypersensitive(target, 10));

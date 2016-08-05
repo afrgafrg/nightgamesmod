@@ -6,6 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.json.JsonUtils;
@@ -167,8 +168,8 @@ public class GenericBodyPart implements BodyPart {
             c.write(self, Global.global.format(
                             "{self:name-possessive} rubber gloves provide a unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
                                             + target.describe(opponent) + ".", self, opponent));
-            bonus += 5 + Global.global.random(5);
-            if (Global.global.random(5) == 0) {
+            bonus += 5 + Rng.rng.random(5);
+            if (Rng.rng.random(5) == 0) {
                 c.write(self, "Unfortunately, the gloves wear out with their usage.");
                 self.shred(ClothingSlot.arms);
             }

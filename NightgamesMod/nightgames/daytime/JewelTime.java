@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
 import nightgames.requirements.NotRequirement;
@@ -240,7 +241,7 @@ public class JewelTime extends BaseNPCTime {
                   .choose(this, "Leave");
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Jewel leads you to her bedroom instead of the wilderness for once. She seems unusually eager and almost like she could break into skipping at any time. "
                                       + "She's always been as fond of sex as the next girl, but this is uncharacteristic. You eventually decide to ask her if anything special is happening today. <i>\"Hmm? Well, "
@@ -306,7 +307,7 @@ public class JewelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.fearless) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.fearless) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Today you've brought a wargame to appeal to Jewel's love of military history. You let her play the Allies, both because her father is a soldier and because the "
                                       + "Allies are on offense in this scenario. She advances all her troops from the start, taking heavy casualties, but stealing a couple victory point locations from you. You bide "
@@ -342,7 +343,7 @@ public class JewelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.dirtyfighter) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.dirtyfighter) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Your martial arts training has finally reached the point where Jewel is willing to spar with you seriously. She's all business when it comes to sparring. There "
                                       + "are no sex holds and no stripping. The only victory condition is to make your opponent admit defeat. Jewel darts in with a snap-kick, which you barely manage to block, and "

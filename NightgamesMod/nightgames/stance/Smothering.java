@@ -3,6 +3,7 @@ package nightgames.stance;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.*;
 
 import java.util.Collection;

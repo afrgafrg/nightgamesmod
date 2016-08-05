@@ -3,6 +3,7 @@ package nightgames.nskills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.requirements.Requirement;
 
 import java.util.*;
@@ -65,7 +66,7 @@ public class GenericSkill implements SkillInterface {
 
     @Override
     public boolean resolve(Combat c, Character user, Character target) {
-        double roll = Global.global.randomdouble();
+        double roll = Rng.rng.randomdouble();
         Optional<SkillResult> maybeResults = getPossibleResults(c, user, target, roll).stream().max((a, b) -> Integer.compare(a.getPriority(), b.getPriority()));
         if (!maybeResults.isPresent() || maybeResults.get().getPriority() < 0) {
             c.write(user, Global.global.format("{self:NAME-POSSESSIVE} %s failed.", user, target, getName()));

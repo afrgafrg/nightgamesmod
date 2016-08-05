@@ -9,6 +9,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.*;
 import nightgames.trap.Spiderweb;
@@ -254,8 +255,7 @@ public class Encounter implements Serializable, IEncounter {
                     }
                 }
             } else {
-                if (p1.get(Attribute.Speed) + Global.global.random(10) >= p2.get(Attribute.Speed) + Global.global
-                                .random(10)) {
+                if (p1.get(Attribute.Speed) + Rng.rng.random(10) >= p2.get(Attribute.Speed) + Rng.rng.random(10)) {
                     if (p2.human()) {
                         Global.global.gui()
                               .message(p1.name() + " dashes away before you can move.");

@@ -6,17 +6,18 @@ import nightgames.characters.body.*;
 import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class BodyShop extends Activity {
-    List<ShopSelection> selection;
+    private List<ShopSelection> selection;
 
     public BodyShop(Character player) {
         super("Body Shop", player);
-        selection = new ArrayList<ShopSelection>();
+        selection = new ArrayList<>();
         populateSelection();
     }
 
@@ -506,7 +507,7 @@ public class BodyShop extends Activity {
     public void shop(Character npc, int budget) {
         int chance = 100;
         while (budget > 0) {
-            if (Global.global.random(100) > chance) {
+            if (Rng.rng.random(100) > chance) {
                 break;
             }
             chance /= 3;
@@ -535,7 +536,7 @@ public class BodyShop extends Activity {
             if (avail.size() == 0) {
                 return;
             }
-            int randomindex = Global.global.random(avail.size());
+            int randomindex = Rng.rng.random(avail.size());
             ShopSelection choice = avail.get(randomindex);
             npc.money -= choice.price;
             budget -= choice.price;

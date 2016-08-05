@@ -2,6 +2,7 @@ package nightgames.daytime;
 
 import nightgames.characters.Character;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.global.Scene;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ abstract class DaytimeEvent implements Scene {
     
     public boolean playAny() {
         for (EventVariation scene : scenes) {
-            if (Global.global.random(100) < scene.priority) {
+            if (Rng.rng.random(100) < scene.priority) {
                 runScene(scene.getName());
                 return true;
             }

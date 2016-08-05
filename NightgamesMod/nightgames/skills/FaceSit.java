@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.PussyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.FaceSitting;
 import nightgames.status.BodyFetish;
@@ -51,7 +51,7 @@ public class FaceSit extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().has(Trait.enthrallingjuices) && Global.global.random(4) == 0 && !target.wary()) {
+        if (getSelf().has(Trait.enthrallingjuices) && Rng.rng.random(4) == 0 && !target.wary()) {
             writeOutput(c, Result.special, target);
             target.add(c, new Enthralled(target, getSelf(), 5));
         } else {
@@ -71,7 +71,7 @@ public class FaceSit extends Skill {
                 target.add(c, new BodyFetish(target, getSelf(), "pussy", .05));
             }
         }
-        double n = 4 + Global.global.random(4);
+        double n = 4 + Rng.rng.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
             n += 3 * getSelf().body.getHotness(target);
@@ -88,7 +88,7 @@ public class FaceSit extends Skill {
         if (!c.getStance().isFaceSitting(getSelf())) {
             c.setStance(new FaceSitting(getSelf(), target), getSelf(), true);
         }
-        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
 

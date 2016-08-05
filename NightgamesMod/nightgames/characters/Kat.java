@@ -7,6 +7,7 @@ import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.strategy.FacesitStrategy;
@@ -281,25 +282,25 @@ public class Kat extends BasePersonality {
             character.money -= 300;
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Body Shop", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Body Shop", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("XXX Store", character, Global.global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Black Market", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Bookstore", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.global.getDay().visit("Hardware Store", character, Global.global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Rng.rng.random(character.money));
         }
         Decider.visit(character);
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
                 Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {

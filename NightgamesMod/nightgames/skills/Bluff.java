@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.IgnoreOrgasm;
 import nightgames.status.Unreadable;
 
@@ -33,7 +33,7 @@ public class Bluff extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 20 + Global.global.random(25);
+        int m = 20 + Rng.rng.random(25);
         writeOutput(c, Result.normal, target);
         if (!getSelf().getArousal().isFull()) {
             getSelf().add(c, new IgnoreOrgasm(getSelf(), 2));

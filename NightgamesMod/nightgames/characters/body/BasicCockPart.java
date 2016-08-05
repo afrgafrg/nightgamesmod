@@ -6,6 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.status.Sensitized;
@@ -39,8 +40,8 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String describe(Character c) {
-        String syn = Global.global.pickRandom(synonyms).get();
-        return Global.global.maybeString(desc + " ") + (c.hasPussy() ? "girl-" : "") + syn;
+        String syn = Rng.rng.pickRandom(synonyms).get();
+        return Rng.rng.maybeString(desc + " ") + (c.hasPussy() ? "girl-" : "") + syn;
     }
 
     @Override
@@ -50,7 +51,7 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String fullDescribe(Character c) {
-        String syn = Global.global.pickRandom(synonyms).get();
+        String syn = Rng.rng.pickRandom(synonyms).get();
         return desc + " " + (c.hasPussy() ? "girl-" : "") + syn;
     }
 

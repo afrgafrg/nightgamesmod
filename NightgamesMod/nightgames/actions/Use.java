@@ -2,6 +2,7 @@ package nightgames.actions;
 
 import nightgames.characters.Character;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Buzzed;
 import nightgames.status.Oiled;
@@ -42,7 +43,7 @@ public class Use extends Action {
                 Global.global.gui().message(
                                 "You chug down the unpleasant drink. Your tiredness immediately starts to recede.");
             }
-            user.heal(null, 10 + Global.global.random(10));
+            user.heal(null, 10 + Rng.rng.random(10));
             user.consume(Item.EnergyDrink, 1);
             return Movement.enerydrink;
         } else if (item == Item.Beer) {

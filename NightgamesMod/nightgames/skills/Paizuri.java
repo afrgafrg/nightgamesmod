@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 import nightgames.status.Stsflag;
@@ -53,20 +53,20 @@ public class Paizuri extends Skill {
 
         int fetishChance = 7 + breasts.size + getSelf().get(Attribute.Fetish) / 2;
 
-        int m = 5 + Global.random(5) + breasts.size;
+        int m = 5 + Rng.rng.random(5) + breasts.size;
 
         if(getSelf().is(Stsflag.oiled)) {
-            m += Global.random(2, 5);
+            m += Rng.rng.random(2, 5);
         }
 
         if( getSelf().has(Trait.lactating)) {
-            m += Global.global.random(3, 5);
+            m += Rng.rng.random(3, 5);
             fetishChance += 5;
         }
 
         if (getSelf().has(Trait.temptingtits)) {
 
-            m += Global.random(4, 8);
+            m += Rng.rng.random(4, 8);
             fetishChance += 10;
         }
 

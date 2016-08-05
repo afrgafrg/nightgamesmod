@@ -6,6 +6,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 
@@ -54,7 +55,7 @@ public class Footjob extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = Global.global.random(12, 20);
+            int m = Rng.rng.random(12, 20);
             if (getSelf().human()) {
                 c.write(getSelf(), Global.global.format(deal(c, m, Result.normal, target), getSelf(), target));
             } else if (c.shouldPrintReceive(target, c)) {
@@ -65,7 +66,7 @@ public class Footjob extends Skill {
             } else {
                 target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("pussy"), m, c, this);
             }
-            if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+            if (Rng.rng.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
                 target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
             }
         } else {

@@ -8,6 +8,7 @@ import nightgames.characters.body.BreastsPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.NursingHold;
 import nightgames.stance.Stance;
@@ -63,7 +64,7 @@ public class Nurse extends Skill {
             new Suckle(target).resolve(c, getSelf());
             getSelf().emote(Emotion.dominant, 10);
         }
-        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), BreastsPart.a.getType(), .25));
         }
         return true;

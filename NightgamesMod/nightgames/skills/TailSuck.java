@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.Abuff;
 import nightgames.status.Stsflag;
@@ -46,20 +46,20 @@ public class TailSuck extends Skill {
         if (target.is(Stsflag.tailsucked)) {
             writeOutput(c, Result.special, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandomCock(),
-                            Global.global.random(10) + 10, c, this);
+                            Rng.rng.random(10) + 10, c, this);
             drain(c, target);
         } else if (getSelf().roll(getSelf(), c, accuracy(c, target))) {
             Result res = c.getStance().isBeingFaceSatBy(c, target, getSelf()) ? Result.critical
                             : Result.normal;
             writeOutput(c, res, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandomCock(),
-                            Global.global.random(10) + 10, c, this);
+                            Rng.rng.random(10) + 10, c, this);
             drain(c, target);
             target.add(c, new TailSucked(target, getSelf(), power()));
         } else if (target.hasBalls()) {
             writeOutput(c, Result.weak, target);
             target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandom("balls"),
-                            Global.global.random(5) + 5, c, this);
+                            Rng.rng.random(5) + 5, c, this);
             return true;
         } else {
             writeOutput(c, Result.miss, target);
@@ -182,12 +182,12 @@ public class TailSuck extends Skill {
     }
 
     private void drain(Combat c, Character target) {
-        Attribute toDrain = Global.global.pickRandom(target.att.entrySet().stream().filter(e -> e.getValue() != 0)
+        Attribute toDrain = Rng.rng.pickRandom(target.att.entrySet().stream().filter(e -> e.getValue() != 0)
                         .map(e -> e.getKey()).toArray(Attribute[]::new)).get();
         target.add(c, new Abuff(target, toDrain, -power(), 20));
         getSelf().add(c, new Abuff(getSelf(), toDrain, power(), 20));
         target.drain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.drain, target, 10));
-        target.drainMojo(c, getSelf(), 1 + Global.random(power() * 3));
+        target.drainMojo(c, getSelf(), 1 + Rng.rng.random(power() * 3));
         target.emote(Emotion.desperate, 5);
         getSelf().emote(Emotion.confident, 5);
     }

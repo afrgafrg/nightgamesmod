@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.BodyFetish;
 
 public class TailJob extends Skill {
@@ -33,7 +33,7 @@ public class TailJob extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         writeOutput(c, Result.normal, target);
-        int m = (5 + Global.global.random(10))
+        int m = (5 + Rng.rng.random(10))
                         + Math.min(getSelf().getArousal().getReal() / 20, getSelf().get(Attribute.Animism));
         String receiver;
         if (target.hasDick()) {
@@ -41,7 +41,7 @@ public class TailJob extends Skill {
         } else {
             receiver = "pussy";
         }
-        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "tail", .25));
         }
         target.body.pleasure(getSelf(), getSelf().body.getRandom("tail"), target.body.getRandom(receiver), m, c, this);

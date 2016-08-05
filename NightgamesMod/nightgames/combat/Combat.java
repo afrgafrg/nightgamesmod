@@ -6,10 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.PussyPart;
-import nightgames.global.DebugFlags;
-import nightgames.global.Flag;
-import nightgames.global.Global;
-import nightgames.global.Grammar;
+import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -791,7 +788,7 @@ public class Combat extends Observable implements Cloneable {
                 chance += 10;
             }
             chance += getCombatantData(self).getDoubleFlag(TEMPT_WORSHIP_BONUS);
-            if (Global.global.random(100) < chance) {
+            if (Rng.rng.random(100) < chance) {
                 getCombatantData(self).setDoubleFlag(TEMPT_WORSHIP_BONUS, 0);
                 return true;
             }
@@ -988,7 +985,7 @@ public class Combat extends Observable implements Cloneable {
 
     private boolean checkCounter(Character attacker, Character target, Skill skill) {
         return !target.has(Trait.submissive) && getStance().mobile(target)
-                        && target.counterChance(this, attacker, skill) > Global.global.random(100);
+                        && target.counterChance(this, attacker, skill) > Rng.rng.random(100);
     }
 
     private boolean resolveCrossCounter(Skill skill, Character target, int chance) {
@@ -1313,8 +1310,8 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private void petbattle(Pet one, Pet two) {
-        int roll1 = Global.global.random(20) + one.power();
-        int roll2 = Global.global.random(20) + two.power();
+        int roll1 = Rng.rng.random(20) + one.power();
+        int roll2 = Rng.rng.random(20) + two.power();
         if (one.hasPussy() && two.hasDick()) {
             roll1 += 3;
         } else if (one.hasDick() && two.hasPussy()) {

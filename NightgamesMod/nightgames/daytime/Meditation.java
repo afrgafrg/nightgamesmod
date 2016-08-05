@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.Clothing;
 
 public class Meditation extends Activity {
@@ -88,7 +89,7 @@ public class Meditation extends Activity {
                 Global.global.gui().choose(this, "Leave");
             }
         } else if (choice.equals("Sharpen Senses")) {
-            if (Global.global.random(100) >= 50) {
+            if (Rng.rng.random(100) >= 50) {
                 Global.global.gui().message(
                                 "Suzume instructs you to sit in the middle of the dojo and close your eyes. <i>\"I'm going to count down from ten. With each number, you will feel your "
                                                 + "mind openning and you will be more receptive to my words. When I reach zero, imagine your mind as an empty vessel, ready to take in everything around you.\"</i> As she "
@@ -128,7 +129,7 @@ public class Meditation extends Activity {
             acted = true;
             Global.global.gui().choose(this, "Leave");
         } else if (choice.equals("Shut Out Sensation")) {
-            if (Global.global.random(100) >= 50) {
+            if (Rng.rng.random(100) >= 50) {
                 Global.global.gui().message(
                                 "Suzume has you lie down on the cold, somewhat uncomfortable floor. <i>\"Now please close your eyes while I count down from ten. I want you to imagine a set of stairs and "
                                                 + "with at each count I want you to take one step down. As you descend, everything in the world will fade away except my voice.\"</i> She begins to count down and you imagine yourself "
@@ -179,7 +180,7 @@ public class Meditation extends Activity {
             //budget -= 1000 * (npc.getPure(Attribute.Ki) + 1);
             npc.mod(Attribute.Ki, 1);
         }
-        int r = Global.global.random(4);
+        int r = Rng.rng.random(4);
         if (r == 3 && npc.getPure(Attribute.Perception) < 9) {
             npc.mod(Attribute.Perception, 1);
         } else if (r == 2 && npc.getPure(Attribute.Perception) > 1) {

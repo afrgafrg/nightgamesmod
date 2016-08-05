@@ -6,6 +6,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.BehindFootjob;
 import nightgames.stance.Stance;
@@ -49,7 +50,7 @@ public class HeelGrind extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 12 + Global.global.random(6);
+        int m = 12 + Rng.rng.random(6);
         int m2 = m / 2;
         writeOutput(c, Result.normal, target);
         target.body.pleasure(getSelf(), getSelf().body.getRandom("feet"), target.body.getRandom("pussy"), m, c, this);
@@ -57,7 +58,7 @@ public class HeelGrind extends Skill {
         if (c.getStance().en != Stance.behindfootjob) {
             c.setStance(new BehindFootjob(getSelf(), target), getSelf(), true);
         }
-        if (Global.global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
         }
         return true;

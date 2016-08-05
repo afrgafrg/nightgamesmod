@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 
@@ -68,22 +68,22 @@ public class BunshinAssault extends Skill {
         }
         for(int i=0;i<clones;i++){
             if(target.roll(getSelf(), c, accuracy(c, target))) {
-                switch (Global.global.random(4)) {
+                switch (Rng.rng.random(4)) {
                 case 0:
                     r=Result.weak;
-                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Global.global.random(1,4)));
+                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Rng.rng.random(1,4)));
                     break;
                 case 1:
                     r=Result.normal;
-                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Global.global.random(2, 5)));
+                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Rng.rng.random(2, 5)));
                     break;
                 case 2:
                     r=Result.strong;
-                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Global.global.random(6, 9)));
+                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Rng.rng.random(6, 9)));
                     break;
                 default:
                     r=Result.critical;
-                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Global.global.random(10, 14)));
+                    target.pain(c,getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target,Rng.rng.random(10, 14)));
                     break;
                 }
                 writeOutput(c, r, target);

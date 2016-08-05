@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.stance.Stance;
 
 public class Grind extends Thrust {
@@ -68,7 +69,7 @@ public class Grind extends Thrust {
         if (getLabel(c).equals(divineName)) {
             target.heal(c, 20);
             target.buildMojo(c, 5);
-            target.loseWillpower(c, Global.global.random(3) + 2, false);
+            target.loseWillpower(c, Rng.rng.random(3) + 2, false);
             getSelf().usedAttribute(Attribute.Divinity, c, .5);
         }
         return res;

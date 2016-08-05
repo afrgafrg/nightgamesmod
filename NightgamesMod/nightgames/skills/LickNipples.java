@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 
@@ -35,7 +35,7 @@ public class LickNipples extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 3 + Global.global.random(6);
+        int m = 3 + Rng.rng.random(6);
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
             if (getSelf().has(Trait.silvertongue)) {

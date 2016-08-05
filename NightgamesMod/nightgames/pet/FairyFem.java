@@ -4,7 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.Growth;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.petskills.FairyEnergize;
 import nightgames.skills.petskills.FairyHeal;
 import nightgames.skills.petskills.FairyKick;

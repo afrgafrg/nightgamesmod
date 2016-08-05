@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.skills.*;
 
 import java.util.Collection;
@@ -142,7 +143,7 @@ public class FaceSitting extends AbstractBehindStance {
             c.write(top, Global.global.format(
                             "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained through your connection.",
                             top, bottom));
-            int m = Global.global.random(5) + 5;
+            int m = Rng.rng.random(5) + 5;
             bottom.drain(c, top, (int) top.modifyDamage(DamageType.drain, bottom, m));
         }
     }

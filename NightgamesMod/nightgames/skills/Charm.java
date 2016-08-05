@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Charmed;
 import nightgames.status.Stsflag;
 
@@ -39,7 +39,7 @@ public class Charm extends Skill {
         }
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
-            double mag = 2 + Global.global.random(4) + 2 * getSelf().body.getHotness(target);
+            double mag = 2 + Rng.rng.random(4) + 2 * getSelf().body.getHotness(target);
             if (target.has(Trait.imagination)) {
                 mag += 4;
             }

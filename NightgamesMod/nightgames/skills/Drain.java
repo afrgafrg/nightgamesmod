@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 import nightgames.status.Abuff;
@@ -68,7 +68,7 @@ public class Drain extends Skill {
     public boolean resolve(Combat c, Character target, boolean nocost) {
         int strength = Math.max(10, 1 + getSelf().get(Attribute.Dark) / 4);
         int staminaStrength = 50;
-        int type = Math.max(1, Global.global.centeredrandom(6, getSelf().get(Attribute.Dark) / 3.0, 3));
+        int type = Math.max(1, Rng.rng.centeredrandom(6, getSelf().get(Attribute.Dark) / 3.0, 3));
         if (!drainsAttributes(c) && type > 2) {
             type = 1;
             staminaStrength /= 2;

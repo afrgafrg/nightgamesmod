@@ -8,6 +8,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.AnalCowgirl;
@@ -74,7 +75,7 @@ public class ReverseAssFuck extends Fuck {
         }
         c.write(getSelf(), Global.global.format(premessage, getSelf(), target));
 
-        int m = Global.global.random(10, 15);
+        int m = Rng.rng.random(10, 15);
         writeOutput(c, Result.normal, target);
 
         int otherm = m;
@@ -85,7 +86,7 @@ public class ReverseAssFuck extends Fuck {
         getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m, c, this);
         c.setStance(new AnalCowgirl(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());
         getSelf().emote(Emotion.dominant, 30);
-        if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().has(Trait.bewitchingbottom)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().has(Trait.bewitchingbottom)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;

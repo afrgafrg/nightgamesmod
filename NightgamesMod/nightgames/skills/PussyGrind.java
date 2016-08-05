@@ -5,6 +5,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 
 public class PussyGrind extends Skill {
@@ -44,8 +45,8 @@ public class PussyGrind extends Skill {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         writeOutput(c, Result.normal, target);
-        int m = 10 + Global.global.random(10);
-        int otherm = 5 + Global.global.random(6);
+        int m = 10 + Rng.rng.random(10);
+        int otherm = 5 + Rng.rng.random(6);
         target.body.pleasure(getSelf(), selfO, targetO, m, c, this);
         getSelf().body.pleasure(target, targetO, selfO, otherm, c, this);
         return true;

@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -29,7 +29,7 @@ public class Finger extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = Global.global.random(8, 13);
+            int m = Rng.rng.random(8, 13);
             if (getSelf().get(Attribute.Seduction) >= 8) {
                 m += 6;
                 if (getSelf().human()) {

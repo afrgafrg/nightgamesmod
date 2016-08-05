@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -49,7 +49,7 @@ public class Nurple extends Skill {
                 writeOutput(c, Result.special, target);
                 getSelf().consume(Item.Battery, 2);
                 damageType = DamageType.gadgets;
-                m += Global.global.random(16, 30);
+                m += Rng.rng.random(16, 30);
             } else {
                 writeOutput(c, Result.normal, target);
             }

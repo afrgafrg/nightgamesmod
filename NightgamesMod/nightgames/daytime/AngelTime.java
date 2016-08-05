@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
 import nightgames.requirements.NotRequirement;
@@ -305,7 +306,7 @@ public class AngelTime extends BaseNPCTime {
                   .addict(AddictionType.ZEAL, npc, Addiction.MED_INCREASE);
             Global.global.getPlayer().getAddiction(AddictionType.ZEAL).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.experttongue) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.experttongue) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You're in Angel's room, naked and feeling a little overwhelmed. She embraces your from behind and you can feel her soft, heavy breasts pressed against "
                                       + "your back. She nibbles lightly on your ear while motioning toward the naked girl on her bed. <i>\"She's all yours. Show me what you can do.\"</i> As for how you got here... "
@@ -382,7 +383,7 @@ public class AngelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.pokerface) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.pokerface) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Today all the girls left the responsibility of choosing a game to you, with Angel's stipulation that it had to including stripping. You picked a simple, but intense "
                                       + "bluffing game with stripping rules slotted in so naturally it's like the game was designed for them. Not to be immodest, but clearly your genius knows no bounds. The first five "
@@ -448,7 +449,7 @@ public class AngelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.disciplinarian) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.disciplinarian) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Your strip wrestling with Angel has become a routine secondary version of your nightly competitions. Unfortunately, in this venue, Angel has a a much better "
                                       + "win rate than you. You've also gotten used to your three girl audience. Mei's sadistic side comes to the fore as she cheers on Angel whenever she's got the upper hand. Caroline, "

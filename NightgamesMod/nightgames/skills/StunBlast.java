@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.status.Falling;
@@ -47,7 +47,7 @@ public class StunBlast extends Skill {
             return true;
         }
         getSelf().consume(Item.Battery, 4);
-        if (Global.global.random(10) >= 4) {
+        if (Rng.rng.random(10) >= 4) {
             writeOutput(c, Result.normal, target);
             target.getStamina().empty();
             target.add(c, new Falling(target));

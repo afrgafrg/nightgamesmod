@@ -3,7 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Oiled;
@@ -53,7 +53,7 @@ public class CommandUse extends PlayerCommand {
     @Override
     public boolean resolve(Combat c, Character target) {
         do {
-            used = Item.values()[Global.global.random(Item.values().length)];
+            used = Item.values()[Rng.rng.random(Item.values().length)];
             boolean hasStatus = false;
             switch (used) {
                 case Lubricant:

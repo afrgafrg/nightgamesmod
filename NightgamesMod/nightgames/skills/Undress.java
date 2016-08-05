@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.Stsflag;
@@ -45,7 +45,7 @@ public class Undress extends Skill {
         Result res = Result.normal;
         int difficulty = getSelf().stripDifficulty(target);
         if (difficulty > 0) {
-            res = Global.global.random(50) > difficulty ? Result.weak : Result.miss;
+            res = Rng.rng.random(50) > difficulty ? Result.weak : Result.miss;
         }
 
         if (getSelf().human()) {

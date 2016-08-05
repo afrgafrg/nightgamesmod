@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Stance;
@@ -43,9 +44,9 @@ public class Slap extends Skill {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (isSlime()) {
                 writeOutput(c, Result.critical, target);
-                target.pain(c, getSelf(), Math.min(80, Global.global.random(10) + getSelf().get(Attribute.Slime)
+                target.pain(c, getSelf(), Math.min(80, Rng.rng.random(10) + getSelf().get(Attribute.Slime)
                                 + getSelf().get(Attribute.Power) / 2));
-                if (c.getStance().en == Stance.neutral && Global.global.random(5) == 0) {
+                if (c.getStance().en == Stance.neutral && Rng.rng.random(5) == 0) {
                     c.setStance(new StandingOver(getSelf(), target), getSelf(), true);
                     c.write(getSelf(),
                                     Global.global.format("{self:SUBJECT-ACTION:slap|slaps} {other:direct-object} hard"
@@ -60,22 +61,22 @@ public class Slap extends Skill {
             } else if (getSelf().get(Attribute.Animism) >= 8) {
                 writeOutput(c, Result.special, target);
                 if (getSelf().has(Trait.pimphand)) {
-                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(35, 50) * (25 + getSelf().getArousal().percent()) / 100));
+                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(35, 50) * (25 + getSelf().getArousal().percent()) / 100));
                     target.emote(Emotion.nervous, 40);
                     target.emote(Emotion.angry, 30);
                 } else {
-                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(25, 45) * (25 + getSelf().getArousal().percent()) / 100));
+                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(25, 45) * (25 + getSelf().getArousal().percent()) / 100));
                     target.emote(Emotion.nervous, 25);
                     target.emote(Emotion.angry, 30);
                 }
             } else {
                 writeOutput(c, Result.normal, target);
                 if (getSelf().has(Trait.pimphand)) {
-                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(7, 15)));
+                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(7, 15)));
                     target.emote(Emotion.nervous, 20);
                     target.emote(Emotion.angry, 30);
                 } else {
-                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.global.random(5, 10)));
+                    target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(5, 10)));
                     target.emote(Emotion.nervous, 10);
                     target.emote(Emotion.angry, 30);
                 }

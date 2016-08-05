@@ -7,7 +7,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.TailPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
@@ -66,7 +66,7 @@ public class TailPeg extends Skill {
             int strength = Math.min(20, 10 + getSelf().get(Attribute.Dark) / 4);
             boolean vaginal = c.getStance().anallyPenetrated(c, c.getOpponent(getSelf()));
             boolean shamed = false;
-            if (!vaginal && Global.global.random(4) == 2) {
+            if (!vaginal && Rng.rng.random(4) == 2) {
                 target.add(c, new Shamed(target));
                 shamed = true;
             }
@@ -120,7 +120,7 @@ public class TailPeg extends Skill {
             target.emote(Emotion.desperate, 10);
             getSelf().emote(Emotion.confident, 15);
             getSelf().emote(Emotion.dominant, 25);
-            if (Global.global.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
+            if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {
                 target.add(c, new BodyFetish(target, getSelf(), "tail", .25));
             }
         } else {
@@ -221,7 +221,7 @@ public class TailPeg extends Skill {
                                 + " at the same time.", getSelf().subject(), getSelf().possessiveAdjective(),
                                 target.nameOrPossessivePronoun(),
                                 Global.capitalizeFirstLetter(target.pronoun()), target.action("look"),
-                                target.action("see"), target.directObject(), 
+                                target.action("see"), target.directObject(),
                                 Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
                                 target.possessiveAdjective(), getSelf().nameOrPossessivePronoun(),
                                 target.possessiveAdjective(), target.possessiveAdjective(),
@@ -231,7 +231,7 @@ public class TailPeg extends Skill {
                                 + "at it and %s the appendage move under %s and %s. %s to keep it"
                                 + " out by clamping %s legs together, but a squeeze of %s"
                                 + " ass breaks %s concentration, so the tail slides smoothly into %s pussy.",
-                                getSelf().subject(), getSelf().possessiveAdjective(), 
+                                getSelf().subject(), getSelf().possessiveAdjective(),
                                 target.nameDirectObject(), Global.capitalizeFirstLetter(target.pronoun()),
                                 target.action("look"), target.action("see"), target.directObject(),
                                 target.action("panic"),

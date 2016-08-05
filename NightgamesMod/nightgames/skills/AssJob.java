@@ -5,8 +5,8 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
 import nightgames.global.Grammar;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -48,7 +48,7 @@ public class AssJob extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (c.getStance().behind(target)) {
             writeOutput(c, Result.special, target);
-            int m = Global.global.random(10, 14);
+            int m = Rng.rng.random(10, 14);
             int fetishChance = 20 + getSelf().get(Attribute.Fetish) / 2;
             if (target.crotchAvailable()) {
                 if (getSelf().crotchAvailable()) {
@@ -64,13 +64,13 @@ public class AssJob extends Skill {
             }
             target.body.pleasure(getSelf(), getSelf().body.getRandomAss(), target.body.getRandomCock(), m, c, this);
 
-            if (Global.global.random(100) < fetishChance) {
+            if (Rng.rng.random(100) < fetishChance) {
                 target.add(c, new BodyFetish(target, getSelf(), "ass", .1 + getSelf().get(Attribute.Fetish) * .05));
             }
         } else if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (c.getStance().en == Stance.reversemount) {
                 writeOutput(c, Result.strong, target);
-                int m = Global.global.random(14, 19);
+                int m = Rng.rng.random(14, 19);
                 int fetishChance = 20 + getSelf().get(Attribute.Fetish) / 2;
                 if (target.crotchAvailable()) {
                     if (getSelf().crotchAvailable()) {
@@ -90,12 +90,12 @@ public class AssJob extends Skill {
                     target.temptWithSkill(c, getSelf(), getSelf().body.getRandomAss(), m, this);
                 }
 
-                if (Global.global.random(100) < fetishChance) {
+                if (Rng.rng.random(100) < fetishChance) {
                     target.add(c, new BodyFetish(target, getSelf(), "ass", .1 + getSelf().get(Attribute.Fetish) * .05));
                 }
             } else {
                 writeOutput(c, Result.normal, target);
-                int m = Global.global.random(10, 14);
+                int m = Rng.rng.random(10, 14);
                 if (target.crotchAvailable()) {
                     if (getSelf().crotchAvailable()) {
                         m += 6;

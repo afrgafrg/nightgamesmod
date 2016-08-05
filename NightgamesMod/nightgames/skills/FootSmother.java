@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 
@@ -37,14 +38,14 @@ public class FootSmother extends Skill {
     public boolean resolve(Combat c, Character target) {
         Result result = Result.normal;
         int m = 0;
-        m = 8 + Global.global.random(6);
+        m = 8 + Rng.rng.random(6);
         if (getSelf().human()) {
             c.write(getSelf(), Global.global.format(deal(c, 0, Result.normal, target), getSelf(), target));
         } else {
             c.write(getSelf(), Global.global.format(receive(c, 0, Result.normal, target), getSelf(), target));
         }
         target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("feet"), m, this);
-        if (Global.global.random(100) < 30 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 30 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "feet", .25));
         }
         return result != Result.miss;

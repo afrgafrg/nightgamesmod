@@ -6,7 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.AssPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 import nightgames.status.Stsflag;
@@ -60,15 +60,15 @@ public class Anilingus extends Skill {
         int selfm = 0;
         if (isWorship(c, target)) {
             result = Result.sub;
-            m += 4 + Global.global.random(6);
+            m += 4 + Rng.rng.random(6);
             n = 20;
             selfm = 20;
         } else if (c.getStance().isBeingFaceSatBy(c, getSelf(), target)) {
             result = Result.reverse;
-            m += Global.global.random(6);
+            m += Rng.rng.random(6);
             n = 10;
         } else if (!c.getStance().mobile(target) || target.roll(getSelf(), c, accuracy(c, target))) {
-            m += Global.global.random(6);
+            m += Rng.rng.random(6);
             if (getSelf().has(Trait.silvertongue)) {
                 m += 4;
                 result = Result.special;

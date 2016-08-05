@@ -3,6 +3,7 @@ package nightgames.daytime;
 import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ public class VideoGames extends Activity {
             }
             showScene(pickScene());
             if (paid) {
-                if (Global.global.random(5) == 0) {
+                if (Rng.rng.random(5) == 0) {
                     Global.global.gui()
                                     .message("<br/><br/><b>You feel like your experiences have grown from playing the game.</b>");
                     player.gainXP(50);
@@ -52,9 +53,8 @@ public class VideoGames extends Activity {
         }
     }
 
-    @Override
     public void shop(Character npc, int budget) {
-        if (Global.global.random(5) == 0) {
+        if (Rng.rng.random(5) == 0) {
             npc.availableAttributePoints += 1;
         }
     }
@@ -173,7 +173,7 @@ public class VideoGames extends Activity {
         if (Global.global.getValue(Flag.CarolineAffection) >= 10.0F) {
             available.add(Scene.caroline3);
         }
-        return available.get(Global.global.random(available.size()));
+        return available.get(Rng.rng.random(available.size()));
     }
 
     private static enum Scene {

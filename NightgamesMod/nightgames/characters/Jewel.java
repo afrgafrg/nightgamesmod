@@ -7,6 +7,7 @@ import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.strategy.FacesitStrategy;
@@ -257,36 +258,36 @@ public class Jewel extends BasePersonality {
         if (character.rank >= 1) {
             if (character.money > 0) {
                 Global.global.getDay()
-                      .visit("Dojo", character, Global.global.random(character.money));
+                      .visit("Dojo", character, Rng.rng.random(character.money));
                 Global.global.getDay()
-                      .visit("Meditation", character, Global.global.random(character.money));
+                      .visit("Meditation", character, Rng.rng.random(character.money));
             }
             if (character.money > 0) {
                 Global.global.getDay()
-                      .visit("Body Shop", character, Global.global.random(character.money));
+                      .visit("Body Shop", character, Rng.rng.random(character.money));
             }
             if (character.money > 0) {
                 Global.global.getDay()
-                      .visit("Workshop", character, Global.global.random(character.money));
+                      .visit("Workshop", character, Rng.rng.random(character.money));
             }
         }
 
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("Bookstore", character, Global.global.random(character.money));
+                  .visit("Bookstore", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("XXX Store", character, Global.global.random(character.money));
+                  .visit("XXX Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
             Global.global.getDay()
-                  .visit("Black Market", character, Global.global.random(character.money));
+                  .visit("Black Market", character, Rng.rng.random(character.money));
         }
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
                 Global.global.getDay()
                       .visit("Exercise", this.character, 0);
@@ -327,7 +328,7 @@ public class Jewel extends BasePersonality {
                 if (other.hasBalls()) {
                     possible.add("Jewel cups your vulnerable balls and gives them a light squeeze. <i>\"Worthless " + c.getOpponent(character).boyOrGirl() + "s like you should just give up. Why even try when you end up as my seat every time?\"</i>");
                 }
-                return possible.get(Global.global.random(possible.size()));
+                return possible.get(Rng.rng.random(possible.size()));
             }
             if (other.hasDick()) {
                 return "Jewel glares at you and squeezes your dick tightly. <i>\"No matter how horny you are, you better give me your best fight. I don't like fucking weaklings.\"</i>";

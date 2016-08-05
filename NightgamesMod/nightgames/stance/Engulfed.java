@@ -5,7 +5,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 
 import java.util.ArrayList;
@@ -126,7 +126,7 @@ public class Engulfed extends Position {
             return super.reverse(c, writeMessage);
         }
         if (writeMessage) {
-            c.write(bottom, String.format("%s loose from %s slimy grip and %s away from %s.", 
+            c.write(bottom, String.format("%s loose from %s slimy grip and %s away from %s.",
                             bottom.subjectAction("struggles", "struggle"), top.nameOrPossessivePronoun(),
                             bottom.action("stagger", "staggers"), top.directObject()));
         }
@@ -188,14 +188,14 @@ public class Engulfed extends Position {
             return false;
         if (!bottom.hasDick())
             return true;
-        return Global.global.random(2) == 0;
+        return Rng.rng.random(2) == 0;
     }
     
     @Override
     public int dominance() {
         return 5;
     }
-    
+
     @Override
     public int distance() {
         return 1;

@@ -9,6 +9,7 @@ import nightgames.characters.body.StraponPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
@@ -129,7 +130,7 @@ public class Fuck extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         String premessage = premessage(c, target);
-        int m = Global.global.random(10, 15);
+        int m = Rng.rng.random(10, 15);
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         if (selfO.isReady(getSelf()) && targetO.isReady(target)) {

@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.global.Flag;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
 import nightgames.requirements.NotRequirement;
@@ -405,7 +406,7 @@ public class CassieTime extends BaseNPCTime {
             Global.global.getPlayer().addict(AddictionType.MAGIC_MILK, npc, Addiction.MED_INCREASE);
             Global.global.getPlayer().getAddiction(AddictionType.MAGIC_MILK).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.silvertongue) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.has(Trait.silvertongue) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "Cassie eagerly invites you to her room for some intimate time. The room is quite tidy, though you're surprised to see a couple anime "
                                                 + "posters on the wall. Cassie gets a little embarrassed as you look around, but she kisses you softly and leads you to the bed. You quickly strip each other "
@@ -462,7 +463,7 @@ public class CassieTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.misdirection) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.has(Trait.misdirection) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "Cassie continues to impress you with her gaming prowess, but right now, you've got a decisive advantage. You're at match point, so if either of you can "
                                                 + "score again, that'll almost certainly be the game. Unfortunately for her, you've got her R&D completely locked down. If she doesn't have the agenda she needs in her "
@@ -510,7 +511,7 @@ public class CassieTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.judonovice) || Global.global.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.has(Trait.judonovice) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "You and Cassie manage to procure an actual fitness room with actual wrestling mats for your sparring practice. No more rolling around in couch cushions and pillows. "
                                                 + "the downside it that you don't have the same level of privacy as in your dorm room, so today you'll need to stick with just sparring. Cassie seems a lot more confident than usual "

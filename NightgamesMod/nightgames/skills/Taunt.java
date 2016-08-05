@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Enthralled;
 import nightgames.status.Shamed;
 
@@ -29,7 +29,7 @@ public class Taunt extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         writeOutput(c, Result.normal, target);
-        double m = (6 + Global.global.random(4) + getSelf().body.getHotness(target)) / 3
+        double m = (6 + Rng.rng.random(4) + getSelf().body.getHotness(target)) / 3
                         * Math.min(2, 1 + target.getExposure());
         double chance = .25;
         if (target.has(Trait.imagination)) {
@@ -41,11 +41,11 @@ public class Taunt extends Skill {
             chance += .25;
         }
         target.temptNoSource(c, getSelf(), (int) Math.round(m), this);
-        if (Global.global.randomdouble() < chance) {
+        if (Rng.rng.randomdouble() < chance) {
             target.add(c, new Shamed(target));
         }
         if (c.getStance().dom(getSelf()) && getSelf().has(Trait.bitingwords)) {
-            int willpowerLoss = Math.max(target.getWillpower().max() / 50, 3) + Global.global.random(3);
+            int willpowerLoss = Math.max(target.getWillpower().max() / 50, 3) + Rng.rng.random(3);
             target.loseWillpower(c, willpowerLoss, 0, false, " (Biting Words)");
         }
         if (getSelf().has(Trait.commandingvoice) && Global.global.random(3) == 0) {

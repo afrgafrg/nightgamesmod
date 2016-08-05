@@ -12,7 +12,7 @@ public class Boutique extends Store {
     }
 
     @Override
-    public boolean known() {
+    public boolean available() {
         if (player.hasPussy()) {
             return Global.global.checkFlag(Flag.basicStores);
         }

@@ -4,6 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.global.Global;
 import nightgames.global.SceneController;
+import nightgames.requirements.Requirement;
 
 public abstract class Activity {
     protected final String name;
@@ -20,7 +21,7 @@ public abstract class Activity {
         controller = new SceneController(Global.global.gui());
     }
 
-    public abstract boolean known();
+    public abstract boolean available();
 
     public abstract void start() throws InterruptedException;
 

@@ -15,7 +15,7 @@ public class VideoGames extends Activity {
     }
 
     @Override
-    public boolean known() {
+    public boolean available() {
         return Global.global.checkFlag(Flag.metBroker);
     }
 

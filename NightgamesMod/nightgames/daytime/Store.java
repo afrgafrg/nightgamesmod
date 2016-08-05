@@ -20,7 +20,7 @@ public abstract class Store extends Activity {
     }
 
     @Override
-    public abstract boolean known();
+    public abstract boolean available();
 
     @Override
     public abstract void start();

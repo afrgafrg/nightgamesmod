@@ -31,7 +31,7 @@ public class BlackMarket extends Store {
     }
 
     @Override
-    public boolean known() {
+    public boolean available() {
         return Global.global.checkFlag(Flag.blackMarket);
     }
 

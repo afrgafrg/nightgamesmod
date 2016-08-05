@@ -21,7 +21,7 @@ public class Informant extends Activity {
     }
 
     @Override
-    public boolean known() {
+    public boolean available() {
         return true;
     }
 

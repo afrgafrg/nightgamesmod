@@ -35,7 +35,7 @@ public abstract class BaseNPCTime extends Activity {
     }
 
     @Override
-    public boolean known() {
+    public boolean available() {
         return knownFlag.isEmpty() || Global.global.checkFlag(knownFlag);
     }
 

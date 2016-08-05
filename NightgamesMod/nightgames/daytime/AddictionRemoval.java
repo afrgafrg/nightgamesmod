@@ -82,7 +82,7 @@ class AddictionRemoval extends Activity {
 
 
     @Override
-    public boolean known() {
+    public boolean available() {
         return Global.global.checkFlag(Flag.AddictionAdvice) && Global.global.getPlayer()
                                                                .checkAddiction();
     }

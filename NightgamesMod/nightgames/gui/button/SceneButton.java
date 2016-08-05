@@ -9,4 +9,8 @@ public class SceneButton extends ValueButton<String> {
     public SceneButton(String label) {
         super(label);
     }
+
+    public SceneButton(String value, String label) {
+        super(value, label);
+    }
 }

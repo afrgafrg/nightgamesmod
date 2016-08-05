@@ -7,20 +7,23 @@ import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Rng;
+import nightgames.global.time.Clock;
+import nightgames.global.time.Clockable;
 import nightgames.status.addiction.Addiction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Daytime {
-    private ArrayList<Activity> activities;
+public class Daytime implements Clockable {
+    private List<Activity> activities;
     private Player player;
-    private int time;
-    private int daylength;
+    private DayClock time;
     private DaytimeEventManager eventMgr;
+    private final DaytimeController controller;
 
     public Daytime(Player player) {
+        controller = new DaytimeController(Global.global.gui());
         this.player = player;
         this.eventMgr = new DaytimeEventManager(player);
         buildActivities();
@@ -39,49 +42,43 @@ public class Daytime {
         }
 
         Global.global.unflag(Flag.threesome);
-        time = 10;
-        // do NPC day length
-        if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
-            dayLength = 10;
-        } else {
-            dayLength = 7;
-        }
+        time = new DayClock();
     }
 
     private boolean morning() {
-        Global.global.gui()
-              .clearText();
-        Global.global.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        Global.global.getPlayer().getAddictions().stream().map(Addiction::describeMorning)
-                        .forEach(s -> Global.global.gui().message(s));
+        Global.global.gui().clearText();
+        for (Addiction addiction : Global.global.getPlayer().getAddictions()) {
+            addiction.clearDaytime();
+            controller.morningMessage(addiction.describeMorning());
+        }
+
+        String message;
         if (eventMgr.playMorningScene()) {
-            time = 12;
             return true;
         } else if (player.getLevel() >= 10 && player.getRank() == 0) {
-            Global.global.gui()
-                  .message("The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
-                                  + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
-                                  + player.name() + ", and "
-                                  + "congratulations. Your performance in your most recent matches has convinced me you're ready for a higher level of play. You're promoted to "
-                                  + "ranked status, effective immediately. This new status earns you a major increase in monetary rewards and many new opportunities. I'll leave "
-                                  + "the details to others. I just wanted to congratulate you personally.\"</i> Wait, wait. That's not the end of the call. This guy is clearly "
-                                  + "someone overseeing the Game, but he hasn't even given you his name. Why all the secrecy? <i>\"If you're looking for more information, you "
-                                  + "know someone who sells it.\"</i> There's a click and the call ends.");
+            message =
+                            "The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
+                                            + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
+                                            + player.name() + ", and "
+                                            + "congratulations. Your performance in your most recent matches has convinced me you're ready for a higher level of play. You're promoted to "
+                                            + "ranked status, effective immediately. This new status earns you a major increase in monetary rewards and many new opportunities. I'll leave "
+                                            + "the details to others. I just wanted to congratulate you personally.\"</i> Wait, wait. That's not the end of the call. This guy is clearly "
+                                            + "someone overseeing the Game, but he hasn't even given you his name. Why all the secrecy? <i>\"If you're looking for more information, you "
+                                            + "know someone who sells it.\"</i> There's a click and the call ends.";
             player.rankup();
         } else if (player.getLevel() >= 20 && player.getRank() == 1) {
-            Global.global.gui()
-                            .message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
+            message =
+                            "In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
                                             + player.name()
                                             + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
                                             + "all quickly adapting to what most people would consider an extraordinary situation. If you are taking advantage of the people and services available "
                                             + "to you, you could probably use more money. Therefore, I am authorizing another pay increase. Congratulations.\"</i> This is the mysterious Benefactor "
                                             + "everyone keeps referring to, right? Is he ever planning to show himself in person? What is he getting out of all this? <i>\"Your curiosity is admirable. "
-                                            + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>");
+                                            + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>";
             player.rankup();
-            time = 15;
         } else if (player.getLevel() >= 30 && player.getRank() == 2) {
-            Global.global.gui()
-                            .message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
+            message =
+                            "In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
                                             + player.name() + ". Have you been keeping busy? You've been putting "
                                             + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
                                             + "That's an odd question since it depends on whether or not he has become more willing to talk. Who else is going to fill you in about this "
@@ -91,54 +88,50 @@ public class Daytime {
                                             + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
                                             + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
                                             + "already justifying your new rank, which is what I am calling you about, incidentally. Perhaps you can put your increased pay rate or the trust "
-                                            + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
+                                            + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.";
             player.rankup();
-            time = 15;
         } else if (player.getLevel() / 10 > player.getRank()) {
-            Global.global.gui().message("You have advanced to rank " + ++player.rank + "!");
-            time = 15;
-        } else if (Global.global.getDate() % 7 == 6 || Global.global.getDate() % 7 == 0) {
-            Global.global.gui()
-                            .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
-            time = 12;
+            player.rankup();
+            message = "You have advanced to rank " + player.getRank() + "!";
+        } else if (Global.global.getDate().isWeekend()) {
+            message =
+                            "You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.";
         } else {
-            Global.global.gui()
-                            .message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
-            time = 15;
+            message =
+                            "You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.";
+        }
+
+        controller.morningMessage(message);
+
+        if (Global.global.getDate().isWeekend()) {
+            // woooo it's the weekend! sleep 'till noon!
+            time.startDay(12);
+        } else {
+            // class gets out at 3 pm
+            time.startDay(15);
         }
         return false;
     }
 
-    public void plan() {
-        boolean special = false;
-        if (time == 10) {
-            special = morning();
-            if (special) {
+    public void plan() throws InterruptedException {
+        if (!time.started()) {
+            if (morning()) {
                 return;
             }
         }
-        if (time < 22) {
-            Global.global.gui().message("It is currently " + displayTime() + ". Your next match starts at 10:00pm.");
-            Global.global.gui().refresh();
-            Global.global.gui().clearCommand();
+        while (!time.dayOver()) {
+            controller.planningMessage(String.format("It is currently %s. Your next match starts at %s.", time.clockString(), time.endTimeString()));
             if (eventMgr.playRegularScene())
                 return;
-            for (Activity act : activities) {
-                if (act.known() && act.time() + time <= 22) {
-                    Global.global.gui()
-                          .addActivity(act);
-                }
-            }
-            activities.stream().filter(act -> act.known() && act.time() + time <= 22)
-                            .forEachOrdered(act -> Global.global.gui().addActivity(act));
-        } else {
-            Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC).forEach(npc -> {
-                if (npc.getLevel() / 10 > npc.getRank()) {
-                    npc.rankup();
-                }
-                ((NPC) npc).daytime(dayLength);
-            });
+            List<Activity> availableActivities = activities.stream().filter(Activity::known).filter(time::enoughFor)
+                            .collect(Collectors.toList());
+            Activity activity = controller.getActivity(availableActivities);
+            activity.start();
+            advance(activity.duration);
         }
+        Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC).forEach(npc -> {
+            ((NPC) npc).daytime(time.duration());
+        });
     }
 
     private void buildActivities() {
@@ -175,12 +168,8 @@ public class Daytime {
         activities.add(new AddictionRemoval(player));
     }
 
-    public String getTime() {
-        return time + ":00";
-    }
-
     public void advance(int t) {
-        time += t;
+        time.tick(t);
         buildActivities();
     }
 
@@ -220,14 +209,7 @@ public class Daytime {
         }
     }
 
-    private String displayTime() {
-        if (time < 12) {
-            return time + ":00am";
-        }
-        if (time == 12) {
-            return "noon";
-        }
-
-        return time - 12 + ":00pm";
+    @Override public Clock getClock() {
+        return time;
     }
 }

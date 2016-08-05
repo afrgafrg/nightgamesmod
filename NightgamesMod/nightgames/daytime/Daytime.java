@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Daytime implements Clockable {
     private List<Activity> activities;
     private Player player;
-    private DayClock time;
+    private DayClock clock;
     private DaytimeEventManager eventMgr;
     private final DaytimeController controller;
 
@@ -42,7 +42,7 @@ public class Daytime implements Clockable {
         }
 
         Global.global.unflag(Flag.threesome);
-        time = new DayClock();
+        clock = new DayClock();
     }
 
     private boolean morning() {
@@ -105,34 +105,34 @@ public class Daytime implements Clockable {
 
         if (Global.global.getDate().isWeekend()) {
             // woooo it's the weekend! sleep 'till noon!
-            time.startDay(12);
+            clock.startDay(12);
         } else {
             // class gets out at 3 pm
-            time.startDay(15);
+            clock.startDay(15);
         }
         return false;
     }
 
     public void plan() throws InterruptedException {
-        if (!time.started()) {
+        if (!clock.started()) {
             if (morning()) {
                 return;
             }
         }
-        while (!time.dayOver()) {
+        while (!clock.dayOver()) {
             controller.planningMessage(
-                            String.format("It is currently %s. Your next match starts at %s.", time.clockString(),
+                            String.format("It is currently %s. Your next match starts at %s.", clock.clockString(),
                                             DayClock.endTimeString()));
             if (eventMgr.playRegularScene())
                 return;
-            List<Activity> availableActivities = activities.stream().filter(Activity::known).filter(time::enoughFor)
+            List<Activity> availableActivities = activities.stream().filter(Activity::available).filter(clock::enoughTimeFor)
                             .collect(Collectors.toList());
             Activity activity = controller.getActivity(availableActivities);
             activity.start();
             advance(activity.duration);
         }
         Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC)
-                        .forEach(npc -> ((NPC) npc).daytime(time.duration()));
+                        .forEach(npc -> ((NPC) npc).daytime(clock.duration()));
     }
 
     private void buildActivities() {
@@ -170,7 +170,7 @@ public class Daytime implements Clockable {
     }
 
     public void advance(int t) {
-        time.tick(t);
+        clock.tick(t);
         buildActivities();
     }
 
@@ -201,7 +201,7 @@ public class Daytime implements Clockable {
         }
     }
 
-    public void visit(String name, Character npc, int budget) {
+    public void visit(String name, NPC npc, int budget) {
         for (Activity a : activities) {
             if (a.toString().equalsIgnoreCase(name)) {
                 a.shop(npc, budget);
@@ -211,6 +211,6 @@ public class Daytime implements Clockable {
     }
 
     @Override public Clock getClock() {
-        return time;
+        return clock;
     }
 }

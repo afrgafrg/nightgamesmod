@@ -9,13 +9,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * TODO: Write class-level documentation.
+ * Controller for Daytime.
  */
 class DaytimeController implements NgsController {
     private final GUI gui;
 
     DaytimeController(GUI gui) {
         this.gui = gui;
+    }
+
+    @Override public GUI gui() {
+        return gui;
     }
 
     void morningMessage(String message) {
@@ -26,6 +30,12 @@ class DaytimeController implements NgsController {
         gui.message(message);
     }
 
+    /**
+     * Prompts the user to select an Activity.
+     * @param activities The available Activities.
+     * @return The Activity that the user selected.
+     * @throws InterruptedException when the prompt is interrupted.
+     */
     Activity getActivity(List<Activity> activities) throws InterruptedException {
         List<ActivityButton> buttons = activities.stream().map(ActivityButton::new).collect(Collectors.toList());
         Prompt<Activity> prompt = new Prompt<>(buttons);

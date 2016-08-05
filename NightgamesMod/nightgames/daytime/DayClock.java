@@ -34,7 +34,7 @@ class DayClock implements Clock {
         return ClockFormatter.clockString(END_TIME, 0);
     }
 
-    boolean enoughFor(Activity activity) {
+    boolean enoughTimeFor(Activity activity) {
         return time + activity.duration() < END_TIME;
     }
 

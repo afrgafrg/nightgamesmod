@@ -3,7 +3,6 @@ package nightgames.characters;
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.custom.AiModifiers;
 import nightgames.characters.custom.CommentSituation;
@@ -27,7 +26,7 @@ public abstract class BasePersonality implements Personality {
     private String type;
     public NPC character;
     protected List<PreferredAttribute> preferredAttributes;
-    protected CockMod preferredCockMod;
+    protected CockPart.Mod preferredCockMod;
     protected AiModifiers mods;
 
     protected BasePersonality(String name, int level, boolean isStartCharacter) {
@@ -35,7 +34,7 @@ public abstract class BasePersonality implements Personality {
         type = getClass().getSimpleName();
         character = new NPC(name, level, this);
         character.isStartCharacter = isStartCharacter;
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
         preferredAttributes = new ArrayList<PreferredAttribute>();
     }
 
@@ -74,7 +73,7 @@ public abstract class BasePersonality implements Personality {
 
     @Override
     public void rest(int time) {
-        if (preferredCockMod != CockMod.error && character.rank > 0) {
+        if (preferredCockMod != CockPart.Mod.normal && character.rank > 0) {
             Optional<BodyPart> optDick = character.body.get("cock")
                                                        .stream()
                                                        .filter(part -> part.getMod(character) != preferredCockMod)

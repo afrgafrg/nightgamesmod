@@ -3445,7 +3445,7 @@ public abstract class Character extends Observable implements Cloneable {
     public boolean isDemonic() {
         return has(Trait.succubus) || body.get("pussy").stream()
                         .anyMatch(part -> part.moddedPartCountsAs(this, PussyPart.succubus)) || body.get("cock")
-                        .stream().anyMatch(part -> part.moddedPartCountsAs(this, CockMod.incubus));
+                        .stream().anyMatch(part -> part.moddedPartCountsAs(this, CockPart.Mod.incubus));
     }
 
     public int baseDisarm() {

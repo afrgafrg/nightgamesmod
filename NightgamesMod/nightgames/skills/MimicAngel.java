@@ -3,10 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -56,7 +53,7 @@ public class MimicAngel extends Skill {
             getSelf().body.temporaryAddOrReplacePartWithType(part.upgrade().upgrade(), 10);
         }
         getSelf().add(c, new Abuff(getSelf(), Attribute.Divinity, Math.max(10, getSelf().get(Attribute.Slime)), 10));
-        getSelf().add(c, new SlimeMimicry("angel", PussyPart.divine, CockMod.blessed, getSelf(), 10));
+        getSelf().add(c, new SlimeMimicry("angel", PussyPart.divine, CockPart.Mod.blessed, getSelf(), 10));
         return true;
     }
 

@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.body.StraponPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -73,7 +73,7 @@ public class Fuck extends Skill {
     private boolean canGetToCrotch(Character target) {
         if (target.crotchAvailable())
             return true;
-        if (!getSelfOrgan().moddedPartCountsAs(getSelf(), CockMod.slimy))
+        if (!getSelfOrgan().moddedPartCountsAs(getSelf(), CockPart.Mod.slimy))
             return false;
         return target.outfit.getTopOfSlot(ClothingSlot.bottom).getLayer() == 0;
     }
@@ -110,7 +110,7 @@ public class Fuck extends Skill {
                             bottomMessage);
         }
 
-        if (!target.crotchAvailable() && getSelfOrgan().getMod(getSelf()).equals(CockMod.slimy)) {
+        if (!target.crotchAvailable() && getSelfOrgan().getMod(getSelf()).equals(CockPart.Mod.slimy)) {
             Clothing destroyed = target.strip(ClothingSlot.bottom, c);
             assert target.outfit.slotEmpty(ClothingSlot.bottom);
             String start;

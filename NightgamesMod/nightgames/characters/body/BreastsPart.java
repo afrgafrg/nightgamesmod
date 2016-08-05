@@ -302,7 +302,7 @@ public enum BreastsPart implements BodyPart {
     }
 
     @Override
-    public int mod(Attribute a, int total) {
+    public int modifyAttribute(Attribute a, int total) {
         switch (a) {
             case Speed:
                 return -Math.max(size - 3, 0) / 2;

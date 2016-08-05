@@ -319,15 +319,7 @@ public class Body implements Cloneable {
 
     public CockPart getLargestCock() {
         List<BodyPart> parts = get("cock");
-        if (parts.size() == 0) {
-            return null;
-        }
-        CockPart largest = BasicCockPart.tiny;
-        for (BodyPart part : parts) {
-            CockPart cock = (CockPart) part;
-            largest = cock.getSize() >= largest.getSize() ? cock : largest;
-        }
-        return largest;
+        return parts.stream().map(bodyPart -> (CockPart) bodyPart).max((a, b) -> a.getSize().compareTo(b.getSize())).orElse(null);
     }
 
     public CockPart getCockBelow(double size) {
@@ -335,7 +327,7 @@ public class Body implements Cloneable {
         List<CockPart> upgradable = new ArrayList<>();
         for (BodyPart part : parts) {
             CockPart cock = (CockPart) part;
-            if (cock.getSize() < size) {
+            if (cock.getSize().length < size) {
                 upgradable.add(cock);
             }
         }
@@ -351,7 +343,7 @@ public class Body implements Cloneable {
         List<CockPart> upgradable = new ArrayList<>();
         for (BodyPart part : parts) {
             CockPart b = (CockPart) part;
-            if (b.getSize() > size) {
+            if (b.getSize().length > size) {
                 upgradable.add(b);
             }
         }
@@ -485,6 +477,14 @@ public class Body implements Cloneable {
                                               .anyMatch(part -> part.getType()
                                                                     .equals(type)));
         updateCurrentParts();
+    }
+
+    public boolean hasGenericCock() {
+        return findGenericCock().isPresent();
+    }
+
+    public Optional<CockPart> findGenericCock() {
+        return get("cock").stream().map(cock -> (CockPart) cock).filter(cock -> cock.isGeneric(character)).findAny();
     }
 
     public CockPart getRandomCock() {
@@ -984,7 +984,7 @@ public class Body implements Cloneable {
         }
         if (sex.hasCock()) {
             if (!has("cock")) {
-                add(BasicCockPart.average);
+                add(new CockPart());
             }
         }
         if (sex.hasBalls()) {
@@ -1144,7 +1144,7 @@ public class Body implements Cloneable {
     public int mod(Attribute a, int total) {
         int res = 0;
         for (BodyPart p : getCurrentParts()) {
-            total += p.mod(a, total);
+            total += p.modifyAttribute(a, total);
         }
         return res;
     }

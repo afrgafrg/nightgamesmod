@@ -241,7 +241,7 @@ public class GenericBodyPart implements BodyPart {
     }
 
     @Override
-    public int mod(Attribute a, int total) {
+    public int modifyAttribute(Attribute a, int total) {
         return 0;
     }
 

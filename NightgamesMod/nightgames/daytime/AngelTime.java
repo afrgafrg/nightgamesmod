@@ -76,27 +76,17 @@ public class AngelTime extends BaseNPCTime {
         {
             TransformationOption blessedCock = new TransformationOption();
             blessedCock.ingredients.put(Item.HolyWater, 3);
-            blessedCock.requirements.add(new BodyPartRequirement("cock"));
-            blessedCock.requirements.add((c, self, other) -> {
-                return self.body.get("cock")
-                                .stream()
-                                .anyMatch(cock -> ((CockPart) cock).isGeneric(self));
-            });
-            blessedCock.requirements.add((c, self, other) -> {
-                return self.get(Attribute.Divinity) >= 10;
-            });
+            blessedCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
+            blessedCock.requirements.add((c, self, other) -> self.get(Attribute.Divinity) >= 10);
             blessedCock.additionalRequirements = "A normal cock<br/>Divinity greater than 10";
             blessedCock.option = "Blessed Cock";
             blessedCock.scene =
                             "[Placeholder]<br/>Angel performs a sacrament on your cock, imbuing it with holy powers.";
             blessedCock.effect = (c, self, other) -> {
-                Optional<BodyPart> optPart = self.body.get("cock")
-                                                      .stream()
-                                                      .filter(cock -> ((CockPart) cock).isGeneric(self))
-                                                      .findAny();
-                BasicCockPart target = (BasicCockPart) optPart.get();
+                Optional<CockPart> optCock = self.body.findGenericCock();
+                CockPart target = optCock.get();
                 self.body.remove(target);
-                self.body.add(new ModdedCockPart(target, CockMod.blessed));
+                self.body.add(new CockPart(target, CockPart.Mod.blessed));
                 return true;
             };
             options.add(blessedCock);

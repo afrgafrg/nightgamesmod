@@ -3,7 +3,6 @@ package nightgames.skills;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
 import nightgames.characters.body.CockPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -57,18 +56,18 @@ public class CockGrowth extends Skill {
 
         if (res != Result.miss) {
             target.add(c, new Hypersensitive(target, 10));
-            CockPart part = target.body.getCockBelow(BasicCockPart.massive.size);
+            CockPart part = target.body.getCockBelow(CockPart.Size.maximumSize().length);
             if (permanent) {
                 if (part != null) {
                     target.body.addReplace(part.upgrade(), 1);
                 } else {
-                    target.body.addReplace(BasicCockPart.small, 1);
+                    target.body.addReplace(new CockPart(CockPart.Size.minimumSize()), 1);
                 }
             } else {
                 if (part != null) {
                     target.body.temporaryAddOrReplacePartWithType(part.upgrade(), 10);
                 } else {
-                    target.body.temporaryAddPart(BasicCockPart.small, 10);
+                    target.body.temporaryAddPart(new CockPart(CockPart.Size.minimumSize()), 10);
                 }
             }
         }

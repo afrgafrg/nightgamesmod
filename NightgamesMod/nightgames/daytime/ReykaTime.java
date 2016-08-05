@@ -73,12 +73,7 @@ public class ReykaTime extends BaseNPCTime {
         incubusCock.ingredients.put(Item.PriapusDraft, 10);
         incubusCock.ingredients.put(Item.SuccubusDraft, 20);
         incubusCock.ingredients.put(Item.semen, 5);
-        incubusCock.requirements.add(new BodyPartRequirement("cock"));
-        incubusCock.requirements.add((c, self, other) -> {
-            return self.body.get("cock")
-                            .stream()
-                            .anyMatch(cock -> ((CockPart) cock).isGeneric(self));
-        });
+        incubusCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         incubusCock.additionalRequirements = "A normal cock";
         incubusCock.option = "Incubus Cock";
         incubusCock.scene = "{self:subject} smiles when she sees that you have brought her the ingredients. "
@@ -111,13 +106,10 @@ public class ReykaTime extends BaseNPCTime {
                         + "we're done, I have to get some rest. Even if it doesn't look like it, that ritual took a lot out of me.\" "
                         + "Recognizing that you are being shooed away, you profusely thank Reyka and leave her chapel with your new incubus cock.</i>";
         incubusCock.effect = (c, self, other) -> {
-            Optional<BodyPart> optPart = self.body.get("cock")
-                                                  .stream()
-                                                  .filter(cock -> ((CockPart) cock).isGeneric(self))
-                                                  .findAny();
-            BasicCockPart target = (BasicCockPart) optPart.get();
+            Optional<CockPart> optCock = self.body.findGenericCock();
+            CockPart target = optCock.get();
             self.body.remove(target);
-            self.body.add(new ModdedCockPart(target, CockMod.incubus));
+            self.body.add(new CockPart(target, CockPart.Mod.incubus));
             return true;
         };
         options.add(incubusCock);

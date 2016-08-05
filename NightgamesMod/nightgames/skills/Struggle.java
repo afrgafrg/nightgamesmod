@@ -7,7 +7,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -192,9 +192,9 @@ public class Struggle extends Skill {
         } else {
             partner = c.getStance().bottom;
         }
-        target = partner;        if (c.getStance().insertedPartFor(c,target).moddedPartCountsAs(target, CockMod.enlightened)) {
+        target = partner;        if (c.getStance().insertedPartFor(c,target).moddedPartCountsAs(target, CockPart.Mod.enlightened)) {
                     diffMod = 15;
-                } else if (c.getStance().insertedPartFor(c,getSelf()).moddedPartCountsAs(getSelf(), CockMod.enlightened)) {
+                } else if (c.getStance().insertedPartFor(c,getSelf()).moddedPartCountsAs(getSelf(), CockPart.Mod.enlightened)) {
                     diffMod = -15;
                 }
                 if (target.has(Trait.grappler)) {

@@ -3,10 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -56,7 +53,7 @@ public class MimicDryad extends Skill {
             getSelf().body.temporaryAddOrReplacePartWithType(part.upgrade(), 10);
         }
         getSelf().add(c, new Abuff(getSelf(), Attribute.Bio, Math.max(10, getSelf().get(Attribute.Slime)), 10));
-        getSelf().add(c, new SlimeMimicry("dryad", PussyPart.plant, CockMod.error, getSelf(), 10));
+        getSelf().add(c, new SlimeMimicry("dryad", PussyPart.plant, CockPart.Mod.normal, getSelf(), 10));
         return true;
     }
 

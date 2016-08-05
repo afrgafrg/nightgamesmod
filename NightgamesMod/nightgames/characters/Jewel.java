@@ -55,7 +55,7 @@ public class Jewel extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.enlightened;
+        preferredCockMod = CockPart.Mod.enlightened;
         self.outfitPlan.add(Clothing.getByID("bra"));
         self.outfitPlan.add(Clothing.getByID("tanktop"));
         self.outfitPlan.add(Clothing.getByID("panties"));

@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.body.PussyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
@@ -13,13 +13,13 @@ import nightgames.global.Grammar;
 public class SlimeMimicry extends DurationStatus {
     private final String mimickedName;
     private final PussyPart pussyMimicked;
-    private final CockMod cockMimicked;
+    private final CockPart.Mod cockModMimicked;
 
-    public SlimeMimicry(String name, PussyPart pussyMimicked, CockMod cockMimicked, Character affected, int duration) {
+    public SlimeMimicry(String name, PussyPart pussyMimicked, CockPart.Mod cockModMimicked, Character affected, int duration) {
         super("Mimicry: " + Grammar.capitalizeFirstLetter(name), affected, duration);
         this.mimickedName = name;
         this.pussyMimicked = pussyMimicked;
-        this.cockMimicked = cockMimicked;
+        this.cockModMimicked = cockModMimicked;
         this.flag(Stsflag.mimicry);
         this.flag(Stsflag.form);
     }
@@ -28,8 +28,8 @@ public class SlimeMimicry extends DurationStatus {
         return pussyMimicked;
     }
 
-    public CockMod getCockMimicked() {
-        return cockMimicked;
+    public CockPart.Mod getCockModMimicked() {
+        return cockModMimicked;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class SlimeMimicry extends DurationStatus {
 
     @Override
     public Status instance(Character newAffected, Character newOther) {
-        return new SlimeMimicry(getMimickedName(), pussyMimicked, cockMimicked, newAffected, getDuration());
+        return new SlimeMimicry(getMimickedName(), pussyMimicked, cockModMimicked, newAffected, getDuration());
     }
 
      @Override public JsonObject saveToJson() {
@@ -107,7 +107,7 @@ public class SlimeMimicry extends DurationStatus {
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("mimickedName", getMimickedName());
         obj.addProperty("pussyMimicked", pussyMimicked.name());
-        obj.addProperty("cockMimicked", cockMimicked.name());
+        obj.addProperty("cockMimicked", cockModMimicked.name());
         obj.addProperty("duration", getDuration());
         return obj;
     }
@@ -115,7 +115,7 @@ public class SlimeMimicry extends DurationStatus {
     @Override public Status loadFromJson(JsonObject obj) {
         return new SlimeMimicry(obj.get("mimickedName").getAsString(),
                         PussyPart.valueOf(obj.get("pussyMimicked").getAsString()),
-                        CockMod.valueOf(obj.get("cockMimicked").getAsString()), null, obj.get("duration").getAsInt());
+                        CockPart.Mod.valueOf(obj.get("cockMimicked").getAsString()), null, obj.get("duration").getAsInt());
     }
 
     public String getMimickedName() {

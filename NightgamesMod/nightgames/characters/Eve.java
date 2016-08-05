@@ -50,7 +50,7 @@ public class Eve extends BasePersonality {
         Global.global.gainSkills(self);
         self.setTrophy(Item.EveTrophy);
         self.body.add(BreastsPart.d);
-        self.body.add(BasicCockPart.big);
+        self.body.add(CockPart.Size.big);
         self.body.add(PussyPart.normal);
         self.getMojo().setMax(120);
 
@@ -59,7 +59,7 @@ public class Eve extends BasePersonality {
         // somewhat androgynous face
         self.body.add(new FacePart(.1, .9));
         self.initialGender = CharacterSex.shemale;
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
     }
 
     @Override

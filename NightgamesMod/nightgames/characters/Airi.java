@@ -45,7 +45,7 @@ public class Airi extends BasePersonality {
     public void applyBasicStats(Character self) {
         self.change();
         self.setTrophy(Item.AiriTrophy);
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.error;
 
         self.outfitPlan.add(Clothing.getByID("shirt"));
         self.outfitPlan.add(Clothing.getByID("bra"));
@@ -208,8 +208,9 @@ public class Airi extends BasePersonality {
                 c.write(character, Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 character, opponent, character.body.getRandomPussy()));
             }
-            if (character.hasDick() && !character.body.getRandomCock().moddedPartCountsAs(character, CockMod.slimy)) {
-                character.body.temporaryAddOrReplacePartWithType(character.body.getRandomCock().applyMod(CockMod.slimy), 999);
+            if (character.hasDick() && !character.body.getRandomCock().moddedPartCountsAs(character, CockPart.Mod.slimy)) {
+                character.body.temporaryAddOrReplacePartWithType(character.body.getRandomCock().applyMod(
+                                CockPart.Mod.slimy), 999);
                 c.write(character, Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey cock.",
                                                 character, opponent, character.body.getRandomCock()));
             }
@@ -231,8 +232,9 @@ public class Airi extends BasePersonality {
             if (character.hasPussy() && !character.body.getRandomPussy().moddedPartCountsAs(character, PussyPart.gooey)) {
                 character.body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
             }
-            if (character.hasDick() && !character.body.getRandomCock().moddedPartCountsAs(character, CockMod.slimy)) {
-                character.body.temporaryAddOrReplacePartWithType(character.body.getRandomCock().applyMod(CockMod.slimy), 999);
+            if (character.hasDick() && !character.body.getRandomCock().moddedPartCountsAs(character, CockPart.Mod.slimy)) {
+                character.body.temporaryAddOrReplacePartWithType(character.body.getRandomCock().applyMod(
+                                CockPart.Mod.slimy), 999);
             }
             BreastsPart part = character.body.getBreastsBelow(BreastsPart.h.size);
             if (part != null) {

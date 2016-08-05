@@ -2,7 +2,7 @@ package nightgames.skills;
 
 import nightgames.characters.Character;
 import nightgames.characters.body.Body;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -21,7 +21,7 @@ public class ToggleKnot extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.body.get("cock").stream().anyMatch(cock -> cock.getMod(user).countsAs(user, CockMod.primal));
+        return user.body.get("cock").stream().anyMatch(cock -> cock.getMod(user).countsAs(user, CockPart.Mod.primal));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ToggleKnot extends Skill {
                                     + "As soon as %s pelvis touches %s, something starts happening.",
                                     getSelf().subject(), target.nameDirectObject(),
                                     getSelf().possessiveAdjective(), getSelf().possessiveAdjective(),
-                                    (target.human() || target.useFemalePronouns()) 
+                                    (target.human() || target.useFemalePronouns())
                                     ? target.possessiveAdjective() + "s" : "s");
                 }
                 c.write(getSelf() ,String.format("%s A ball swells up at the base of %s dick,"

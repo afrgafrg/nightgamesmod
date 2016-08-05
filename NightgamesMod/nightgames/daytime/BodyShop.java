@@ -189,7 +189,7 @@ public class BodyShop extends Activity {
         selection.add(new ShopSelection("Grow Cock", 2500) {
             @Override
             void buy(Character buyer) {
-                buyer.body.addReplace(BasicCockPart.tiny, 1);
+                buyer.body.addReplace(new CockPart(CockPart.Size.minimumSize()), 1);
             }
 
             @Override
@@ -343,7 +343,7 @@ public class BodyShop extends Activity {
         selection.add(new ShopSelection("Cock Expansion", 1500) {
             @Override
             void buy(Character buyer) {
-                CockPart target = buyer.body.getCockBelow(BasicCockPart.maximumSize().size);
+                CockPart target = buyer.body.getCockBelow(CockPart.Size.maximumSize().length);
                 assert target != null;
                 buyer.body.remove(target);
                 buyer.body.addReplace(target.upgrade(), 1);
@@ -351,7 +351,7 @@ public class BodyShop extends Activity {
 
             @Override
             boolean available(Character buyer) {
-                CockPart target = buyer.body.getCockBelow(BasicCockPart.maximumSize().size);
+                CockPart target = buyer.body.getCockBelow(CockPart.Size.maximumSize().length);
                 return target != null;
             }
 
@@ -359,7 +359,7 @@ public class BodyShop extends Activity {
             double priority(Character buyer) {
                 CockPart part = buyer.body.getRandomCock();
                 if (part != null) {
-                    return BasicCockPart.big.size > part.getSize() ? 10 : 3;
+                    return CockPart.Size.big.length > part.getSize().length ? 10 : 3;
                 }
                 return 0;
             }
@@ -368,7 +368,7 @@ public class BodyShop extends Activity {
         selection.add(new ShopSelection("Cock Reduction", 1500) {
             @Override
             void buy(Character buyer) {
-                CockPart target = buyer.body.getCockAbove(BasicCockPart.tiny.size);
+                CockPart target = buyer.body.getCockAbove(CockPart.Size.minimumSize().length);
                 assert target != null;
                 buyer.body.remove(target);
                 buyer.body.addReplace(target.downgrade(), 1);
@@ -376,7 +376,7 @@ public class BodyShop extends Activity {
 
             @Override
             boolean available(Character buyer) {
-                CockPart target = buyer.body.getCockAbove(BasicCockPart.maximumSize().size);
+                CockPart target = buyer.body.getCockAbove(CockPart.Size.minimumSize().length);
                 return target != null;
             }
 
@@ -384,7 +384,7 @@ public class BodyShop extends Activity {
             double priority(Character buyer) {
                 CockPart part = buyer.body.getRandomCock();
                 if (part != null) {
-                    return BasicCockPart.small.size < part.getSize() ? 3 : 0;
+                    return CockPart.Size.small.length < part.getSize().length ? 3 : 0;
                 }
                 return 0;
             }
@@ -396,20 +396,13 @@ public class BodyShop extends Activity {
                 CockPart target = buyer.body.getRandomCock();
                 assert target != null;
                 buyer.body.remove(target);
-                BasicCockPart best = BasicCockPart.massive;
-                for (BasicCockPart part : BasicCockPart.values()) {
-                    double delta = Math.abs(target.getSize() - part.getSize());
-                    if (delta < Math.abs(target.getSize() - best.getSize())) {
-                        best = part;
-                    }
-                }
-                buyer.body.addReplace(best, 1);
+                buyer.body.addReplace(new CockPart(target, CockPart.Mod.normal), 1);
             }
 
             @Override
             boolean available(Character buyer) {
                 Optional<BodyPart> optTarget =
-                                buyer.body.get("cock").stream().filter(c -> !((CockPart) c).isGeneric(buyer)).findAny();
+                                buyer.body.get("cock").stream().filter(c -> !c.isGeneric(buyer)).findAny();
                 return optTarget.isPresent();
             }
 
@@ -442,7 +435,7 @@ public class BodyShop extends Activity {
         });
 
         addTraitMod("Vaginal Tongue", "Remove V.Tongue", Trait.vaginaltongue, 10000, 10000,
-                        character -> character.hasPussy());
+                        Character::hasPussy);
         addTraitMod("Laced Juices", "Remove L.Juices", Trait.lacedjuices, 1000, 1000,
                         noRequirement);
         addTraitMod("Permanent Lactation", "Stop Lactating", Trait.lactating, 1000, 1000,

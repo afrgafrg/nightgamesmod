@@ -43,7 +43,7 @@ public class Kat extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.primal;
+        preferredCockMod = CockPart.Mod.primal;
         self.outfitPlan.add(Clothing.getByID("bra"));
         self.outfitPlan.add(Clothing.getByID("Tshirt"));
         self.outfitPlan.add(Clothing.getByID("panties"));

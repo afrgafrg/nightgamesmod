@@ -151,7 +151,7 @@ public enum TailPart implements BodyPart,BodyPartMod {
     }
 
     @Override
-    public int mod(Attribute a, int total) {
+    public int modifyAttribute(Attribute a, int total) {
         // TODO Auto-generated method stub
         return 0;
     }

@@ -3,7 +3,7 @@ package nightgames.characters;
 import java.util.Optional;
 
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -62,7 +62,7 @@ public class Maya extends BasePersonality {
 
         self.body.add(BreastsPart.d);
         self.initialGender = CharacterSex.female;
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
     }
 
     @Override

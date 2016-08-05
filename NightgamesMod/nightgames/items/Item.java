@@ -161,11 +161,11 @@ public enum Item implements Loot {
     Totem("Fetish Totem", 150, "A small penis shaped totem that can summon tentacles", "a "),
     Capacitor("Capacitor", 30, "", "a "),
     TinyDraft("Tiny Draft", 100, "Temporarily shrink a penis", "a ",
-                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", BasicCockPart.average,
+                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", CockPart.Size.average,
                                     BodyModEffect.Effect.downgrade)),
                     15),
     PriapusDraft("Priapus Draft", 150, "Temporarily grow a penis", "a ",
-                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", BasicCockPart.average,
+                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", CockPart.Size.average,
                                     BodyModEffect.Effect.growplus)),
                     15),
     BustDraft("Bust Draft", 80, "Temporarily grow breasts", "a ", Collections.singleton(

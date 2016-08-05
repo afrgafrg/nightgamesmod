@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -42,7 +42,7 @@ public class SuccubusSurprise extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        boolean oppHasBlessed = c.getStance().insertedPartFor(c, target).getMod(target).countsAs(target, CockMod.blessed);
+        boolean oppHasBlessed = c.getStance().insertedPartFor(c, target).getMod(target).countsAs(target, CockPart.Mod.blessed);
         if (getSelf().human()) {
             if (oppHasBlessed) {
                 c.write(getSelf(), deal(c, 0, Result.weak, target));
@@ -120,14 +120,14 @@ public class SuccubusSurprise extends Skill {
                         + " a draft of some kind. %s grin widens as black wings and a tail form on %s back."
                         + " %s to pull out, but ", target.nameOrPossessivePronoun(),
                         getSelf().name(), getSelf().subject(), getSelf().possessiveAdjective(),
-                        target.subjectAction("follow"), getSelf().possessiveAdjective(), 
+                        target.subjectAction("follow"), getSelf().possessiveAdjective(),
                         target.possessiveAdjective(), getSelf().name(), getSelf().directObject(),
                         getSelf().pronoun(), Global.capitalizeFirstLetter(getSelf().possessiveAdjective()),
-                        getSelf().possessiveAdjective(), 
+                        getSelf().possessiveAdjective(),
                         Global.capitalizeFirstLetter(target.subjectAction("try", "tries")));
         if (isArmLock(c.getStance())) {
             result += String.format("%s grabs %s hands tightly to %s body, holding %s in place. ",
-                            getSelf().subject(), target.possessiveAdjective(), 
+                            getSelf().subject(), target.possessiveAdjective(),
                             getSelf().possessiveAdjective(), target.directObject());
         } else {
             result += String.format("%s wraps %s lithe legs around %s waist, keeping %s inside.",
@@ -136,7 +136,7 @@ public class SuccubusSurprise extends Skill {
         }
         if (modifier == Result.weak) {
             result += String.format(" Luckily%s, the blessings on %s cock prevent any serious damage.",
-                            target.human() ? "" : " for " + target.directObject(), 
+                            target.human() ? "" : " for " + target.directObject(),
                                             target.nameOrPossessivePronoun());
         } else {
             result += String.format(" %s fears are confirmed as %s %s a terrible suction starting "

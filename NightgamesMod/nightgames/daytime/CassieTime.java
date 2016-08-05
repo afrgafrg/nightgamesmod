@@ -9,14 +9,14 @@ import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 import nightgames.status.addiction.Addiction.Severity;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.*;
 
 public class CassieTime extends BaseNPCTime {
     public CassieTime(Character player) {
@@ -45,24 +45,23 @@ public class CassieTime extends BaseNPCTime {
     public void buildTransformationPool() {
         options = new ArrayList<>();
         {
-            TransformationOption growCock = new TransformationOption();
+            Transformation growCock = new Transformation("Cassie: Grow a cock");
             growCock.ingredients.put(Item.PriapusDraft, 3);
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
-            growCock.option = "Cassie: Grow a cock";
             growCock.scene = "[Placeholder]<br/>Cassie hesistantly drinks the 3 priapus drafts and grows a large runic cock.";
             growCock.effect = (c, self, other) -> {
+                // TODO: Fix with CockPart.Mod
                 other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.runic));
                 return true;
             };
             options.add(growCock);
         }
         {
-            TransformationOption removeCock = new TransformationOption();
+            Transformation removeCock = new Transformation("Cassie: Remove her cock");
             removeCock.ingredients.put(Item.FemDraft, 3);
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
-            removeCock.option = "Cassie: Remove her cock";
             removeCock.scene = "[Placeholder]<br/>Cassie hesistantly drinks the three femdrafts and her runic cock shrinks into her normal clitoris.";
             removeCock.effect = (c, self, other) -> {
                 other.body.removeAll("cock");
@@ -70,23 +69,19 @@ public class CassieTime extends BaseNPCTime {
             };
             options.add(removeCock);
         }
-        TransformationOption runicCock = new TransformationOption();
-        runicCock.ingredients.put(Item.PriapusDraft, 10);
-        runicCock.ingredients.put(Item.BewitchingDraught, 20);
-        runicCock.ingredients.put(Item.FaeScroll, 1);
-        runicCock.requirements.add(new BodyPartRequirement("cock"));
-        runicCock.requirements.add((c, self, other) -> {
-            return self.body.get("cock").stream().anyMatch(cock -> ((CockPart) cock).isGeneric(self));
-        });
+        Transformation runicCock = new Transformation();
+        runicCock.ingredients.add(item(Item.PriapusDraft, 10));
+        runicCock.ingredients.add(item(Item.BewitchingDraught, 20));
+        runicCock.ingredients.add(item(Item.FaeScroll, 1));
+        runicCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         runicCock.additionalRequirements = "A normal cock";
         runicCock.option = "Runic Cock";
         runicCock.scene = "[Placeholder]<br/>Cassie enchants your cock with the power of the fairies.";
         runicCock.effect = (c, self, other) -> {
-            Optional<BodyPart> optPart =
-                            self.body.get("cock").stream().filter(cock -> ((CockPart) cock).isGeneric(self)).findAny();
-            BasicCockPart target = (BasicCockPart) optPart.get();
+            Optional<CockPart> optPart = self.body.findGenericCock();
+            CockPart target = optPart.get();
             self.body.remove(target);
-            self.body.add(target.applyMod(CockMod.runic));
+            self.body.add(target.applyMod(CockPart.Mod.runic));
             return true;
         };
         options.add(runicCock);

@@ -50,17 +50,11 @@ public class Corruption extends Addiction {
                                 "<b>The dark taint changes you even further, and your pussy turns into that of a succubus!</b>");
                 affected.body.temporaryAddOrReplacePartWithType(PussyPart.succubus, 20);
             } else if (affected.hasDick() && affected.body.getRandomCock()
-                                                          .getMod(affected) != CockMod.incubus) {
+                                                          .getMod(affected) != CockPart.Mod.incubus) {
                 c.write(affected,
                                 "<b>The dark taint changes you even further, and your cock turns into that of an incubus!</b>");
                 CockPart cock = affected.body.getRandomCock();
-                BasicCockPart base;
-                if (cock instanceof BasicCockPart) {
-                    base = (BasicCockPart) cock;
-                } else {
-                    base = ((ModdedCockPart) cock).getBase();
-                }
-                affected.body.temporaryAddOrReplacePartWithType(new ModdedCockPart(base, CockMod.incubus), 20);
+                affected.body.temporaryAddOrReplacePartWithType(new CockPart(cock, CockPart.Mod.incubus), 20);
             } else if (!affected.hasPussy() && cause.hasDick()) {
                 c.write(affected,
                                 "<b>The dark taint changes you even further, and a succubus's pussy forms between your legs!</b>");
@@ -68,7 +62,7 @@ public class Corruption extends Addiction {
             } else if (!affected.hasDick()) {
                 c.write(affected,
                                 "<b>The dark taint changes you even further, and an incubus's cock forms between your legs!</b>");
-                affected.body.temporaryAddOrReplacePartWithType(new ModdedCockPart(BasicCockPart.huge, CockMod.incubus),
+                affected.body.temporaryAddOrReplacePartWithType(new CockPart(CockPart.Size.huge, CockPart.Mod.incubus),
                                 20);
             } else {
                 c.write(affected,

@@ -39,7 +39,7 @@ public class Reyka extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.incubus;
+        preferredCockMod = CockPart.Mod.incubus;
         self.outfitPlan.add(Clothing.getByID("tanktop"));
         self.outfitPlan.add(Clothing.getByID("miniskirt"));
         self.outfitPlan.add(Clothing.getByID("garters"));

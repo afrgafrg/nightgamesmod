@@ -12,20 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import nightgames.characters.CharacterSex;
-import nightgames.characters.body.AnalPussyPart;
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.Body;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.ModdedCockPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.TentaclePart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.json.JsonUtils;
 
 class BodyConfiguration {
@@ -230,9 +217,10 @@ class BodyConfiguration {
                 CockConfiguration cock = new CockConfiguration();
                 JsonObject cockJson = object.getAsJsonObject("cock");
                 JsonUtils.getOptional(cockJson, "length").map(JsonElement::getAsString)
-                                .ifPresent(length -> cock.length = BasicCockPart.valueOf(length.toLowerCase()));
+                                .ifPresent(length -> cock.length = CockPart.Size.valueOf(length.toLowerCase()));
                 cock.type = JsonUtils.getOptional(cockJson, "type").map(JsonElement::getAsString)
-                                .map(String::toLowerCase).filter(type -> !type.equals("basic")).map(CockMod::valueOf);
+                                .map(String::toLowerCase).filter(type -> !type.equals("basic")).map(
+                                                CockPart.Mod::valueOf);
                 config.cock = Optional.of(cock);
             }
 
@@ -254,40 +242,39 @@ class BodyConfiguration {
     }
 
     static class CockConfiguration {
-        Optional<CockMod> type;
-        BasicCockPart length;
+        Optional<CockPart.Mod> type;
+        CockPart.Size length;
 
         CockConfiguration() {
             type = Optional.empty();
-            length = BasicCockPart.average;
+            length = CockPart.Size.average;
         }
 
         private CockPart build() {
-            return type.isPresent() ? new ModdedCockPart(length, type.get()) : length;
+            return type.isPresent() ? new CockPart(length, type.get()) : new CockPart(length);
         }
     }
 
 
     enum Archetype {
-        REGULAR(null, PussyPart.normal),
-        DEMON(CockMod.incubus, PussyPart.succubus),
-        CAT(CockMod.primal, PussyPart.feral),
-        CYBORG(CockMod.bionic, PussyPart.cybernetic),
-        ANGEL(CockMod.blessed, PussyPart.divine),
-        WITCH(CockMod.runic, PussyPart.arcane),
-        SLIME(CockMod.slimy, PussyPart.gooey);
-        private final CockMod cockMod;
+        REGULAR(CockPart.Mod.normal, PussyPart.normal),
+        DEMON(CockPart.Mod.incubus, PussyPart.succubus),
+        CAT(CockPart.Mod.primal, PussyPart.feral),
+        CYBORG(CockPart.Mod.bionic, PussyPart.cybernetic),
+        ANGEL(CockPart.Mod.blessed, PussyPart.divine),
+        WITCH(CockPart.Mod.runic, PussyPart.arcane),
+        SLIME(CockPart.Mod.slimy, PussyPart.gooey);
+        private final CockPart.Mod cockMod;
         private final PussyPart pussy;
 
-        Archetype(CockMod cockMod, PussyPart pussy) {
+        Archetype(CockPart.Mod cockMod, PussyPart pussy) {
             this.cockMod = cockMod;
             this.pussy = pussy;
         }
 
         private void apply(Body body) {
-            if (body.has("cock") && this != REGULAR) {
-                BasicCockPart size = BasicCockPart.valueOf(body.getLargestCock().getName());
-                body.addReplace(new ModdedCockPart(size, cockMod), 1);
+            if (body.has("cock")) {
+                body.addReplace(new CockPart(body.getLargestCock(), cockMod), 1);
             }
             if (body.has("pussy") && this != REGULAR)
                 body.addReplace(pussy, 1);

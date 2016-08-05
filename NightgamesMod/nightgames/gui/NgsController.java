@@ -8,5 +8,26 @@ package nightgames.gui;
  * a match, while the UI would focus on actually displaying the messages and prompts and receiving input from the user.
  */
 public interface NgsController {
-    // Just a tag, for now.
+    /**
+     * A controller is associated with the GUI instance it talks to.
+     * @return The GUI this controller queries and updates.
+     */
+    GUI gui();
+
+    /**
+     * Clears text from the main text panel and prints a message.
+     * @param message The message to print to a cleared panel.
+     */
+    default void newPage(String message) {
+        gui().clearText();
+        gui().message(message);
+    }
+
+    /**
+     * Appends text to the main text panel.
+     * @param message The message to append.
+     */
+    default void message(String message) {
+        gui().message(message);
+    }
 }

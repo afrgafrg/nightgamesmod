@@ -1,5 +1,10 @@
 package nightgames.global.time;
 
+import nightgames.global.Grammar;
+
+/**
+ * Tracks number of days since the game started.
+ */
 public class NgsDate {
     private int date;
 
@@ -26,6 +31,10 @@ public class NgsDate {
     public boolean isWeekend() {
         int day = date % 7;
         return day == 6 || day == 0;
+    }
+
+    public String dateString(Time time) {
+        return String.format("%s %d", Grammar.capitalizeFirstLetter(time.desc), date);
     }
 
     @Override public boolean equals(Object o) {

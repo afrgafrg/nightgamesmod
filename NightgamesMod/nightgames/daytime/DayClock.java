@@ -1,12 +1,13 @@
 package nightgames.daytime;
 
 import nightgames.global.time.Clock;
+import nightgames.global.time.ClockFormatter;
 
 /**
- * TODO: Write class-level documentation.
+ * Clock that tracks time during the day in increments of one hour.
  */
-public class DayClock implements Clock {
-    private int time;   // One time increment is one hour.
+class DayClock implements Clock {
+    private int time;
     private int startTime;
     private static final int END_TIME = 22;
     private boolean started = false;
@@ -29,8 +30,8 @@ public class DayClock implements Clock {
         return !(time < END_TIME);
     }
 
-    String endTimeString() {
-        return clockString(END_TIME);
+    static String endTimeString() {
+        return ClockFormatter.clockString(END_TIME, 0);
     }
 
     boolean enoughFor(Activity activity) {
@@ -45,20 +46,8 @@ public class DayClock implements Clock {
         return getHour(time);
     }
 
-
-    private static String clockString(int someTime) {
-        int hour = getHour(someTime);
-        if (hour < 12) {
-            return hour + ":00 am";
-        } else if (hour == 12) {
-            return "noon";
-        } else {
-            return hour % 12 + ":00 pm";
-        }
-    }
-
-    @Override public String clockString() {
-        return clockString(time);
+    @Override public int getMinute() {
+        return 0;
     }
 
     @Override public void tick() {

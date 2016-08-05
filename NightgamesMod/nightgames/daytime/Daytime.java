@@ -120,7 +120,9 @@ public class Daytime implements Clockable {
             }
         }
         while (!time.dayOver()) {
-            controller.planningMessage(String.format("It is currently %s. Your next match starts at %s.", time.clockString(), time.endTimeString()));
+            controller.planningMessage(
+                            String.format("It is currently %s. Your next match starts at %s.", time.clockString(),
+                                            DayClock.endTimeString()));
             if (eventMgr.playRegularScene())
                 return;
             List<Activity> availableActivities = activities.stream().filter(Activity::known).filter(time::enoughFor)
@@ -129,9 +131,8 @@ public class Daytime implements Clockable {
             activity.start();
             advance(activity.duration);
         }
-        Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC).forEach(npc -> {
-            ((NPC) npc).daytime(time.duration());
-        });
+        Global.global.everyone().stream().filter(npc -> !npc.human() && npc instanceof NPC)
+                        .forEach(npc -> ((NPC) npc).daytime(time.duration()));
     }
 
     private void buildActivities() {

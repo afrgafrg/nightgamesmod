@@ -19,9 +19,8 @@ import nightgames.status.addiction.Addiction;
 import java.util.*;
 
 public class Match implements Clockable {
-    private static final int MATCH_LENGTH = 36; // 3 hours
     private static final int CHALLENGE_INTERVAL = 6; // Challenges dropped off every 30 minutes
-    private final MatchTime matchTime;
+    private final MatchClock matchClock;
     private int dropOffTime;
     protected Map<String, Area> map;
     public List<Character> combatants;
@@ -76,7 +75,7 @@ public class Match implements Clockable {
             }
             manageConditions(player);
         }
-        matchTime = new MatchTime();
+        matchClock = new MatchClock();
     }
 
     public MatchType getType() {
@@ -84,17 +83,17 @@ public class Match implements Clockable {
     }
 
     public void play() {
-        while (matchTime.time() < MATCH_LENGTH) {
+        while (!matchClock.matchOver()) {
             if (index >= combatants.size()) {
                 index = 0;
                 if (meanLvl() > 3 && Rng.rng.random(10) + dropOffTime >= 12) {
                     dropPackage();
                     dropOffTime = 0;
                 }
-                if (Global.global.checkFlag(Flag.challengeAccepted) && matchTime.time() % CHALLENGE_INTERVAL == 0) {
+                if (Global.global.checkFlag(Flag.challengeAccepted) && matchClock.turns() % CHALLENGE_INTERVAL == 0) {
                     dropChallenge();
                 }
-                matchTime.tick();
+                matchClock.tick();
                 dropOffTime++;
             }
             getAreas().forEach(area -> area.setPinged(false));
@@ -217,7 +216,7 @@ public class Match implements Clockable {
     }
 
     public Clock getClock() {
-        return matchTime;
+        return matchClock;
     }
 
     public Area gps(String name) {

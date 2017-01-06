@@ -1,5 +1,5 @@
 package nightgames.global;
 
 public interface Scene {
-    public void respond(String response);
+    void respond(String response);
 }

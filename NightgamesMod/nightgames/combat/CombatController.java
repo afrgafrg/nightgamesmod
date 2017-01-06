@@ -20,6 +20,10 @@ public class CombatController implements NgsController, Observer {
         this.gui = gui;
     }
 
+    @Override public GUI gui() {
+        return this.gui;
+    }
+
     @Override public void update(Observable o, Object arg) {
         if (!(o instanceof Combat)) {
             return;

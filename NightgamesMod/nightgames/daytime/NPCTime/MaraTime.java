@@ -1,9 +1,11 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
+import nightgames.daytime.Daytime;
+import nightgames.daytime.Transformation;
 import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.items.Item;
@@ -43,13 +45,12 @@ public class MaraTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
-        options = new ArrayList<>();
+        transformations = new ArrayList<>();
         {
-            TransformationOption growCock = new TransformationOption();
+            Transformation growCock = new Transformation("Mara: Install a cock");
             growCock.ingredients.put(Item.Dildo, 1);
             growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
-            growCock.option = "Mara: Install a cock";
             growCock.scene = "[Placeholder]<br/>Mara makes some modifications to the dildo and manages to attach it to her own body through methods unknown to you.";
             growCock.effect = (c, self, other) -> {
                 other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.bionic));
@@ -58,11 +59,10 @@ public class MaraTime extends BaseNPCTime {
             options.add(growCock);
         }
         {
-            TransformationOption removeCock = new TransformationOption();
+            TransformationOption removeCock = new TransformationOption("Mara: Remove her cock");
             removeCock.ingredients.put(Item.DisSol, 3);
             removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
-            removeCock.option = "Mara: Remove her cock";
             removeCock.scene = "[Placeholder]<br/>Mara uses the solvent to dissolve the bond from her modified cock, making her wholly female again.";
             removeCock.effect = (c, self, other) -> {
                 other.body.removeAll("cock");
@@ -70,7 +70,7 @@ public class MaraTime extends BaseNPCTime {
             };
             options.add(removeCock);
         }
-        TransformationOption bionicCock = new TransformationOption();
+        Transformation bionicCock = new Transformation("Bionic Cock");
         bionicCock.ingredients.put(Item.PriapusDraft, 10);
         bionicCock.ingredients.put(Item.TinkersMix, 20);
         bionicCock.ingredients.put(Item.Lubricant, 5);
@@ -78,7 +78,6 @@ public class MaraTime extends BaseNPCTime {
         bionicCock.ingredients.put(Item.Dildo, 1);
         bionicCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         bionicCock.additionalRequirements = "A normal cock";
-        bionicCock.option = "Bionic Cock";
         bionicCock.scene = "[Placeholder]<br/>Mara installs a bionic cock on you";
         bionicCock.effect = (c, self, other) -> {
             Optional<CockPart> optCock = self.body.findGenericCock();
@@ -87,26 +86,25 @@ public class MaraTime extends BaseNPCTime {
             self.body.add(new CockPart(target, CockPart.Mod.bionic));
             return true;
         };
-        options.add(bionicCock);
-        TransformationOption cyberneticPussy = new TransformationOption();
+        transformations.add(bionicCock);
+        Transformation cyberneticPussy = new Transformation("Cybernetic Pussy");
         cyberneticPussy.ingredients.put(Item.TinkersMix, 20);
         cyberneticPussy.ingredients.put(Item.Lubricant, 5);
         cyberneticPussy.ingredients.put(Item.Spring, 5);
         cyberneticPussy.ingredients.put(Item.Onahole, 1);
-        cyberneticPussy.requirements.add(new BodyPartRequirement("pussy"));
+        cyberneticPussy.requirements.add(bodypart("pussy"));
         cyberneticPussy.requirements.add((c, self, other) -> {
             return self.body.get("pussy")
                             .stream()
                             .anyMatch(part -> part == PussyPart.normal);
         });
         cyberneticPussy.additionalRequirements = "A normal pussy";
-        cyberneticPussy.option = "Cybernetic Pussy";
         cyberneticPussy.scene = "[Placeholder]<br/>Mara installs a cybernetic pussy on you";
         cyberneticPussy.effect = (c, self, other) -> {
             self.body.addReplace(PussyPart.cybernetic, 1);
             return true;
         };
-        options.add(cyberneticPussy);
+        transformations.add(cyberneticPussy);
     }
 
     @Override

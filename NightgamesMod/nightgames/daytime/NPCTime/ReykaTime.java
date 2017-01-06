@@ -1,9 +1,11 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
+import nightgames.daytime.Daytime;
+import nightgames.daytime.Transformation;
 import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.items.Item;
@@ -37,14 +39,13 @@ public class ReykaTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
-        options = new ArrayList<>();
+        transformations = new ArrayList<>();
         {
-            TransformationOption growCock = new TransformationOption();
+            Transformation growCock = new Transformation("Reyka: Grow a cock");
             growCock.ingredients.put(Item.PriapusDraft, 1);
             growCock.ingredients.put(Item.Talisman, 1);
             growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
-            growCock.option = "Reyka: Grow a cock";
             growCock.scene = "[Placeholder]<br/>Reyka downs the bottle of the priapus draft after channeling her dark magic into the talisman and attaching it to her clitoris. "
                             + "The two of you wait, and soon enough, a large demonic cock sprouts out under the talisman, ripping it off from her body.";
             growCock.effect = (c, self, other) -> {
@@ -54,11 +55,10 @@ public class ReykaTime extends BaseNPCTime {
             options.add(growCock);
         }
         {
-            TransformationOption removeCock = new TransformationOption();
+            Transformation removeCock = new Transformation("Reyka: Remove her cock");
             removeCock.ingredients.put(Item.FemDraft, 3);
             removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
-            removeCock.option = "Reyka: Remove her cock";
             removeCock.scene = "<br/>Reyka doesn't seem extremely pleased with your request to remove her new found maleness, but complies anyways with your wishes. "
                             + "Taking the FemDrafts you offer her, she drinks them one after another and waits with her cock still proudly erect. "
                             + "Soon enough though, the organ starts shrinking back into her body as if being absorbed by her lower lips. "
@@ -69,13 +69,12 @@ public class ReykaTime extends BaseNPCTime {
             };
             options.add(removeCock);
         }
-        TransformationOption incubusCock = new TransformationOption();
+        Transformation incubusCock = new Transformation("Incubus Cock");
         incubusCock.ingredients.put(Item.PriapusDraft, 10);
         incubusCock.ingredients.put(Item.SuccubusDraft, 20);
         incubusCock.ingredients.put(Item.semen, 5);
         incubusCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         incubusCock.additionalRequirements = "A normal cock";
-        incubusCock.option = "Incubus Cock";
         incubusCock.scene = "{self:subject} smiles when she sees that you have brought her the ingredients. "
                         + "<i>\"{other:name}, honey, just lie down on the couch over there and I'll fix you right up.\"</i> "
                         + "To be completely honest, you're kind of worried that this may go completely and horribly wrong "
@@ -112,12 +111,11 @@ public class ReykaTime extends BaseNPCTime {
             self.body.add(new CockPart(target, CockPart.Mod.incubus));
             return true;
         };
-        options.add(incubusCock);
-        TransformationOption demonWings = new TransformationOption();
+        transformations.add(incubusCock);
+        Transformation demonWings = new Transformation("Demonic Wings");
         demonWings.ingredients.put(Item.SuccubusDraft, 20);
         demonWings.ingredients.put(Item.semen, 5);
         demonWings.requirements.add(not(bodypart("wings")));
-        demonWings.option = "Demonic Wings";
         demonWings.scene =
                         "Reyka smiles and crushes the ingredients together and draws a magic formation on your back and shoulders. "
                                         + "After telling you to sit down across from her, she starts masturbating. Dumbfounded at her sudden action, you start getting up from your chair. "
@@ -128,8 +126,8 @@ public class ReykaTime extends BaseNPCTime {
             self.body.addReplace(WingsPart.demonic, 1);
             return true;
         };
-        options.add(demonWings);
-        TransformationOption demonTail = new TransformationOption();
+        transformations.add(demonWings);
+        Transformation demonTail = new Transformation("Spade Tail");
         demonTail.ingredients.put(Item.SuccubusDraft, 20);
         demonTail.ingredients.put(Item.semen, 5);
         demonTail.requirements.add(not(bodypart("tail")));
@@ -138,15 +136,15 @@ public class ReykaTime extends BaseNPCTime {
                             .stream()
                             .anyMatch(part -> part != TailPart.demonic) || !self.body.has("tail");
         });
-        demonTail.option = "Spade Tail";
         demonTail.scene =
+        demonTail.name = "Spade Tail";
                         "[Placeholder]<br/>Reyka marks the top of you ass with a magic symbol and fingers your ass until you grow a demonic tail.";
         demonTail.effect = (c, self, other) -> {
             self.body.addReplace(TailPart.demonic, 1);
             return true;
         };
-        options.add(demonTail);
-        TransformationOption pointedEars = new TransformationOption();
+        transformations.add(demonTail);
+        Transformation pointedEars = new Transformation("Pointed Ears");
         pointedEars.ingredients.put(Item.SuccubusDraft, 20);
         pointedEars.ingredients.put(Item.semen, 5);
         pointedEars.requirements.add(new BodyPartRequirement("ears"));
@@ -155,8 +153,8 @@ public class ReykaTime extends BaseNPCTime {
                             .stream()
                             .anyMatch(part -> part != EarPart.cat) || !self.body.has("ears");
         });
-        pointedEars.option = "Pointed Ears";
         pointedEars.scene =
+        pointedEars.name = "Pointed Ears";
                         "Reyka fetches the ingredients from your pockets with her tail and mixes them together with her palm. She mutters something unintelligible under her breath and suddenly a "
                                         + "comfortable-looking massage table appears in front of you. She motions for you to lie down, to which you promptly comply. She hovers above you and uses her mixture coated hands to "
                                         + "massage your ears. As her hands make contact with your sensitive ears, you feel a burning sensation in them as if they're are melting. "
@@ -167,8 +165,8 @@ public class ReykaTime extends BaseNPCTime {
             self.body.addReplace(EarPart.pointed, 1);
             return true;
         };
-        options.add(pointedEars);
-        TransformationOption succubusPussy = new TransformationOption();
+        transformations.add(pointedEars);
+        Transformation succubusPussy = new Transformation("Succubus Pussy");
         succubusPussy.ingredients.put(Item.SuccubusDraft, 20);
         succubusPussy.ingredients.put(Item.BewitchingDraught, 20);
         succubusPussy.ingredients.put(Item.FemDraft, 20);
@@ -180,14 +178,13 @@ public class ReykaTime extends BaseNPCTime {
                             .anyMatch(pussy -> pussy == PussyPart.normal);
         });
         succubusPussy.additionalRequirements = "A normal pussy";
-        succubusPussy.option = "Succubus Pussy";
         succubusPussy.scene =
                         "[Placeholder]<br/>Reyka mixes the potions together with her tail and fucks you thoroughly with it, turning your once-human slit into a pulsating cock-hungry succubus pussy.";
         succubusPussy.effect = (c, self, other) -> {
             self.body.addReplace(PussyPart.succubus, 1);
             return true;
         };
-        options.add(succubusPussy);
+        transformations.add(succubusPussy);
     }
 
     @Override

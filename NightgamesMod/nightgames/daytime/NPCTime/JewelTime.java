@@ -1,9 +1,11 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
+import nightgames.daytime.Daytime;
+import nightgames.daytime.Transformation;
 import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.items.Item;
@@ -45,13 +47,13 @@ public class JewelTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
+        transformations = new ArrayList<>();
         options = new ArrayList<>();
         {
-            TransformationOption growCock = new TransformationOption();
+            Transformation growCock = new Transformation("Jewel: Grow a cock");
             growCock.ingredients.put(Item.PriapusDraft, 3);
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
-            growCock.option = "Jewel: Grow a cock";
             growCock.scene = "[Placeholder]<br/>Jewel chugs down the three priapus drafts one after the other, making her clit grow into a large enlightened cock.";
             growCock.effect = (c, self, other) -> {
                 other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.enlightened));
@@ -60,9 +62,9 @@ public class JewelTime extends BaseNPCTime {
             options.add(growCock);
         }
         {
-            TransformationOption removeCock = new TransformationOption();
+            Transformation removeCock = new Transformation("Jewel: Remove her cock");
             removeCock.ingredients.put(Item.FemDraft, 3);
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
             removeCock.option = "Jewel: Remove her cock";
             removeCock.scene = "[Placeholder]<br/>Jewel drinks the three femdrafts one after another and her penis shrinks back into her normal clitoris.";
@@ -72,14 +74,13 @@ public class JewelTime extends BaseNPCTime {
             };
             options.add(removeCock);
         }
-        TransformationOption enlightenedCock = new TransformationOption();
+        Transformation enlightenedCock = new Transformation("Enlightened Cock");
         enlightenedCock.ingredients.put(Item.PriapusDraft, 10);
         enlightenedCock.ingredients.put(Item.EnergyDrink, 20);
         enlightenedCock.ingredients.put(Item.JuggernautJuice, 10);
 
         enlightenedCock.requirements.add((c, self, other) ->  self.body.hasGenericCock());
         enlightenedCock.additionalRequirements = "A normal cock";
-        enlightenedCock.option = "Enlightened Cock";
         enlightenedCock.scene = "[Placeholder]<br/>Jewel trains your cock to be enlightened.";
         enlightenedCock.effect = (c, self, other) -> {
             Optional<CockPart> optCock = self.body.findGenericCock();
@@ -88,25 +89,24 @@ public class JewelTime extends BaseNPCTime {
             self.body.add(new CockPart(target, CockPart.Mod.enlightened));
             return true;
         };
-        options.add(enlightenedCock);
-        TransformationOption fieryPussy = new TransformationOption();
+        transformations.add(enlightenedCock);
+        Transformation fieryPussy = new Transformation("Fiery Pussy");
         fieryPussy.ingredients.put(Item.EnergyDrink, 20);
         fieryPussy.ingredients.put(Item.JuggernautJuice, 10);
         fieryPussy.ingredients.put(Item.FemDraft, 10);
-        fieryPussy.requirements.add(new BodyPartRequirement("pussy"));
+        fieryPussy.requirements.add(bodypart("pussy"));
         fieryPussy.requirements.add((c, self, other) -> {
             return self.body.get("pussy")
                             .stream()
                             .anyMatch(part -> part == PussyPart.normal);
         });
         fieryPussy.additionalRequirements = "A normal pussy";
-        fieryPussy.option = "Fiery Pussy";
         fieryPussy.scene = "[Placeholder]<br/>Jewel trains your pussy to be fiery";
         fieryPussy.effect = (c, self, other) -> {
             self.body.addReplace(PussyPart.fiery, 1);
             return true;
         };
-        options.add(fieryPussy);
+        transformations.add(fieryPussy);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
@@ -24,7 +24,7 @@ public class YuiTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
-        options = Collections.emptyList();
+        transformations = Collections.emptyList();
     }
 
     @Override

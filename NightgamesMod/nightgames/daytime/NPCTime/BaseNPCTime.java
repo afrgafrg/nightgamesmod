@@ -1,19 +1,23 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.Player;
 import nightgames.characters.Trait;
+import nightgames.daytime.Activity;
+import nightgames.daytime.Transformation;
 import nightgames.global.Global;
 import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
+import nightgames.requirements.Requirement;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static nightgames.requirements.RequirementShortcuts.*;
 
 public abstract class BaseNPCTime extends Activity {
     protected NPC npc;
@@ -26,7 +30,7 @@ public abstract class BaseNPCTime extends Activity {
     String transformationIntro = "[Placeholder]<br/>TransformationIntro";
     String transformationFlag = "";
     Trait advTrait = null;
-    List<TransformationOption> options;
+    List<Transformation> transformations;
 
     public BaseNPCTime(Player player, NPC npc) {
         super(npc.getName(), player);
@@ -56,7 +60,7 @@ public abstract class BaseNPCTime extends Activity {
         return Optional.empty();
     }
 
-    enum VisitChoice {
+    protected enum VisitChoice {
         GAMES,
         SPARRING,
         SEX,
@@ -65,31 +69,32 @@ public abstract class BaseNPCTime extends Activity {
         OUTFIT,
         ADDICTION,
         LEAVE;
+
+        String getLabel() {
+            return Grammar.capitalizeFirstLetter(name());
+        }
     }
 
-    String getLabel(VisitChoice choice) {
-        return choice.name();
-    }
 
     @Override
-    public void start() {
-        Global.global.gui().clearText();
-        Global.global.gui().commandPanel.clearCommand(Global.global.gui());
+    public void start() throws InterruptedException {
         List<Loot> giftables = getGiftables();
-        Map<Item, Integer> MyInventory = this.player.getInventory();
+        Map<Item, Integer> playerInventory = this.player.getInventory();
 
-        Optional<TransformationOption> optionalOption =
-                        options.stream().filter(opt -> choice.equals(opt.option)).findFirst();
-        Optional<Loot> optionalGiftOption = giftables.stream()
-                        .filter(gift -> choice.equals(Grammar.capitalizeFirstLetter(gift.getName()))).findFirst();
+        // TODO: implement choiceAvailable() or availableChoices()
+        Map<String, String> choiceLabelMap = Stream.of(VisitChoice.values()).filter(choice -> choiceAvailable(choice))
+                        .collect(Collectors.toMap(VisitChoice::name, VisitChoice::getLabel));
+
+//        Optional<Loot> optionalGiftOption = giftables.stream()
+//                        .filter(gift -> choice.equals(Grammar.capitalizeFirstLetter(gift.getName()))).findFirst();
 
         if (optionalOption.isPresent()) {
-            TransformationOption option = optionalOption.get();
+            Transformation option = optionalOption.get();
             boolean hasAll = option.ingredients.entrySet().stream()
                             .allMatch(entry -> player.has(entry.getKey(), entry.getValue()));
             if (hasAll) {
                 Global.global.gui().message(Global.global.format(option.scene, npc, player));
-                option.ingredients.entrySet().stream().forEach(entry -> player.consume(entry.getKey(), entry.getValue(), false));
+                option.ingredients.entrySet().forEach(entry -> player.consume(entry.getKey(), entry.getValue(), false));
                 option.effect.execute(null, player, npc);
                 Global.global.gui().choose(this, "Leave");
             } else {
@@ -107,7 +112,10 @@ public abstract class BaseNPCTime extends Activity {
             player.gainAffection(npc, 2);
             npc.gainAffection(player, 2);
             Global.global.gui().choose(this, "Back");
-        } else if (choice.equals("Gift")) {
+        }
+
+        VisitChoice choice = controller.getChoice(choiceLabelMap).map(VisitChoice::valueOf).orElse(VisitChoice.LEAVE);
+        if (choice.equals("Gift")) {
             Global.global.gui().message(Global.global.format(giftString, npc, player));
             giftables.stream().forEach(loot -> Global.global.gui()
                             .choose(this, Grammar.capitalizeFirstLetter(loot.getName())));
@@ -119,18 +127,18 @@ public abstract class BaseNPCTime extends Activity {
             if (!transformationFlag.equals("")) {
                 Global.global.flag(transformationFlag);
             }
-            options.stream()
+            transformations.stream()
                    .filter(option -> option.requirements.stream().allMatch(req -> req.meets(null, player, npc)))
                    .forEach(opt -> {
-                Global.global.gui().message(opt.option + ":");
+                Global.global.gui().message(opt.name + ":");
                 opt.ingredients.entrySet().forEach((entry) -> {
-                    if (MyInventory.get(entry.getKey()) == null || MyInventory.get(entry.getKey()) == 0) {
+                    if (playerInventory.get(entry.getKey()) == null || playerInventory.get(entry.getKey()) == 0) {
                         Global.global.gui().message(
                                         entry.getValue() + " " + entry.getKey().getName() + " (you don't have any)");
 
                     } else {
                         Global.global.gui().message(entry.getValue() + " " + entry.getKey().getName() + " (you have: "
-                                        + MyInventory.get(entry.getKey()) + ")");
+                                        + playerInventory.get(entry.getKey()) + ")");
                     }
                 });
                 if (!opt.additionalRequirements.isEmpty()) {
@@ -146,7 +154,7 @@ public abstract class BaseNPCTime extends Activity {
                 Global.global.gui().choose(this, "Games");
                 Global.global.gui().choose(this, "Sparring");
                 Global.global.gui().choose(this, "Sex");
-                if (!options.isEmpty()) {
+                if (!transformations.isEmpty()) {
                     Global.global.gui().choose(this, transformationOptionString);
                 }
                 if (npc.getAffection(player) > 30) {

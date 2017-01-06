@@ -1,9 +1,10 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
-import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
+import nightgames.daytime.Daytime;
+import nightgames.characters.body.CockPart;
 import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.requirements.BodyPartRequirement;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public class AiriTime extends BaseNPCTime {
-    public AiriTime(Character player) {
+    public AiriTime(Player player) {
         super(player, Global.global.getNPC("Airi"));
         knownFlag = "Airi";
         giftedString = "\"Uhm... thank you!\"";
@@ -28,7 +29,7 @@ public class AiriTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
-        options = new ArrayList<>();
+        transformations = new ArrayList<>();
         {
             TransformationOption growCock = new TransformationOption();
             growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));

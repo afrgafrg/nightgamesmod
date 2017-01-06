@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.Player;
+import nightgames.daytime.NPCTime.*;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Rng;

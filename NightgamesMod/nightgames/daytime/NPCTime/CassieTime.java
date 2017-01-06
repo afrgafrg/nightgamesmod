@@ -1,9 +1,11 @@
-package nightgames.daytime;
+package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
+import nightgames.daytime.Daytime;
+import nightgames.daytime.Transformation;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.global.Rng;
@@ -43,7 +45,7 @@ public class CassieTime extends BaseNPCTime {
 
     @Override
     public void buildTransformationPool() {
-        options = new ArrayList<>();
+        transformations = new ArrayList<>();
         {
             Transformation growCock = new Transformation("Cassie: Grow a cock");
             growCock.ingredients.put(Item.PriapusDraft, 3);
@@ -75,7 +77,6 @@ public class CassieTime extends BaseNPCTime {
         runicCock.ingredients.add(item(Item.FaeScroll, 1));
         runicCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         runicCock.additionalRequirements = "A normal cock";
-        runicCock.option = "Runic Cock";
         runicCock.scene = "[Placeholder]<br/>Cassie enchants your cock with the power of the fairies.";
         runicCock.effect = (c, self, other) -> {
             Optional<CockPart> optPart = self.body.findGenericCock();
@@ -84,24 +85,22 @@ public class CassieTime extends BaseNPCTime {
             self.body.add(target.applyMod(CockPart.Mod.runic));
             return true;
         };
-        options.add(runicCock);
-        TransformationOption arcanePussy = new TransformationOption();
-        arcanePussy.ingredients.put(Item.BewitchingDraught, 20);
-        arcanePussy.ingredients.put(Item.FemDraft, 10);
-        arcanePussy.ingredients.put(Item.FaeScroll, 1);
-        arcanePussy.requirements.add(new BodyPartRequirement("pussy"));
-        arcanePussy.requirements.add((c, self, other) -> {
-            return self.body.get("pussy").stream().anyMatch(pussy -> pussy == PussyPart.normal);
-        });
+        transformations.add(runicCock);
+        Transformation arcanePussy = new Transformation(name);
+        arcanePussy.ingredients.add(item(Item.BewitchingDraught, 20));
+        arcanePussy.ingredients.add(item(Item.FemDraft, 10));
+        arcanePussy.ingredients.add(item(Item.FaeScroll, 1));
+        arcanePussy.requirements.add(bodypart("pussy"));
+        arcanePussy.requirements.add((c, self, other) -> self.body.get("pussy").stream().anyMatch(pussy -> pussy == PussyPart.normal));
         arcanePussy.additionalRequirements = "A normal pussy";
-        arcanePussy.option = "Arcane Pussy";
+        arcanePussy.name = "Arcane Pussy";
         arcanePussy.scene = "[Placeholder]<br/>Cassie draws intricate arcane tattoos on your pussy";
         arcanePussy.effect = (c, self, other) -> {
             self.body.addReplace(PussyPart.arcane, 1);
             return true;
         };
-        options.add(arcanePussy);
-        TransformationOption mouthPussy = new TransformationOption();
+        transformations.add(arcanePussy);
+        Transformation mouthPussy = new Transformation(name);
         mouthPussy.ingredients.put(Item.BewitchingDraught, 10);
         mouthPussy.ingredients.put(Item.FemDraft, 20);
         mouthPussy.ingredients.put(Item.Dildo, 1);
@@ -114,7 +113,7 @@ public class CassieTime extends BaseNPCTime {
             return other.body.get("mouth").stream().anyMatch(mouth -> mouth instanceof MouthPussyPart);
         });
         mouthPussy.additionalRequirements = "A normal mouth";
-        mouthPussy.option = "Mouth Pussy";
+        mouthPussy.name = "Mouth Pussy";
         mouthPussy.scene =
                         "When you mention Cassie's modified mouth to her, she blushes bright red and averts her eyes."
                                         + "She replies shyly, <i>\"Uhm would you mind if we don't talk about that? I'm not entirely sure what I was thinking at the time...\"</i>"
@@ -144,7 +143,7 @@ public class CassieTime extends BaseNPCTime {
             self.body.addReplace(new MouthPussyPart(), 1);
             return true;
         };
-        options.add(mouthPussy);
+        transformations.add(mouthPussy);
     }
 
     @Override

@@ -474,7 +474,9 @@ public enum Trait {
 
     event("event", "special character"),
     mindcontrolresistance("", "temporary resistance to mind games - hidden"),
-    none("", "");
+
+    // Null-valued trait
+    none("NoneTrait", "If you see this trait in-game, it's a bug.");
 
     private String desc;
     private TraitDescription longDesc;

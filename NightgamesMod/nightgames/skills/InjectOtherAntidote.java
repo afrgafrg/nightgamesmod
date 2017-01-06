@@ -18,7 +18,7 @@ public class InjectOtherAntidote extends Skill {
 
     public boolean usable(Combat c, Character target) {
         return (c.getStance().mobile(this.getSelf())) && (this.getSelf().canAct())
-                        && getSelf().has(Item.MedicalSupplies, 1)
+                        && getSelf().hasItem(Item.MedicalSupplies, 1)
                         && (!c.getStance().mobile(this.getSelf()) || !target.canAct());
     }
 

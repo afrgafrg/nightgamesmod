@@ -17,12 +17,12 @@ public class Whisper extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().kiss(getSelf(), target) && getSelf().canAct() && !getSelf().has(Trait.direct);
+        return c.getStance().kiss(getSelf(), target) && getSelf().canAct() && !getSelf().hasTrait(Trait.direct);
     }
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.darkpromises) ? .2f : 0;
+        return getSelf().hasTrait(Trait.darkpromises) ? .2f : 0;
     }
 
     @Override
@@ -35,13 +35,13 @@ public class Whisper extends Skill {
         int roll = Rng.rng.centeredrandom(4, getSelf().get(Attribute.Dark) / 5.0, 2);
         int m = 4 + Rng.rng.random(6);
 
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             m += 4;
         }
-        if (getSelf().has(Trait.darkpromises)) {
+        if (getSelf().hasTrait(Trait.darkpromises)) {
             m += 3;
         }
-        if (getSelf().has(Trait.darkpromises) && roll == 4 && getSelf().canSpend(15) && !target.wary()) {
+        if (getSelf().hasTrait(Trait.darkpromises) && roll == 4 && getSelf().canSpend(15) && !target.wary()) {
             getSelf().spendMojo(c, 15);
             writeOutput(c, Result.special, target);
             target.add(c, new Enthralled(target, getSelf(), 4));
@@ -55,7 +55,7 @@ public class Whisper extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) >= 32 && !user.has(Trait.direct);
+        return user.get(Attribute.Seduction) >= 32 && !user.hasTrait(Trait.direct);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Whisper extends Skill {
             return String.format("%s whispers in %s ear in some eldritch language."
                             + " %s words echo through %s head and %s %s a"
                             + " strong compulsion to do what %s tells %s.", getSelf().subject(),
-                            target.nameOrPossessivePronoun(), 
+                            target.nameOrPossessivePronoun(),
                             Global.capitalizeFirstLetter(getSelf().possessiveAdjective()),
                                             target.possessiveAdjective(), target.pronoun(),
                                             target.action("feel"), getSelf().subject(),

@@ -30,12 +30,12 @@ public class Tear extends Skill {
         boolean notMedical = getSelf().get(Attribute.Power) >= 32 || getSelf().get(Attribute.Animism) >= 12;
         return ((c.getStance().reachTop(getSelf()) && !target.breastsAvailable())
                         || ((c.getStance().reachBottom(getSelf()) && !target.crotchAvailable()))) && getSelf().canAct()
-                        && (notMedical || getSelf().has(Item.MedicalSupplies, 1));
+                        && (notMedical || getSelf().hasItem(Item.MedicalSupplies, 1));
     }
 
     @Override
     public String describe(Combat c) {
-        if (getSelf().get(Attribute.Medicine) >= 12 && getSelf().has(Item.MedicalSupplies, 1)) {
+        if (getSelf().get(Attribute.Medicine) >= 12 && getSelf().hasItem(Item.MedicalSupplies, 1)) {
             return "Dissect your opponent's clothing";
         }
         return "Rip off your opponent's clothes";
@@ -43,7 +43,7 @@ public class Tear extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        boolean isMedical = (getSelf().get(Attribute.Medicine) >= 12 && getSelf().has(Item.MedicalSupplies, 1));
+        boolean isMedical = (getSelf().get(Attribute.Medicine) >= 12 && getSelf().hasItem(Item.MedicalSupplies, 1));
         if (c.getStance().reachTop(getSelf()) && !target.getOutfit().slotEmpty(ClothingSlot.top)) {
             Clothing article = target.getOutfit().getTopOfSlot(ClothingSlot.top);
             if (isMedical && !article.is(ClothingTrait.indestructible)

@@ -139,7 +139,7 @@ public class FaceSitting extends AbstractBehindStance {
         bottom.weaken(c, (int) top.modifyDamage(DamageType.stance, bottom, 5));
         top.emote(Emotion.dominant, 20);
         top.emote(Emotion.horny, 10);
-        if (top.has(Trait.energydrain)) {
+        if (top.hasTrait(Trait.energydrain)) {
             c.write(top, Global.global.format(
                             "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained through your connection.",
                             top, bottom));
@@ -167,7 +167,7 @@ public class FaceSitting extends AbstractBehindStance {
 
     @Override
     public float priorityMod(Character self) {
-        return getSubDomBonus(self, top.has(Trait.energydrain) ? 5.0f : 3.0f);
+        return getSubDomBonus(self, top.hasTrait(Trait.energydrain) ? 5.0f : 3.0f);
     }
 
     @Override

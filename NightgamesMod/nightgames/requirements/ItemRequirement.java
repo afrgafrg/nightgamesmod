@@ -19,7 +19,7 @@ public class ItemRequirement extends BaseRequirement {
     }
 
     @Override public boolean meets(Combat c, Character self, Character other) {
-        return self.has(item.item, item.amount);
+        return self.hasItem(item.item, item.amount);
     }
 
     @Override public boolean equals(Object o) {

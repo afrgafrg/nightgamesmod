@@ -21,7 +21,7 @@ public class Sensitize extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().has(Item.SPotion)
+        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().hasItem(Item.SPotion)
                         && target.mostlyNude() && !c.getStance().prone(getSelf()) && !target.is(Stsflag.hypersensitive);
     }
 
@@ -38,7 +38,7 @@ public class Sensitize extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.SPotion, 1);
-        if (getSelf().has(Item.Aersolizer)) {
+        if (getSelf().hasItem(Item.Aersolizer)) {
             writeOutput(c, Result.special, target);
         } else if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
@@ -82,7 +82,7 @@ public class Sensitize extends Skill {
                             + "suddenly surrounded by a cloud of minty gas. %s skin becomes"
                             + " hot, but goosebumps appear anyway. "
                             + "Even the air touching %s skin makes %s shiver.", getSelf().subject(),
-                            getSelf().possessiveAdjective(), 
+                            getSelf().possessiveAdjective(),
                             Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
                             target.possessiveAdjective(), target.possessiveAdjective(),
                             target.directObject());

@@ -76,10 +76,10 @@ public class Clothing implements Loot {
     }
 
     public int dc(Character attacker) {
-        if (attacker != null && attacker.has(Trait.dexterous) && layer <= 1 && slots.contains(ClothingSlot.top)) {
+        if (attacker != null && attacker.hasTrait(Trait.dexterous) && layer <= 1 && slots.contains(ClothingSlot.top)) {
             return dc / 4;
         }
-        if (attacker != null && attacker.has(Trait.dexterous) && layer <= 1 && slots.contains(ClothingSlot.bottom)) {
+        if (attacker != null && attacker.hasTrait(Trait.dexterous) && layer <= 1 && slots.contains(ClothingSlot.bottom)) {
             return dc / 4;
         }
         return dc;
@@ -113,7 +113,7 @@ public class Clothing implements Loot {
 
     @Override
     public void pickup(Character owner) {
-        if (!owner.has(this)) {
+        if (!owner.hasClothing(this)) {
             owner.gain(this);
         }
     }

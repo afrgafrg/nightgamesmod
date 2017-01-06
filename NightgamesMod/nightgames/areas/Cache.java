@@ -56,7 +56,7 @@ public class Cache implements Deployable {
     @Override
     public boolean resolve(Character active) {
         if (active.state == State.ready) {
-            if (active.has(Trait.treasureSeeker)) {
+            if (active.hasTrait(Trait.treasureSeeker)) {
                 dc -= 5;
             }
             if (active.check(test, dc)) {

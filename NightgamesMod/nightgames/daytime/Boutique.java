@@ -35,7 +35,7 @@ public class Boutique extends Store {
             Global.global.gui().message(
                             "This is a higher end store for women's clothing. Things may get a bit expensive here.");
             for (Clothing i : clothing().keySet()) {
-                Global.global.gui().message(i.getName() + ": " + i.getPrice() + (player.has(i) ? " (Owned)" : ""));
+                Global.global.gui().message(i.getName() + ": " + i.getPrice() + (player.hasClothing(i) ? " (Owned)" : ""));
             }
             Global.global.gui().message("You have: $" + player.money + " available to spend.");
             displayGoods();

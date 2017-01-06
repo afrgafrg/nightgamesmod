@@ -273,11 +273,11 @@ public class Kat extends BasePersonality {
     @Override
     public void rest(int time) {
         super.rest(time);
-        if (!(character.has(Item.Dildo) || character.has(Item.Dildo2)) && character.money >= 250) {
+        if (!(character.hasItem(Item.Dildo) || character.hasItem(Item.Dildo2)) && character.money >= 250) {
             character.gain(Item.Dildo);
             character.money -= 250;
         }
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Onahole) || character.hasItem(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
@@ -573,7 +573,7 @@ public class Kat extends BasePersonality {
             if (!character.is(Stsflag.feral)) {
                 character.add(c, new Feral(character));
             }
-            if (!character.has(Trait.shameless)) {
+            if (!character.hasTrait(Trait.shameless)) {
                 character.add(Trait.shameless);
                 character.remove(Trait.shy);
             }
@@ -586,7 +586,7 @@ public class Kat extends BasePersonality {
                     return value >= 100;
             }
         } else {
-            if (!character.has(Trait.shy)) {
+            if (!character.hasTrait(Trait.shy)) {
                 character.add(Trait.shy);
                 character.remove(Trait.shameless);
                 character.removeStatus(Stsflag.feral);

@@ -22,7 +22,7 @@ public class ShamefulDisplay extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return getSelf().getPure(Attribute.Submissive) >= 15 && !getSelf().has(Trait.shameless);
+        return getSelf().getPure(Attribute.Submissive) >= 15 && !getSelf().hasTrait(Trait.shameless);
     }
 
     @Override

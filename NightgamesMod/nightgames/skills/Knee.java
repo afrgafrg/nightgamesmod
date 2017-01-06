@@ -53,10 +53,10 @@ public class Knee extends Skill {
                     c.write(getSelf(), getSelf().bbLiner(c, target));
                 }
             }
-            if (target.has(Trait.achilles) && !target.has(ClothingTrait.armored)) {
+            if (target.hasTrait(Trait.achilles) && !target.hasClothingTrait(ClothingTrait.armored)) {
                 m += Rng.rng.random(16,20);
             }
-            if (target.has(ClothingTrait.armored) || target.has(Trait.brassballs)) {
+            if (target.hasClothingTrait(ClothingTrait.armored) || target.hasTrait(Trait.brassballs)) {
                 m *= .75;
             }
             target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));

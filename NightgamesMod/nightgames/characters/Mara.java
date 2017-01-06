@@ -370,27 +370,27 @@ public class Mara extends BasePersonality {
 
     @Override
     public void rest(int time) {
-        if (character.rank == 1 && !character.has(Trait.madscientist)) {
+        if (character.rank == 1 && !character.hasTrait(Trait.madscientist)) {
             advance();
         }
         super.rest(time);
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Onahole) || character.hasItem(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
-        if (!(character.has(Item.Tickler) || character.has(Item.Tickler)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Tickler) || character.hasItem(Item.Tickler)) && character.money >= 300) {
             character.gain(Item.Tickler);
             character.money -= 300;
         }
-        if (!(character.has(Item.Dildo) || character.has(Item.Dildo)) && character.money >= 250) {
+        if (!(character.hasItem(Item.Dildo) || character.hasItem(Item.Dildo)) && character.money >= 250) {
             character.gain(Item.Dildo);
             character.money -= 250;
         }
-        if (!(character.has(Item.Crop) || character.has(Item.Crop)) && character.money >= 200) {
+        if (!(character.hasItem(Item.Crop) || character.hasItem(Item.Crop)) && character.money >= 200) {
             character.gain(Item.Crop);
             character.money -= 200;
         }
-        if (!(character.has(Item.Strapon) || character.has(Item.Strapon)) && character.money >= 600) {
+        if (!(character.hasItem(Item.Strapon) || character.hasItem(Item.Strapon)) && character.money >= 600) {
             character.gain(Item.Strapon);
             character.money -= 600;
         }
@@ -469,7 +469,7 @@ public class Mara extends BasePersonality {
                             + "know how to give as well as take.\"</i> She jokes as she begins to work up a steady rhythm. Not to be outdone you quickly shift yourself and begin to thrust into her "
                             + "earnestly, intent on showing just how well you can 'give'. Soon Mara is collapsed on top of you breathing hard and her eyes unfocused. You stand and take your leave. You may have lost the battle but the war is far from over.";
         }
-        if (character.has(Trait.madscientist) && character.has(Item.Lubricant)) {
+        if (character.hasTrait(Trait.madscientist) && character.hasItem(Item.Lubricant)) {
             target.add(c, new Oiled(target));
             return "You've fallen completely into Mara's hands now. Her nimble fingers dance over your dick and balls, playing you like an instrument. You grit your teeth and "
                             + "try to endure her touch until you can finger her to orgasm. It's a lost cause though, and you groan as you inevitably feel your pleasure building to a peak. Just before "
@@ -495,7 +495,7 @@ public class Mara extends BasePersonality {
         }
         if (c.getStance()
              .vaginallyPenetrated(c, character)) {
-            if (character.has(Item.ShockGlove) && Rng.rng.random(2) == 0) {
+            if (character.hasItem(Item.ShockGlove) && Rng.rng.random(2) == 0) {
                 return "You've got Mara just where you want her. Your arms are wrapped around her, holding her in place as you thrust your cock into her tight pussy over and over. Her moans are getting louder and louder, and you can feel her breath "
                                 + "quickening. You're getting close to cumming, but she's definitely closer. She returns your embrace, squeezing her body against yours, stroking your back with her hands. Her hands creep down to grasp your buttocks. "
                                 + "All of a sudden, she grins deviously, and she whispers...<br/><br/>"
@@ -539,7 +539,7 @@ public class Mara extends BasePersonality {
     @Override
     public String defeat(Combat c, Result flag) {
         Character other = c.getOpponent(character);
-        if (character.has(Trait.madscientist) && character.has(Item.SPotion)) {
+        if (character.hasTrait(Trait.madscientist) && character.hasItem(Item.SPotion)) {
             character.add(c, new Hypersensitive(character));
             return "Mara begins to panic as she realizes she's on the verge of defeat. She grabs a small bottle of liquid from pouch on her belt, but it slips from her fingers "
                             + "as she shudders in orgasm. You finger her pussy until she goes limp. While you're waiting for her to recover, you take a look at the bottle she dropped. "
@@ -617,7 +617,7 @@ public class Mara extends BasePersonality {
 
     @Override
     public String describe(Combat c, Character self) {
-        if (character.has(Trait.madscientist)) {
+        if (character.hasTrait(Trait.madscientist)) {
             return "Mara has gone high tech. She has a rig of equipment on harnesses that seem carefully placed so as not to interfere with clothing removal. The glasses she's wearing appear to be "
                             + "computerized rather than prescription. She also has a device of unknown purpose strapped to her arm. Underneath all of that, she has the same cute, mischievous expression she "
                             + "you're used to.";

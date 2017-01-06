@@ -65,7 +65,7 @@ public class Fly extends Fuck {
             target.emote(Emotion.nervous, 75);
             int m = 5 + Rng.rng.random(5);
             int otherm = m;
-            if (getSelf().has(Trait.insertion)) {
+            if (getSelf().hasTrait(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
             }
             c.setStance(new FlyingCarry(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());

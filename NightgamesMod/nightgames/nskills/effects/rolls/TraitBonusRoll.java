@@ -13,7 +13,7 @@ public class TraitBonusRoll extends BasicNumberRoll {
 
     @Override
     public double roll(SkillResultStruct result) {
-        if (result.getSelf().getCharacter().has(trait)) {
+        if (result.getSelf().getCharacter().hasTrait(trait)) {
             return super.roll(result);
         }
         return 0;

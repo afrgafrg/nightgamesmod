@@ -58,7 +58,7 @@ public class TentacleTrap extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Totem);
+        return owner.hasItem(Item.Totem);
     }
 
     @Override

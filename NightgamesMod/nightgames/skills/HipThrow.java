@@ -23,7 +23,7 @@ public class HipThrow extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.judonovice);
+        return user.hasTrait(Trait.judonovice);
     }
 
     @Override

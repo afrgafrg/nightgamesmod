@@ -20,7 +20,7 @@ public class Diversion extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.misdirection);
+        return user.hasTrait(Trait.misdirection);
     }
 
     @Override

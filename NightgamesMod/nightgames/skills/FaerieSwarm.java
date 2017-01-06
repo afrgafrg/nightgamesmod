@@ -22,7 +22,7 @@ public class FaerieSwarm extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && getSelf().has(Item.MinorScroll);
+                        && getSelf().hasItem(Item.MinorScroll);
     }
 
     @Override

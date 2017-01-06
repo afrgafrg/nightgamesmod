@@ -45,7 +45,7 @@ public class ReverseCarry extends Carry {
             }
             int m = 5 + Rng.rng.random(5);
             int otherm = m;
-            if (getSelf().has(Trait.insertion)) {
+            if (getSelf().hasTrait(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
             }
             c.setStance(new Jumped(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());

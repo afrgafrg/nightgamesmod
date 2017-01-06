@@ -27,7 +27,7 @@ public class DarkTalisman extends Skill {
                                       .mobile(getSelf())
                         && !c.getStance()
                              .prone(getSelf())
-                        && !target.is(Stsflag.enthralled) && getSelf().has(Item.Talisman);
+                        && !target.is(Stsflag.enthralled) && getSelf().hasItem(Item.Talisman);
     }
 
     @Override

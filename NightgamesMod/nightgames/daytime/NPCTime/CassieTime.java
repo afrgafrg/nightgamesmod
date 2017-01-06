@@ -159,7 +159,7 @@ public class CassieTime extends BaseNPCTime {
             Global.global.gui().choose(this, "Games");
             Global.global.gui().choose(this, "Sparring");
             Global.global.gui().choose(this, "Sex");
-            if (npc.has(Trait.magicmilk) && Global.global.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
+            if (npc.hasTrait(Trait.magicmilk) && Global.global.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
                 Global.global.gui().choose(this, "Ask for milk");
             }
         } else if (Global.global.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
@@ -210,7 +210,7 @@ public class CassieTime extends BaseNPCTime {
             Global.global.gui().choose(this, "Games");
             Global.global.gui().choose(this, "Sparring");
             Global.global.gui().choose(this, "Sex");
-            if (npc.has(Trait.magicmilk) && Global.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
+            if (npc.hasTrait(Trait.magicmilk) && Global.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
                 Global.global.gui().choose(this, "Ask for milk");
             }
         }
@@ -400,7 +400,7 @@ public class CassieTime extends BaseNPCTime {
             Global.global.getPlayer().addict(AddictionType.MAGIC_MILK, npc, Addiction.MED_INCREASE);
             Global.global.getPlayer().getAddiction(AddictionType.MAGIC_MILK).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.silvertongue) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.hasTrait(Trait.silvertongue) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "Cassie eagerly invites you to her room for some intimate time. The room is quite tidy, though you're surprised to see a couple anime "
                                                 + "posters on the wall. Cassie gets a little embarrassed as you look around, but she kisses you softly and leads you to the bed. You quickly strip each other "
@@ -424,7 +424,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "<i>\"O-ok tha-mmm... I don't mind if you do that for a while.\"</i> She takes your cock into her mouth again and continues pleasuring you. Fair enough. If she's going to become better "
                                                 + "acquainted with your manhood, you might as well learn the ins and outs of her most sensitive area.<br/><br/>The two of you keep up your oral activities until your tongues are too "
                                                 + "tired to continue and both of you have orgasmed more times than you can count.");
-                if (!player.has(Trait.silvertongue)) {
+                if (!player.hasTrait(Trait.silvertongue)) {
                     Global.global.gui().message(
                                     "<br/><br/><b>Through diligent practice, you and Cassie have gotten more skilled at oral sex.</b>");
                     player.add(Trait.silvertongue);
@@ -457,7 +457,7 @@ public class CassieTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.misdirection) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.hasTrait(Trait.misdirection) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "Cassie continues to impress you with her gaming prowess, but right now, you've got a decisive advantage. You're at match point, so if either of you can "
                                                 + "score again, that'll almost certainly be the game. Unfortunately for her, you've got her R&D completely locked down. If she doesn't have the agenda she needs in her "
@@ -476,7 +476,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "which are clearly still on. Cassie suddenly closes the distance between you and kisses you passionately. She presses her body against yours and you embrace her gently. <i>\"Ok, so "
                                                 + "I admit your pants are still on,\"</i> she whispers as you break for air. <i>\"Neither of us wants that. Maybe we should work together to remove the pants?\"</i> Perhaps some of her clothes need "
                                                 + "to be removed too? <i>\"I agree, we're both wearing far too much clothing for the bedroom.\"</i> She's already got your belt off as you kiss her again and lead her to the bed.");
-                if (!player.has(Trait.misdirection)) {
+                if (!player.hasTrait(Trait.misdirection)) {
                     Global.global.gui().message(
                                     "<br/><br/><b>You've learned the art of using a diversion to distract your opponent.</b>");
                     player.add(Trait.misdirection);
@@ -505,7 +505,7 @@ public class CassieTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.judonovice) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.hasTrait(Trait.judonovice) || Rng.rng.random(2) == 1)) {
                 Global.global.gui().message(
                                 "You and Cassie manage to procure an actual fitness room with actual wrestling mats for your sparring practice. No more rolling around in couch cushions and pillows. "
                                                 + "the downside it that you don't have the same level of privacy as in your dorm room, so today you'll need to stick with just sparring. Cassie seems a lot more confident than usual "
@@ -519,7 +519,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "help with tuition. After a few matches, I started really wanting to see if I could win. Each time I lost a fight, I wanted to figure out if I could have done better. I guess this "
                                                 + "is my answer to that.\"</i><br/><br/>She extends her hand to help you up, but instead you pull her down on top of you and kiss her tenderly. She blushes and grins at you when you break the kiss. "
                                                 + "<i>\"That's not a judo technique.\"</i> She stands back up and motions for you to do the same. <i>\"Come on, I'll show you what I've learned.\"</i>");
-                if (!player.has(Trait.judonovice)) {
+                if (!player.hasTrait(Trait.judonovice)) {
                     Global.global.gui().message("<br/><br/><b>By training with Cassie, you learned the Hip Throw skill.</b>");
                     player.add(Trait.judonovice);
                     npc.getGrowth().addTrait(0, Trait.judonovice);

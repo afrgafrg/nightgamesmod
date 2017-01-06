@@ -33,7 +33,7 @@ public class ClothingStore extends Store {
             Global.global.gui().message(
                             "This is a normal retail clothing outlet. For obvious reasons, you'll need to buy anything you want to wear at night in bulk.");
             for (Clothing i : clothing().keySet()) {
-                Global.global.gui().message(i.getName() + ": " + i.getPrice() + (player.has(i) ? " (Owned)" : ""));
+                Global.global.gui().message(i.getName() + ": " + i.getPrice() + (player.hasClothing(i) ? " (Owned)" : ""));
             }
             Global.global.gui().message("You have: $" + player.money + " available to spend.");
             displayGoods();

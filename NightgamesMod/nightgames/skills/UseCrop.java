@@ -28,7 +28,7 @@ public class UseCrop extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return (getSelf().has(Item.Crop) || getSelf().has(Item.Crop2)) && getSelf().canAct()
+        return (getSelf().hasItem(Item.Crop) || getSelf().hasItem(Item.Crop2)) && getSelf().canAct()
                         && c.getStance().mobile(getSelf())
                         && (c.getStance().reachTop(getSelf()) || c.getStance().reachBottom(getSelf()));
     }
@@ -48,9 +48,9 @@ public class UseCrop extends Skill {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             double m = Global.random(12, 18);
             if (target.crotchAvailable() && c.getStance().reachBottom(getSelf())) {
-                if (getSelf().has(Item.Crop2) && Rng.rng.random(10) > 7 && !target.has(Trait.brassballs)) {
+                if (getSelf().hasItem(Item.Crop2) && Rng.rng.random(10) > 7 && !target.hasTrait(Trait.brassballs)) {
                     writeOutput(c, Result.critical, target);
-                    if (target.has(Trait.achilles)) {
+                    if (target.hasTrait(Trait.achilles)) {
                         m += 6;
                     }
                     target.emote(Emotion.angry, 10);
@@ -86,7 +86,7 @@ public class UseCrop extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            if (!target.has(Item.Crop)) {
+            if (!target.hasItem(Item.Crop)) {
                 return "You lash out with your riding crop, but it fails to connect.";
             } else {
                 return "You try to hit " + target.name() + " with your riding crop, but she deflects it with her own.";
@@ -112,7 +112,7 @@ public class UseCrop extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            if (!target.has(Item.Crop)) {
+            if (!target.hasItem(Item.Crop)) {
                 return String.format("%s out of the way, as %s swings %s riding crop at %s.",
                                 target.subjectAction("duck"), getSelf().subject(),
                                 getSelf().possessiveAdjective(), target.directObject());

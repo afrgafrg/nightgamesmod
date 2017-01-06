@@ -16,7 +16,7 @@ public class TraitRequirement extends BaseRequirement {
     }
 
     @Override public boolean meets(Combat c, Character self, Character other) {
-        return self.has(trait);
+        return self.hasTrait(trait);
     }
 
     @Override public boolean equals(Object o) {

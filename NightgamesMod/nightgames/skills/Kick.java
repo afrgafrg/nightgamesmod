@@ -29,7 +29,7 @@ public class Kick extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return c.getStance().feet(getSelf(), target) && getSelf().canAct() && (!c.getStance().prone(getSelf())
-                        || getSelf().has(Trait.dirtyfighter) && !c.getStance().connected(c));
+                        || getSelf().hasTrait(Trait.dirtyfighter) && !c.getStance().connected(c));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Kick extends Skill {
             target.shred(ClothingSlot.bottom);
         } else if (target.roll(getSelf(), c, accuracy(c, target))) {
             double m = Rng.rng.random(16, 21);
-            if (target.has(Trait.brassballs)) {
+            if (target.hasTrait(Trait.brassballs)) {
                 m *= .8;
             }
             if (getSelf().human()) {
@@ -67,10 +67,10 @@ public class Kick extends Skill {
                     c.write(getSelf(), receive(c, 0, Result.normal, target));
                 }
             }
-            if (target.has(Trait.achilles) && !target.has(ClothingTrait.armored)) {
+            if (target.hasTrait(Trait.achilles) && !target.hasClothingTrait(ClothingTrait.armored)) {
                 m += 14 + Rng.rng.random(4);
             }
-            if (target.has(ClothingTrait.armored)) {
+            if (target.hasClothingTrait(ClothingTrait.armored)) {
                 m = m / 2;
             }
             target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));

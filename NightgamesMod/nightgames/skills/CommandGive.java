@@ -27,7 +27,7 @@ public class CommandGive extends PlayerCommand {
             return false;
         }
         for (Item transferable : TRANSFERABLES) {
-            if (target.has(transferable)) {
+            if (target.hasItem(transferable)) {
                 return true;
             }
         }
@@ -43,7 +43,7 @@ public class CommandGive extends PlayerCommand {
     public boolean resolve(Combat c, Character target) {
         do {
             transfer = Item.values()[Rng.rng.random(Item.values().length)];
-            if (!(target.has(transfer) && TRANSFERABLES.contains(transfer))) {
+            if (!(target.hasItem(transfer) && TRANSFERABLES.contains(transfer))) {
                 transfer = null;
             }
         } while (transfer == null);

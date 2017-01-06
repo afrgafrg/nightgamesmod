@@ -192,7 +192,7 @@ public abstract class Skill {
 
         // Horrendously ugly, I know.
         // But you were the one who removed getWithOrganType...
-        if (skill.user().has(Trait.temptress)) {
+        if (skill.user().hasTrait(Trait.temptress)) {
             FiredUp status = (FiredUp) skill.user().status.stream().filter(s -> s instanceof FiredUp).findAny()
                             .orElse(null);
             if (status != null) {

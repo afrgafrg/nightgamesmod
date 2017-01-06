@@ -13,12 +13,12 @@ import nightgames.status.Flatfooted;
 import nightgames.status.Winded;
 
 public class SpringTrap extends Trap {
-    
+
 
     public SpringTrap() {
         this(null);
     }
-    
+
     public SpringTrap(Character owner) {
         super("Spring Trap", owner);
     }
@@ -36,11 +36,11 @@ public class SpringTrap extends Trap {
                                 + "and collapses to the floor in pain.");
             }
             int m = 50 + target.getLevel() * 5;
-            if (target.has(ClothingTrait.armored)) {
+            if (target.hasClothingTrait(ClothingTrait.armored)) {
                 m /= 2;
                 target.pain(null, null, m);
             } else {
-                if (target.has(Trait.achilles)) {
+                if (target.hasTrait(Trait.achilles)) {
                     m += 20;
                 }
                 target.pain(null, null, m);
@@ -57,7 +57,7 @@ public class SpringTrap extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Spring) && owner.has(Item.Rope);
+        return owner.hasItem(Item.Spring) && owner.hasItem(Item.Rope);
     }
 
     @Override

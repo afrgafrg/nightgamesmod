@@ -41,13 +41,13 @@ public class Tickle extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         DamageType type = DamageType.technique;
-        if (getSelf().has(Trait.ticklemonster) || target.roll(getSelf(), c, accuracy(c, target))) {
+        if (getSelf().hasTrait(Trait.ticklemonster) || target.roll(getSelf(), c, accuracy(c, target))) {
             if (target.crotchAvailable() && c.getStance().reachBottom(getSelf()) && !c.getStance().havingSex(c)) {
                 int bonus = 0;
                 int weak = 0;
                 Result result = Result.normal;
 
-                if (getSelf().has(Item.Tickler2) && Rng.rng.random(2) == 1 && getSelf().canSpend(10)) {
+                if (getSelf().hasItem(Item.Tickler2) && Rng.rng.random(2) == 1 && getSelf().canSpend(10)) {
                     getSelf().spendMojo(c, 10);
                     result = Result.special;
                     bonus += 2;
@@ -60,7 +60,7 @@ public class Tickle extends Skill {
                     type = DamageType.gadgets;
                 }
                 writeOutput(c, result, target);
-                if (getSelf().has(Trait.ticklemonster) && target.mostlyNude()) {
+                if (getSelf().hasTrait(Trait.ticklemonster) && target.mostlyNude()) {
                     writeOutput(c, Result.special, target);
                     bonus += 5 + Rng.rng.random(4);
                     weak += 3 + Rng.rng.random(4);
@@ -71,7 +71,7 @@ public class Tickle extends Skill {
                 if (result == Result.special) {
                     target.add(c, new Hypersensitive(target, 5));
                 }
-                if (target.has(Trait.ticklish)) {
+                if (target.hasTrait(Trait.ticklish)) {
                     bonus = 4 + Rng.rng.random(3);
                     c.write(target, Global.global.format(
                                     "{other:SUBJECT-ACTION:squirm|squirms} uncontrollably from {self:name-possessive} actions. Yup, definitely ticklish.",
@@ -85,7 +85,7 @@ public class Tickle extends Skill {
                 int bonus = 0;
                 if (target.breastsAvailable() && c.getStance().reachTop(getSelf())) {
                     writeOutput(c, Result.item, target);
-                    if (target.has(Trait.ticklish)) {
+                    if (target.hasTrait(Trait.ticklish)) {
                         bonus = 4 + Rng.rng.random(3);
                         c.write(target, Global.global.format(
                                         "{other:SUBJECT-ACTION:squirm|squirms} uncontrollably from {self:name-possessive} actions. Yup definitely ticklish.",
@@ -95,7 +95,7 @@ public class Tickle extends Skill {
                                     4 + Rng.rng.random(4), bonus, c, false, this);
                 } else {
                     writeOutput(c, Result.weak, target);
-                    if (target.has(Trait.ticklish)) {
+                    if (target.hasTrait(Trait.ticklish)) {
                         bonus = 4 + Rng.rng.random(3);
                         c.write(target, Global.global.format(
                                         "{other:SUBJECT-ACTION:squirm|squirms} uncontrollably from {self:name-possessive} actions. Yup definitely ticklish.",
@@ -108,7 +108,7 @@ public class Tickle extends Skill {
             } else {
                 writeOutput(c, Result.normal, target);
                 int bonus = 0;
-                if (target.has(Trait.ticklish)) {
+                if (target.hasTrait(Trait.ticklish)) {
                     bonus = 2 + Rng.rng.random(3);
                     c.write(target, Global.global.format(
                                     "{other:SUBJECT-ACTION:squirm|squirms} uncontrollably from {self:name-possessive} actions. Yup definitely ticklish.",
@@ -213,7 +213,7 @@ public class Tickle extends Skill {
     }
 
     private boolean hastickler() {
-        return getSelf().has(Item.Tickler) || getSelf().has(Item.Tickler2);
+        return getSelf().hasItem(Item.Tickler) || getSelf().hasItem(Item.Tickler2);
     }
 
     @Override

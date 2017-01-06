@@ -29,7 +29,7 @@ public class CommandUse extends PlayerCommand {
         }
         boolean usable = false;
         for (Item candidate : CANDIDATES) {
-            if (target.has(candidate)) {
+            if (target.hasItem(candidate)) {
                 switch (candidate) {
                     case Lubricant:
                         usable = !target.is(Stsflag.oiled);
@@ -65,7 +65,7 @@ public class CommandUse extends PlayerCommand {
                 default:
                     break;
             }
-            if (!(CANDIDATES.contains(used) && target.has(used)) && !hasStatus) {
+            if (!(CANDIDATES.contains(used) && target.hasItem(used)) && !hasStatus) {
                 used = null;
             }
         } while (used == null);

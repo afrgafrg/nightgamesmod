@@ -42,7 +42,7 @@ public class CockWorship extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         int m = 10 + Rng.rng.random(8);
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
         writeOutput(c, Result.normal, target);

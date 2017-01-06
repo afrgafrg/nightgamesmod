@@ -17,7 +17,7 @@ public class Bite extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.breeder);
+        return user.hasTrait(Trait.breeder);
     }
 
     @Override

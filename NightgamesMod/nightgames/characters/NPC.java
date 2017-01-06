@@ -164,12 +164,12 @@ public class NPC extends Character {
         } else {
             target = c.p1;
         }
-        if (!has(Trait.leveldrainer))
+        if (!hasTrait(Trait.leveldrainer))
             gainXP(getVictoryXP(target));
-        if (!target.has(Trait.leveldrainer))
+        if (!target.hasTrait(Trait.leveldrainer))
             target.gainXP(getDefeatXP(this));
         target.arousal.empty();
-        if (target.has(Trait.insatiable)) {
+        if (target.hasTrait(Trait.insatiable)) {
             target.arousal.restore((int) (arousal.max() * .2));
         }
         dress(c);
@@ -198,10 +198,10 @@ public class NPC extends Character {
         if (!target.human() || !Global.global.getMatch().condition.name().equals("norecovery")) {
             target.arousal.empty();
         }
-        if (this.has(Trait.insatiable)) {
+        if (this.hasTrait(Trait.insatiable)) {
             arousal.restore((int) (arousal.max() * .2));
         }
-        if (target.has(Trait.insatiable)) {
+        if (target.hasTrait(Trait.insatiable)) {
             target.arousal.restore((int) (arousal.max() * .2));
         }
         target.dress(c);
@@ -226,7 +226,7 @@ public class NPC extends Character {
         gainXP(getVictoryXP(target));
         target.gainXP(getDefeatXP(this));
         target.arousal.empty();
-        if (target.has(Trait.insatiable)) {
+        if (target.hasTrait(Trait.insatiable)) {
             target.arousal.restore((int) (arousal.max() * .2));
         }
         dress(c);
@@ -239,7 +239,7 @@ public class NPC extends Character {
 
     @Override
     public boolean resist3p(Combat combat, Character intruder, Character assist) {
-        if (has(Trait.cursed)) {
+        if (hasTrait(Trait.cursed)) {
             Global.global.gui().message(ai.resist3p(combat, intruder, assist));
             return true;
         }
@@ -374,10 +374,10 @@ public class NPC extends Character {
             target.gainXP(getVictoryXP(this));
         arousal.empty();
         target.arousal.empty();
-        if (this.has(Trait.insatiable)) {
+        if (this.hasTrait(Trait.insatiable)) {
             arousal.restore((int) (arousal.max() * .2));
         }
-        if (target.has(Trait.insatiable)) {
+        if (target.hasTrait(Trait.insatiable)) {
             target.arousal.restore((int) (arousal.max() * .2));
         }
         target.undress(c);
@@ -466,7 +466,7 @@ public class NPC extends Character {
             }
         } else if (busy > 0) {
             busy--;
-        } else if (this.is(Stsflag.enthralled) && !has(Trait.immobile)) {
+        } else if (this.is(Stsflag.enthralled) && !hasTrait(Trait.immobile)) {
             Character master;
             master = ((Enthralled) getStatus(Stsflag.enthralled)).master;
             Move compelled = findPath(master.location);
@@ -498,18 +498,18 @@ public class NPC extends Character {
                         moves.add(findPath(match.gps("Central Camp")));
                         if (Global.global.isDebugOn(DebugFlags.DEBUG_FTC))
                             System.out.println(name() + " moving to get flag (prey)");
-                    } else if (!match.isPrey(this) && has(Item.Flag) && !match.isBase(this, location)) {
+                    } else if (!match.isPrey(this) && hasItem(Item.Flag) && !match.isBase(this, location)) {
                         moves.add(findPath(match.getBase(this)));
                         if (Global.global.isDebugOn(DebugFlags.DEBUG_FTC))
                             System.out.println(name() + " moving to deliver flag (hunter)");
-                    } else if (!match.isPrey(this) && has(Item.Flag) && match.isBase(this, location)) {
+                    } else if (!match.isPrey(this) && hasItem(Item.Flag) && match.isBase(this, location)) {
                         if (Global.global.isDebugOn(DebugFlags.DEBUG_FTC))
                             System.out.println(name() + " delivering flag (hunter)");
                         new Resupply().execute(this);
                         return;
                     }
                 }
-                if (!has(Trait.immobile) && moves.isEmpty()) {
+                if (!hasTrait(Trait.immobile) && moves.isEmpty()) {
                     for (Area path : location.adjacent) {
                         moves.add(new Move(path));
                         if (path.ping(get(Attribute.Perception))) {
@@ -551,7 +551,7 @@ public class NPC extends Character {
         Encs encType;
         if (ai.fightFlight(opponent)) {
             encType = Encs.fight;
-        } else if (has(Item.SmokeBomb)) {
+        } else if (hasItem(Item.SmokeBomb)) {
             encType = Encs.smoke;
             remove(Item.SmokeBomb);
         } else {
@@ -583,7 +583,7 @@ public class NPC extends Character {
     @Override
     public void showerScene(Character target, IEncounter encounter) {
         Encs response;
-        if (this.has(Item.Aphrodisiac)) {
+        if (this.hasItem(Item.Aphrodisiac)) {
             // encounter.aphrodisiactrick(this, target);
             response = Encs.aphrodisiactrick;
         } else if (!target.mostlyNude() && Rng.rng.random(3) >= 2) {
@@ -598,9 +598,9 @@ public class NPC extends Character {
 
     @Override
     public void intervene(IEncounter enc, Character p1, Character p2) {
-        if (Rng.rng.random(20) + getAffection(p1) + (p1.has(Trait.sympathetic) ? 10 : 0)
+        if (Rng.rng.random(20) + getAffection(p1) + (p1.hasTrait(Trait.sympathetic) ? 10 : 0)
                         >= Rng.rng.random(20)
-                        + getAffection(p2) + (p2.has(Trait.sympathetic) ? 10 : 0)) {
+                        + getAffection(p2) + (p2.hasTrait(Trait.sympathetic) ? 10 : 0)) {
             enc.intrude(this, p1);
         } else {
             enc.intrude(this, p2);
@@ -780,12 +780,12 @@ public class NPC extends Character {
     public void eot(Combat c, Character opponent, Skill last) {
         super.eot(c, opponent, last);
         ai.eot(c, opponent, last);
-        if (opponent.has(Trait.pheromones) && opponent.getArousal().percent() >= 20 && opponent.rollPheromones(c)) {
+        if (opponent.hasTrait(Trait.pheromones) && opponent.getArousal().percent() >= 20 && opponent.rollPheromones(c)) {
             c.write(opponent, "<br/>You see " + name()
                             + " swoon slightly as she gets close to you. Seems like she's starting to feel the effects of your musk.");
             add(c, Pheromones.getWith(opponent, this, opponent.getPheromonePower(), 10));
         }
-        if (has(Trait.RawSexuality)) {
+        if (hasTrait(Trait.RawSexuality)) {
             c.write(this, Global.global.format("{self:NAME-POSSESSIVE} raw sexuality turns both of you on.", this, opponent));
             temptNoSkillNoSource(c, opponent, getArousal().max() / 20);
             opponent.temptNoSkillNoSource(c, this, opponent.getArousal().max() / 20);
@@ -803,7 +803,7 @@ public class NPC extends Character {
         }
         if (mostlyNude()) {
             emote(Emotion.nervous, 10);
-            if (has(Trait.exhibitionist)) {
+            if (hasTrait(Trait.exhibitionist)) {
                 emote(Emotion.horny, 20);
             }
         }
@@ -889,9 +889,9 @@ public class NPC extends Character {
     
     public void decayMood(){
         for(Emotion e: emotes.keySet()){
-            if(mostlyNude()&&!has(Trait.exhibitionist)&&!has(Trait.shameless)&& e==Emotion.nervous){
+            if(mostlyNude()&&!hasTrait(Trait.exhibitionist)&&!hasTrait(Trait.shameless)&& e==Emotion.nervous){
                 emotes.put(e, emotes.get(e)-((emotes.get(e)-50)/2));
-            }else if(mostlyNude()&&!has(Trait.exhibitionist)&& e==Emotion.horny){
+            }else if(mostlyNude()&&!hasTrait(Trait.exhibitionist)&& e==Emotion.horny){
                 emotes.put(e, emotes.get(e)-((emotes.get(e)-50)/2));
             }
             else if(!mostlyNude()&&e==Emotion.confident){

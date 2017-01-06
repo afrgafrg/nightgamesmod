@@ -20,8 +20,8 @@ public class NursesGloves extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canAct() && c.getStance().mobile(getSelf()) && !getSelf().has(ClothingTrait.nursegloves)
-                        && getSelf().has(Item.MedicalSupplies, 1);
+        return getSelf().canAct() && c.getStance().mobile(getSelf()) && !getSelf().hasClothingTrait(ClothingTrait.nursegloves)
+                        && getSelf().hasItem(Item.MedicalSupplies, 1);
     }
 
     @Override

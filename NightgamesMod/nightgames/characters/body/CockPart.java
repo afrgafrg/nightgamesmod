@@ -212,9 +212,9 @@ public class CockPart implements BodyPart {
 
     @Override public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = getPleasureBase();
-        pleasureMod += self.has(Trait.cockTraining1) ? .5 : 0;
-        pleasureMod += self.has(Trait.cockTraining2) ? .7 : 0;
-        pleasureMod += self.has(Trait.cockTraining3) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.cockTraining1) ? .5 : 0;
+        pleasureMod += self.hasTrait(Trait.cockTraining2) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.cockTraining3) ? .7 : 0;
         DivineCharge charge = (DivineCharge) self.getStatus(Stsflag.divinecharge);
         if (charge != null) {
             pleasureMod += charge.magnitude;
@@ -227,7 +227,7 @@ public class CockPart implements BodyPart {
     }
 
     @Override public boolean isReady(Character self) {
-        return self.has(Trait.alwaysready) || self.getArousal().percent() >= 15 || this.modType
+        return self.hasTrait(Trait.alwaysready) || self.getArousal().percent() >= 15 || this.modType
                         .countsAs(self, Mod.bionic);
     }
 
@@ -308,15 +308,15 @@ public class CockPart implements BodyPart {
 
     @Override public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
-        if (self.has(Trait.polecontrol)) {
+        if (self.hasTrait(Trait.polecontrol)) {
             String desc = "";
-            if (self.has(Trait.polecontrol)) {
+            if (self.hasTrait(Trait.polecontrol)) {
                 desc += "expert ";
             }
             c.write(self, Global.global.format("{self:SUBJECT-ACTION:use|uses} {self:possessive} " + desc
                                             + "cock control to grind against {other:name-possessive} inner walls, making {other:possessive} knuckles whiten as {other:pronoun} {other:action:moan|moans} uncontrollably.",
                             self, opponent));
-            bonus += self.has(Trait.polecontrol) ? 8 : 0;
+            bonus += self.hasTrait(Trait.polecontrol) ? 8 : 0;
         }
         if (this.modType.countsAs(self, Mod.blessed) && target.isType("cock")) {
             if (self.getStatus(Stsflag.divinecharge) != null) {
@@ -467,18 +467,18 @@ public class CockPart implements BodyPart {
             }
         }
         double bonus = 0;
-        if (opponent.has(Trait.dickhandler) || opponent.has(Trait.anatomyknowledge)) {
+        if (opponent.hasTrait(Trait.dickhandler) || opponent.hasTrait(Trait.anatomyknowledge)) {
             c.write(opponent, Global.global.format(
                             "{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} cock causes {self:subject} to shudder uncontrollably.",
                             self, opponent));
-            if (opponent.has(Trait.dickhandler)) {
+            if (opponent.hasTrait(Trait.dickhandler)) {
                 bonus += 5;
             }
-            if (opponent.has(Trait.anatomyknowledge)) {
+            if (opponent.hasTrait(Trait.anatomyknowledge)) {
                 bonus += 5;
             }
         }
-        if (self.has(Trait.druglacedprecum) && !opponent.isPartProtected(target)) {
+        if (self.hasTrait(Trait.druglacedprecum) && !opponent.isPartProtected(target)) {
             opponent.add(c, new Sensitized(opponent, target, .2, 2.0, 20));
             c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} drug-laced precum is affecting {other:direct-object}.", self,

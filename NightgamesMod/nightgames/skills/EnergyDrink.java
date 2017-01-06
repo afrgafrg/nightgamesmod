@@ -20,7 +20,7 @@ public class EnergyDrink extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().has(Item.EnergyDrink);
+        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().hasItem(Item.EnergyDrink);
     }
 
     @Override

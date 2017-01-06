@@ -26,7 +26,7 @@ public class AnalPussyPart extends AssPart {
 
     @Override
     public boolean isReady(Character c) {
-        return c.getArousal().percent() > 15 || c.has(Trait.alwaysready) || super.isReady(c);
+        return c.getArousal().percent() > 15 || c.hasTrait(Trait.alwaysready) || super.isReady(c);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class Grind extends Thrust {
             mt = 10;
         }
 
-        if (getSelf().has(Trait.experienced)) {
+        if (getSelf().hasTrait(Trait.experienced)) {
             mt = mt * 2 / 3;
         }
         mt = Math.max(1, mt);

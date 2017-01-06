@@ -31,14 +31,14 @@ public class Tempt extends Skill {
             m += 2 * getSelf().body.getHotness(target);
         }
 
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             m *= 1.5;
         }
 
         int n = (int) Math.round(m);
 
         boolean tempted = Rng.rng.random(5) == 0;
-        if (getSelf().has(Trait.darkpromises) && tempted && !target.wary() && getSelf().canSpend(15)) {
+        if (getSelf().hasTrait(Trait.darkpromises) && tempted && !target.wary() && getSelf().canSpend(15)) {
             getSelf().spendMojo(c, 15);
             c.write(getSelf(), Global.global.format(
                             "{self:NAME-POSSESSIVE} words fall on fertile grounds. {other:NAME-POSSESSIVE} will to resist crumbles in light of {self:possessive} temptation.",

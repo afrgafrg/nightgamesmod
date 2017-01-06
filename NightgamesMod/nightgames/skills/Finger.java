@@ -21,7 +21,7 @@ public class Finger extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return c.getStance().reachBottom(getSelf())
-                        && (target.crotchAvailable() || getSelf().has(Trait.dexterous)
+                        && (target.crotchAvailable() || getSelf().hasTrait(Trait.dexterous)
                                         && target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getLayer() <= 1)
                         && target.hasPussy() && getSelf().canAct() && !c.getStance().vaginallyPenetrated(c, target);
     }

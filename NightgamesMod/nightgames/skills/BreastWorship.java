@@ -29,10 +29,10 @@ public class BreastWorship extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
+        Result results = target.hasTrait(Trait.lactating) ? Result.special : Result.normal;
         int m = 8 + Rng.rng.random(6);
         writeOutput(c, results, target);
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
         target.body.pleasure(getSelf(), getSelf().body.getRandom("mouth"), target.body.getRandom("breasts"), m, c, this);

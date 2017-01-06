@@ -25,7 +25,7 @@ public class Use extends Action {
 
     @Override
     public boolean usable(Character user) {
-        return user.has(item) && !user.bound();
+        return user.hasItem(item) && !user.bound();
     }
 
     @Override

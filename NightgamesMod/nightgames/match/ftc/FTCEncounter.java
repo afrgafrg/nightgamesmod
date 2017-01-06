@@ -49,7 +49,7 @@ public class FTCEncounter extends Encounter {
     private void treeAmbush(Character attacker, Character victim) {
         fightTime = 2;
         victim.addNonCombat(new Flatfooted(victim, 3));
-        if (attacker.has(Item.Handcuffs))
+        if (attacker.hasItem(Item.Handcuffs))
             victim.addNonCombat(new Bound(victim, 75, "handcuffs"));
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));
@@ -75,7 +75,7 @@ public class FTCEncounter extends Encounter {
                                 + " when {other:pronoun} is right beneath you, before you jump"
                                 + " down. You land right on {other:possessive} shoulders, pushing"
                                 + " {other:direct-object} firmly to the soft soil. Pulling our a ";
-                if (attacker.has(Item.Handcuffs)) {
+                if (attacker.hasItem(Item.Handcuffs)) {
                     message += "pair of handcuffs, ";
                 } else {
                     message += "zip-tie, ";
@@ -93,7 +93,7 @@ public class FTCEncounter extends Encounter {
     private void bushAmbush(Character attacker, Character victim) {
         fightTime = 2;
         victim.addNonCombat(new Flatfooted(victim, 3));
-        if (attacker.has(Item.Handcuffs))
+        if (attacker.hasItem(Item.Handcuffs))
             victim.addNonCombat(new Bound(victim, 75, "handcuffs"));
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));

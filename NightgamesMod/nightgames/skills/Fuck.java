@@ -29,7 +29,7 @@ public class Fuck extends Skill {
 
     public BodyPart getSelfOrgan() {
         BodyPart res = getSelf().body.getRandomCock();
-        if (res == null && getSelf().has(Trait.strapped)) {
+        if (res == null && getSelf().hasTrait(Trait.strapped)) {
             res = StraponPart.generic;
         }
         return res;
@@ -158,7 +158,7 @@ public class Fuck extends Skill {
                 c.setStance(c.getStance().insert(c, getSelf(), getSelf()), getSelf(), getSelf().canMakeOwnDecision());
             }
             int otherm = m;
-            if (getSelf().has(Trait.insertion)) {
+            if (getSelf().hasTrait(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
             }
             target.body.pleasure(getSelf(), selfO, targetO, otherm, c, this);

@@ -84,7 +84,7 @@ public abstract class SkillTag {
     public final static SkillTag chain = new NameOnlySkillTag("Chain");
     public final static SkillTag bodyAltering = new NameOnlySkillTag("BodyAltering");
     public final static SkillTag permantlyBodyAltering =
-                    new BasicSkillTag((results, value) -> !results.getSelf().getCharacter().has(Trait.stableform),
+                    new BasicSkillTag((results, value) -> !results.getSelf().getCharacter().hasTrait(Trait.stableform),
                                     SkillRequirement.noRequirement(), "PermanentlyBodyAltering");
     public final static SkillTag mindAltering =
                     new BasicSkillTag((results, value) -> !results.getSelf().getCharacter().is(Stsflag.cynical),

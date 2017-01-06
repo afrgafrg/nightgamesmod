@@ -107,15 +107,15 @@ public class Reyka extends BasePersonality {
     @Override
     public void rest(int time) {
         super.rest(time);
-        if (!(character.has(Item.Dildo) || character.has(Item.Dildo2)) && character.money >= 250) {
+        if (!(character.hasItem(Item.Dildo) || character.hasItem(Item.Dildo2)) && character.money >= 250) {
             character.gain(Item.Dildo);
             character.money -= 250;
         }
-        if (!(character.has(Item.Tickler) || character.has(Item.Tickler2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Tickler) || character.hasItem(Item.Tickler2)) && character.money >= 300) {
             character.gain(Item.Tickler);
             character.money -= 300;
         }
-        if (!(character.has(Item.Strapon) || character.has(Item.Strapon2)) && character.money >= 600) {
+        if (!(character.hasItem(Item.Strapon) || character.hasItem(Item.Strapon2)) && character.money >= 600) {
             character.gain(Item.Strapon);
             character.money -= 600;
         }
@@ -255,7 +255,7 @@ public class Reyka extends BasePersonality {
     @Override
     public String defeat(Combat paramCombat, Result flag) {
         character.arousal.empty();
-        if (character.has(Trait.lacedjuices) && Global.global.random(3) == 0 ) {
+        if (character.hasTrait(Trait.lacedjuices) && Global.global.random(3) == 0 ) {
             return "Reyka shivers as she approaches her climax and her legs fall open defenselessly. You can't resist taking advantage of this opening to deliver the "
                             + "coup de grace. You grab hold of her thighs and run your tongue across her wet pussy. Her love juice is surprisingly sweet and almost intoxicating, "
                             + "but you stay focused on your goal. You ravage her vulnerable love button with your tongue and a flood of tasty wetness hits you as she cums. You "

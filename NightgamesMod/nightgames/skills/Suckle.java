@@ -25,10 +25,10 @@ public class Suckle extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
+        Result results = target.hasTrait(Trait.lactating) ? Result.special : Result.normal;
         int m = (getSelf().get(Attribute.Seduction) > 10 ? 8 : 4) + Rng.rng.random(6);
         writeOutput(c, Result.normal, target);
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
 

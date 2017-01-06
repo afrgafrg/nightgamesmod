@@ -50,8 +50,8 @@ public class AphrodisiacTrap extends Trap {
     
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Aphrodisiac) && owner.has(Item.Tripwire) && owner.has(Item.Sprayer)
-                        && !owner.has(Trait.direct);
+        return owner.hasItem(Item.Aphrodisiac) && owner.hasItem(Item.Tripwire) && owner.hasItem(Item.Sprayer)
+                        && !owner.hasTrait(Trait.direct);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AphrodisiacTrap extends Trap {
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.get(Attribute.Cunning) >= 12 && !owner.has(Trait.direct);
+        return owner.get(Attribute.Cunning) >= 12 && !owner.hasTrait(Trait.direct);
     }
 
     @Override

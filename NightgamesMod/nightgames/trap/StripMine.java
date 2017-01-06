@@ -43,7 +43,7 @@ public class StripMine extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Tripwire) && owner.has(Item.Battery, 3);
+        return owner.hasItem(Item.Tripwire) && owner.hasItem(Item.Battery, 3);
     }
 
     @Override

@@ -103,7 +103,7 @@ public class NursingHold extends AbstractFacingStance {
 
     @Override
     public float priorityMod(Character self) {
-        return dom(self) ? self.has(Trait.lactating) ? 5 : 2 : 0;
+        return dom(self) ? self.hasTrait(Trait.lactating) ? 5 : 2 : 0;
     }
 
     @Override

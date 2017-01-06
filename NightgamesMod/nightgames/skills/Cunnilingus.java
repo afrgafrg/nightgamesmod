@@ -32,7 +32,7 @@ public class Cunnilingus extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.silvertongue) ? 1 : 0;
+        return getSelf().hasTrait(Trait.silvertongue) ? 1 : 0;
     }
 
     @Override
@@ -49,16 +49,16 @@ public class Cunnilingus extends Skill {
         Result results = Result.normal;
         boolean facesitting = c.getStance().isBeingFaceSatBy(c, getSelf(), target);
         int m = 10 + Rng.rng.random(8);
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
         int i = 0;
         if (!facesitting && c.getStance().mobile(target) && !target.roll(getSelf(), c, accuracy(c, target))) {
             results = Result.miss;
         } else {
-            if (target.has(Trait.enthrallingjuices) && Rng.rng.random(4) == 0 && !target.wary()) {
+            if (target.hasTrait(Trait.enthrallingjuices) && Rng.rng.random(4) == 0 && !target.wary()) {
                 i = -2;
-            } else if (target.has(Trait.lacedjuices)) {
+            } else if (target.hasTrait(Trait.lacedjuices)) {
                 i = -1;
                 getSelf().temptNoSource(c, target, 5, this);
             }

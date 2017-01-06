@@ -27,7 +27,7 @@ public class RipBlindfold extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        if (!getSelf().human() && getSelf().has(Trait.mindcontroller)) {
+        if (!getSelf().human() && getSelf().hasTrait(Trait.mindcontroller)) {
             return c.getStance().dom(getSelf()) ? 10.f : 2.f;
         }
         return -5.f;

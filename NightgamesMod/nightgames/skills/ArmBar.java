@@ -23,7 +23,7 @@ public class ArmBar extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return c.getStance().dom(getSelf()) && c.getStance().reachTop(target) && getSelf().canAct()
-                        && !getSelf().has(Trait.undisciplined) && !c.getStance().inserted();
+                        && !getSelf().hasTrait(Trait.undisciplined) && !c.getStance().inserted();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ArmBar extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Power) >= 20 && !user.has(Trait.undisciplined);
+        return user.get(Attribute.Power) >= 20 && !user.hasTrait(Trait.undisciplined);
     }
 
     @Override

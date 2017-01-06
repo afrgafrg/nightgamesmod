@@ -28,7 +28,7 @@ public class SuccubusSurprise extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().has(Trait.succubus) && getSelf().has(Item.SuccubusDraft)
+        return getSelf().canRespond() && !getSelf().hasTrait(Trait.succubus) && getSelf().hasItem(Item.SuccubusDraft)
                         && c.getStance().inserted(target) && !c.getStance().anallyPenetrated(c)
                         && !BodyPart.hasOnlyType(c.getStance().topParts(c), "strapon") && c.getStance().sub(getSelf())
                         && getSelf().canSpend(getMojoCost(c)) && !target.is(Stsflag.armlocked)

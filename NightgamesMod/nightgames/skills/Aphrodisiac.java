@@ -34,7 +34,7 @@ public class Aphrodisiac extends Skill {
         boolean canMove = c.getStance()
                            .mobile(getSelf())
                         && getSelf().canAct();
-        boolean hasItem = getSelf().has(Item.Aphrodisiac);
+        boolean hasItem = getSelf().hasItem(Item.Aphrodisiac);
         boolean canGetFromOwnBody = !(getSelf().body.getCurrentPartsThatMatch(hasSuccubusPussy)
                                                     .isEmpty())
                         && getSelf().getArousal()
@@ -62,7 +62,7 @@ public class Aphrodisiac extends Skill {
             writeOutput(c, (int) magnitude, Result.strong, target);
             type = " aphrodisiac juices";
             target.emote(Emotion.horny, 20);
-        } else if (getSelf().has(Item.Aersolizer)) {
+        } else if (getSelf().hasItem(Item.Aersolizer)) {
             writeOutput(c, Result.special, target);
             getSelf().consume(Item.Aphrodisiac, 1);
             type = " aphrodisiac spray";

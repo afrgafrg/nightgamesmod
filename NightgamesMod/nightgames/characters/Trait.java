@@ -571,7 +571,7 @@ public enum Trait {
         });
         resistances.put(Trait.masterheels, (combat, c, s) -> {
             // 33% to resist falling wearing heels
-            if (c.has(ClothingTrait.heels) && s.flags().contains(Stsflag.falling) && Rng.rng.random(100) < 33) {
+            if (c.hasClothingTrait(ClothingTrait.heels) && s.flags().contains(Stsflag.falling) && Rng.rng.random(100) < 33) {
                 return "Heels Master";
             }
             return "";
@@ -598,7 +598,7 @@ public enum Trait {
             return "";
         });
         resistances.put(Trait.mindcontrolresistance, (combat, c, s) -> {
-           if (s.mindgames() && combat != null && combat.getOpponent(c).has(Trait.mindcontroller)) {
+           if (s.mindgames() && combat != null && combat.getOpponent(c).hasTrait(Trait.mindcontroller)) {
                if (c instanceof Player) {
                    float magnitude = ((Player)c).getAddiction(AddictionType.MIND_CONTROL).map(Addiction::getMagnitude)
                                                    .orElse(0f);

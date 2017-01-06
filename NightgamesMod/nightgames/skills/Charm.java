@@ -40,7 +40,7 @@ public class Charm extends Skill {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
             double mag = 2 + Rng.rng.random(4) + 2 * getSelf().body.getHotness(target);
-            if (target.has(Trait.imagination)) {
+            if (target.hasTrait(Trait.imagination)) {
                 mag += 4;
             }
             int m = (int) Math.round(mag);

@@ -54,7 +54,7 @@ public class FTCMatch extends Match {
     }
 
     public Character getFlagHolder() {
-        return combatants.stream().filter(c -> c.has(Item.Flag)).findAny().orElse(null);
+        return combatants.stream().filter(c -> c.hasItem(Item.Flag)).findAny().orElse(null);
     }
 
     public boolean isBase(Character ch, Area loc) {
@@ -79,7 +79,7 @@ public class FTCMatch extends Match {
         if (ch.equals(prey)) {
             if (gracePeriod > 0)
                 gracePeriod--;
-            if (ch.has(Item.Flag) && gracePeriod == 0 && (++flagCounter % 3) == 0) {
+            if (ch.hasItem(Item.Flag) && gracePeriod == 0 && (++flagCounter % 3) == 0) {
                 score(ch, 1);
                 if (ch.human()) {
                     Global.global.gui().message("You scored one point for holding the flag.");

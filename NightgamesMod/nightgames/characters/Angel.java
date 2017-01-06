@@ -259,36 +259,36 @@ public class Angel extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.has(Trait.demigoddess) && (Global.checkFlag(ANGEL_SEX_FOCUS) || Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS))) {
+            if (!character.hasTrait(Trait.demigoddess) && (Global.checkFlag(ANGEL_SEX_FOCUS) || Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS))) {
                 advance();
             }
         }
         super.rest(time);
-        if (!(character.has(Item.Dildo) || character.has(Item.Dildo2)) && character.money >= 250) {
+        if (!(character.hasItem(Item.Dildo) || character.hasItem(Item.Dildo2)) && character.money >= 250) {
             character.gain(Item.Dildo);
             character.money -= 250;
         }
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Onahole) || character.hasItem(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
-        if (!character.has(Item.Onahole2) && character.has(Item.Onahole) && character.money >= 300) {
+        if (!character.hasItem(Item.Onahole2) && character.hasItem(Item.Onahole) && character.money >= 300) {
             character.remove(Item.Onahole);
             character.gain(Item.Onahole2);
             character.money -= 300;
         }
-        if (!(character.has(Item.Strapon) || character.has(Item.Strapon2)) && character.money >= 500) {
+        if (!(character.hasItem(Item.Strapon) || character.hasItem(Item.Strapon2)) && character.money >= 500) {
             character.gain(Item.Strapon);
             character.money -= 500;
         }
-        if (!character.has(Item.Strapon2) && character.has(Item.Strapon) && character.money >= 500) {
+        if (!character.hasItem(Item.Strapon2) && character.hasItem(Item.Strapon) && character.money >= 500) {
             character.remove(Item.Strapon);
             character.gain(Item.Strapon2);
             character.money -= 500;
         }
         buyUpTo(Item.PriapusDraft, 3);
         if (character.rank >= 1) {
-            if (!character.has(Trait.lacedjuices) && character.money >= 1000) {
+            if (!character.hasTrait(Trait.lacedjuices) && character.money >= 1000) {
                 character.money -= 1000;
                 character.getGrowth().addTrait(Math.min(20, character.getLevel()), Trait.lacedjuices);
             }
@@ -498,7 +498,7 @@ public class Angel extends BasePersonality {
 
     @Override
     public String describe(Combat c, Character self) {
-        if (character.has(Trait.demigoddess)) {
+        if (character.hasTrait(Trait.demigoddess)) {
             return "Angel's transformation seems to have taken inspiration from her own name. She has large angelic wings behind her, which combined with her long blonde hair and perfect unblemished "
                             + "skin gives her a positively divine appearance. Her appearance should be emanating holy purity, but instead her eyes and expression seem lewder than ever. "
                             + "You're not sure what happened exactly, but it's clear to you that she's somehow become a goddess of sexuality. "

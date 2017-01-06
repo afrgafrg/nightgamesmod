@@ -29,7 +29,7 @@ public class Locate extends Action {
                 hasUnderwear = true;
             }
         }
-        return self.has(Trait.locator) && hasUnderwear && !self.bound();
+        return self.hasTrait(Trait.locator) && hasUnderwear && !self.bound();
     }
 
     @Override

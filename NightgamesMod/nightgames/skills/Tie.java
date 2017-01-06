@@ -22,14 +22,14 @@ public class Tie extends Skill {
     public boolean usable(Combat c, Character target) {
         return !target.wary() && getSelf().canAct() && c.getStance().reachTop(getSelf())
                         && !c.getStance().reachTop(target)
-                        && (getSelf().has(Item.ZipTie) || getSelf().has(Item.Handcuffs)) && c.getStance().dom(getSelf())
+                        && (getSelf().hasItem(Item.ZipTie) || getSelf().hasItem(Item.Handcuffs)) && c.getStance().dom(getSelf())
                         && !target.is(Stsflag.bound)
                         && !target.is(Stsflag.maglocked);
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().has(Item.Handcuffs, 1)) {
+        if (getSelf().hasItem(Item.Handcuffs, 1)) {
             getSelf().consume(Item.Handcuffs, 1);
             writeOutput(c, Result.special, target);
             target.add(c, new Bound(target, 75, "handcuffs"));

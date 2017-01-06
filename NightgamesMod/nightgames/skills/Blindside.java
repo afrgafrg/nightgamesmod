@@ -25,7 +25,7 @@ public class Blindside extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.temptress) && user.get(Attribute.Technique) >= 10;
+        return user.hasTrait(Trait.temptress) && user.get(Attribute.Technique) >= 10;
     }
 
     @Override

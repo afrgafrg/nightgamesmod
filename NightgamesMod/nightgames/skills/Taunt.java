@@ -18,7 +18,7 @@ public class Taunt extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return target.mostlyNude() && !c.getStance().sub(getSelf()) && getSelf().canAct() && !getSelf().has(Trait.shy);
+        return target.mostlyNude() && !c.getStance().sub(getSelf()) && getSelf().canAct() && !getSelf().hasTrait(Trait.shy);
     }
 
     @Override
@@ -32,11 +32,11 @@ public class Taunt extends Skill {
         double m = (6 + Rng.rng.random(4) + getSelf().body.getHotness(target)) / 3
                         * Math.min(2, 1 + target.getExposure());
         double chance = .25;
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             m += 4;
             chance += .25;
         }
-        if (getSelf().has(Trait.bitingwords)) {
+        if (getSelf().hasTrait(Trait.bitingwords)) {
             m += 4;
             chance += .25;
         }
@@ -44,7 +44,7 @@ public class Taunt extends Skill {
         if (Rng.rng.randomdouble() < chance) {
             target.add(c, new Shamed(target));
         }
-        if (c.getStance().dom(getSelf()) && getSelf().has(Trait.bitingwords)) {
+        if (c.getStance().dom(getSelf()) && getSelf().hasTrait(Trait.bitingwords)) {
             int willpowerLoss = Math.max(target.getWillpower().max() / 50, 3) + Rng.rng.random(3);
             target.loseWillpower(c, willpowerLoss, 0, false, " (Biting Words)");
         }

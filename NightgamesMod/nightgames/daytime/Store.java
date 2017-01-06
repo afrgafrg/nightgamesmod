@@ -43,7 +43,7 @@ public abstract class Store extends Activity {
 
     protected void displayClothes() {
         for (Clothing i : clothingstock.keySet()) {
-            if (!player.has(i)) {
+            if (!player.hasClothing(i)) {
                 Global.global.gui().sale(this, i);
             }
         }

@@ -45,7 +45,7 @@ public class ThrowDraft extends Skill {
     public Collection<String> subChoices(Combat c) {
         ArrayList<String> usables = new ArrayList<String>();
         for (Item i : getSelf().getInventory().keySet()) {
-            if (getSelf().has(i) && i.getEffects().get(0).throwable()) {
+            if (getSelf().hasItem(i) && i.getEffects().get(0).throwable()) {
                 usables.add(i.getName());
             }
         }
@@ -114,7 +114,7 @@ public class ThrowDraft extends Skill {
             c.write(getSelf(), Global.global.format(
                             String.format("{self:SUBJECT-ACTION:%s|%ss} %s%s.", verb, verb, used.pre(), used.getName()),
                             getSelf(), target));
-            if (transformativeItems.contains(used) && target.has(Trait.stableform)) {
+            if (transformativeItems.contains(used) && target.hasTrait(Trait.stableform)) {
                 c.write(target, "...But nothing happened (Stable Form).");
             } else {
                 boolean eventful = false;

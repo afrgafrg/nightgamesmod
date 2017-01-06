@@ -28,7 +28,7 @@ public class Lethargic extends DurationStatus {
     public String describe(Combat c) {
         if (affected.human()) {
             return "Your mojo gain is stopped.";
-        } else if (affected.has(Trait.lethargic)) {
+        } else if (affected.hasTrait(Trait.lethargic)) {
             if (affected.getMojo().get() < 40) {
                 return affected.name() + " looks lethargic.";
             } else {

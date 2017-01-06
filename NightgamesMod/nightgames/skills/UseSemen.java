@@ -20,8 +20,8 @@ public class UseSemen extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        boolean hasItems = getSelf().has(Item.semen);
-        return hasItems && getSelf().canAct() && getSelf().has(Trait.succubus) && c.getStance().mobile(getSelf());
+        boolean hasItems = getSelf().hasItem(Item.semen);
+        return hasItems && getSelf().canAct() && getSelf().hasTrait(Trait.succubus) && c.getStance().mobile(getSelf());
     }
 
     @Override

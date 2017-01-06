@@ -109,13 +109,13 @@ public class GenericBodyPart implements BodyPart {
     public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = pleasure;
         if (type.equals("hands") || type.equals("feet")) {
-            pleasureMod += self.has(Trait.limbTraining1) ? .5 : 0;
-            pleasureMod += self.has(Trait.limbTraining2) ? .7 : 0;
-            pleasureMod += self.has(Trait.limbTraining3) ? .7 : 0;
-            pleasureMod += self.has(Trait.dexterous) ? .4 : 0;
+            pleasureMod += self.hasTrait(Trait.limbTraining1) ? .5 : 0;
+            pleasureMod += self.hasTrait(Trait.limbTraining2) ? .7 : 0;
+            pleasureMod += self.hasTrait(Trait.limbTraining3) ? .7 : 0;
+            pleasureMod += self.hasTrait(Trait.dexterous) ? .4 : 0;
         }
         if (type.equals("hands")) {
-            pleasureMod += self.has(Trait.pimphand) ? .2 : 0;
+            pleasureMod += self.hasTrait(Trait.pimphand) ? .2 : 0;
         }
         return pleasureMod;
     }
@@ -164,7 +164,7 @@ public class GenericBodyPart implements BodyPart {
     @Override
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         int bonus = 0;
-        if (self.has(ClothingTrait.nursegloves) && type.equals("hands")) {
+        if (self.hasClothingTrait(ClothingTrait.nursegloves) && type.equals("hands")) {
             c.write(self, Global.global.format(
                             "{self:name-possessive} rubber gloves provide a unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
                                             + target.describe(opponent) + ".", self, opponent));

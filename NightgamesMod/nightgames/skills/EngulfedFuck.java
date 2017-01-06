@@ -46,7 +46,7 @@ public class EngulfedFuck extends Skill {
         Pairing pair = Pairing.findPairing(getSelf(), target);
         double base = 20.0 + Rng.rng
                         .random(getSelf().get(Attribute.Slime) + getSelf().get(Attribute.Seduction) / 2);
-        int selfDmg = (int) ((base * pair.modPleasure(true)) / (getSelf().has(Trait.experienced) ? 2.0 : 3.0));
+        int selfDmg = (int) ((base * pair.modPleasure(true)) / (getSelf().hasTrait(Trait.experienced) ? 2.0 : 3.0));
         int targetDmg = (int) (base * pair.modPleasure(false));
         switch (pair) {
             case ASEX_MALE:

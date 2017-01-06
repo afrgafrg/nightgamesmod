@@ -56,8 +56,8 @@ public class DissolvingTrap extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Tripwire) && owner.has(Item.DisSol) && owner.has(Item.Sprayer)
-                        && !owner.has(Trait.direct);
+        return owner.hasItem(Item.Tripwire) && owner.hasItem(Item.DisSol) && owner.hasItem(Item.Sprayer)
+                        && !owner.hasTrait(Trait.direct);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DissolvingTrap extends Trap {
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.get(Attribute.Cunning) >= 11 && !owner.has(Trait.direct);
+        return owner.get(Attribute.Cunning) >= 11 && !owner.hasTrait(Trait.direct);
     }
 
     @Override

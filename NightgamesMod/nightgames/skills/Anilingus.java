@@ -35,7 +35,7 @@ public class Anilingus extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return getSelf().has(Trait.shameless) || getSelf().get(Attribute.Seduction) >= 30;
+        return getSelf().hasTrait(Trait.shameless) || getSelf().get(Attribute.Seduction) >= 30;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Anilingus extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.silvertongue) ? 1 : 0;
+        return getSelf().hasTrait(Trait.silvertongue) ? 1 : 0;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Anilingus extends Skill {
             n = 10;
         } else if (!c.getStance().mobile(target) || target.roll(getSelf(), c, accuracy(c, target))) {
             m += Rng.rng.random(6);
-            if (getSelf().has(Trait.silvertongue)) {
+            if (getSelf().hasTrait(Trait.silvertongue)) {
                 m += 4;
                 result = Result.special;
             }
@@ -160,7 +160,7 @@ public class Anilingus extends Skill {
 
     private boolean isWorship(Combat c, Character target) {
         Optional<BodyFetish> fetish = getSelf().body.getFetish("ass");
-        boolean worship = c.getOpponent(getSelf()).has(Trait.objectOfWorship);
+        boolean worship = c.getOpponent(getSelf()).hasTrait(Trait.objectOfWorship);
         boolean enthralled = getSelf().is(Stsflag.enthralled);
         boolean isPet = target == null ? getSelf().isPet() : getSelf().isPetOf(target);
         return fetish.isPresent() || worship || enthralled || isPet;

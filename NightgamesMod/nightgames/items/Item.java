@@ -71,7 +71,7 @@ public enum Item implements Loot {
                                         @Override
                                         public boolean operation(Combat c, Character user, Character opponent,
                                                         Item item) {
-                                            return user.has(Trait.succubus);
+                                            return user.hasTrait(Trait.succubus);
                                         }
                                     }),
                                     new ConditionalEffect(
@@ -83,7 +83,7 @@ public enum Item implements Loot {
                                                         @Override
                                                         public boolean operation(Combat c, Character user,
                                                                         Character opponent, Item item) {
-                                                            return !user.has(Trait.succubus);
+                                                            return !user.hasTrait(Trait.succubus);
                                                         }
                                                     })),
                     15),

@@ -83,7 +83,7 @@ public class Jumped extends FemdomSexStance {
 
     @Override
     public void checkOngoing(Combat c) {
-        if (bottom.getStamina().get() < 2 && !top.has(Trait.petite)) {
+        if (bottom.getStamina().get() < 2 && !top.hasTrait(Trait.petite)) {
             if (bottom.human()) {
                 c.write("Your legs give out and you fall on the floor. " + top.name() + " lands heavily on your lap.");
                 c.setStance(new Cowgirl(top, bottom));

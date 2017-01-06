@@ -38,10 +38,10 @@ public class Blowjob extends Skill {
         if (c.getStance().penetratedBy(c, getSelf(), c.getOpponent(getSelf()))) {
             priority += 1.0f;
         }
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             priority += 1;
         }
-        if (getSelf().has(Trait.experttongue)) {
+        if (getSelf().hasTrait(Trait.experttongue)) {
             priority += 1;
         }
         return priority;
@@ -49,7 +49,7 @@ public class Blowjob extends Skill {
 
     public boolean isVaginal(Combat c) {
         return c.getStance().vaginallyPenetratedBy(c, getSelf(), c.getOpponent(getSelf()))
-                        && !c.getOpponent(getSelf()).has(Trait.strapped) && getSelf().has(Trait.vaginaltongue);
+                        && !c.getOpponent(getSelf()).hasTrait(Trait.strapped) && getSelf().hasTrait(Trait.vaginaltongue);
     }
 
     public boolean isFacesitting(Combat c, Character target) {
@@ -71,7 +71,7 @@ public class Blowjob extends Skill {
     public boolean resolve(Combat c, Character target) {
         int m = 10 + Rng.rng.random(8);
         boolean facesitting = isFacesitting(c, target);
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
         if (isVaginal(c)) {
@@ -83,7 +83,7 @@ public class Blowjob extends Skill {
             target.body.pleasure(getSelf(), getSelf().body.getRandom("mouth"), target.body.getRandom("cock"), m, c, this);
             target.buildMojo(c, 10);
         } else if (target.roll(getSelf(), c, accuracy(c, target))) {
-            writeOutput(c, m, getSelf().has(Trait.silvertongue) ? Result.special : Result.normal, target);
+            writeOutput(c, m, getSelf().hasTrait(Trait.silvertongue) ? Result.special : Result.normal, target);
             BodyPart mouth = getSelf().body.getRandom("mouth");
             BodyPart cock = target.body.getRandom("cock");
             target.body.pleasure(getSelf(), mouth, cock, m, c, this);
@@ -103,7 +103,7 @@ public class Blowjob extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) >= 10 && !user.has(Trait.temptress);
+        return user.get(Attribute.Seduction) >= 10 && !user.hasTrait(Trait.temptress);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class Blowjob extends Skill {
 
     @Override
     public Tactics type(Combat c) {
-        if (c.getStance().vaginallyPenetrated(c, getSelf()) && getSelf().has(Trait.vaginaltongue)) {
+        if (c.getStance().vaginallyPenetrated(c, getSelf()) && getSelf().hasTrait(Trait.vaginaltongue)) {
             return Tactics.fucking;
         } else {
             return Tactics.pleasure;

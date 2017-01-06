@@ -25,7 +25,7 @@ public class TemptressBlowjob extends Blowjob {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.temptress);
+        return user.hasTrait(Trait.temptress);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class TemptressBlowjob extends Blowjob {
     public boolean resolve(Combat c, Character target) {
         int m = 10 + Rng.rng.random(getSelf().get(Attribute.Technique) / 2);
 
-        if (getSelf().has(Trait.silvertongue)) {
+        if (getSelf().hasTrait(Trait.silvertongue)) {
             m += 4;
         }
 

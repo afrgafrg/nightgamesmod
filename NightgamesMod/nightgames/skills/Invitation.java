@@ -27,12 +27,12 @@ public class Invitation extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.submissive) ? 2 : 0;
+        return getSelf().hasTrait(Trait.submissive) ? 2 : 0;
     }
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) > 25 || user.has(Trait.submissive);
+        return user.get(Attribute.Seduction) > 25 || user.hasTrait(Trait.submissive);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class Invitation extends Skill {
         int difficulty = target.getLevel() - target.getArousal().get() * 10 / target.getArousal().max()
                         + target.get(Attribute.Seduction);
         int strength = getSelf().getLevel() + getSelf().get(Attribute.Seduction)
-                        * (getSelf().has(Trait.submissive) ? 2 : 1) * (hasDivinity() ? 2 : 1);
+                        * (getSelf().hasTrait(Trait.submissive) ? 2 : 1) * (hasDivinity() ? 2 : 1);
 
         boolean success = Rng.rng.random(Math.min(Math.max(difficulty - strength, 1), 10)) == 0;
         Result result = Result.normal;

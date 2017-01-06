@@ -261,7 +261,7 @@ public class MaraTime extends BaseNPCTime {
             Global.global.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.hasTrait(Trait.ticklemonster) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You invite Mara to your room some fun. As soon as you get there she walks up behind you, shoves her hand down the front of your pants, and grabs you penis. "
                                       + "You're taken by surprise, but it doesn't stop you from getting hard in her hand. <i>\"You said we're here to have fun and I've decided you're my toy today,\"</i> she whispers "
@@ -292,7 +292,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "You're almost ready to come from just being inside her. She moves her hips, riding you for her own pleasure as much as yours. You've been hard for so long without relief that you know you "
                                       + "won't be able to last, so you massage and play with her breasts to accelerate her climax. When your endurance breaks and you shoot you seed in Mara, she shudders and you can feel her pussy "
                                       + "squeeze you. She collapses into your chest and mumbles, <i>\"Four orgasms. I think you're trying to train my body.\"</i>");
-                if (!player.has(Trait.ticklemonster)) {
+                if (!player.hasTrait(Trait.ticklemonster)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've gotten better at finding sensitive spots when tickling nude opponents.</b>");
                     player.add(Trait.ticklemonster);
@@ -331,7 +331,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spider) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.hasTrait(Trait.spider) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Mara is too damn good at these games. She moves her third spider next to your queen, trapping it in place. You don't lose until she fills in all six spaces "
                                       + "adjacent to your queen, but even with just those three pieces, you don't have enough room to move out of there. For the rest of the game, you try to block off her access "
@@ -362,7 +362,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "I'll even show you how to make it.\"</i> That can wait, you're still recovering from your megagasm and from being tied up for so long. Besides, even if it wasn't a fair fight, Mara did "
                                       + "make you cum. Surely she has something she wants you to do. She lowers her eyes shyly and replies softly. <i>\"Yeah, I want you to fall in love with me.\"</i> She gives you a tender, lingering "
                                       + "kiss. <i>\"There's no time limit, just get started on that when you get a chance.\"</i>");
-                if (!player.has(Trait.spider)) {
+                if (!player.hasTrait(Trait.spider)) {
                     Global.global.gui()
                           .message("<br/><br/><b>Mara has taught you to make the brilliant and insanely complex Spiderweb Trap.</b>");
                     player.add(Trait.spider);
@@ -397,7 +397,7 @@ public class MaraTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.heeldrop) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.hasTrait(Trait.heeldrop) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You and Mara prepare for some sparring practice by getting undressed. She tosses her clothes aside and is so eager that she's actually bouncing noticeably, "
                                       + "unconcerned about her nudity. You finish stretching and square off with her, but she raises a hand to stop you. <i>\"Wait! Can I have a kiss before we start?\"</i> You hesitate "
@@ -420,7 +420,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "firmly and pumps it steadily. Your sore nuts give a twinge of protest, but it's quickly drowned out by your increasing need to cum. Mara smiles as you squirm under her hand and speeds "
                                       + "up her strokes to finish you off. Spurts of semen shoot into the air as you cum. You've probably recovered enough to get up, but you decide to take advantage of her lap pillow for a little "
                                       + "while longer.");
-                if (!player.has(Trait.heeldrop)) {
+                if (!player.hasTrait(Trait.heeldrop)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've experienced Mara's most painful technique and learned how to use it yourself.</b>");
                     player.add(Trait.heeldrop);
@@ -489,7 +489,7 @@ public class MaraTime extends BaseNPCTime {
                             + "You collapse onto the bed, pulling Mara into your embrace. She leans her head contentedly against your chest. The two faeries, apparently realizing the humans in the room are too "
                             + "tired to play with them and entertain themselves by starting an impromptu sex-fight. You and Mara watch the show and she giggles in delight as the female gains the upper hand, milking "
                             + "the boy dry. Mara finally gets a chance to play with the female, giving the victor an orgasm as reward.");
-                    if(!player.has(Trait.faefriend)){
+                    if(!player.hasTrait(Trait.faefriend)){
                         Global.global.gui()
                                         .message("<br/><br/><b>You're finding it easier to call faeries. They seem to be more eager to respond to your summons.</b>");
                         player.add(Trait.faefriend);

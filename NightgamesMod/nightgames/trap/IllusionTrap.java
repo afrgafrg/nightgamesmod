@@ -13,7 +13,7 @@ public class IllusionTrap extends Trap {
     public IllusionTrap() {
         this(null);
     }
-    
+
     public IllusionTrap(Character owner) {
         super("Illusion Trap", owner);
     }
@@ -33,7 +33,7 @@ public class IllusionTrap extends Trap {
             Global.global.gui()
                             .message("There's a flash of pink light and " + target.name() + " flushes with arousal.");
         }
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             target.tempt(25 + getStrength());
         }
         target.tempt(25 + getStrength());

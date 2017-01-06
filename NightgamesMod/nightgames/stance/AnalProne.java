@@ -16,7 +16,7 @@ public class AnalProne extends AnalSexStance {
         if (top.human()) {
             return String.format("You're holding %s legs over your shoulder while your cock in buried in %s's ass.",
                             bottom.nameOrPossessivePronoun(), bottom.possessiveAdjective());
-        } else if (top.has(Trait.strapped)) {
+        } else if (top.hasTrait(Trait.strapped)) {
             return String.format("%s flat on %s back with %s feet over %s head while %s pegs you with %s strapon dildo.",
                             bottom.subjectAction("are", "is"), bottom.possessiveAdjective(),
                             bottom.possessiveAdjective(), bottom.possessiveAdjective(),
@@ -115,7 +115,7 @@ public class AnalProne extends AnalSexStance {
 
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
-        if (top.has(Trait.strapped)) {
+        if (top.hasTrait(Trait.strapped)) {
             if (writeMessage) {
                 c.write(bottom, Global.global.format(
                                 "As {other:subject-action:are|is} thrusting into {self:name-do} with {other:possessive} strapon, {self:subject-action:suddenly pull|suddenly pulls} {self:possessive} face up towards {other:direct-object}, and kisses {other:direct-object} deeply. "

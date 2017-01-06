@@ -20,8 +20,8 @@ public class InjectAphrodisiac extends Skill {
     }
 
     public boolean usable(Combat c, Character target) {
-        return (c.getStance().mobile(this.getSelf())) && (this.getSelf().has(Item.Aphrodisiac) && (!getSelf().human()))
-                        && (this.getSelf().canAct()) && getSelf().has(Item.MedicalSupplies, 1)
+        return (c.getStance().mobile(this.getSelf())) && (this.getSelf().hasItem(Item.Aphrodisiac) && (!getSelf().human()))
+                        && (this.getSelf().canAct()) && getSelf().hasItem(Item.MedicalSupplies, 1)
                         && (!c.getStance().mobile(this.getSelf()) || !target.canAct());
     }
 

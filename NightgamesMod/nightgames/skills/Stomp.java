@@ -38,9 +38,9 @@ public class Stomp extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int pain = Global.random(1, 10);
-        if (target.has(Trait.brassballs)) {
-            if (getSelf().has(Trait.heeldrop) && target.crotchAvailable() && target.hasBalls()) {
+        int pain = Rng.rng.random(1, 10);
+        if (target.hasTrait(Trait.brassballs)) {
+            if (getSelf().hasTrait(Trait.heeldrop) && target.crotchAvailable() && target.hasBalls()) {
                 if (getSelf().human()) {
                     c.write(getSelf(), deal(c, 0, Result.strong, target));
                 } else if (c.shouldPrintReceive(target, c)) {
@@ -54,7 +54,7 @@ public class Stomp extends Skill {
             } else {
                 writeOutput(c, Result.weak2, target);
             }
-        } else if (getSelf().has(Trait.heeldrop) && target.crotchAvailable()) {
+        } else if (getSelf().hasTrait(Trait.heeldrop) && target.crotchAvailable()) {
             if (getSelf().human()) {
                 c.write(getSelf(), deal(c, 0, Result.special, target));
             } else if (c.shouldPrintReceive(target, c)) {
@@ -63,12 +63,12 @@ public class Stomp extends Skill {
                     c.write(getSelf(), getSelf().bbLiner(c, target));
                 }
             }
-            if (target.has(Trait.achilles)) {
+            if (target.hasTrait(Trait.achilles)) {
                 pain += 20;
             }
             pain += 40 - (int) Math.round(
                             (5 + Rng.rng.random(5)) * target.getOutfit().getExposure(ClothingSlot.bottom));
-        } else if (target.has(ClothingTrait.armored)) {
+        } else if (target.hasClothingTrait(ClothingTrait.armored)) {
             writeOutput(c, Result.weak, target);
             pain += 15 - (int) Math.round(
                             (2 + Rng.rng.random(3)) * target.getOutfit().getExposure(ClothingSlot.bottom));
@@ -112,7 +112,7 @@ public class Stomp extends Skill {
 
     @Override
     public String getLabel(Combat c) {
-        if (getSelf().has(Trait.heeldrop)) {
+        if (getSelf().hasTrait(Trait.heeldrop)) {
             return "Double Legdrop";
         } else {
             return getName(c);

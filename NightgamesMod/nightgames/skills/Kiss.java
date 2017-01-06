@@ -34,7 +34,7 @@ public class Kiss extends Skill {
         if (getLabel(c).equals(divineString)) {
             return 0;
         }
-        return 10 + (getSelf().has(Trait.romantic) ? 5 : 0);
+        return 10 + (getSelf().hasTrait(Trait.romantic) ? 5 : 0);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Kiss extends Skill {
             return false;
         }
         boolean deep = getLabel(c).equals("Deep Kiss");
-        if (getSelf().has(Trait.romantic)) {
+        if (getSelf().hasTrait(Trait.romantic)) {
             m += 2;
             // if it's an advanced kiss.
             if (!getLabel(c).equals("Kiss")) {
@@ -80,11 +80,11 @@ public class Kiss extends Skill {
             m += 2;
             res = Result.special;
         }
-        if (getSelf().has(Trait.experttongue)) {
+        if (getSelf().hasTrait(Trait.experttongue)) {
             m += 2;
             res = Result.special;
         }
-        if (getSelf().has(Trait.soulsucker)) {
+        if (getSelf().hasTrait(Trait.soulsucker)) {
             res = Result.upgrade;
         }
         if (getLabel(c).equals(divineString)) {
@@ -263,7 +263,7 @@ public class Kiss extends Skill {
     public String getLabel(Combat c) {
         if (getSelf().get(Attribute.Divinity) >= 1 && getSelf().canSpend(divineCost)) {
             return divineString;
-        } else if (getSelf().has(Trait.soulsucker)) {
+        } else if (getSelf().hasTrait(Trait.soulsucker)) {
             return "Drain Kiss";
         } else if (getSelf().get(Attribute.Seduction) >= 20) {
             return "Deep Kiss";

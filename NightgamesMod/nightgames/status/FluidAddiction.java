@@ -181,7 +181,7 @@ public class FluidAddiction extends DurationStatus {
     public Collection<Skill> allowedSkills(Combat c) {
         if (!isActive()) {
             return Collections.emptySet();
-        } else if (target.has(Trait.lactating)) {
+        } else if (target.hasTrait(Trait.lactating)) {
             return Arrays.asList((Skill) new Suckle(affected), new LickNipples(affected), new Kiss(affected),
                             new Cunnilingus(affected), new Blowjob(affected));
         } else {

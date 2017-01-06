@@ -28,7 +28,7 @@ public class Frottage extends Skill {
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().sub(getSelf())
                         && !c.getStance().havingSex(c) && target.crotchAvailable()
-                        && (getSelf().hasDick() && getSelf().crotchAvailable() || getSelf().has(Trait.strapped))
+                        && (getSelf().hasDick() && getSelf().crotchAvailable() || getSelf().hasTrait(Trait.strapped))
                         && c.getStance().reachBottom(getSelf());
     }
 
@@ -53,7 +53,7 @@ public class Frottage extends Skill {
             } else {
                 c.write(getSelf(), deal(c, m, Result.normal, target));
             }
-        } else if (getSelf().has(Trait.strapped)) {
+        } else if (getSelf().hasTrait(Trait.strapped)) {
             if (target.human()) {
                 c.write(getSelf(), receive(c, m, Result.special, target));
             }

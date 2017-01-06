@@ -58,7 +58,7 @@ public class Match implements Clockable {
         areaList.add(map.get("Workshop"));
         areaList.add(map.get("Pool"));
         combatants.forEach(character -> {
-            if (character.has(Trait.immobile)) {
+            if (character.hasTrait(Trait.immobile)) {
                 character.place(map.get("Courtyard"));
             } else {
                 character.place(areaList.pop());
@@ -134,7 +134,7 @@ public class Match implements Clockable {
                 player = combatant;
             }
             for (Character other : combatants) {
-                while (combatant.has(other.getTrophy())) {
+                while (combatant.hasItem(other.getTrophy())) {
                     combatant.consume(other.getTrophy(), 1, false);
                     combatant.modMoney(other.prize());
                     if (combatant.human()) {

@@ -24,7 +24,7 @@ public class UseDildo extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return (getSelf().has(Item.Dildo) || getSelf().has(Item.Dildo2)) && getSelf().canAct() && target.hasPussy()
+        return (getSelf().hasItem(Item.Dildo) || getSelf().hasItem(Item.Dildo2)) && getSelf().canAct() && target.hasPussy()
                         && c.getStance().reachBottom(getSelf()) && target.crotchAvailable()
                         && !c.getStance().vaginallyPenetrated(c, target);
     }
@@ -38,7 +38,7 @@ public class UseDildo extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             int m;
-            if (getSelf().has(Item.Dildo2)) {
+            if (getSelf().hasItem(Item.Dildo2)) {
                 writeOutput(c, Result.upgrade, target);
                 m = Rng.rng.random(10, 20);
             } else {

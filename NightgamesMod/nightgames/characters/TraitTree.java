@@ -73,9 +73,9 @@ public class TraitTree {
             } else if (qName.equals("LevelReq")) {
                 reqs.add(c -> c.getLevel() > Integer.valueOf(val.trim()));
             } else if (qName.equals("TraitReq")) {
-                reqs.add(c -> c.has(Trait.valueOf(val.trim())));
+                reqs.add(c -> c.hasTrait(Trait.valueOf(val.trim())));
             } else if (qName.equals("NoTraitReq")) {
-                reqs.add(c -> !c.has(Trait.valueOf(val.trim())));
+                reqs.add(c -> !c.hasTrait(Trait.valueOf(val.trim())));
             } else if (qName.equals("BreastsReq")) {
                 reqs.add(c -> c.body.getLargestBreasts().size >= BreastsPart.valueOf(val.trim()).size);
             } else if (qName.equals("AttributeReq")) {

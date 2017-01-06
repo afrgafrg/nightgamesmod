@@ -65,7 +65,7 @@ public class Tackle extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Power) >= 26 && !user.has(Trait.petite) || user.get(Attribute.Animism) >= 1;
+        return user.get(Attribute.Power) >= 26 && !user.hasTrait(Trait.petite) || user.get(Attribute.Animism) >= 1;
     }
 
     @Override

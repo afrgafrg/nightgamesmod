@@ -25,8 +25,8 @@ public class ReverseAssFuck extends Fuck {
     @Override
     public float priorityMod(Combat c) {
         return ((getSelf().getMood() == Emotion.dominant ? 1.0f : 0)
-                        + (getSelf().has(Trait.autonomousAss) ? 4.0f : 0)
-                        + (getSelf().has(Trait.oiledass) ? 2.0f : 0)
+                        + (getSelf().hasTrait(Trait.autonomousAss) ? 4.0f : 0)
+                        + (getSelf().hasTrait(Trait.oiledass) ? 2.0f : 0)
                         + (getSelf().has(Trait.drainingass) ? 3.f : 0)
                         + (getSelf().has(Trait.bewitchingbottom) ? 3.f : 0))
                         * (getSelf().has(Trait.powerfulcheeks) ? 2.f : 1.f);
@@ -46,15 +46,15 @@ public class ReverseAssFuck extends Fuck {
     public boolean usable(Combat c, Character target) {
         return fuckable(c, target) && c.getStance().mobile(getSelf()) && c.getStance().prone(target)
                         && !c.getStance().mobile(target) && getSelf().canAct() && getTargetOrgan(target).isReady(target)
-                        && (getSelfOrgan().isReady(getSelf()) || getSelf().has(Item.Lubricant)
-                                        || getSelf().getArousal().percent() > 50 || getSelf().has(Trait.alwaysready));
+                        && (getSelfOrgan().isReady(getSelf()) || getSelf().hasItem(Item.Lubricant)
+                                        || getSelf().getArousal().percent() > 50 || getSelf().hasTrait(Trait.alwaysready));
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         String premessage = premessage(c, target);
         if (!getSelf().hasStatus(Stsflag.oiled) && getSelf().getArousal().percent() > 50
-                        || getSelf().has(Trait.alwaysready)) {
+                        || getSelf().hasTrait(Trait.alwaysready)) {
             String fluids = getSelf().hasDick() ? "copious pre-cum" : "own juices";
             if (premessage.isEmpty()) {
                 premessage = "{self:subject-action:lube|lubes}";
@@ -63,7 +63,7 @@ public class ReverseAssFuck extends Fuck {
             }
             premessage += " up {self:possessive} ass with {self:possessive} " + fluids + ".";
             getSelf().add(c, new Oiled(getSelf()));
-        } else if (!getSelf().hasStatus(Stsflag.oiled) && getSelf().has(Item.Lubricant)) {
+        } else if (!getSelf().hasStatus(Stsflag.oiled) && getSelf().hasItem(Item.Lubricant)) {
             if (premessage.isEmpty()) {
                 premessage = "{self:subject-action:lube|lubes}";
             } else {
@@ -79,7 +79,7 @@ public class ReverseAssFuck extends Fuck {
         writeOutput(c, Result.normal, target);
 
         int otherm = m;
-        if (getSelf().has(Trait.insertion)) {
+        if (getSelf().hasTrait(Trait.insertion)) {
             otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
         }
         target.body.pleasure(getSelf(), getSelfOrgan(), getTargetOrgan(target), otherm, c, this);

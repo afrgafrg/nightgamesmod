@@ -236,7 +236,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.has(Trait.Clingy) || !npc.has(Trait.Clingy))) {
+            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.Clingy) || !npc.hasTrait(Trait.Clingy))) {
                 Global.global.gui()
                                 .message("You feel like you learned a lot about holding on to someone. Maybe you can apply this in the games?");
                 player.add(Trait.Clingy);
@@ -267,7 +267,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.has(Trait.fakeout) || !npc.has(Trait.fakeout))) {
+            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
                 Global.global.gui()
                                 .message("You learn some real-world lessons on misleading people.");
                 player.add(Trait.fakeout);
@@ -282,7 +282,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.has(Trait.fakeout) || !npc.has(Trait.fakeout))) {
+            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
                 Global.global.gui()
                                 .message("You feel like you learned a lot about holding on to someone. Maybe you can apply this in the games?");
                 player.add(Trait.fakeout);

@@ -34,7 +34,7 @@ public class Thrust extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return !user.has(Trait.temptress) || user.get(Attribute.Technique) < 11;
+        return !user.hasTrait(Trait.temptress) || user.get(Attribute.Technique) < 11;
     }
 
     @Override
@@ -70,13 +70,13 @@ public class Thrust extends Skill {
         int results[] = new int[2];
 
         int m = 8 + Rng.rng.random(11);
-        if (c.getStance().anallyPenetrated(c, target) && getSelf().has(Trait.assmaster)) {
+        if (c.getStance().anallyPenetrated(c, target) && getSelf().hasTrait(Trait.assmaster)) {
             m *= 1.5;
         }
 
         float mt = Math.max(1, m / 3.f);
 
-        if (getSelf().has(Trait.experienced)) {
+        if (getSelf().hasTrait(Trait.experienced)) {
             mt = Math.max(1, mt * .66f);
         }
         mt = target.modRecoilPleasure(c, mt);
@@ -178,7 +178,7 @@ public class Thrust extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.anal) {
             String res;
-            if (getSelf().has(Trait.strapped)) {
+            if (getSelf().hasTrait(Trait.strapped)) {
                 res = String.format("%s thrusts her hips, pumping her artificial cock in and out"
                                 + " of %s ass and pushing on %s %s.", getSelf().subject(),
                                 target.nameOrPossessivePronoun(), target.possessiveAdjective(),
@@ -188,7 +188,7 @@ public class Thrust extends Skill {
                 res = String.format("%s cock slowly pumps the inside of %s rectum.",
                                 getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun());
             }
-            if (getSelf().has(Trait.assmaster)) {
+            if (getSelf().hasTrait(Trait.assmaster)) {
                 res += String.format(" %s penchant for fucking people in the ass makes "
                                 + "%s thrusting that much more powerful, and that much more "
                                 + "intense for the both of %s.", getSelf().nameOrPossessivePronoun(),

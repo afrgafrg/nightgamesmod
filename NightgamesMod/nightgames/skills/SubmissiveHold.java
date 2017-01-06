@@ -19,7 +19,7 @@ public class SubmissiveHold extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.submissive) ? 4 : 2;
+        return getSelf().hasTrait(Trait.submissive) ? 4 : 2;
     }
 
     @Override

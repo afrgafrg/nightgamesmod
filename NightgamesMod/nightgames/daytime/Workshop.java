@@ -130,13 +130,13 @@ public class Workshop extends Activity {
                                                 + "recharge during a match, there are a few compatible charging stations in the Mechanical Engineering workshops.\"</i>");
                 player.money -= 1000 * (player.getPure(Attribute.Science) + 1);
                 player.mod(Attribute.Science, 1);
-                if (!player.has(Item.ShockGlove)) {
+                if (!player.hasItem(Item.ShockGlove)) {
                     player.gain(Item.ShockGlove);
                 }
-                if (!player.has(Clothing.getByID("labcoat"))) {
+                if (!player.hasClothing(Clothing.getByID("labcoat"))) {
                     player.gain(Clothing.getByID("labcoat"));
                 }
-                if (player.getPure(Attribute.Science) >= 4 && !player.has(Item.Aersolizer)) {
+                if (player.getPure(Attribute.Science) >= 4 && !player.hasItem(Item.Aersolizer)) {
                     player.gain(Item.Aersolizer);
                 }
                 acted = true;
@@ -145,19 +145,19 @@ public class Workshop extends Activity {
             }
             acted = true;
         }
-        if (player.has(Item.Dildo)) {
+        if (player.hasItem(Item.Dildo)) {
             Global.global.gui().choose(this, "Upgrade Dildo: $2000");
         }
-        if (player.has(Item.Tickler)) {
+        if (player.hasItem(Item.Tickler)) {
             Global.global.gui().choose(this, "Upgrade Tickler: $3000");
         }
-        if (player.has(Item.Crop)) {
+        if (player.hasItem(Item.Crop)) {
             Global.global.gui().choose(this, "Upgrade Riding Crop: $1500");
         }
-        if (player.has(Item.Onahole)) {
+        if (player.hasItem(Item.Onahole)) {
             Global.global.gui().choose(this, "Upgrade Onahole: $3000");
         }
-        if (player.has(Item.Strapon)) {
+        if (player.hasItem(Item.Strapon)) {
             Global.global.gui().choose(this, "Upgrade Strapon: $2500");
         }
         Global.global.gui().choose(this, "Leave");
@@ -170,35 +170,35 @@ public class Workshop extends Activity {
             npc.money -= 1000;
             remaining -= 1000;
             npc.mod(Attribute.Science, 1);
-            if (!npc.has(Item.ShockGlove)) {
+            if (!npc.hasItem(Item.ShockGlove)) {
                 npc.gain(Item.ShockGlove);
             }
         }
-        if (npc.has(Item.Onahole) && remaining >= Item.Onahole2.getPrice()) {
+        if (npc.hasItem(Item.Onahole) && remaining >= Item.Onahole2.getPrice()) {
             npc.money -= Item.Onahole2.getPrice();
             remaining -= Item.Onahole2.getPrice();
             npc.consume(Item.Onahole, 1, false);
             npc.gain(Item.Onahole2);
         }
-        if (npc.has(Item.Dildo) && remaining >= Item.Dildo2.getPrice()) {
+        if (npc.hasItem(Item.Dildo) && remaining >= Item.Dildo2.getPrice()) {
             npc.money -= Item.Dildo2.getPrice();
             remaining -= Item.Dildo2.getPrice();
             npc.consume(Item.Dildo, 1, false);
             npc.gain(Item.Dildo2);
         }
-        if (npc.has(Item.Tickler) && remaining >= Item.Tickler2.getPrice()) {
+        if (npc.hasItem(Item.Tickler) && remaining >= Item.Tickler2.getPrice()) {
             npc.money -= Item.Tickler2.getPrice();
             remaining -= Item.Tickler2.getPrice();
             npc.consume(Item.Tickler, 1, false);
             npc.gain(Item.Tickler2);
         }
-        if (npc.has(Item.Crop) && remaining >= Item.Crop2.getPrice()) {
+        if (npc.hasItem(Item.Crop) && remaining >= Item.Crop2.getPrice()) {
             npc.money -= Item.Crop2.getPrice();
             remaining -= Item.Crop2.getPrice();
             npc.consume(Item.Crop, 1, false);
             npc.gain(Item.Crop2);
         }
-        if (npc.has(Item.Strapon2) && remaining >= Item.Strapon2.getPrice()) {
+        if (npc.hasItem(Item.Strapon2) && remaining >= Item.Strapon2.getPrice()) {
             npc.money -= Item.Strapon2.getPrice();
             remaining -= Item.Strapon2.getPrice();
             npc.consume(Item.Strapon, 1, false);
@@ -208,7 +208,7 @@ public class Workshop extends Activity {
             npc.money -= 1000;
             remaining -= 1000;
             npc.mod(Attribute.Science, 1);
-            if (!npc.has(Item.ShockGlove)) {
+            if (!npc.hasItem(Item.ShockGlove)) {
                 npc.gain(Item.ShockGlove);
             }
         }

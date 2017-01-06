@@ -57,7 +57,7 @@ public class Bookstore extends Store {
         int bored = 0;
         while (remaining > 25 && bored < 5) {
             for (Item i : stock.keySet()) {
-                if (remaining > i.getPrice() && !npc.has(i, 10)) {
+                if (remaining > i.getPrice() && !npc.hasItem(i, 10)) {
                     npc.gain(i);
                     npc.money -= i.getPrice();
                     remaining -= i.getPrice();

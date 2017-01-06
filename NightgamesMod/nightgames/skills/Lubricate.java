@@ -20,7 +20,7 @@ public class Lubricate extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().has(Item.Lubricant)
+        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().hasItem(Item.Lubricant)
                         && target.mostlyNude() && !target.is(Stsflag.oiled) && !c.getStance().prone(getSelf());
     }
 

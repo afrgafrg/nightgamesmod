@@ -31,7 +31,7 @@ public class SpawnFaerie extends Skill {
 
     @Override
     public int getMojoCost(Combat c) {
-        return getSelf().has(Trait.faefriend) ? 10 : 25;
+        return getSelf().hasTrait(Trait.faefriend) ? 10 : 25;
     }
 
     @Override

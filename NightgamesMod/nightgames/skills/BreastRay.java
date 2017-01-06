@@ -23,7 +23,7 @@ public class BreastRay extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && target.mostlyNude() && getSelf().has(Item.Battery, 2);
+                        && target.mostlyNude() && getSelf().hasItem(Item.Battery, 2);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BreastRay extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
         boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
-                        && !target.has(Trait.stableform);
+                        && !target.hasTrait(Trait.stableform);
         writeOutput(c, permanent ? 1 : 0, Result.normal, target);
         target.add(c, new Hypersensitive(target, 10));
         BreastsPart part = target.body.getBreastsBelow(BreastsPart.f.size);

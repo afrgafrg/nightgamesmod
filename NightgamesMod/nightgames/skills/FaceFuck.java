@@ -25,7 +25,7 @@ public class FaceFuck extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().dom(getSelf()) && c.getStance().prone(target)
-                        && (getSelf().crotchAvailable() && getSelf().hasDick() || getSelf().has(Trait.strapped))
+                        && (getSelf().crotchAvailable() && getSelf().hasDick() || getSelf().hasTrait(Trait.strapped))
                         && !c.getStance().inserted(getSelf()) && c.getStance().front(getSelf())
                         && !c.getStance().behind(target)
                         && c.getStance().reachTop(getSelf());
@@ -42,12 +42,12 @@ public class FaceFuck extends Skill {
         int selfDamage = 4;
         int targetDamage = 0;
         BodyPart targetMouth = target.body.getRandom("mouth");
-        if (target.has(Trait.silvertongue)) {
+        if (target.hasTrait(Trait.silvertongue)) {
             res = Result.reverse;
             selfDamage *= 2;
         }
-        if (getSelf().has(Trait.strapped)) {
-            if (getSelf().has(Item.Strapon2)) {
+        if (getSelf().hasTrait(Trait.strapped)) {
+            if (getSelf().hasItem(Item.Strapon2)) {
                 res = Result.upgrade;
                 targetDamage += 6;
             } else {
@@ -74,7 +74,7 @@ public class FaceFuck extends Skill {
         if (targetDamage > 0) {
             target.body.pleasure(target, getSelf().body.getRandomInsertable(), targetMouth, targetDamage, c, this);
         }
-        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) && !getSelf().has(Trait.strapped)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) && !getSelf().hasTrait(Trait.strapped)) {
             target.add(c, new BodyFetish(target, getSelf(), "cock", .25));
         }
         target.loseMojo(c, Global.random(10, 20));

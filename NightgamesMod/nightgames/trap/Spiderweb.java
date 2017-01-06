@@ -14,7 +14,7 @@ public class Spiderweb extends Trap {
     public Spiderweb() {
         this(null);
     }
-    
+
     public Spiderweb(Character owner) {
         super("Spiderweb", owner);
     }
@@ -49,12 +49,12 @@ public class Spiderweb extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Rope, 4) && owner.has(Item.Spring, 2) && owner.has(Item.Tripwire);
+        return owner.hasItem(Item.Rope, 4) && owner.hasItem(Item.Spring, 2) && owner.hasItem(Item.Tripwire);
     }
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.has(Trait.spider) && !owner.has(Trait.roboweb);
+        return owner.hasTrait(Trait.spider) && !owner.has(Trait.roboweb);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Spiderweb extends Trap {
         victim.defeated(attacker);
         victim.getArousal().empty();
         attacker.tempt(20);
-        Global.global.getMatch().score(attacker, victim.has(Trait.event) ? 5 : 1);
+        Global.global.getMatch().score(attacker, victim.hasTrait(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         victim.state = State.ready;
         victim.location().endEncounter();

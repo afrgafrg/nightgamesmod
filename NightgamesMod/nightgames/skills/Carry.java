@@ -28,7 +28,7 @@ public class Carry extends Fuck {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Power) >= 25 && !user.has(Trait.petite);
+        return user.get(Attribute.Power) >= 25 && !user.hasTrait(Trait.petite);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Carry extends Fuck {
             }
             int m = 5 + Rng.rng.random(5);
             int otherm = m;
-            if (getSelf().has(Trait.insertion)) {
+            if (getSelf().hasTrait(Trait.insertion)) {
                 otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
             }
             c.setStance(new Standing(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());

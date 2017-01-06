@@ -23,7 +23,7 @@ public class Flick extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return target.crotchAvailable() && c.getStance().reachBottom(getSelf()) && getSelf().canAct()
-                        && !getSelf().has(Trait.shy);
+                        && !getSelf().hasTrait(Trait.shy);
     }
 
     @Override
@@ -44,13 +44,13 @@ public class Flick extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            if (target.has(Trait.brassballs)) {
+            if (target.hasTrait(Trait.brassballs)) {
                 writeOutput(c, Result.weak, target);
             } else {
                 int mojoLost = 25;
                 int m = Rng.rng.random(8) + 8;
                 writeOutput(c, Result.normal, target);
-                if (target.has(Trait.achilles)) {
+                if (target.hasTrait(Trait.achilles)) {
                     m += 2 + Rng.rng.random(target.get(Attribute.Perception) / 2);
                     mojoLost = 40;
                 }

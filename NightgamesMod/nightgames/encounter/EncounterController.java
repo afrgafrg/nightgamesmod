@@ -54,7 +54,7 @@ public class EncounterController implements NgsController {
         if (!target.mostlyNude()) {
             buttons.add(new EncounterButton(Encs.stealclothes, "Steal Clothes"));
         }
-        if (Global.global.human.has(Item.Aphrodisiac)) {
+        if (Global.global.human.hasItem(Item.Aphrodisiac)) {
             buttons.add(new EncounterButton(Encs.aphrodisiactrick, "Use Aphrodisiac"));
         }
         buttons.add(new EncounterButton(Encs.wait, "Do Nothing"));

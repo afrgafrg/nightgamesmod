@@ -30,7 +30,7 @@ public class FaceSit extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        return getSelf().has(Trait.lacedjuices) || getSelf().has(Trait.addictivefluids)
+        return getSelf().hasTrait(Trait.lacedjuices) || getSelf().hasTrait(Trait.addictivefluids)
                         || (getSelf().body.has("pussy") && getSelf().body.
                                         getRandomPussy().moddedPartCountsAs(getSelf(), PussyPart.feral)) ? 3.0f : 0;
     }
@@ -40,7 +40,7 @@ public class FaceSit extends Skill {
         return getSelf().crotchAvailable() && getSelf().canAct() && c.getStance().dom(getSelf())
                         && c.getStance().prone(target) && !c.getStance().penetrated(c, getSelf())
                         && !c.getStance().inserted(getSelf()) && c.getStance().prone(target)
-                        && !getSelf().has(Trait.shy)
+                        && !getSelf().hasTrait(Trait.shy)
                         && c.getStance().reachTop(getSelf());
     }
 
@@ -51,7 +51,7 @@ public class FaceSit extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().has(Trait.enthrallingjuices) && Rng.rng.random(4) == 0 && !target.wary()) {
+        if (getSelf().hasTrait(Trait.enthrallingjuices) && Rng.rng.random(4) == 0 && !target.wary()) {
             writeOutput(c, Result.special, target);
             target.add(c, new Enthralled(target, getSelf(), 5));
         } else {
@@ -59,7 +59,7 @@ public class FaceSit extends Skill {
         }
 
         int m = 10;
-        if (target.has(Trait.silvertongue)) {
+        if (target.hasTrait(Trait.silvertongue)) {
             m = m * 3 / 2;
         }
         if (getSelf().hasBalls()) {
@@ -76,7 +76,7 @@ public class FaceSit extends Skill {
             // opponent can see self
             n += 3 * getSelf().body.getHotness(target);
         }
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             n *= 1.5;
         }
 

@@ -52,8 +52,7 @@ public class CockGrowth extends Skill {
         }
 
         boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
-                        && !target.has(Trait.stableform);
-
+                        && !target.hasTrait(Trait.stableform);
         if (res != Result.miss) {
             target.add(c, new Hypersensitive(target, 10));
             CockPart part = target.body.getCockBelow(CockPart.Size.maximumSize().length);

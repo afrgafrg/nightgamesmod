@@ -9,7 +9,6 @@ import nightgames.gui.button.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 /**
  * TODO: Write class-level documentation.
@@ -69,7 +68,7 @@ public class PlayerController implements NgsController{
         gui.message("You've earned a new perk. Select one below.");
         List<FutureButton<Trait>> buttons = new ArrayList<>();
         for (Trait feat : Global.global.getFeats(player)) {
-            if (!player.has(feat)) {
+            if (!player.hasTrait(feat)) {
                 buttons.add(new FeatButton(feat));
             }
         }

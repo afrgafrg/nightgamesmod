@@ -16,13 +16,13 @@ public class DenyOrgasm extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Power) >= 20 && user.has(Trait.tight);
+        return user.get(Attribute.Power) >= 20 && user.hasTrait(Trait.tight);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canRespond() && !target.is(Stsflag.orgasmseal) && target.getArousal().percent() > 50
-                        && c.getStance().penetratedBy(c, getSelf(), target) && !target.has(Trait.strapped);
+                        && c.getStance().penetratedBy(c, getSelf(), target) && !target.hasTrait(Trait.strapped);
     }
 
     @Override

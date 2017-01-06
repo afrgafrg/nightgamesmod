@@ -35,7 +35,7 @@ public class TemptressRide extends Thrust {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.temptress) && user.get(Attribute.Technique) >= 11;
+        return user.hasTrait(Trait.temptress) && user.get(Attribute.Technique) >= 11;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class TemptressRide extends Thrust {
         }
         int targetDmg = 10 + Rng.rng.random(Math.max(10, getSelf().get(Attribute.Technique)));
         int selfDmg = (int) Math.max(1f, targetDmg / 3f);
-        if (getSelf().has(Trait.experienced)) {
+        if (getSelf().hasTrait(Trait.experienced)) {
             selfDmg *= 0.67;
         }
         FiredUp status = (FiredUp) getSelf().status.stream().filter(s -> s instanceof FiredUp).findAny().orElse(null);

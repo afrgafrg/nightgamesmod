@@ -129,7 +129,7 @@ public class Wait extends Skill {
     }
 
     private boolean focused(Combat c) {
-        return getSelf().get(Attribute.Cunning) >= 15 && !getSelf().has(Trait.undisciplined) && getSelf().canRespond() && !c.getStance().sub(getSelf());
+        return getSelf().get(Attribute.Cunning) >= 15 && !getSelf().hasTrait(Trait.undisciplined) && getSelf().canRespond() && !c.getStance().sub(getSelf());
     }
 
     private boolean channel(Combat c) {

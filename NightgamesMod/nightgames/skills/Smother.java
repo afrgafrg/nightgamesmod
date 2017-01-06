@@ -38,7 +38,7 @@ public class Smother extends Skill {
     public boolean usable(Combat c, Character target) {
         return getSelf().crotchAvailable() && getSelf().canAct() && c.getStance().dom(getSelf())
                         && (c.getStance().isBeingFaceSatBy(c, target, getSelf()))
-                        && !getSelf().has(Trait.shy);
+                        && !getSelf().hasTrait(Trait.shy);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Smother extends Skill {
         writeOutput(c, Result.normal, target);
 
         int m = 10;
-        if (target.has(Trait.silvertongue)) {
+        if (target.hasTrait(Trait.silvertongue)) {
             m = m * 3 / 2;
         }
         getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandom("ass"), m, c, this);
@@ -60,7 +60,7 @@ public class Smother extends Skill {
             // opponent can see self
             n += 3 * getSelf().body.getHotness(target);
         }
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             n *= 1.5;
         }
 

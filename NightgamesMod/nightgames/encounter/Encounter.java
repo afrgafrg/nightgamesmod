@@ -193,8 +193,8 @@ public class Encounter implements Serializable, IEncounter {
                     if (p1.human() || p2.human())
                         Global.global.gui().message(p2Guaranteed.get());
                     p2.flee(location);
-                } else if (p2.check(Attribute.Speed, 10 + p1.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? 5 : 0)
-                                + (p2.has(Trait.sprinter) ? -5 : 0))) {
+                } else if (p2.check(Attribute.Speed, 10 + p1.get(Attribute.Speed) + (p1.hasTrait(Trait.sprinter) ? 5 : 0)
+                                + (p2.hasTrait(Trait.sprinter) ? -5 : 0))) {
                     if (p1.human()) {
                         Global.global.gui()
                               .message(p2.name() + " dashes away before you can move.");
@@ -229,8 +229,8 @@ public class Encounter implements Serializable, IEncounter {
                     if (p1.human() || p2.human())
                         Global.global.gui().message(p1Guaranteed.get());
                     p1.flee(location);
-                } else if (p1.check(Attribute.Speed, 10 + p2.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? -5 : 0)
-                                + (p2.has(Trait.sprinter) ? 5 : 0))) {
+                } else if (p1.check(Attribute.Speed, 10 + p2.get(Attribute.Speed) + (p1.hasTrait(Trait.sprinter) ? -5 : 0)
+                                + (p2.hasTrait(Trait.sprinter) ? 5 : 0))) {
                     if (p2.human()) {
                         Global.global.gui()
                               .message(p1.name() + " dashes away before you can move.");
@@ -379,7 +379,7 @@ public class Encounter implements Serializable, IEncounter {
               .empty();
         attacker.tempt(20);
         Global.global.getMatch()
-              .score(attacker, target.has(Trait.event) ? 5 : 1);
+              .score(attacker, target.hasTrait(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
         location.endEncounter();
@@ -416,7 +416,7 @@ public class Encounter implements Serializable, IEncounter {
               .empty();
         attacker.tempt(20);
         Global.global.getMatch()
-              .score(attacker, target.has(Trait.event) ? 5 : 1);
+              .score(attacker, target.hasTrait(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
         location.endEncounter();
@@ -455,7 +455,7 @@ public class Encounter implements Serializable, IEncounter {
               .empty();
         attacker.tempt(20);
         Global.global.getMatch()
-              .score(attacker, target.has(Trait.event) ? 5 : 1);
+              .score(attacker, target.hasTrait(Trait.event) ? 5 : 1);
         attacker.state = State.ready;
         target.state = State.ready;
         location.endEncounter();

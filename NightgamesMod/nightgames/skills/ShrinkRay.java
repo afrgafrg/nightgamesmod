@@ -25,7 +25,7 @@ public class ShrinkRay extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && target.mostlyNude() && getSelf().has(Item.Battery, 2);
+                        && target.mostlyNude() && getSelf().hasItem(Item.Battery, 2);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ShrinkRay extends Skill {
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 2);
         boolean permanent = Rng.rng.random(20) == 0 && (getSelf().human() || target.human())
-                        && !target.has(Trait.stableform);
+                        && !target.hasTrait(Trait.stableform);
         if (getSelf().human()) {
             if (target.hasDick()) {
                 c.write(getSelf(), deal(c, permanent ? 1 : 0, Result.special, target));

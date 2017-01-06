@@ -49,7 +49,7 @@ public class Tripline extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Rope);
+        return owner.hasItem(Item.Rope);
     }
 
     @Override

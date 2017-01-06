@@ -40,8 +40,8 @@ public class Nurse extends Skill {
 
     @Override
     public float priorityMod(Combat c) {
-        int mod = getSelf().has(Trait.lactating) ? 3 : 0;
-        if (getSelf().has(Trait.magicmilk))
+        int mod = getSelf().hasTrait(Trait.lactating) ? 3 : 0;
+        if (getSelf().hasTrait(Trait.magicmilk))
             mod *= 3;
         return mod;
     }
@@ -50,7 +50,7 @@ public class Nurse extends Skill {
     public boolean resolve(Combat c, Character target) {
         boolean special = c.getStance().en != Stance.nursing && !c.getStance().havingSex(c);
         writeOutput(c, special ? Result.special : Result.normal, target);
-        if (getSelf().has(Trait.lactating) && !target.is(Stsflag.suckling) && !target.is(Stsflag.wary)) {
+        if (getSelf().hasTrait(Trait.lactating) && !target.is(Stsflag.suckling) && !target.is(Stsflag.wary)) {
             c.write(target, Global.global.format(
                             "{other:SUBJECT-ACTION:are|is} a little confused at the sudden turn of events, but after milk starts flowing into {other:possessive} mouth, {other:pronoun} can't help but continue to suck on {self:possessive} teats.",
                             getSelf(), target));

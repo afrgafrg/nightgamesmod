@@ -23,7 +23,7 @@ public class LivingClothing extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().inserted()
-                        && getSelf().torsoNude() && getSelf().has(Item.Battery, 3);
+                        && getSelf().torsoNude() && getSelf().hasItem(Item.Battery, 3);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class MouthPart extends GenericBodyPart {
     @Override
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
-        if (target.isErogenous() && opponent.has(Trait.lickable)) {
+        if (target.isErogenous() && opponent.hasTrait(Trait.lickable)) {
             c.write(opponent, Grammar.capitalizeFirstLetter(opponent.subjectAction("shudder", "shudders"))
                             + " when licked by " + self.directObject() + ".");
             bonus += Rng.rng.random(2, 4) + opponent.getLevel() / 20;
@@ -42,13 +42,13 @@ public class MouthPart extends GenericBodyPart {
             }
         }
         String fluid = target.getFluids(opponent);
-        if (!fluid.isEmpty() && opponent.has(Trait.lacedjuices)) {
+        if (!fluid.isEmpty() && opponent.hasTrait(Trait.lacedjuices)) {
             c.write(self, Grammar.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " drug-laced "
                             + fluid
                             + " leaves " + self.nameOrPossessivePronoun() + " entire body tingling with arousal.");
             self.arouse(Math.max(opponent.getArousal().get() / 10, 5), c);
         }
-        if (!fluid.isEmpty() && opponent.has(Trait.frenzyingjuices) && Rng.rng.random(5) == 0) {
+        if (!fluid.isEmpty() && opponent.hasTrait(Trait.frenzyingjuices) && Rng.rng.random(5) == 0) {
             c.write(self, Grammar.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()) + " madness-inducing "
                             + fluid + " leaves " + self.nameOrPossessivePronoun() + " in a state of frenzy.");
             self.add(c, new Frenzied(self, 3));
@@ -85,7 +85,7 @@ public class MouthPart extends GenericBodyPart {
                 }
             }
         }
-        if (self.has(Trait.experttongue)) {
+        if (self.hasTrait(Trait.experttongue)) {
             if (Rng.rng.random(6) == 0 && !opponent.wary() && damage > 5) {
                 if (!self.human()) {
                     c.write(opponent, "<br/>Your mind falls into a pink colored fog from the tongue lashing.");
@@ -103,7 +103,7 @@ public class MouthPart extends GenericBodyPart {
                             self, opponent));
             opponent.temptNoSkill(c, self, this, (int) self.modifyDamage(DamageType.temptation, opponent, damage));
         }
-        if (self.has(Trait.catstongue)) {
+        if (self.hasTrait(Trait.catstongue)) {
             c.write(opponent, Global.global.format(
                             "<br/>{self:name-possessive} abrasive tongue produces an unique sensation.",
                             self, opponent));
@@ -111,10 +111,10 @@ public class MouthPart extends GenericBodyPart {
             bonus += Rng.rng.random(3) + 4;
             opponent.pain(c, opponent, 8 + Rng.rng.random(10), false, true);
         }
-        if (self.has(Trait.corrupting) && opponent.human()) {
+        if (self.hasTrait(Trait.corrupting) && opponent.human()) {
             opponent.add(c, new PartiallyCorrupted((Player) opponent, self));
         }
-        if (self.has(Trait.soulsucker) && target.isGenital()) {
+        if (self.hasTrait(Trait.soulsucker) && target.isGenital()) {
             if (!self.human()) {
                 c.write(opponent,
                                 "<br/>You feel faint as her lips touch you, as if your will to fight is being sucked out through your "
@@ -134,9 +134,9 @@ public class MouthPart extends GenericBodyPart {
     @Override
     public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = pleasure;
-        pleasureMod += self.has(Trait.tongueTraining1) ? .5 : 0;
-        pleasureMod += self.has(Trait.tongueTraining2) ? .7 : 0;
-        pleasureMod += self.has(Trait.tongueTraining3) ? .9 : 0;
+        pleasureMod += self.hasTrait(Trait.tongueTraining1) ? .5 : 0;
+        pleasureMod += self.hasTrait(Trait.tongueTraining2) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.tongueTraining3) ? .9 : 0;
         return pleasureMod;
     }
 

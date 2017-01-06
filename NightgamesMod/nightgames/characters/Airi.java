@@ -202,7 +202,7 @@ public class Airi extends BasePersonality {
     @Override
     public void eot(Combat c, Character opponent, Skill last) {
         // always replace with gooey/slime versions of genitals.
-        if (character.has(Trait.slime)) {
+        if (character.hasTrait(Trait.slime)) {
             if (character.hasPussy() && !character.body.getRandomPussy().moddedPartCountsAs(character, PussyPart.gooey)) {
                 character.body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
                 c.write(character, Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
@@ -219,7 +219,7 @@ public class Airi extends BasePersonality {
 
     @Override
     public void resolveOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart, int times, int totalTimes) {
-        if (times == totalTimes && character.getWillpower().percent() < 60 && !character.has(Trait.slime)) {
+        if (times == totalTimes && character.getWillpower().percent() < 60 && !character.hasTrait(Trait.slime)) {
             c.write(character, Global.global.format(
                             "After {self:NAME-POSSESSIVE} orgasm, her whole body shimmers and melts into a puddle of goo. A human body rises from the slime and molds itself to a facsimile of {self:reflective}. "
                             + "Gone is the slim repressed girl you knew. The new Airi that appears before you is a sexually idealized version of herself, with bigger breasts, a dynamic body line and long legs that end in a ball of blue goo. "
@@ -350,7 +350,7 @@ public class Airi extends BasePersonality {
 
     @Override
     public String describe(Combat c, Character self) {
-        return character.has(Trait.slime) ? "A crystal blue figure stands in front of you. Well, \"stands\" might be an exaggeration. "
+        return character.hasTrait(Trait.slime) ? "A crystal blue figure stands in front of you. Well, \"stands\" might be an exaggeration. "
                         + "Airi sports a cute face and a tight body, but her thighs end in a giant ball of slime. "
                         + "Indeed, while her body might look human at a distance, she seems to be composed of a soft, translucent gel."
                         : "Airi looks at you cautiously. Airi sports a cute face and a tight body with shoulder length black hair "
@@ -426,7 +426,7 @@ public class Airi extends BasePersonality {
 
     @Override
     public String image(Combat c) {
-        if (character.has(Trait.slime)) {
+        if (character.hasTrait(Trait.slime)) {
             SlimeMimicry mimicry = (SlimeMimicry) character.getStatus(Stsflag.mimicry);
             if (mimicry != null) {
                 return "airi_" + mimicry.getMimickedName() + "_slime.jpg";

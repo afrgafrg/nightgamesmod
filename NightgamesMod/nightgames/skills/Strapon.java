@@ -25,9 +25,9 @@ public class Strapon extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canAct() && !getSelf().has(Trait.strapped) && c.getStance().mobile(getSelf())
+        return getSelf().canAct() && !getSelf().hasTrait(Trait.strapped) && c.getStance().mobile(getSelf())
                         && !c.getStance().prone(getSelf())
-                        && (getSelf().has(Item.Strapon) || getSelf().has(Item.Strapon2)) && !getSelf().hasDick()
+                        && (getSelf().hasItem(Item.Strapon) || getSelf().hasItem(Item.Strapon2)) && !getSelf().hasDick()
                         && !c.getStance().connected(c) && !c.getStance().isFaceSitting(getSelf());
     }
 
@@ -71,7 +71,7 @@ public class Strapon extends Skill {
         }
         getSelf().emote(Emotion.confident, 30);
         getSelf().emote(Emotion.dominant, 40);
-        Item lost = getSelf().has(Item.Strapon2) ? Item.Strapon2 : Item.Strapon;
+        Item lost = getSelf().hasItem(Item.Strapon2) ? Item.Strapon2 : Item.Strapon;
         c.getCombatantData(getSelf()).loseItem(lost);
         getSelf().remove(lost);
         return true;

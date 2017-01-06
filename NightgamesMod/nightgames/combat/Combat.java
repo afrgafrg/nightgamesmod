@@ -25,6 +25,7 @@ import nightgames.status.addiction.Addiction.Severity;
 import java.util.*;
 
 public class Combat extends Observable implements Cloneable {
+    private final CombatController controller;
     private enum CombatPhase {
         PRETURN,
         SKILL_SELECTION,
@@ -85,6 +86,7 @@ public class Combat extends Observable implements Cloneable {
         if (doExtendedLog()) {
             log = new CombatLog(this);
         }
+        controller = new CombatController(Global.global.gui());
     }
 
     public Combat(Character p1, Character p2, Area loc, Position starting) {
@@ -119,7 +121,7 @@ public class Combat extends Observable implements Cloneable {
                     }
                 }
             }
-        } else if (other.human() && self.has(Trait.zealinspiring) && other instanceof Player && ((Player)other).getAddiction(AddictionType.ZEAL)
+        } else if (other.human() && self.hasTrait(Trait.zealinspiring) && other instanceof Player && ((Player)other).getAddiction(AddictionType.ZEAL)
                         .map(Addiction::isInWithdrawal).orElse(false)) {
             self.add(this, new DivineCharge(self, .3));
         }
@@ -183,13 +185,13 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private boolean checkBottleCollection(Character victor, Character loser, PussyPart mod) {
-        return victor.has(Item.EmptyBottle, 1) && loser.body.get("pussy")
+        return victor.hasItem(Item.EmptyBottle, 1) && loser.body.get("pussy")
                                                             .stream()
                                                             .anyMatch(part -> part.getMod(loser) == mod);
     }
 
     private void doVictory(Character victor, Character loser) {
-        if (loser.hasDick() && victor.has(Trait.succubus)) {
+        if (loser.hasDick() && victor.hasTrait(Trait.succubus)) {
             victor.gain(Item.semen, 3);
             if (loser.human()) {
                 write(victor, "<br/><b>As she leaves, you see all your scattered semen ooze out and gather into a orb in "
@@ -202,8 +204,8 @@ public class Combat extends Observable implements Cloneable {
                                 + " out of the last drops " + loser.subject()
                                 + " had to offer. Yum, you just got some leftovers.</b>");
             }
-        } else if (loser.hasDick() && (victor.human() || victor.has(Trait.madscientist))
-                        && victor.has(Item.EmptyBottle, 1)) {
+        } else if (loser.hasDick() && (victor.human() || victor.hasTrait(Trait.madscientist))
+                        && victor.hasItem(Item.EmptyBottle, 1)) {
             // for now only the player and mara collects semen
             write(victor, Global.global.format(
                             "<br/><b>{self:SUBJECT-ACTION:manage|manages} to collect some of {other:name-possessive} scattered semen in an empty bottle</b>",
@@ -271,7 +273,7 @@ public class Combat extends Observable implements Cloneable {
         loser.getWillpower()
              .fill();
 
-        if (Global.global.checkFlag(Flag.FTC) && loser.has(Item.Flag)) {
+        if (Global.global.checkFlag(Flag.FTC) && loser.hasItem(Item.Flag)) {
             write(victor, Global.global.format(
                             "<br/><b>{self:SUBJECT-ACTION:take|takes} the " + "Flag from {other:subject}!</b>", victor,
                             loser));
@@ -782,9 +784,9 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private boolean rollWorship(Character self, Character other) {
-        if (other.has(Trait.objectOfWorship) && (other.breastsAvailable() || other.crotchAvailable())) {
+        if (other.hasTrait(Trait.objectOfWorship) && (other.breastsAvailable() || other.crotchAvailable())) {
             double chance = Math.min(20, Math.max(5, other.get(Attribute.Divinity) + 10 - self.getLevel()));
-            if (other.has(Trait.revered)) {
+            if (other.hasTrait(Trait.revered)) {
                 chance += 10;
             }
             chance += getCombatantData(self).getDoubleFlag(TEMPT_WORSHIP_BONUS);
@@ -886,7 +888,7 @@ public class Combat extends Observable implements Cloneable {
             }
         }
 
-        if (self.has(Trait.smqueen)) {
+        if (self.hasTrait(Trait.smqueen)) {
                 write(self,
                             Global.global.format("{self:NAME-POSSESSIVE} cold gaze in {self:possessive} dominant position"
                                             + " makes {other:direct-object} shiver.",
@@ -984,7 +986,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private boolean checkCounter(Character attacker, Character target, Skill skill) {
-        return !target.has(Trait.submissive) && getStance().mobile(target)
+        return !target.hasTrait(Trait.submissive) && getStance().mobile(target)
                         && target.counterChance(this, attacker, skill) > Rng.rng.random(100);
     }
 
@@ -1230,7 +1232,7 @@ public class Combat extends Observable implements Cloneable {
             intruder.gainXP(10 + intruder.lvlBonus(target));
             intruder.getArousal()
                     .empty();
-            if (intruder.has(Trait.insatiable)) {
+            if (intruder.hasTrait(Trait.insatiable)) {
                 intruder.getArousal()
                         .restore((int) (intruder.getArousal()
                                                 .max()
@@ -1246,7 +1248,7 @@ public class Combat extends Observable implements Cloneable {
             if (!(p1.human() || p2.human() || intruder.human())) {
                 end();
             } else  {
-                watchCombat(Global.global.gui());
+                controller.watchCombat(this);
                 next();
             }
         }

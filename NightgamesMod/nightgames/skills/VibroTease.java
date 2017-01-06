@@ -19,14 +19,14 @@ public class VibroTease extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Item.Strapon2);
+        return user.hasItem(Item.Strapon2);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().dom(getSelf()) && c.getStance().en == Stance.anal
-                        && getSelf().has(Trait.strapped) && c.getStance().inserted(getSelf())
-                        && getSelf().has(Item.Strapon2);
+                        && getSelf().hasTrait(Trait.strapped) && c.getStance().inserted(getSelf())
+                        && getSelf().hasItem(Item.Strapon2);
     }
 
     @Override

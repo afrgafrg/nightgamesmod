@@ -21,7 +21,7 @@ public class Resupply extends Action {
 
     @Override
     public boolean usable(Character user) {
-        return  !user.bound() && user.location().resupply() || user.has(Trait.immobile) || (Global.global.checkFlag(Flag.FTC)
+        return  !user.bound() && user.location().resupply() || user.hasTrait(Trait.immobile) || (Global.global.checkFlag(Flag.FTC)
                         && ((FTCMatch) Global.global.getMatch()).isBase(user, user.location()));
     }
 
@@ -32,7 +32,7 @@ public class Resupply extends Action {
             if (user.human()) {
                 Global.global.gui().message("You get a change of clothes from the chest placed here.");
             }
-            if (user.has(Item.Flag) && !match.isPrey(user)) {
+            if (user.hasItem(Item.Flag) && !match.isPrey(user)) {
                 match.turnInFlag(user);
             } else if (match.canCollectFlag(user)) {
                 match.grabFlag();

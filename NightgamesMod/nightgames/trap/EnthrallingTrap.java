@@ -57,7 +57,7 @@ public class EnthrallingTrap extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.semen);
+        return owner.hasItem(Item.semen);
     }
 
     @Override

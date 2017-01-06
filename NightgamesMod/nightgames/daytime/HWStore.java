@@ -69,8 +69,8 @@ public class HWStore extends Store {
         int bored = 0;
         while (remaining > 10 && bored < 10) {
             for (Item i : stock.keySet()) {
-                boolean emptyBottleCheck = npc.has(Trait.madscientist) || i != Item.EmptyBottle;
-                if (remaining > i.getPrice() && !npc.has(i, 20) && emptyBottleCheck) {
+                boolean emptyBottleCheck = npc.hasTrait(Trait.madscientist) || i != Item.EmptyBottle;
+                if (remaining > i.getPrice() && !npc.hasItem(i, 20) && emptyBottleCheck) {
                     npc.gain(i);
                     npc.money -= i.getPrice();
                     remaining -= i.getPrice();

@@ -46,7 +46,7 @@ public enum Attribute {
         if (a == Willpower) {
             return self.getWillpower().max() + 2 <= self.getMaxWillpowerPossible();
         }
-        return a != Speed && a != Perception && (self.has(Trait.divinity) || a != Divinity);
+        return a != Speed && a != Perception && (self.hasTrait(Trait.divinity) || a != Divinity);
     }
     
     private static String findYourself(String desc) {

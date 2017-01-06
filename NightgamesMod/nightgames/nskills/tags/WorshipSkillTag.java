@@ -23,7 +23,7 @@ public class WorshipSkillTag extends SkillTag {
                     return true;
                 }
             }
-            if (other.has(Trait.objectOfWorship)) {
+            if (other.hasTrait(Trait.objectOfWorship)) {
                 // check roll for worship
                 if (!self.checkResists(ResistType.mental, other, value + other.get(Attribute.Divinity), results.getRoll())) {
                     //mental resist check failed

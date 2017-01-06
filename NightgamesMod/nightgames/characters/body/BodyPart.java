@@ -41,7 +41,7 @@ public interface BodyPart {
         if (getFluids(c).isEmpty()) {
             return 0;
         } else {
-            return c.has(Trait.addictivefluids) ? 1 : 0;
+            return c.hasTrait(Trait.addictivefluids) ? 1 : 0;
         }
     }
 

@@ -21,13 +21,13 @@ public class PlaceBlindfold extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canAct() && getSelf().has(Item.Blindfold) && !target.is(Stsflag.blinded) && !c.getStance()
+        return getSelf().canAct() && getSelf().hasItem(Item.Blindfold) && !target.is(Stsflag.blinded) && !c.getStance()
                                                                                  .mobile(target);
     }
 
     @Override
     public float priorityMod(Combat c) {
-        if (!getSelf().human() && getSelf().has(Trait.mindcontroller)) {
+        if (!getSelf().human() && getSelf().hasTrait(Trait.mindcontroller)) {
             return -3.f;
         }
         return 2.f;
@@ -42,7 +42,7 @@ public class PlaceBlindfold extends Skill {
     public int accuracy(Combat c, Character target) {
         return target.canAct() ? 200 : 60;
     }
-    
+
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {

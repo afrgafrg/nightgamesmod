@@ -56,10 +56,10 @@ public abstract class Position implements Cloneable {
 
     public float getSubDomBonus(Character self, float bonus) {
         if (!self.human()) {
-            if (self.has(Trait.submissive) && sub(self)) {
+            if (self.hasTrait(Trait.submissive) && sub(self)) {
                 return bonus;
             }
-            if ((!self.has(Trait.submissive) || self.has(Trait.flexibleRole)) && dom(self)) {
+            if ((!self.hasTrait(Trait.submissive) || self.has(Trait.flexibleRole)) && dom(self)) {
                 return bonus;
             }
         }
@@ -123,7 +123,7 @@ public abstract class Position implements Cloneable {
     }
 
     public boolean canthrust(Combat c, Character self) {
-        return domSexCharacter(c) == self || self.has(Trait.powerfulhips);
+        return domSexCharacter(c) == self || self.hasTrait(Trait.powerfulhips);
     }
 
     public boolean facing(Character c, Character target) {
@@ -142,13 +142,13 @@ public abstract class Position implements Cloneable {
         } else {
             target = top;
         }
-        return (self.crotchAvailable() || self.has(Trait.strapped) && target.hasPussy()) && target.crotchAvailable()
+        return (self.crotchAvailable() || self.hasTrait(Trait.strapped) && target.hasPussy()) && target.crotchAvailable()
                         && mobile(self) && !mobile(target)
-                        && ((self.hasDick() || self.has(Trait.strapped)) && !behind(target) || !behind(self))
+                        && ((self.hasDick() || self.hasTrait(Trait.strapped)) && !behind(target) || !behind(self))
                         && self.canAct();
     }
 
-    public Stance 
+    public Stance
     enumerate() {
         return en;
     }
@@ -262,7 +262,7 @@ public abstract class Position implements Cloneable {
     public boolean penetrated(Combat combat, Character c) {
         return vaginallyPenetrated(combat, c) || anallyPenetrated(combat, c);
     }
-    
+
     public Character getPenetratedCharacter(Combat c, Character self) {
         return getPartner(c, self);
     }
@@ -274,7 +274,7 @@ public abstract class Position implements Cloneable {
 
     public boolean havingSexOtherNoStrapped(Combat c, Character self) {
         Character other = getPartner(c, self);
-        return penetratedBy(c, other, self) || penetratedBy(c, self, other) && !other.has(Trait.strapped);
+        return penetratedBy(c, other, self) || penetratedBy(c, self, other) && !other.hasTrait(Trait.strapped);
     }
 
     public boolean havingSexNoStrapped(Combat c) {
@@ -380,7 +380,7 @@ public abstract class Position implements Cloneable {
     public boolean isFaceSitting(Character self) {
         return false;
     }
-   
+
     public boolean isFacesatOn(Character self) {
         return false;
     }

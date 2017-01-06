@@ -212,7 +212,7 @@ public class AngelTime extends BaseNPCTime {
                   .choose(this, "Sparring");
             Global.global.gui()
                   .choose(this, "Sex");
-            if (npc.has(Trait.zealinspiring)) {
+            if (npc.hasTrait(Trait.zealinspiring)) {
                 Global.global.gui()
                       .choose(this, "Worship");
             }
@@ -283,7 +283,7 @@ public class AngelTime extends BaseNPCTime {
                   .addict(AddictionType.ZEAL, npc, Addiction.MED_INCREASE);
             Global.global.getPlayer().getAddiction(AddictionType.ZEAL).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.experttongue) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.hasTrait(Trait.experttongue) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You're in Angel's room, naked and feeling a little overwhelmed. She embraces your from behind and you can feel her soft, heavy breasts pressed against "
                                       + "your back. She nibbles lightly on your ear while motioning toward the naked girl on her bed. <i>\"She's all yours. Show me what you can do.\"</i> As for how you got here... "
@@ -320,7 +320,7 @@ public class AngelTime extends BaseNPCTime {
                                       + "bed, exhausted from multiple orgasms. <i>\"Mei is straight, so even when she's seeking my affection, I have to act like it's punishment. If I neglect her for too long, she steals a boy from "
                                       + "me so I have an excuse to punish her. She doesn't mean any harm, she just gets lonely.\"</i> That seems unnecessarily complicated. Still, it's very considerate of Angel to indulge Mei even when "
                                       + "they're fighting over guys. <i>\"Of course,\"</i> she says. <i>\"Mei is my friend.\"</i>");
-                if (!player.has(Trait.experttongue)) {
+                if (!player.hasTrait(Trait.experttongue)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've improved your kissing technique to the point where it may render opponents temporarily helpless.</b>");
                     player.add(Trait.experttongue);
@@ -360,7 +360,7 @@ public class AngelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.pokerface) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.hasTrait(Trait.pokerface) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Today all the girls left the responsibility of choosing a game to you, with Angel's stipulation that it had to including stripping. You picked a simple, but intense "
                                       + "bluffing game with stripping rules slotted in so naturally it's like the game was designed for them. Not to be immodest, but clearly your genius knows no bounds. The first five "
@@ -389,7 +389,7 @@ public class AngelTime extends BaseNPCTime {
                                       + "facing you while they masturbate openly. Sarah looks so embarrassed she may cry, but you can tell she's getting off on this more than anyone else. Mei looks more composed, but from time to time you see her "
                                       + "bite her lip and shudder. You realize she's having multiple little orgasms and trying to hide it. After Sarah climaxes (loudly), Angel speeds up her handjob and whispers in your ear, <i>\"Cum for me. "
                                       + "You have my permission.\"</i> You couldn't hold back even if you wanted to. You shoot your load so far that some of it even hits Caroline, who is standing quite a ways away.");
-                if (!player.has(Trait.pokerface)) {
+                if (!player.hasTrait(Trait.pokerface)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've mastered the art of bluffing.</b>");
                     player.add(Trait.pokerface);
@@ -426,7 +426,7 @@ public class AngelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.disciplinarian) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.hasTrait(Trait.disciplinarian) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Your strip wrestling with Angel has become a routine secondary version of your nightly competitions. Unfortunately, in this venue, Angel has a a much better "
                                       + "win rate than you. You've also gotten used to your three girl audience. Mei's sadistic side comes to the fore as she cheers on Angel whenever she's got the upper hand. Caroline, "
@@ -455,7 +455,7 @@ public class AngelTime extends BaseNPCTime {
                                       + "hand as she orgasms. As she goes limp in your arms, the other girls snap out of whatever what keeping them silent and they gather around you. Mei stands nearby, but can't seem to make eye "
                                       + "contact with Angel. Caroline pats Angel on the head while congratulating you on your victory. Sarah crouches next to Angel and kisses her on the cheek affectionately. It occurs to you, not "
                                       + "for the first time, what a close group of friends they are. You feel honored that they're starting to count you as one of them.");
-                if (!player.has(Trait.disciplinarian)) {
+                if (!player.hasTrait(Trait.disciplinarian)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've learn how to spank your opponent in a way that can ruin their morale.</b>");
                     player.add(Trait.disciplinarian);

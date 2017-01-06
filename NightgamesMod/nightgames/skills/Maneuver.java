@@ -19,7 +19,7 @@ public class Maneuver extends Skill {
     public boolean usable(Combat c, Character target) {
         return !target.wary() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
                         && !c.getStance().prone(target) && !c.getStance().behind(getSelf()) && getSelf().canAct()
-                        && !getSelf().has(Trait.undisciplined) && !c.getStance().connected(c);
+                        && !getSelf().hasTrait(Trait.undisciplined) && !c.getStance().connected(c);
     }
 
     @Override

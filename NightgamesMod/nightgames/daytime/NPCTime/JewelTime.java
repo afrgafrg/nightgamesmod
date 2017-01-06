@@ -234,7 +234,7 @@ public class JewelTime extends BaseNPCTime {
                   .choose(this, "Leave");
         }
         if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.hasTrait(Trait.spiral) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Jewel leads you to her bedroom instead of the wilderness for once. She seems unusually eager and almost like she could break into skipping at any time. "
                                       + "She's always been as fond of sex as the next girl, but this is uncharacteristic. You eventually decide to ask her if anything special is happening today. <i>\"Hmm? Well, "
@@ -264,7 +264,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "Your already overstimulated cock rubs against Jewel's vaginal walls and she screams in pleasure even as you ejaculate into her. For some reason the words 'Giga Drill Break' come "
                                       + "unbidden to your mind, but you resist the urge to yell. It takes Jewel a lot longer to recover from this orgasm, but when she does she smiles contently. <i>\"That was even better than I "
                                       + "expected.\"</i>");
-                if (!player.has(Trait.spiral)) {
+                if (!player.hasTrait(Trait.spiral)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've learned to harness the awesome power that has laid dormant in your soul... maybe. You've at least learned to move your hips a lot during sex.</b>");
                     player.add(Trait.spiral);
@@ -300,7 +300,7 @@ public class JewelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.fearless) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.hasTrait(Trait.fearless) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Today you've brought a wargame to appeal to Jewel's love of military history. You let her play the Allies, both because her father is a soldier and because the "
                                       + "Allies are on offense in this scenario. She advances all her troops from the start, taking heavy casualties, but stealing a couple victory point locations from you. You bide "
@@ -317,7 +317,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "on a real battlefield. <i>\"This isn't a real battlefield,\"</i> she retorts. She points to one of the troops in her casualty pile. <i>\"This is a piece of plastic, not a person with parents, "
                                       + "kids, or a spouse. In a game, the only thing that matters is victory. When you lose a piece, no one has to cry over a friend or family member's grave. You can't treat war like a game, "
                                       + "and likewise you can't treat a game like war.\"</i><br/><br/>She stands up and practically drags you out of your chair. <i>\"Enough serious talk. Strip and get on the bed. I'm on top today.\"</i>");
-                if (!player.has(Trait.fearless)) {
+                if (!player.hasTrait(Trait.fearless)) {
                     Global.global.gui().message("<br/><br/><b>Jewel has taught you a valuable lesson in reckless determination.</b>");
                     player.add(Trait.fearless);
                     npc.getGrowth().addTrait(0, Trait.fearless);
@@ -336,7 +336,7 @@ public class JewelTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.dirtyfighter) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 12 && (!player.hasTrait(Trait.dirtyfighter) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("Your martial arts training has finally reached the point where Jewel is willing to spar with you seriously. She's all business when it comes to sparring. There "
                                       + "are no sex holds and no stripping. The only victory condition is to make your opponent admit defeat. Jewel darts in with a snap-kick, which you barely manage to block, and "
@@ -352,7 +352,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "were flat on their backs, so they aimed right for Carthage's balls. Speaking of which...\"</i> She slides her hand down the front of your pants to lightly grasp your testicles. "
                                       + "<i>\"You haven't given up yet. Should I assume you want to keep fighting?\"</i> You hastily concede before your situation becomes any more painful. She breathes lustily in your ear and "
                                       + "fondles your penis. <i>\"Try to recover quickly. I need this in me as soon as possible.\"</i>");
-                if (!player.has(Trait.dirtyfighter)) {
+                if (!player.hasTrait(Trait.dirtyfighter)) {
                     Global.global.gui()
                           .message("<br/><br/><b>You've learned the hard way that kicks can be dangerous, even when you're down.</b>");
                     player.add(Trait.dirtyfighter);

@@ -43,36 +43,36 @@ public class AssPart extends GenericBodyPart {
     @Override
     public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = super.getPleasure(self, target);
-        pleasureMod += self.has(Trait.analTraining1) ? .5 : 0;
-        pleasureMod += self.has(Trait.analTraining2) ? .7 : 0;
-        pleasureMod += self.has(Trait.analTraining3) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.analTraining1) ? .5 : 0;
+        pleasureMod += self.hasTrait(Trait.analTraining2) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.analTraining3) ? .7 : 0;
         return pleasureMod;
     }
 
     @Override
     public double applyBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
-        if (self.has(Trait.oiledass) && c.getStance().anallyPenetratedBy(c, self, opponent)) {
+        if (self.hasTrait(Trait.oiledass) && c.getStance().anallyPenetratedBy(c, self, opponent)) {
             c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} naturally oiled asshole swallows {other:name-possessive} cock with ease.",
                             self, opponent));
             bonus += 5;
         }
 
-        if ((self.has(Trait.tight) || self.has(Trait.holecontrol)) && c.getStance().anallyPenetrated(c, self)) {
+        if ((self.hasTrait(Trait.tight) || self.hasTrait(Trait.holecontrol)) && c.getStance().anallyPenetrated(c, self)) {
             String desc = "";
-            if (self.has(Trait.tight)) {
+            if (self.hasTrait(Trait.tight)) {
                 desc += "powerful ";
             }
-            if (self.has(Trait.holecontrol)) {
+            if (self.hasTrait(Trait.holecontrol)) {
                 desc += "well-trained ";
             }
             c.write(self, Global.global.format(
                             "{self:SUBJECT-ACTION:use|uses} {self:possessive} " + desc
                                             + "sphincter muscles to milk {other:name-possessive} cock, adding to the pleasure.",
                             self, opponent));
-            bonus += self.has(Trait.tight) && self.has(Trait.holecontrol) ? 10 : 5;
-            if (self.has(Trait.tight)) {
+            bonus += self.hasTrait(Trait.tight) && self.hasTrait(Trait.holecontrol) ? 10 : 5;
+            if (self.hasTrait(Trait.tight)) {
                 opponent.pain(c, self, Math.min(30, self.get(Attribute.Power)));
             }
         }
@@ -96,7 +96,7 @@ public class AssPart extends GenericBodyPart {
 
     @Override
     public void tickHolding(Combat c, Character self, Character opponent, BodyPart otherOrgan) {
-        if (self.has(Trait.autonomousAss)) {
+        if (self.hasTrait(Trait.autonomousAss)) {
             c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} " + fullDescribe(self)
                                             + " churns against {other:name-possessive} cock, "
@@ -109,14 +109,14 @@ public class AssPart extends GenericBodyPart {
     @Override
     public double applyReceiveBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
         double bonus = 0;
-        if (opponent.has(Trait.asshandler) || opponent.has(Trait.anatomyknowledge)) {
+        if (opponent.hasTrait(Trait.asshandler) || opponent.hasTrait(Trait.anatomyknowledge)) {
             c.write(opponent, Global.global.format(
                             "{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} ass causes {self:subject} to shudder uncontrollably.",
                                             self, opponent));
-            if (opponent.has(Trait.asshandler)) {
+            if (opponent.hasTrait(Trait.asshandler)) {
                 bonus += 5;
             }
-            if (opponent.has(Trait.anatomyknowledge)) {
+            if (opponent.hasTrait(Trait.anatomyknowledge)) {
                 bonus += 5;
             }
         }
@@ -137,12 +137,12 @@ public class AssPart extends GenericBodyPart {
 
     @Override
     public boolean isReady(Character c) {
-        return c.has(Trait.oiledass) || c.is(Stsflag.oiled);
+        return c.hasTrait(Trait.oiledass) || c.is(Stsflag.oiled);
     }
 
     @Override
     public String getFluids(Character c) {
-        if (c.has(Trait.oiledass)) {
+        if (c.hasTrait(Trait.oiledass)) {
             return "oils";
         } else {
             return "";
@@ -156,8 +156,8 @@ public class AssPart extends GenericBodyPart {
 
     @Override
     public double priority(Character c) {
-        return (c.has(Trait.tight) ? 1 : 0) + (c.has(Trait.holecontrol) ? 1 : 0) + (c.has(Trait.oiledass) ? 1 : 0)
-                        + (c.has(Trait.autonomousAss) ? 4 : 0);
+        return (c.hasTrait(Trait.tight) ? 1 : 0) + (c.hasTrait(Trait.holecontrol) ? 1 : 0) + (c.hasTrait(Trait.oiledass) ? 1 : 0)
+                        + (c.hasTrait(Trait.autonomousAss) ? 4 : 0);
     }
 
 }

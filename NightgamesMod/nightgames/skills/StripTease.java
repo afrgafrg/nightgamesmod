@@ -22,12 +22,12 @@ public class StripTease extends Skill {
     }
 
     public static boolean hasRequirements(Character user) {
-        return user.get(Attribute.Seduction) >= 24 && !user.has(Trait.direct) && !user.has(Trait.shy)
-                        && !user.has(Trait.temptress);
+        return user.get(Attribute.Seduction) >= 24 && !user.hasTrait(Trait.direct) && !user.hasTrait(Trait.shy)
+                        && !user.hasTrait(Trait.temptress);
     }
 
     public static boolean isUsable(Combat c, Character self, Character target) {
-        return self.stripDifficulty(target) == 0 && !self.has(Trait.strapped) && self.canAct() && c.getStance()
+        return self.stripDifficulty(target) == 0 && !self.hasTrait(Trait.strapped) && self.canAct() && c.getStance()
                                                                                                    .mobile(self)
                         && !self.mostlyNude() && !c.getStance()
                                                    .prone(self)

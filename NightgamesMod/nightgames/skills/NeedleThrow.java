@@ -26,7 +26,7 @@ public class NeedleThrow extends Skill {
                 .mobile(getSelf())
                         && !c.getStance()
                              .prone(getSelf())
-                        && getSelf().canAct() && getSelf().has(Item.Needle);
+                        && getSelf().canAct() && getSelf().hasItem(Item.Needle);
     }
 
     @Override

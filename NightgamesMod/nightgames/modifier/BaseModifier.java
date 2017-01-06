@@ -64,7 +64,7 @@ public abstract class BaseModifier implements Modifier {
             }
         });
         items.ensuredItems().forEach((item, count) -> {
-            while (!c.has(item, count)) {
+            while (!c.hasItem(item, count)) {
                 c.gain(item);
                 moddedItems.get(c).putIfAbsent(item, 0);
                 moddedItems.get(c).compute(item, (i, cnt) -> cnt + 1);

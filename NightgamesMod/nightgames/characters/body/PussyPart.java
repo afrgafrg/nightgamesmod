@@ -96,8 +96,8 @@ public enum PussyPart implements BodyPart,BodyPartMod {
 
     @Override
     public double priority(Character c) {
-        return priority + (c.has(Trait.tight) ? 1 : 0) + (c.has(Trait.holecontrol) ? 1 : 0)
-                        + +(c.has(Trait.autonomousPussy) ? 4 : 0);
+        return priority + (c.hasTrait(Trait.tight) ? 1 : 0) + (c.hasTrait(Trait.holecontrol) ? 1 : 0)
+                        + +(c.hasTrait(Trait.autonomousPussy) ? 4 : 0);
     }
 
     @Override
@@ -147,9 +147,9 @@ public enum PussyPart implements BodyPart,BodyPartMod {
     @Override
     public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = pleasure;
-        pleasureMod += self.has(Trait.sexTraining1) ? .5 : 0;
-        pleasureMod += self.has(Trait.sexTraining2) ? .7 : 0;
-        pleasureMod += self.has(Trait.sexTraining3) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining1) ? .5 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining2) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining3) ? .7 : 0;
         DivineCharge charge = (DivineCharge) self.getStatus(Stsflag.divinecharge);
         if (charge != null) {
             pleasureMod += charge.magnitude;
@@ -164,7 +164,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
 
     @Override
     public boolean isReady(Character self) {
-        return self.has(Trait.alwaysready) || self.getArousal()
+        return self.hasTrait(Trait.alwaysready) || self.getArousal()
                                                   .percent() >= wetThreshold;
     }
 
@@ -238,14 +238,14 @@ public enum PussyPart implements BodyPart,BodyPartMod {
             }
             opponent.add(c, Pheromones.getWith(self, opponent, (float) base, 5, " feral musk"));
         }
-        if (opponent.has(Trait.pussyhandler) || opponent.has(Trait.anatomyknowledge)) {
+        if (opponent.hasTrait(Trait.pussyhandler) || opponent.hasTrait(Trait.anatomyknowledge)) {
             c.write(opponent, Global.global.format(
                             "{other:NAME-POSSESSIVE} expert handling of {self:name-possessive} pussy causes {self:subject} to shudder uncontrollably.",
                                             self, opponent));
-            if (opponent.has(Trait.pussyhandler)) {
+            if (opponent.hasTrait(Trait.pussyhandler)) {
                 bonus += 5;
             }
-            if (opponent.has(Trait.anatomyknowledge)) {
+            if (opponent.hasTrait(Trait.anatomyknowledge)) {
                 bonus += 5;
             }
         }
@@ -440,28 +440,28 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                 opponent.add(c, new Frenzied(opponent, 3));
             }
         }
-        if (isType("pussy") && self.has(Trait.vaginaltongue) && target.isType("cock")
+        if (isType("pussy") && self.hasTrait(Trait.vaginaltongue) && target.isType("cock")
                         && !opponent.hasStatus(Stsflag.cockbound)) {
             opponent.add(c, new CockBound(opponent, 5, self.nameOrPossessivePronoun() + " pussy-tongue"));
             c.write(self, self.nameOrPossessivePronoun() + " long sinuous vaginal tongue wraps around "
                             + opponent.nameOrPossessivePronoun() + " " + target.describe(opponent)
                             + ", preventing any escape.\n");
         }
-        if ((self.has(Trait.tight) || self.has(Trait.holecontrol)) && c.getStance()
+        if ((self.hasTrait(Trait.tight) || self.hasTrait(Trait.holecontrol)) && c.getStance()
                                                                        .vaginallyPenetrated(c, self)
                                                                        && opponent.body.has("cock")) {
             String desc = "";
-            if (self.has(Trait.tight)) {
+            if (self.hasTrait(Trait.tight)) {
                 desc += "powerful ";
             }
-            if (self.has(Trait.holecontrol)) {
+            if (self.hasTrait(Trait.holecontrol)) {
                 desc += "well-trained ";
             }
             c.write(self, Global.global.format(
                             "{self:SUBJECT-ACTION:use|uses} {self:possessive} " + desc
                                             + "vaginal muscles to milk {other:name-possessive} cock, adding to the pleasure.",
                             self, opponent));
-            bonus += self.has(Trait.tight) && self.has(Trait.holecontrol) ? 10 : 5;
+            bonus += self.hasTrait(Trait.tight) && self.hasTrait(Trait.holecontrol) ? 10 : 5;
         }
         return bonus;
     }
@@ -524,7 +524,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
 
     @Override
     public void tickHolding(Combat c, Character self, Character opponent, BodyPart otherOrgan) {
-        if (self.has(Trait.autonomousPussy)) {
+        if (self.hasTrait(Trait.autonomousPussy)) {
             c.write(self, Global.global.format(
                             "{self:NAME-POSSESSIVE} " + fullDescribe(self)
                                             + " churns against {other:name-possessive} cock, "
@@ -620,7 +620,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                                                 + " over, {other:subject-action:are|is} much more drained of cum than usual.",
                                 self, opponent));
                 opponent.loseWillpower(c, 10 + Rng.rng.random(Math.min(20, self.get(Attribute.Bio))));
-            } else if (countsAs(self, divine) && self.has(Trait.zealinspiring) && opponent.human() && opponent instanceof Player
+            } else if (countsAs(self, divine) && self.hasTrait(Trait.zealinspiring) && opponent.human() && opponent instanceof Player
                             && Rng.rng.random(4) > 0) {
                 c.write(self, Global.global.format(
                                 "As {other:possessive} cum floods {self:name-possessive} "

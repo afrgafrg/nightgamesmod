@@ -241,16 +241,16 @@ public class Jewel extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.has(Trait.fighter) && (Global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.checkFlag(JEWEL_ANAL_FOCUS))) {
+            if (!character.hasTrait(Trait.fighter) && (Global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.checkFlag(JEWEL_ANAL_FOCUS))) {
                 advance();
             }
         }
         super.rest(time);
-        if (!(character.has(Item.Crop) || character.has(Item.Crop2)) && character.money >= 200) {
+        if (!(character.hasItem(Item.Crop) || character.hasItem(Item.Crop2)) && character.money >= 200) {
             character.gain(Item.Crop);
             character.money -= 200;
         }
-        if (!(character.has(Item.Strapon) || character.has(Item.Strapon2)) && character.money >= 600) {
+        if (!(character.hasItem(Item.Strapon) || character.hasItem(Item.Strapon2)) && character.money >= 600) {
             character.gain(Item.Strapon);
             character.money -= 600;
         }
@@ -318,7 +318,7 @@ public class Jewel extends BasePersonality {
         });
 
         character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> {
-            if (self.has(Trait.bitingwords) && c.getStance().dom(self)) {
+            if (self.hasTrait(Trait.bitingwords) && c.getStance().dom(self)) {
                 ArrayList<String> possible = new ArrayList<>();
                 possible.add("Jewel looks down at you with a sadistic smirk, <i>\"That's a nice look on you there "
                                 + c.getOpponent(self)
@@ -432,7 +432,7 @@ public class Jewel extends BasePersonality {
                             + " I like. Thanks for being cool about it.\"</i> You smile back tell her she's welcome, but you'd appreciate it if she weren't so rough. "
                             + "The last thing you hear before she round the corner is her giggled response. <i>\"We'll see.\"</i>";
         }
-        if (character.has(Trait.fighter) && character.get(Attribute.Ki) >= 10) {
+        if (character.hasTrait(Trait.fighter) && character.get(Attribute.Ki) >= 10) {
             String message = "Your duel with Jewel is rapidly reaching its conclusion and it's not going that well for you. Something seems different about her, her moves have an additional level of "
                             + "coordination that is made worse by her already monstrous strength. But the worst thing is that she is throwing powerful moves at you like they were nothing!<br/><br/>"
                             + "All of this has culminated in the situation you find yourself in now, namely pinned to the ground by Jewel as "
@@ -556,7 +556,7 @@ public class Jewel extends BasePersonality {
     @Override
     public String defeat(Combat c, Result flag) {
         Character other = c.getOpponent(character);
-        if (character.has(Trait.fighter)) {
+        if (character.hasTrait(Trait.fighter)) {
             return "Jewel falters as her arousal begins to overwhelm her. You manage to force her to the ground and pin her hands. You press your thigh against her slick pussy, "
                             + "making her moan in pleasure. You rub her with your leg and suck on her neck until she can't resist grinding against you. She climaxes with a scream and you kiss "
                             + "her on the lips to quiet her. You start to get off her, but her voice stops you. <i>\"Don't tell me you're done already. I can keep going for another couple rounds "
@@ -624,7 +624,7 @@ public class Jewel extends BasePersonality {
 
     @Override
     public String describe(Combat c, Character self) {
-        if (character.has(Trait.fighter)) {
+        if (character.hasTrait(Trait.fighter)) {
             return "Something has changed about Jewel's demeanor, though it's hard to put your finger on it. Her body has always been toned, but now she seems like a weapon "
                             + "in human shape. She carries a calm composure subtly different from her normal arrogance. Her movements are deliberate and fluid, like you imagine a "
                             + "martial arts master would look.";

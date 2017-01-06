@@ -35,12 +35,12 @@ public class Decoy extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Phone);
+        return owner.hasItem(Item.Phone);
     }
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.get(Attribute.Cunning) >= 6 && !owner.has(Trait.direct);
+        return owner.get(Attribute.Cunning) >= 6 && !owner.hasTrait(Trait.direct);
     }
 
     @Override

@@ -30,7 +30,7 @@ public abstract class ItemModifier implements ModifierCategory<ItemModifier>, Mo
 
     public void giveRequiredItems(Character c) {
         ensuredItems().forEach((item, count) -> {
-            while (!c.has(item, count)) {
+            while (!c.hasItem(item, count)) {
                 c.gain(item);
             }
         });

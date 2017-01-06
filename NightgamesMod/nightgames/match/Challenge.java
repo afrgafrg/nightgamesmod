@@ -32,7 +32,7 @@ public class Challenge implements Deployable {
             available.add(GOAL.kisswin);
             available.add(GOAL.pendraw);
         }
-        if (target.has(Item.Strapon) || target.has(Item.Strapon2) || target.hasDick()) {
+        if (target.hasItem(Item.Strapon) || target.hasItem(Item.Strapon2) || target.hasDick()) {
             available.add(GOAL.peggedloss);
         }
         available.add(GOAL.pendomwin);

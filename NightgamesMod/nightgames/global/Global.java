@@ -623,17 +623,17 @@ public class Global implements Runnable, Clockable {
             player.getMojo().empty();
             player.change();
             level += player.getLevel();
-            if (!player.has(Trait.unnaturalgrowth) && !player.has(Trait.naturalgrowth)) {
+            if (!player.hasTrait(Trait.unnaturalgrowth) && !player.hasTrait(Trait.naturalgrowth)) {
                 maxLevelTracker = Math.max(player.getLevel(), maxLevelTracker);
             }
         }
         final int maxLevel = maxLevelTracker / players.size();
-        players.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2).forEach(c -> {
+        players.stream().filter(c -> c.hasTrait(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2).forEach(c -> {
             while (c.getLevel() < maxLevel + 2) {
                 c.ding();
             }
         });
-        players.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
+        players.stream().filter(c -> c.hasTrait(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
                         .forEach(c -> {
                             while (c.getLevel() < maxLevel + 5) {
                                 c.ding();
@@ -650,7 +650,7 @@ public class Global implements Runnable, Clockable {
     private Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
         List<Character> randomizer = avail.stream()
                         .filter(c -> !c.human())
-                        .filter(c -> !c.has(Trait.event))
+                        .filter(c -> !c.hasTrait(Trait.event))
                         .filter(c -> !added.contains(c))
                         .collect(Collectors.toList());
         Collections.shuffle(randomizer);
@@ -673,7 +673,7 @@ public class Global implements Runnable, Clockable {
             if (player.getPure(Attribute.Science) > 0) {
                 player.chargeBattery();
             }
-            if (human.getAffection(player) > maxaffection && !player.has(Trait.event) && !checkCharacterDisabledFlag(player)) {
+            if (human.getAffection(player) > maxaffection && !player.hasTrait(Trait.event) && !checkCharacterDisabledFlag(player)) {
                 maxaffection = human.getAffection(player);
                 lover = player;
             }
@@ -746,15 +746,15 @@ public class Global implements Runnable, Clockable {
 
     public String gainSkills(Character c) {
         String message = "";
-        if (c.getPure(Attribute.Dark) >= 6 && !c.has(Trait.darkpromises)) {
+        if (c.getPure(Attribute.Dark) >= 6 && !c.hasTrait(Trait.darkpromises)) {
             c.add(Trait.darkpromises);
-        } else if (!(c.getPure(Attribute.Dark) >= 6) && c.has(Trait.darkpromises)) {
+        } else if (!(c.getPure(Attribute.Dark) >= 6) && c.hasTrait(Trait.darkpromises)) {
             c.remove(Trait.darkpromises);
         }
-        boolean pheromonesRequirements = c.getPure(Attribute.Animism) >= 2 || c.has(Trait.augmentedPheromones);
-        if (pheromonesRequirements && !c.has(Trait.pheromones)) {
+        boolean pheromonesRequirements = c.getPure(Attribute.Animism) >= 2 || c.hasTrait(Trait.augmentedPheromones);
+        if (pheromonesRequirements && !c.hasTrait(Trait.pheromones)) {
             c.add(Trait.pheromones);
-        } else if (!pheromonesRequirements && c.has(Trait.pheromones)) {
+        } else if (!pheromonesRequirements && c.hasTrait(Trait.pheromones)) {
             c.remove(Trait.pheromones);
         }
         return message;
@@ -1260,7 +1260,7 @@ public class Global implements Runnable, Clockable {
         matchActions.put("body-part", (self, first, second, third) -> {
             if (self != null && third != null) {
                 BodyPart part = self.body.getRandom(third);
-                if (part == null && third.equals("cock") && self.has(Trait.strapped)) {
+                if (part == null && third.equals("cock") && self.hasTrait(Trait.strapped)) {
                     part = StraponPart.generic;
                 }
                 if (part != null) {

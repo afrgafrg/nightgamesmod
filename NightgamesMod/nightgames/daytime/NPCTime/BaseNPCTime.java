@@ -149,7 +149,7 @@ public abstract class BaseNPCTime extends Activity {
             });
             Global.global.gui().choose(this, "Back");
         } else if (choice.equals("Start") || choice.equals("Back")) {
-            if (npc.getAffection(player) > 25 && (advTrait == null || npc.has(advTrait))) {
+            if (npc.getAffection(player) > 25 && (advancedTrait == null || npc.hasTrait(advancedTrait))) {
                 Global.global.gui().message(Global.global.format(loveIntro, npc, player));
                 Global.global.gui().choose(this, "Games");
                 Global.global.gui().choose(this, "Sparring");

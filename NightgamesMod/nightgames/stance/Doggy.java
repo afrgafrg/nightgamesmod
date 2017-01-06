@@ -25,7 +25,7 @@ public class Doggy extends MaledomSexStance {
 
     @Override
     public String image() {
-        if (top.has(Trait.strapped)) {
+        if (top.hasTrait(Trait.strapped)) {
             return "doggy_ff_strapped.jpg";
         }
         if (top.useFemalePronouns()) {

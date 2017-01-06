@@ -45,7 +45,7 @@ public class Nurple extends Skill {
         double m = Global.global.random(4, 7);
         DamageType damageType = DamageType.physical;
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            if (getSelf().has(Item.ShockGlove) && getSelf().has(Item.Battery, 2)) {
+            if (getSelf().hasItem(Item.ShockGlove) && getSelf().hasItem(Item.Battery, 2)) {
                 writeOutput(c, Result.special, target);
                 getSelf().consume(Item.Battery, 2);
                 damageType = DamageType.gadgets;
@@ -80,7 +80,7 @@ public class Nurple extends Skill {
 
     @Override
     public String getLabel(Combat c) {
-        if (getSelf().has(Item.ShockGlove)) {
+        if (getSelf().hasItem(Item.ShockGlove)) {
             return "Shock breasts";
         } else {
             return getName(c);

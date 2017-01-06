@@ -220,7 +220,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public int get(Attribute a) {
-        if (a == Attribute.Slime && !has(Trait.slime)) {
+        if (a == Attribute.Slime && !hasTrait(Trait.slime)) {
             // always return 0 if there's no trait for it.
             return 0;
         }
@@ -266,7 +266,7 @@ public abstract class Character extends Observable implements Cloneable {
                 }
                 break;
             case Power:
-                if (has(Trait.testosterone) && hasDick()) {
+                if (hasTrait(Trait.testosterone) && hasDick()) {
                     total += Math.min(20, 10 + getLevel() / 4);
                 }
                 if (has(Trait.FeralStrength) && is(Stsflag.feral)) {
@@ -278,29 +278,29 @@ public abstract class Character extends Observable implements Cloneable {
                 }
                 break;
             case Science:
-                if (has(ClothingTrait.geeky)) {
+                if (hasClothingTrait(ClothingTrait.geeky)) {
                     total += 2;
                 }
                 break;
             case Speed:
-                if (has(ClothingTrait.bulky)) {
+                if (hasClothingTrait(ClothingTrait.bulky)) {
                     total -= 1;
                 }
-                if (has(ClothingTrait.shoes)) {
+                if (hasClothingTrait(ClothingTrait.shoes)) {
                     total += 1;
                 }
-                if (has(ClothingTrait.heels) && !has(Trait.proheels)) {
+                if (hasClothingTrait(ClothingTrait.heels) && !hasTrait(Trait.proheels)) {
                     total -= 2;
                 }
-                if (has(ClothingTrait.highheels) && !has(Trait.proheels)) {
+                if (hasClothingTrait(ClothingTrait.highheels) && !hasTrait(Trait.proheels)) {
                     total -= 1;
                 }
-                if (has(ClothingTrait.higherheels) && !has(Trait.proheels)) {
+                if (hasClothingTrait(ClothingTrait.higherheels) && !hasTrait(Trait.proheels)) {
                     total -= 1;
                 }
                 break;
             case Seduction:
-                if (has(Trait.repressed)) {
+                if (hasTrait(Trait.repressed)) {
                     total /= 2;
                 }
                 break;
@@ -310,7 +310,7 @@ public abstract class Character extends Observable implements Cloneable {
         return total;
     }
 
-    public boolean has(ClothingTrait attribute) {
+    public boolean hasClothingTrait(ClothingTrait attribute) {
         return outfit.has(attribute);
     }
 
@@ -345,7 +345,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void gainXP(int i) {
         assert i >= 0;
         double rate = 1.0;
-        if (has(Trait.fastLearner)) {
+        if (hasTrait(Trait.fastLearner)) {
             rate += .2;
         }
         rate *= Global.global.xpRate;
@@ -478,20 +478,20 @@ public abstract class Character extends Observable implements Cloneable {
             arouse(pain, c);
             return;
         }
-        if (has(Trait.slime)) {
+        if (hasTrait(Trait.slime)) {
             bonus -= pain / 2;
             if (c != null) {
                 c.write(this, "The blow glances off " + nameOrPossessivePronoun() + " slimy body.");
             }
         }
         if (c != null) {
-            if (has(Trait.cute) && other != null && primary && physical) {
+            if (hasTrait(Trait.cute) && other != null && primary && physical) {
                 bonus -= Math.min(get(Attribute.Seduction), 50) * pain / 100;
                 c.write(this, Global.global.format(
                                 "{self:NAME-POSSESSIVE} innocent appearance throws {other:direct-object} off and {other:subject-action:use|uses} much less strength than intended.",
                                 this, other));
             }
-            if (other != null && other != this && other.has(Trait.dirtyfighter) && (c.getStance().prone(other)
+            if (other != null && other != this && other.hasTrait(Trait.dirtyfighter) && (c.getStance().prone(other)
                             || c.getStance()
                                 .sub(other))
                             && physical) {
@@ -518,7 +518,7 @@ public abstract class Character extends Observable implements Cloneable {
 
         // threshold at which pain calms you down
         int painAllowance = Math.max(10, getStamina().max() / 6);
-        if (other != null && other.has(Trait.wrassler)) {
+        if (other != null && other.hasTrait(Trait.wrassler)) {
             painAllowance *= 1.5;
         }
         int difference = pain - painAllowance;
@@ -530,7 +530,7 @@ public abstract class Character extends Observable implements Cloneable {
                             subjectWas(), pain));
         }
         if (difference > 0 && !is(Stsflag.masochism)) {
-            if (other != null && other.has(Trait.wrassler)) {
+            if (other != null && other.hasTrait(Trait.wrassler)) {
                 calm(c, difference / 2);
             } else {
                 calm(c, difference);
@@ -1125,7 +1125,10 @@ public abstract class Character extends Observable implements Cloneable {
         return getTraits().contains(t);
     }
 
-    public boolean has(Trait t) {
+    public boolean hasTrait(Trait t) {
+        if (t == Trait.none) {
+            return true;
+        }
         boolean hasTrait = false;
         if (t.parent != null) {
             hasTrait = getTraits().contains(t.parent);
@@ -1178,7 +1181,7 @@ public abstract class Character extends Observable implements Cloneable {
         for (Status s : new HashSet<>(getStatuses())) {
             regen += s.regen(c);
         }
-        if (has(Trait.BoundlessEnergy)) {
+        if (hasTrait(Trait.BoundlessEnergy)) {
             regen += 1;
         }
         if (regen > 0) {
@@ -1187,13 +1190,13 @@ public abstract class Character extends Observable implements Cloneable {
             weaken(c, -regen);
         }
         if (combat) {
-            if (has(Trait.exhibitionist) && mostlyNude()) {
+            if (hasTrait(Trait.exhibitionist) && mostlyNude()) {
                 buildMojo(c, 5);
             }
             if (outfit.has(ClothingTrait.stylish)) {
                 buildMojo(c, 1);
             }
-            if (has(Trait.SexualGroove)) {
+            if (hasTrait(Trait.SexualGroove)) {
                 buildMojo(c, 3);
             }
             if (outfit.has(ClothingTrait.lame)) {
@@ -1210,7 +1213,7 @@ public abstract class Character extends Observable implements Cloneable {
         add(null, status);
     }
 
-    public boolean has(Status status) {
+    public boolean hasStatus(Status status) {
         return this.status.stream().anyMatch(s -> s.flags().containsAll(status.flags()) && status.flags()
                         .containsAll(status.flags()) && s.getVariant().equals(status.getVariant()));
     }
@@ -1400,11 +1403,11 @@ public abstract class Character extends Observable implements Cloneable {
         for (Status s : getStatuses()) {
             total += s.escape();
         }
-        if (has(Trait.freeSpirit)) {
+        if (hasTrait(Trait.freeSpirit)) {
             total += 5;
         }
         if (from != null) {
-            if (from.has(Trait.Clingy)) {
+            if (from.hasTrait(Trait.Clingy)) {
                 total -= 5;
             }
             if (from.has(Trait.FeralStrength) && from.is(Stsflag.feral)) {
@@ -1606,10 +1609,10 @@ public abstract class Character extends Observable implements Cloneable {
     public void doOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart) {
         int total = 1;
         if (this != opponent && opponent != null) {
-            if (opponent.has(Trait.carnalvirtuoso)) {
+            if (opponent.hasTrait(Trait.carnalvirtuoso)) {
                 total++;
             }
-            if (opponent.has(Trait.intensesuction) && (outfit.has(ClothingTrait.harpoonDildo)
+            if (opponent.hasTrait(Trait.intensesuction) && (outfit.has(ClothingTrait.harpoonDildo)
                             || outfit.has(ClothingTrait.harpoonOnahole)) && Global.random(3) == 0) {
                 total++;
             }
@@ -1642,7 +1645,7 @@ public abstract class Character extends Observable implements Cloneable {
             resolvePostOrgasmForOpponent(c, opponent, selfPart, opponentPart);
         }
         getArousal().empty();
-        if (has(Trait.insatiable)) {
+        if (hasTrait(Trait.insatiable)) {
             arousal.restore((int) (arousal.max() * .2));
         }
         if (is(Stsflag.feral)) {
@@ -1671,7 +1674,7 @@ public abstract class Character extends Observable implements Cloneable {
             c.write(opponent, opponentOrgasmLiner);
         }
 
-        if (has(Trait.nymphomania) && (Global.random(100) < Math.sqrt(get(Attribute.Nymphomania) + get(Attribute.Animism)) * 10) && !getWillpower().isEmpty() && times == totalTimes) {
+        if (hasTrait(Trait.nymphomania) && (Global.random(100) < Math.sqrt(get(Attribute.Nymphomania) + get(Attribute.Animism)) * 10) && !getWillpower().isEmpty() && times == totalTimes) {
             if (human()) {
                 c.write("Cumming actually made you feel kind of refreshed, albeit with a burning desire for more.");
             } else {
@@ -1754,7 +1757,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     private void resolvePreOrgasmForOpponent(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart,
                     int times, int total) {
-        if (c.getStance().inserted(this) && !has(Trait.strapped)) {
+        if (c.getStance().inserted(this) && !hasTrait(Trait.strapped)) {
             Character partner = c.getStance().getPenetratedCharacter(c, this);
             if (times == 1) {
                 c.write(this, Global.global.format(
@@ -1794,7 +1797,7 @@ public abstract class Character extends Observable implements Cloneable {
                                 this, opponent));
             }
         }
-        if (human() && this instanceof Player && opponent.has(Trait.mindcontroller) && cloned == 0) {
+        if (human() && this instanceof Player && opponent.hasTrait(Trait.mindcontroller) && cloned == 0) {
             MindControl.Result res = new MindControl.Result(opponent, c.getStance());
             String message = res.getDescription();
             if (res.hasSucceeded()) {
@@ -1836,26 +1839,26 @@ public abstract class Character extends Observable implements Cloneable {
         }
         body.getCurrentParts().forEach(part -> part.onOrgasm(c, this, opponent));
 
-        if (opponent.has(Trait.erophage)) {
+        if (opponent.hasTrait(Trait.erophage)) {
             c.write(Grammar.capitalizeFirstLetter("<b>" + opponent.subjectAction("flush", "flushes")
                             + " as the feedback from " + nameOrPossessivePronoun() + " orgasm feeds "
                             + opponent.possessiveAdjective() + " divine power.</b>"));
             opponent.add(c, new Alluring(opponent, 5));
             opponent.buildMojo(c, 100);
-            if (c.getStance().inserted(this) && opponent.has(Trait.divinity)) {
+            if (c.getStance().inserted(this) && opponent.hasTrait(Trait.divinity)) {
                 opponent.add(c, new DivineCharge(opponent, 1));
             }
         }
-        if (opponent.has(Trait.sexualmomentum)) {
+        if (opponent.hasTrait(Trait.sexualmomentum)) {
             c.write(Grammar.capitalizeFirstLetter(
                             "<b>" + opponent.subjectAction("are more composed", "seems more composed") + " as "
                                             + nameOrPossessivePronoun() + " forced orgasm goes straight to "
                                             + opponent.possessiveAdjective() + " ego.</b>"));
             opponent.restoreWillpower(c, 10 + Rng.rng.random(10));
         }
-        if (opponent.has(Trait.leveldrainer) && !has(Trait.leveldrainer)
+        if (opponent.hasTrait(Trait.leveldrainer) && !has(Trait.leveldrainer)
                         && (((c.getStance().penetratedBy(c, opponent, this) || c.getStance().penetratedBy(c, this, opponent))
-                                        && !has(Trait.strapped)
+                                        && !hasTrait(Trait.strapped)
                                         && !opponent.has(Trait.strapped))
                         || c.getStance().en == Stance.trib)) {
             if (getLevel() > 1 && (!c.getCombatantData(opponent).getBooleanFlag("has_drained")
@@ -1917,7 +1920,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void loseWillpower(Combat c, int i, int extra, boolean primary, String source) {
         int amt = i + extra;
         String reduced = "";
-        if (has(Trait.strongwilled) && primary) {
+        if (hasTrait(Trait.strongwilled) && primary) {
             amt = amt * 2 / 3 + 1;
             reduced = " (Strong-willed)";
         }
@@ -1992,7 +1995,7 @@ public abstract class Character extends Observable implements Cloneable {
                     selfOrgan = body.getRandomPussy();
                 }
             }
-            if (has(Trait.energydrain) && selfOrgan != null && otherOrgan != null) {
+            if (hasTrait(Trait.energydrain) && selfOrgan != null && otherOrgan != null) {
                 c.write(this, Global.global.format(
                                 "{self:NAME-POSSESSIVE} body glows purple as {other:subject-action:feel|feels} {other:possessive} very spirit drained into {self:possessive} "
                                                 + selfOrgan.describe(this) + " through your connection.",
@@ -2038,7 +2041,7 @@ public abstract class Character extends Observable implements Cloneable {
                                 + " {other:possessive} arm device.", this, opponent));
             } else {
                 int damage = 5;
-                if (opponent.has(Trait.pussyhandler)) {
+                if (opponent.hasTrait(Trait.pussyhandler)) {
                     damage += 2;
                 }
                 if (opponent.has(Trait.yank)) {
@@ -2182,7 +2185,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (state == State.hidden) {
             dc += (checked.get(Attribute.Cunning) * 3 / 4) + 20;
         }
-        if (has(Trait.Sneaky)) {
+        if (hasTrait(Trait.Sneaky)) {
             dc += 20;
         }
         dc -= get(Attribute.Perception) * 2;
@@ -2209,25 +2212,25 @@ public abstract class Character extends Observable implements Cloneable {
         getTraits().forEach(trait -> {
             if (trait.status != null) {
                 Status newStatus = trait.status.instance(this, null);
-                if (!has(newStatus)) {
+                if (!hasStatus(newStatus)) {
                     addNonCombat(newStatus);
                 }
             }
         });
         regen();
         tick(null);
-        if (has(Trait.Confident)) {
+        if (hasTrait(Trait.Confident)) {
             willpower.restore(10);
             mojo.reduce(5);
         } else {
             willpower.restore(5);
             mojo.reduce(10);
         }
-        if (has(Trait.exhibitionist) && mostlyNude()) {
+        if (hasTrait(Trait.exhibitionist) && mostlyNude()) {
             mojo.restore(2);
         }
         dropStatus(null, null);
-        if (has(Trait.QuickRecovery)) {
+        if (hasTrait(Trait.QuickRecovery)) {
             heal(null, Global.random(4, 7), " (Quick Recovery)");
         }
         update();
@@ -2268,11 +2271,11 @@ public abstract class Character extends Observable implements Cloneable {
         setChanged();
     }
 
-    public boolean has(Item item) {
-        return has(item, 1);
+    public boolean hasItem(Item item) {
+        return hasItem(item, 1);
     }
 
-    public boolean has(Item item, int quantity) {
+    public boolean hasItem(Item item, int quantity) {
         return inventory.containsKey(item) && inventory.get(item) >= quantity;
     }
 
@@ -2282,7 +2285,7 @@ public abstract class Character extends Observable implements Cloneable {
         change();
     }
 
-    public boolean has(Clothing item) {
+    public boolean hasClothing(Clothing item) {
         return closet.contains(item) || outfit.getEquipped().contains(item);
     }
 
@@ -2291,7 +2294,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void consume(Item item, int quantity, boolean canBeResourceful) {
-        if (canBeResourceful && has(Trait.resourceful) && Rng.rng.random(5) == 0) {
+        if (canBeResourceful && hasTrait(Trait.resourceful) && Rng.rng.random(5) == 0) {
             quantity--;
         }
         if (inventory.containsKey(item)) {
@@ -2320,7 +2323,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void resupply() {
         for (String victorType : mercy) {
             Character victor = Global.global.getCharacterByType(victorType);
-            victor.bounty(has(Trait.event) ? 5 : 1, victor);
+            victor.bounty(hasTrait(Trait.event) ? 5 : 1, victor);
         }
         mercy.clear();
         change();
@@ -2363,7 +2366,7 @@ public abstract class Character extends Observable implements Cloneable {
     public void finishMatch() {
         for (String victorType : mercy) {
             Character victor = Global.global.getCharacterByType(victorType);
-            victor.bounty(has(Trait.event) ? 5 : 1, victor);
+            victor.bounty(hasTrait(Trait.event) ? 5 : 1, victor);
         }
         Global.global.gui().clearImage();
         mercy.clear();
@@ -2601,7 +2604,7 @@ public abstract class Character extends Observable implements Cloneable {
         for (Status s : getStatuses()) {
             ac += s.evade();
         }
-        if (has(Trait.clairvoyance)) {
+        if (hasTrait(Trait.clairvoyance)) {
             ac += 5;
         }
         if (has(Trait.FeralAgility) && is(Stsflag.feral)) {
@@ -2626,13 +2629,13 @@ public abstract class Character extends Observable implements Cloneable {
         for (Status s : getStatuses()) {
             counter += s.counter();
         }
-        if (has(Trait.clairvoyance)) {
+        if (hasTrait(Trait.clairvoyance)) {
             counter += 3;
         }
-        if (has(Trait.aikidoNovice)) {
+        if (hasTrait(Trait.aikidoNovice)) {
             counter += 3;
         }
-        if (has(Trait.fakeout)) {
+        if (hasTrait(Trait.fakeout)) {
             counter += 3;
         }
         if (opponent.is(Stsflag.countered)) {
@@ -2689,13 +2692,13 @@ public abstract class Character extends Observable implements Cloneable {
         if (has(Trait.stabilized)) {
             dc += 10;
         }
-        if (has(ClothingTrait.heels) && !has(Trait.proheels)) {
+        if (hasClothingTrait(ClothingTrait.heels) && !hasTrait(Trait.proheels)) {
             dc -= 7;
         }
-        if (has(ClothingTrait.highheels) && !has(Trait.proheels)) {
+        if (hasClothingTrait(ClothingTrait.highheels) && !hasTrait(Trait.proheels)) {
             dc -= 8;
         }
-        if (has(ClothingTrait.higherheels) && !has(Trait.proheels)) {
+        if (hasClothingTrait(ClothingTrait.higherheels) && !hasTrait(Trait.proheels)) {
             dc -= 10;
         }
         return dc;
@@ -2775,13 +2778,13 @@ public abstract class Character extends Observable implements Cloneable {
         dropStatus(null, null);
         orgasms = 0;
         setChanged();
-        if (has(ClothingTrait.heels)) {
+        if (hasClothingTrait(ClothingTrait.heels)) {
             setFlag("heelsTraining", getFlag("heelsTraining") + 1);
         }
-        if (has(ClothingTrait.highheels)) {
+        if (hasClothingTrait(ClothingTrait.highheels)) {
             setFlag("heelsTraining", getFlag("heelsTraining") + 1);
         }
-        if (has(ClothingTrait.higherheels)) {
+        if (hasClothingTrait(ClothingTrait.higherheels)) {
             setFlag("heelsTraining", getFlag("heelsTraining") + 1);
         }
     }
@@ -3081,7 +3084,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (hasPussy()) {
             fit += (pussyPreference() - 3) * 4;
         }
-        if (has(Trait.pheromones)) {
+        if (hasTrait(Trait.pheromones)) {
             fit += 5 * getPheromonePower();
             fit += 15 * getPheromonesChance(c) * (2 + getPheromonePower());
         }
@@ -3431,7 +3434,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean hasInsertable() {
-        return hasDick() || has(Trait.strapped);
+        return hasDick() || hasTrait(Trait.strapped);
     }
 
     public String guyOrGirl() {
@@ -3443,14 +3446,14 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean isDemonic() {
-        return has(Trait.succubus) || body.get("pussy").stream()
+        return hasTrait(Trait.succubus) || body.get("pussy").stream()
                         .anyMatch(part -> part.moddedPartCountsAs(this, PussyPart.succubus)) || body.get("cock")
                         .stream().anyMatch(part -> part.moddedPartCountsAs(this, CockPart.Mod.incubus));
     }
 
     public int baseDisarm() {
         int disarm = 0;
-        if (has(Trait.cautious)) {
+        if (hasTrait(Trait.cautious)) {
             disarm += 5;
         }
         return disarm;
@@ -3461,14 +3464,14 @@ public abstract class Character extends Observable implements Cloneable {
         if (c.getStance().sub(this)) {
             total += get(Attribute.Submissive) / 2;
         }
-        if (has(Trait.responsive)) {
+        if (hasTrait(Trait.responsive)) {
             total += total / 2;
         }
         return total;
     }
 
     public boolean isPartProtected(BodyPart target) {
-        return target.isType("hands") && has(ClothingTrait.nursegloves);
+        return target.isType("hands") && hasClothingTrait(ClothingTrait.nursegloves);
     }
 
     public void purge(Combat c) {

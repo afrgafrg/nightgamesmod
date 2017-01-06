@@ -193,8 +193,8 @@ public class Command extends Skill {
                 available.add(CommandType.MASTER_FACESIT);
         }
 
-        if (!getSelf().hasDick() && !getSelf().has(Trait.strapped)
-                        && (getSelf().has(Item.Strapon) || getSelf().has(Item.Strapon2)))
+        if (!getSelf().hasDick() && !getSelf().hasTrait(Trait.strapped)
+                        && (getSelf().hasItem(Item.Strapon) || getSelf().hasItem(Item.Strapon2)))
             available.add(CommandType.MASTER_STRAPON);
 
         if (target.crotchAvailable())
@@ -247,7 +247,7 @@ public class Command extends Skill {
                                                 + " instantly %s towards it and %s it fervently.", getSelf().name(),
                                                 getSelf().possessiveAdjective(), target.nameDirectObject(),
                                                 target.pronoun(), target.action("dive"), target.action("lick")));
-                int m = target.has(Trait.silvertongue) ? 15 : 10;
+                int m = target.hasTrait(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomAss(),
                                 7 + Rng.rng.random(m), c, this);
                 if (Rng.rng.random(50) < getSelf().get(Attribute.Fetish) + 10) {
@@ -265,7 +265,7 @@ public class Command extends Skill {
                                                               target.subjectAction("lower"),
                                                               target.possessiveAdjective(), target.action("lick"),
                                                               target.action("suck")));
-                m = target.has(Trait.silvertongue) ? 15 : 10;
+                m = target.hasTrait(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomCock(),
                                 7 + Rng.rng.random(m), c, this);
                 if (Rng.rng.random(50) < getSelf().get(Attribute.Fetish) + 10) {
@@ -281,7 +281,7 @@ public class Command extends Skill {
                                 getSelf().name(), getSelf().possessiveAdjective(), getSelf().pronoun(),
                                 target.directObject(), target.subjectAction("are", "is"),
                                 getSelf().possessiveAdjective()));
-                m = target.has(Trait.silvertongue) ? 15 : 10;
+                m = target.hasTrait(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomPussy(),
                                 7 + Rng.rng.random(m), c, this);
                 if (Rng.rng.random(50) < getSelf().get(Attribute.Fetish) + 10) {
@@ -330,7 +330,7 @@ public class Command extends Skill {
                                                 target.subjectAction("are", "is"),
                                                 getSelf().subject(), target.subjectAction("like"),
                                                 target.pronoun(), target.action("are", "is")));
-                if (getSelf().has(Item.Strapon2)) {
+                if (getSelf().hasItem(Item.Strapon2)) {
                     c.write(getSelf(), "The phallic toy vibrates softly but insistently, "
                                     + "obviously designed to make the recepient squeal.");
                 }

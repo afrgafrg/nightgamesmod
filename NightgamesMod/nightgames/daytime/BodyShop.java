@@ -119,7 +119,7 @@ public class BodyShop extends Activity {
 
             @Override
             boolean available(Character buyer) {
-                return !buyer.has(trait) && requirement.isSatisfied(buyer);
+                return !buyer.hasTrait(trait) && requirement.isSatisfied(buyer);
             }
         });
 
@@ -131,7 +131,7 @@ public class BodyShop extends Activity {
 
             @Override
             boolean available(Character buyer) {
-                return buyer.has(trait);
+                return buyer.hasTrait(trait);
             }
 
             @Override

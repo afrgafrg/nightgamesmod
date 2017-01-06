@@ -100,15 +100,15 @@ public class Eve extends BasePersonality {
     @Override
     public void rest(int time) {
         super.rest(time);
-        if (!(character.has(Item.Dildo) || character.has(Item.Dildo2)) && character.money >= 250) {
+        if (!(character.hasItem(Item.Dildo) || character.hasItem(Item.Dildo2)) && character.money >= 250) {
             character.gain(Item.Dildo);
             character.money -= 250;
         }
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Onahole) || character.hasItem(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
-        if (!character.has(Item.Onahole2) && character.has(Item.Onahole) && character.money >= 300) {
+        if (!character.hasItem(Item.Onahole2) && character.hasItem(Item.Onahole) && character.money >= 300) {
             character.remove(Item.Onahole);
             character.gain(Item.Onahole2);
             character.money -= 300;

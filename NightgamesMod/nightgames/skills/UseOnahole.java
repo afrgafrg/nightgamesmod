@@ -28,7 +28,7 @@ public class UseOnahole extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return (getSelf().has(Item.Onahole) || getSelf().has(Item.Onahole2)) && getSelf().canAct() && target.hasDick()
+        return (getSelf().hasItem(Item.Onahole) || getSelf().hasItem(Item.Onahole2)) && getSelf().canAct() && target.hasDick()
                         && c.getStance().reachBottom(getSelf()) && target.crotchAvailable()
                         && !c.getStance().inserted(target);
     }
@@ -38,7 +38,7 @@ public class UseOnahole extends Skill {
         int m = 5 + Rng.rng.random(10);
 
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            if (getSelf().has(Item.Onahole2)) {
+            if (getSelf().hasItem(Item.Onahole2)) {
                 m += 5;
                 if (target.human()) {
                     c.write(getSelf(), receive(c, 0, Result.upgrade, target));

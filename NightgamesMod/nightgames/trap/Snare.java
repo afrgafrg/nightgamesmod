@@ -44,7 +44,7 @@ public class Snare extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Tripwire) && owner.has(Item.Rope);
+        return owner.hasItem(Item.Tripwire) && owner.hasItem(Item.Rope);
     }
 
     @Override

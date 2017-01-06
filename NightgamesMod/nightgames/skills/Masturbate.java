@@ -53,7 +53,7 @@ public class Masturbate extends Skill {
         if (pussy != null && !c.getStance().vaginallyPenetrated(c, target)) {
             parts.add(pussy);
         }
-        if ((parts.isEmpty() || getSelf().has(Trait.shameless)) && ass != null
+        if ((parts.isEmpty() || getSelf().hasTrait(Trait.shameless)) && ass != null
                         && !c.getStance().anallyPenetrated(c, target)) {
             parts.add(ass);
         }

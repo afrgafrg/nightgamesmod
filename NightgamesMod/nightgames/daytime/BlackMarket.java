@@ -194,7 +194,7 @@ public class BlackMarket extends Store {
                     }
                     max = 1;
                 }
-                if (remaining > i.getPrice() && !npc.has(i, max)) {
+                if (remaining > i.getPrice() && !npc.hasItem(i, max)) {
                     npc.gain(i);
                     npc.money -= i.getPrice();
                     remaining -= i.getPrice();

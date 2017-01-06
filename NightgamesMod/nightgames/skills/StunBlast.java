@@ -25,7 +25,7 @@ public class StunBlast extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && c.getStance().front(getSelf())
-                        && (getSelf().has(Item.Battery, 4) ||
+                        && (getSelf().hasItem(Item.Battery, 4) ||
                                         (target.has(Trait.conducivetoy) &&
                                         target.has(ClothingTrait.harpoonDildo) ||
                                         target.has(ClothingTrait.harpoonOnahole)));

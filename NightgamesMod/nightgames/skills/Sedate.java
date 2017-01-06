@@ -20,7 +20,7 @@ public class Sedate extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().has(Item.Sedative)
+        return c.getStance().mobile(getSelf()) && getSelf().canAct() && getSelf().hasItem(Item.Sedative)
                         && !c.getStance().prone(getSelf());
     }
 
@@ -32,7 +32,7 @@ public class Sedate extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Sedative, 1);
-        if (getSelf().has(Item.Aersolizer)) {
+        if (getSelf().hasItem(Item.Aersolizer)) {
             writeOutput(c, Result.special, target);
             target.weaken(c, (int) getSelf().modifyDamage(DamageType.biological, target, 50));
             target.loseMojo(c, (int) getSelf().modifyDamage(DamageType.biological, target, 35));

@@ -18,7 +18,7 @@ public class Anal extends AnalSexStance {
                             top.subjectAction("are", "is"),
                             bottom.nameDirectObject(), top.possessiveAdjective(),
                             bottom.possessiveAdjective());
-        } else if (top.has(Trait.strapped)) {
+        } else if (top.hasTrait(Trait.strapped)) {
             return String.format("%s pegging %s with %s strapon dildo from behind.",
                            top.subjectAction("are", "is"), bottom.nameDirectObject(),
                            top.possessiveAdjective());
@@ -117,7 +117,7 @@ public class Anal extends AnalSexStance {
 
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
-        if (top.has(Trait.strapped)) {
+        if (top.hasTrait(Trait.strapped)) {
             if (writeMessage) {
                 c.write(bottom, Global.global.format(
                                 "As {other:subject-action:are|is} thrusting into {self:name-do} with {other:possessive} strapon, {self:subject-action:force|forces} {self:possessive} hips back and knock {other:direct-object} off balance. {self:SUBJECT-ACTION:quickly pull|quickly pulls} {other:possessive} fake cock out of {self:possessive} bottom while sitting on top of {other:direct-object}.",

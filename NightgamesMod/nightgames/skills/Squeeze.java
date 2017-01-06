@@ -27,7 +27,7 @@ public class Squeeze extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return target.hasBalls() && c.getStance().reachBottom(getSelf()) && getSelf().canAct()
-                        && !getSelf().has(Trait.shy);
+                        && !getSelf().hasTrait(Trait.shy);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Squeeze extends Skill {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             double m = Global.random(10, 20);
             DamageType type = DamageType.physical;
-            if (target.has(Trait.brassballs)) {
+            if (target.hasTrait(Trait.brassballs)) {
                 if (target.human()) {
                     c.write(getSelf(), receive(c, 0, Result.weak2, target));
                 } else if (getSelf().human()) {
@@ -53,7 +53,7 @@ public class Squeeze extends Skill {
                 }
                 m = 0;
             } else if (target.crotchAvailable()) {
-                if (getSelf().has(Item.ShockGlove) && getSelf().has(Item.Battery, 2)) {
+                if (getSelf().hasItem(Item.ShockGlove) && getSelf().hasItem(Item.Battery, 2)) {
                     getSelf().consume(Item.Battery, 2);
                     if (target.human()) {
                         c.write(getSelf(), receive(c, 0, Result.special, target));
@@ -62,10 +62,10 @@ public class Squeeze extends Skill {
                     }
                     type = DamageType.gadgets;
                     m += 15;
-                    if (target.has(Trait.achilles)) {
+                    if (target.hasTrait(Trait.achilles)) {
                         m += 5;
                     }
-                } else if (target.has(ClothingTrait.armored)) {
+                } else if (target.hasClothingTrait(ClothingTrait.armored)) {
                     if (target.human()) {
                         c.write(getSelf(), receive(c, 0, Result.item, target));
                     } else if (getSelf().human()) {
@@ -78,7 +78,7 @@ public class Squeeze extends Skill {
                     } else if (getSelf().human()) {
                         c.write(getSelf(), deal(c, 0, Result.normal, target));
                     }
-                    if (target.has(Trait.achilles)) {
+                    if (target.hasTrait(Trait.achilles)) {
                         m += 5;
                     }
                 }
@@ -176,7 +176,7 @@ public class Squeeze extends Skill {
 
     @Override
     public String getLabel(Combat c) {
-        if (getSelf().has(Item.ShockGlove)) {
+        if (getSelf().hasItem(Item.ShockGlove)) {
             return "Shock Balls";
         } else {
             return getName(c);

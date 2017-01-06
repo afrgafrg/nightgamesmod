@@ -31,7 +31,7 @@ public class Slap extends Skill {
 
     @Override
     public int getMojoBuilt(Combat c) {
-        return getSelf().has(Trait.pimphand) ? 15 : 5;
+        return getSelf().hasTrait(Trait.pimphand) ? 15 : 5;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Slap extends Skill {
                 target.emote(Emotion.angry, 30);
             } else if (getSelf().get(Attribute.Animism) >= 8) {
                 writeOutput(c, Result.special, target);
-                if (getSelf().has(Trait.pimphand)) {
+                if (getSelf().hasTrait(Trait.pimphand)) {
                     target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(35, 50) * (25 + getSelf().getArousal().percent()) / 100));
                     target.emote(Emotion.nervous, 40);
                     target.emote(Emotion.angry, 30);
@@ -71,7 +71,7 @@ public class Slap extends Skill {
                 }
             } else {
                 writeOutput(c, Result.normal, target);
-                if (getSelf().has(Trait.pimphand)) {
+                if (getSelf().hasTrait(Trait.pimphand)) {
                     target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(7, 15)));
                     target.emote(Emotion.nervous, 20);
                     target.emote(Emotion.angry, 30);

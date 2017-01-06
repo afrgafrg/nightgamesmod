@@ -26,7 +26,7 @@ public class ToggleBlindfold extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return ((!getSelf().is(Stsflag.blinded) && getSelf().has(Item.Blindfold))
+        return ((!getSelf().is(Stsflag.blinded) && getSelf().hasItem(Item.Blindfold))
                         || (getSelf().is(Stsflag.blinded)) && canRemove()) && getSelf().canAct();
     }
 

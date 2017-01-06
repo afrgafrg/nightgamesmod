@@ -116,7 +116,7 @@ public class Engulfed extends Position {
 
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
-        if (bottom.has(Trait.slime)) {
+        if (bottom.hasTrait(Trait.slime)) {
             if (writeMessage) {
                 c.write(bottom, String.format("%s %s slimy body a"
                                 + "round %s, reversing %s hold.",

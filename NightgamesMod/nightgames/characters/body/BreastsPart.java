@@ -182,12 +182,12 @@ public enum BreastsPart implements BodyPart {
 
     @Override
     public String getFluids(Character c) {
-        return c.has(Trait.lactating) ? "milk" : "";
+        return c.hasTrait(Trait.lactating) ? "milk" : "";
     }
 
     @Override
     public double getFluidAddictiveness(Character c) {
-        if (c.has(Trait.lactating) && c.has(Trait.addictivefluids)) {
+        if (c.hasTrait(Trait.lactating) && c.hasTrait(Trait.addictivefluids)) {
             return 1;
         } else {
             return 0;
@@ -206,8 +206,8 @@ public enum BreastsPart implements BodyPart {
 
     @Override
     public double applyReceiveBonuses(Character self, Character opponent, BodyPart target, double damage, Combat c) {
-        if (self.has(Trait.lactating) && target.isType("mouth")) {
-            if (self.has(Trait.magicmilk)) {
+        if (self.hasTrait(Trait.lactating) && target.isType("mouth")) {
+            if (self.hasTrait(Trait.magicmilk)) {
                 float addictionLevel;
                 Addiction addiction;
                 if (opponent.human() && opponent instanceof Player) {

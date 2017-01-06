@@ -18,7 +18,7 @@ public class SpiralThrust extends Thrust {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.spiral);
+        return user.hasTrait(Trait.spiral);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class SpiralThrust extends Thrust {
         int[] result = new int[2];
         int x = cost;
         int mt = x / 2;
-        if (getSelf().has(Trait.experienced)) {
+        if (getSelf().hasTrait(Trait.experienced)) {
             mt = mt * 2 / 3;
         }
         result[0] = x;

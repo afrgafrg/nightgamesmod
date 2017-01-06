@@ -29,7 +29,7 @@ public class Spank extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         double m = Global.random(6, 13);
-        if (getSelf().has(Trait.disciplinarian)) {
+        if (getSelf().hasTrait(Trait.disciplinarian)) {
             boolean shamed = Rng.rng.random(10) >= 5 || !target.is(Stsflag.shamed) && getSelf().canSpend(5);
             if (shamed) {
                 getSelf().spendMojo(c, 5);
@@ -40,7 +40,7 @@ public class Spank extends Skill {
                 target.emote(Emotion.angry, 10);
                 target.emote(Emotion.nervous, 15);
             }
-            if (target.has(Trait.achilles)) {
+            if (target.hasTrait(Trait.achilles)) {
                 m += 10;
             } else {
                 m += 5;

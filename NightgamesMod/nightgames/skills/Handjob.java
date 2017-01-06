@@ -25,7 +25,7 @@ public class Handjob extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return c.getStance().reachBottom(getSelf())
-                        && (target.crotchAvailable() || getSelf().has(Trait.dexterous)
+                        && (target.crotchAvailable() || getSelf().hasTrait(Trait.dexterous)
                                         && target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getLayer() <= 1)
                         && target.hasDick() && getSelf().canAct()
                         && (!c.getStance().inserted(target));
@@ -63,7 +63,7 @@ public class Handjob extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return !user.has(Trait.temptress) && user.get(Attribute.Seduction) >= 5;
+        return !user.hasTrait(Trait.temptress) && user.get(Attribute.Seduction) >= 5;
     }
 
     @Override

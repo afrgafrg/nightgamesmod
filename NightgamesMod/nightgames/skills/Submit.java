@@ -28,7 +28,7 @@ public class Submit extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.submissive) || user.humanControlled(c);
+        return user.hasTrait(Trait.submissive) || user.humanControlled(c);
     }
 
     @Override

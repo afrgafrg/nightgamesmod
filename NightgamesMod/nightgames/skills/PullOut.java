@@ -112,7 +112,7 @@ public class PullOut extends Skill {
             writeOutput(c, Result.special, target);
             c.setStance(new StandingOver(getSelf(), target), getSelf(), true);
         } else {
-            if (isLocked || target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
+            if (isLocked || target.hasTrait(Trait.tight) && c.getStance().inserted(getSelf())) {
                 boolean escaped = getSelf().check(Attribute.Power,
                                 10 - getSelf().escape(c, target) + target.get(Attribute.Power));
                 if (escaped) {
@@ -143,7 +143,7 @@ public class PullOut extends Skill {
                                             target.nameDirectObject(), target.possessiveAdjective(),
                                             getSelf().pronoun(), target.directObject()));
                         }
-                    } else if (target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
+                    } else if (target.hasTrait(Trait.tight) && c.getStance().inserted(getSelf())) {
                         BodyPart part = c.getStance().anallyPenetrated(c, target) ? target.body.getRandom("ass")
                                         : target.body.getRandomPussy();
                         String partString = part.describe(target);

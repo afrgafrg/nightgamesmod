@@ -370,7 +370,7 @@ public class ReykaTime extends BaseNPCTime {
                   .addict(AddictionType.CORRUPTION, npc, Addiction.MED_INCREASE);
             Global.global.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
-            if (npc.getAffection(player) >= 8 && (!player.has(Trait.desensitized) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 8 && (!player.hasTrait(Trait.desensitized) || Rng.rng.random(2) == 1)) {
                 Global.global.gui()
                       .message("You hesitated for a bit too long, and again Reyka's eyes flash red. Again, your mind fogs over, "
                                       + "ready to do whatever your mistress wants. Again, Reyka, hauls you off. You don't seem to "
@@ -429,7 +429,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "after that, so you are too. You just hold her as her hair is beginning to darken at the roots and "
                                       + "her irises are taking on a pinkish hue. Eventually, you get up and get dressed. Reyka, her old self "
                                       + "again, does the same and you share a final kiss before you leave.");
-                if (!player.has(Trait.desensitized)) {
+                if (!player.hasTrait(Trait.desensitized)) {
                     Global.global.gui()
                           .message("<br/><br/><b>Having been in the maelstrom that is Reyka's pussy while she was orgasming, you are sure "
                                           + "nothing else will ever come close to those feelings. Your sexual endurance has permanently increased.</b>");
@@ -482,8 +482,8 @@ public class ReykaTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            if (npc.getAffection(player) >= 12 && (!player.has(Trait.clairvoyance) || Rng.rng.random(2) == 1)) {
-                if (!player.has(Trait.clairvoyance)) {
+            if (npc.getAffection(player) >= 12 && (!player.hasTrait(Trait.clairvoyance) || Rng.rng.random(2) == 1)) {
+                if (!player.hasTrait(Trait.clairvoyance)) {
                     Global.global.gui()
                           .message("<i>\"Are you that eager to get your ass... kicked, shall we say... again? I must "
                                           + "say I admire your courage. Tell you what, if you do a little something for me, "
@@ -613,9 +613,9 @@ public class ReykaTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            if (npc.getAffection(player) >= 16 && (!player.has(Trait.locator) || Rng.rng.random(2) == 1)) {
+            if (npc.getAffection(player) >= 16 && (!player.hasTrait(Trait.locator) || Rng.rng.random(2) == 1)) {
 
-                if (!player.has(Trait.locator)) {
+                if (!player.hasTrait(Trait.locator)) {
                     Global.global.gui()
                           .message("<i>\"Another game? Great! I liked the way the last one turned out!\"</i> She winks as she says this, "
                                           + "stirring memories you'd rather be bygones. You quickly suggest to play something else, saying you need all your "

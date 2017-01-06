@@ -29,16 +29,16 @@ public class Offer extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return (target.pantsless() || target.has(Trait.strapped)) && c.getStance().mobile(target)
+        return (target.pantsless() || target.hasTrait(Trait.strapped)) && c.getStance().mobile(target)
                         && !c.getStance().mobile(getSelf())
-                        && (target.hasDick() || target.has(Trait.strapped) || target.hasPussy() && getSelf().hasDick())
+                        && (target.hasDick() || target.hasTrait(Trait.strapped) || target.hasPussy() && getSelf().hasDick())
                         && getSelf().canAct() && target.canAct() && !c.getStance().inserted();
     }
 
     @Override
     public String describe(Combat c) {
         Character other = c.getOpponent(getSelf());
-        return other.hasDick() || other.has(Trait.strapped)
+        return other.hasDick() || other.hasTrait(Trait.strapped)
                         ? "Offer your " + (getSelf().hasPussy() ? "pussy" : "ass") + " to " + other.possessiveAdjective()
                                         + "'s " + other.body.getRandomInsertable().describe(other)
                         : "Offer " + other.directObject() + " the use of your dick";
@@ -49,12 +49,12 @@ public class Offer extends Skill {
         if (target.getArousal().get() < 15) {
             writeOutput(c, Result.miss, target);
             getSelf().add(c, new Shamed(getSelf()));
-            if (target.hasDick() || target.has(Trait.strapped)) {
+            if (target.hasDick() || target.hasTrait(Trait.strapped)) {
                 new Spank(target).resolve(c, getSelf());
             }
             return false;
         }
-        if (target.hasDick() || target.has(Trait.strapped)) {
+        if (target.hasDick() || target.hasTrait(Trait.strapped)) {
             if (getSelf().hasPussy()) {
                 // offer pussy to dick/strapon
                 writeOutput(c, Result.special, target);
@@ -70,7 +70,7 @@ public class Offer extends Skill {
                 c.setStance(new Anal(target, getSelf()), target, true);
                 getSelf().body.pleasure(target, target.body.getRandomInsertable(), getSelf().body.getRandomAss(),
                                 Rng.rng.random(5) + getSelf().get(Attribute.Perception), c, this);
-                if (!target.has(Trait.strapped)) {
+                if (!target.hasTrait(Trait.strapped)) {
                     target.body.pleasure(getSelf(), getSelf().body.getRandomAss(), target.body.getRandomCock(),
                                     Rng.rng.random(5) + getSelf().get(Attribute.Perception), c, this);
                 }
@@ -107,7 +107,7 @@ public class Offer extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         switch (modifier) {
             case miss:
-                if (target.hasDick() || target.has(Trait.strapped)) {
+                if (target.hasDick() || target.hasTrait(Trait.strapped)) {
                     return String.format(
                                     "You get on all fours and offer your %s to %s, but %s merely "
                                                     + "chuckles at your meekness. Before you can get back up in shame,"
@@ -149,7 +149,7 @@ public class Offer extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         switch (modifier) {
             case miss:
-                if (target.hasDick() || target.has(Trait.strapped)) {
+                if (target.hasDick() || target.hasTrait(Trait.strapped)) {
                     return String.format(
                                     "%s gets down and sticks %s ass in the air, offering it up to %s. "
                                                     + "%s not interested, however, and just %s %s. %s seemed to enjoy that, but"

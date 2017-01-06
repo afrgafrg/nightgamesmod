@@ -332,25 +332,25 @@ public class Cassie extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.has(Trait.witch) && (Global.checkFlag(CASSIE_BREAST_FOCUS) || Global.checkFlag(CASSIE_MOUTH_FOCUS))) {
+            if (!character.hasTrait(Trait.witch) && (Global.checkFlag(CASSIE_BREAST_FOCUS) || Global.checkFlag(CASSIE_MOUTH_FOCUS))) {
                 advance();
             }
         }
         super.rest(time);
-        if (!(character.has(Item.Tickler) || character.has(Item.Tickler2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Tickler) || character.hasItem(Item.Tickler2)) && character.money >= 300) {
             character.gain(Item.Tickler);
             character.money -= 300;
         }
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasItem(Item.Onahole) || character.hasItem(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
-        if (!character.has(Item.Onahole2) && character.has(Item.Onahole) && character.money >= 300) {
+        if (!character.hasItem(Item.Onahole2) && character.hasItem(Item.Onahole) && character.money >= 300) {
             character.remove(Item.Onahole);
             character.gain(Item.Onahole2);
             character.money -= 300;
         }
-        while (character.money > Item.Lactaid.getPrice() && !character.has(Trait.lactating)
+        while (character.money > Item.Lactaid.getPrice() && !character.hasTrait(Trait.lactating)
                         && character.count(Item.Lactaid) < 3) {
             character.money -= Item.Lactaid.getPrice();
             character.gain(Item.Lactaid);
@@ -394,7 +394,7 @@ public class Cassie extends BasePersonality {
 
     @Override
     public String describe(Combat c, Character self) {
-        if (character.has(Trait.witch)) {
+        if (character.hasTrait(Trait.witch)) {
             return "Cassie has changed a lot since you started the Game. Maybe she isn't that different physically. She has the same bright blue eyes and the same sweet smile. "
                             + "The magic spellbook and cloak are both new. She's been dabbling in the arcane, and it may be your imagination, but you feel like you can perceive the power "
                             + "radiating from her. Her magic seems to have given her more confidence and she seems even more eager than usual.";
@@ -418,7 +418,7 @@ public class Cassie extends BasePersonality {
                             + "you actually came while she was pegging you. <i>\"You came?\"</i> she gasps. <i>\"I mean the shopkeeper said it would work but....\"</i> she trails off.  She smiles, and stands. <i>\"I never knew "
                             + "I'd enjoy that so much.\"</i> Her grin widens in a way that makes you nervous. <i>\"I might need to try that again in the future.\"</i> Your decide to bid a hasty retreat leaving your "
                             + "clothes behind to the victor.";
-        } else if (character.has(Trait.witch) && character.has(Trait.silvertongue) && Rng.rng.random(3) == 0) {
+        } else if (character.hasTrait(Trait.witch) && character.hasTrait(Trait.silvertongue) && Rng.rng.random(3) == 0) {
             character.arousal.empty();
             return "Cassie's efforts to pleasure you finally break your resistance and you find yourself completely unable to stop her. She slips between your legs and takes your straining "
                             + "dick into her mouth. She eagerly sucks on your cock, while glancing up to meet your eyes. Her talented oral technique blows away your endurance and you spill your seed "
@@ -487,7 +487,7 @@ public class Cassie extends BasePersonality {
     @Override
     public String defeat(Combat c, Result flag) {
         Character opponent = c.getOpponent(character);
-        if (character.has(Trait.witch) && Rng.rng.random(3) == 0) {
+        if (character.hasTrait(Trait.witch) && Rng.rng.random(3) == 0) {
             opponent.add(c, new Energized(opponent, 10));
             return "You capture Cassie's lips and slip your hand between her legs to facilitate her imminent orgasm. You rub her soaked pussy lips and she moans against your lips. Her body "
                             + "tenses as she clings to you, letting you know she's reached her climax. You keep rubbing her petals as she starts to relax. She shows no sign of breaking the kiss or "
@@ -562,7 +562,7 @@ public class Cassie extends BasePersonality {
     public String draw(Combat c, Result flag) {
         Character opponent=c.getOpponent(character);
         if (flag == Result.intercourse) {
-            if (character.has(Trait.witch) && opponent.getPure(Attribute.Arcane) >= 4
+            if (character.hasTrait(Trait.witch) && opponent.getPure(Attribute.Arcane) >= 4
                             && character.getAffection(opponent) >= 12 && Rng.rng.random(2) == 0) {
                 return "You thrust your hips in time with Cassie's, pushing you both closer to orgasm. At this rate, it seems a draw is pretty much certain. If you pulled out, "
                                 + "there's a chance you could change tactics and take the advantage, but right at this moment, it feels like there are more important things than winning.<br/><br/> "

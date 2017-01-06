@@ -498,7 +498,7 @@ public class Body implements Cloneable {
 
     public BodyPart getRandomInsertable() {
         BodyPart part = getRandomCock();
-        if (part == null && character.has(Trait.strapped)) {
+        if (part == null && character.hasTrait(Trait.strapped)) {
             part = StraponPart.generic;
         }
         return part;
@@ -539,13 +539,13 @@ public class Body implements Cloneable {
         }
 
         double sensitivity = target.getSensitivity(with);
-        if (character.has(Trait.desensitized)) {
+        if (character.hasTrait(Trait.desensitized)) {
             sensitivity -= .5;
         }
-        if (character.has(Trait.desensitized2)) {
+        if (character.hasTrait(Trait.desensitized2)) {
             sensitivity -= .5;
         }
-        if (target.isErogenous() && character.has(Trait.hairtrigger)) {
+        if (target.isErogenous() && character.hasTrait(Trait.hairtrigger)) {
             sensitivity += 1;
         }
 
@@ -573,9 +573,9 @@ public class Body implements Cloneable {
             }
             // double the base damage if the opponent is submissive and in a
             // submissive stance
-            if (c.getStance().sub(opponent) && opponent.has(Trait.submissive) && target.isErogenous()) {
+            if (c.getStance().sub(opponent) && opponent.hasTrait(Trait.submissive) && target.isErogenous()) {
                 baseBonusDamage += baseBonusDamage + magnitude;
-            } else if (c.getStance().dom(opponent) && opponent.has(Trait.submissive) && !opponent.has(Trait.flexibleRole) && target.isErogenous()) {
+            } else if (c.getStance().dom(opponent) && opponent.hasTrait(Trait.submissive) && !opponent.has(Trait.flexibleRole) && target.isErogenous()) {
                 baseBonusDamage -= (baseBonusDamage + magnitude) * 1. / 3.;
             }
         }
@@ -714,7 +714,7 @@ public class Body implements Cloneable {
 
         if (opponent != null && Arrays.asList(fetishParts)
                                       .contains(with.getType())) {
-            if (opponent.has(Trait.fetishTrainer) && Rng.rng.random(100) < Math
+            if (opponent.hasTrait(Trait.fetishTrainer) && Rng.rng.random(100) < Math
                             .min(opponent.get(Attribute.Fetish), 25)) {
                 c.write(character, character.subjectAction("now have", "now has") + " a new fetish, courtesy of "
                                 + opponent.directObject() + ".");
@@ -1153,7 +1153,7 @@ public class Body implements Cloneable {
         if (part == null) {
             part = character.body.getRandom("skin");
         }
-        if (character.has(Trait.spiritphage)) {
+        if (character.hasTrait(Trait.spiritphage)) {
             c.write(character, "<br/><b>" + Grammar.capitalizeFirstLetter(character.subjectAction("glow", "glows")
                             + " with power as the cum is absorbed by " + character.possessiveAdjective() + " "
                             + part.describe(character) + ".</b>"));
@@ -1162,7 +1162,7 @@ public class Body implements Cloneable {
             character.add(c, new Abuff(character, Attribute.Cunning, 5, 10));
             character.buildMojo(c, 100);
         }
-        if (opponent.has(Trait.hypnoticsemen)) {
+        if (opponent.hasTrait(Trait.hypnoticsemen)) {
             c.write(character, Global.global.format(
                             "<br/><b>{other:NAME-POSSESSIVE} hypnotic semen takes its toll on {self:name-possessive} willpower, rendering {self:direct-object} doe-eyed and compliant.</b>",
                             character, opponent));

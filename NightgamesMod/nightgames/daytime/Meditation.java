@@ -78,7 +78,7 @@ public class Meditation extends Activity {
                 player.money -= 1000 * (player.getPure(Attribute.Ki) + 1);
                 player.mod(Attribute.Ki, 1);
                 acted = true;
-                if (!player.has(Clothing.getByID("gi"))) {
+                if (!player.hasClothing(Clothing.getByID("gi"))) {
                     player.gain(Clothing.getByID("gi"));
                 }
                 Global.global.gui().choose(this, "Leave");

@@ -175,7 +175,7 @@ public class Player extends Character {
 
     @Override
     public void victory(Combat c, Result flag) {
-        if (has(Trait.slime)) {
+        if (hasTrait(Trait.slime)) {
             purge(c);
         }
         if (c.p1.human()) {
@@ -569,7 +569,7 @@ public class Player extends Character {
         gainXP(getVictoryXP(target));
         target.gainXP(getDefeatXP(this));
         target.arousal.empty();
-        if (target.has(Trait.insatiable)) {
+        if (target.hasTrait(Trait.insatiable)) {
             target.arousal.restore((int) (arousal.max() * .2));
         }
         dress(c);
@@ -705,24 +705,24 @@ public class Player extends Character {
     @Override
     public void eot(Combat c, Character opponent, Skill last) {
         super.eot(c, opponent, last);
-        if (opponent.has(Trait.pheromones) && opponent.getArousal()
+        if (opponent.hasTrait(Trait.pheromones) && opponent.getArousal()
                                                       .percent() >= 20
                         && opponent.rollPheromones(c)) {
             c.write(opponent, "<br/>Whenever you're near " + opponent.name()
                             + ", you feel your body heat up. Something in her scent is making you extremely horny.");
             add(c, Pheromones.getWith(opponent, this, opponent.getPheromonePower(), 10));
         }
-        if (opponent.has(Trait.sadist) && !is(Stsflag.masochism)) {
+        if (opponent.hasTrait(Trait.sadist) && !is(Stsflag.masochism)) {
             c.write("<br/>" + Grammar.capitalizeFirstLetter(
                             String.format("%s seem to shudder in arousal at the thought of pain.", subject())));
             add(c, new Masochistic(this));
         }
-        if (has(Trait.RawSexuality)) {
+        if (hasTrait(Trait.RawSexuality)) {
             c.write(this, Global.global.format("{self:NAME-POSSESSIVE} raw sexuality turns both of you on.", this, opponent));
             temptNoSkillNoSource(c, opponent, arousal.max() / 25);
             opponent.temptNoSkillNoSource(c, this, opponent.arousal.max() / 25);
         }
-        if (has(Trait.slime)) {
+        if (hasTrait(Trait.slime)) {
             if (hasPussy() && !body.getRandomPussy().moddedPartCountsAs(this, PussyPart.gooey)) {
                 body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
                 c.write(this,
@@ -815,7 +815,7 @@ public class Player extends Character {
 
     @Override
     public boolean resist3p(Combat c, Character target, Character assist) {
-        return has(Trait.cursed);
+        return hasTrait(Trait.cursed);
     }
 
     public boolean hasAddiction(AddictionType type) {

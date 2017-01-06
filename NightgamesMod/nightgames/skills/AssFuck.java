@@ -38,9 +38,9 @@ public class AssFuck extends Fuck {
                                         || (c.getStance().prone(target) && !c.getStance().mobile(target)))
                         && getSelf().canAct()
                         && c.getStance().reachBottom(getSelf())
-                        && (getTargetOrgan(target).isReady(target) || target.has(Trait.buttslut) || getSelf().has(Item.Lubricant)
-                                        || getSelf().getArousal().percent() > 50 || getSelf().has(Trait.alwaysready)
-                                        || getSelf().has(Trait.assmaster))
+                        && (getTargetOrgan(target).isReady(target) || target.has(Trait.buttslut) || getSelf().hasItem(Item.Lubricant)
+                                        || getSelf().getArousal().percent() > 50 || getSelf().hasTrait(Trait.alwaysready)
+                                        || getSelf().hasTrait(Trait.assmaster))
                         && (!target.hasPussy() || !PullOut.blockedByAddiction(getSelf()));
     }
 
@@ -48,7 +48,7 @@ public class AssFuck extends Fuck {
     public boolean resolve(Combat c, Character target) {
         String premessage = premessage(c, target);
         if (!target.hasStatus(Stsflag.oiled) && getSelf().getArousal().percent() > 50
-                        || getSelf().has(Trait.alwaysready) || getSelf().has(Trait.assmaster)) {
+                        || getSelf().hasTrait(Trait.alwaysready) || getSelf().hasTrait(Trait.assmaster)) {
             String fluids = target.hasDick() ? "copious pre-cum" : "own juices";
             if (premessage.isEmpty()) {
                 premessage = "{self:subject-action:lube|lubes}";
@@ -57,7 +57,7 @@ public class AssFuck extends Fuck {
             }
             premessage += " up {other:possessive} ass with {self:possessive} " + fluids + ".";
             target.add(c, new Oiled(target));
-        } else if (!target.hasStatus(Stsflag.oiled) && getSelf().has(Item.Lubricant)) {
+        } else if (!target.hasStatus(Stsflag.oiled) && getSelf().hasItem(Item.Lubricant)) {
             if (premessage.isEmpty()) {
                 premessage = "{self:subject-action:lube|lubes}";
             } else {
@@ -76,7 +76,7 @@ public class AssFuck extends Fuck {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, premessage.length(), Result.normal, target));
         } else if (target.human()) {
-            if (!c.getStance().behind(getSelf()) && getSelf().has(Trait.strapped)) {
+            if (!c.getStance().behind(getSelf()) && getSelf().hasTrait(Trait.strapped)) {
                 c.write(getSelf(), receive(c, premessage.length(), Result.upgrade, target));
             } else if (getSelf().getType().equals("Eve") && c.getStance().behind(getSelf())) {
                 m += 5;
@@ -104,11 +104,11 @@ public class AssFuck extends Fuck {
             c.setStance(new AnalProne(getSelf(), target), getSelf(), voluntary);
         }
         int otherm = m;
-        if (getSelf().has(Trait.insertion)) {
+        if (getSelf().hasTrait(Trait.insertion)) {
             otherm += Math.min(getSelf().get(Attribute.Seduction) / 4, 40);
         }
         target.body.pleasure(getSelf(), getSelfOrgan(), getTargetOrgan(target), otherm, c, this);
-        if (!getSelf().has(Trait.strapped)) {
+        if (!getSelf().hasTrait(Trait.strapped)) {
             getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m / 2, c, this);
         }
         getSelf().emote(Emotion.dominant, 100);
@@ -117,10 +117,10 @@ public class AssFuck extends Fuck {
         } else {
             target.emote(Emotion.horny, 25);
         }
-        if (!target.has(Trait.Unflappable)) {
+        if (!target.hasTrait(Trait.Unflappable)) {
             target.add(c, new Flatfooted(target, 1));
         }
-        if (getSelf().has(Trait.analFanatic) && getSelf().hasDick()) {
+        if (getSelf().hasTrait(Trait.analFanatic) && getSelf().hasDick()) {
             c.write(getSelf(),
                             String.format("Now with %s %s deeply embedded within %s ass,"
                                             + " %s mind clears itself of everything but fucking %s as hard as possible.",
@@ -178,8 +178,8 @@ public class AssFuck extends Fuck {
                             target.possessiveAdjective());
         }
         if (modifier == Result.normal) {
-            if (getSelf().has(Trait.strapped)) {
-                if (getSelf().has(Item.Strapon2)) {
+            if (getSelf().hasTrait(Trait.strapped)) {
+                if (getSelf().hasItem(Item.Strapon2)) {
                     return String.format("%s %s strap-on behind %s and pushes it into %s lubricated ass. After pushing it"
                                     + " in completely, %s pushes a button on a controller which causes the dildo to vibrate in"
                                     + " %s ass, giving %s a slight shiver.", getSelf().subjectAction("align"), getSelf().possessiveAdjective(),

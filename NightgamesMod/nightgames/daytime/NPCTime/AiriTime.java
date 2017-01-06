@@ -21,7 +21,7 @@ public class AiriTime extends BaseNPCTime {
         giftedString = "\"Uhm... thank you!\"";
         giftString = "\"Oh wow... for me? th-thanks...!\"";
         transformationOptionString = "Transformation";
-        advTrait = null;
+        advancedTrait = null;
         transformationIntro = "[Placeholder]<br/>You ask Airi about bodily transformations. You figure if anyone knew, it would be someone who can freely manipulate their own body.";
         loveIntro = "[Placeholder]<br/>Airi greets you at the door and flies into your arms. She looks pretty happy to see you.";
         transformationFlag = "";

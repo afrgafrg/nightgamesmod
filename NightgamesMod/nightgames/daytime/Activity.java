@@ -4,13 +4,12 @@ import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.global.Global;
 import nightgames.global.SceneController;
-import nightgames.requirements.Requirement;
 
 public abstract class Activity {
     protected final String name;
     protected final int duration;
     protected final Player player;
-    final SceneController controller;
+    protected final SceneController controller;
     protected int page;
 
     public Activity(String name, Player player) {

@@ -39,7 +39,7 @@ public class CassieTime extends BaseNPCTime {
                         + "of being intimate with the " + Global.getPlayer().boyOrGirl() + " I liked. Most of all, I was scared that you might look down on me when you found out what a horny girl I am.\"</i> She grasps your hand and you "
                         + "squeeze it reassuringly. You pull her towards you and kiss her softly. <i>\"I guess it turned out better than I could have hoped.\"</i><br/><br/>She sits up and looks at you, blushing "
                         + "deeply. <i>\"We can't keep lying here with my embarrassing story in the air, let's do some training.\"</i>";
-        advTrait = Trait.witch;
+        advancedTrait = Trait.witch;
         transformationFlag = "";
     }
 

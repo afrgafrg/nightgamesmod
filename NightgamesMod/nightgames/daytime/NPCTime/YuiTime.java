@@ -18,7 +18,7 @@ public class YuiTime extends BaseNPCTime {
         giftString = "\"A present? I'm not going to go easy on you even if you bribe me you know?\"";
         transformationOptionString = "Error";
         loveIntro = "[Placeholder] Yui jumps into your arms as you enter, kissing you forcefully.";
-        advTrait = null;
+        advancedTrait = null;
         transformationFlag = "";
     }
 

@@ -20,12 +20,11 @@ import static nightgames.requirements.RequirementShortcuts.*;
 
 public class AngelTime extends BaseNPCTime {
     public AngelTime(Player player) {
-        super(player, Global.global.getNPC("Angel"));
+        super(player, Global.global.getNPC("Angel"), Trait.demigoddess);
         knownFlag = "AngelKnown";
         giftedString = "\"Hmph thanks.\"";
         giftString = "\"A present mm? Alright let's see it.\"";
         transformationOptionString = "Sacraments";
-        advTrait = Trait.demigoddess;
         transformationIntro =
                         "[Placeholder]<br/>Angel says she may be able to try a few things with her new divine powers.";
         loveIntro = "You meet Angel at her room, but for once, she doesn't seem eager to get to sex. You can tell she has something on her mind, so you let her lean "

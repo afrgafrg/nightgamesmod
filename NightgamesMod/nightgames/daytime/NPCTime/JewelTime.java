@@ -41,7 +41,7 @@ public class JewelTime extends BaseNPCTime {
                         + "play challenging games. That's better than dinner and a movie. I think I would like to spend more nights together.\"</i> That's also quite a reasonable request. Jewel "
                         + "hesitates for a moment. <i>\"Does that mean we're lovers?\"</i> You are in every way you want to be. As for the rest, you can both figure that out as you go. Jewel nods. "
                         + "<i>\"I'll keep thinking about it. In the meantime, what do you want to do on our date today?\"</i>";
-        advTrait = Trait.fighter;
+        advancedTrait = Trait.fighter;
         transformationFlag = "";
     }
 

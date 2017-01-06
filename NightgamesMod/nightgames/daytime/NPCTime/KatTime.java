@@ -27,7 +27,7 @@ public class KatTime extends BaseNPCTime {
         transformationOptionString = "Transformations";
         loveIntro = "[Placeholder]<br/>You text Kat and she excitedly meets up with you.";
         transformationIntro = "[Placeholder]<br/>Kat shares how her totemic magic works.";
-        advTrait = null;
+        advancedTrait = null;
         transformationFlag = "";
     }
 

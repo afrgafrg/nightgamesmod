@@ -25,7 +25,7 @@ public class MaraTime extends BaseNPCTime {
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
         transformationOptionString = "Modifications";
-        advTrait = Trait.madscientist;
+        advancedTrait = Trait.madscientist;
         transformationIntro =
                         "[Placeholder]<br/>Mara explains that she may be able to modify your body with her new equipment.";
         loveIntro = "Mara's computer lab has once again become a clusterfuck of electronics equipment. Not just electronics either. The back corner houses a "

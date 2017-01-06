@@ -54,7 +54,7 @@ public class LewdSuggestion extends Skill {
             c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
 
-        target.add(c, new Horny(target, 10, 4, "Hypnosis"));
+        target.add(c, Horny.getWithPsycologicalType(getSelf(), target, 10, 4, "Hypnosis"));
         target.emote(Emotion.horny, 30);
         return true;
     }
@@ -74,7 +74,7 @@ public class LewdSuggestion extends Skill {
         if (modifier == Result.strong) {
             return String.format(
                             "You take advantage of the erotic fantasies already swirling through %s's head, whispering ideas that fan the flame of %s lust.",
-                            new Object[] {target.name(), target.possessivePronoun()});
+                            new Object[] {target.name(), target.possessiveAdjective()});
         }
         if (modifier == Result.miss) {
             return String.format(
@@ -89,17 +89,19 @@ public class LewdSuggestion extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.strong) {
             return String.format(
-                            "%s whispers a lewd suggestion to you, intensifying the fantasies you were trying to ignore and enflaming your arousal.",
-                            new Object[] {getSelf().name()});
+                            "%s whispers a lewd suggestion to %s, intensifying the fantasies %s %s trying to ignore and enflaming %s arousal.",
+                            getSelf().name(), target.nameDirectObject(), target.pronoun(), target.action("were", "was"),
+                            target.possessiveAdjective());
         }
         if (modifier == Result.miss) {
             return String.format(
-                            "%s whispers a lewd suggestion to you, but you just ignore it, and try to concentrate on the fight.",
-                            new Object[] {getSelf().name()});
+                            "%s whispers a lewd suggestion to %s, but %s just %s it, and %s to concentrate on the fight.",
+                            getSelf().name(), target.nameDirectObject(), target.pronoun(),
+                            target.action("ignore"), target.action("try", "tries"));
         }
         return String.format(
-                        "%s gives you a hypnotic suggestion and your head is immediately filled with erotic possibilities.",
-                        new Object[] {getSelf().name()});
+                        "%s gives %s a hypnotic suggestion and %s head is immediately filled with erotic possibilities.",
+                        getSelf().name(), target.nameDirectObject(), target.possessiveAdjective());
     }
 
 }

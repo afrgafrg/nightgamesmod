@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.pet.Fairy;
 import nightgames.pet.FairyFem;
 import nightgames.pet.FairyMale;
 import nightgames.pet.Ptype;
@@ -13,7 +14,7 @@ public class SpawnFaerie extends Skill {
     private Ptype gender;
 
     public SpawnFaerie(Character self, Ptype gender) {
-        super("Summon Faerie", self);
+        super("Summon Faerie (" + gender.name() + ")", self);
         this.gender = gender;
     }
 
@@ -25,7 +26,7 @@ public class SpawnFaerie extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && getSelf().pet == null;
+                        && c.getPetsFor(getSelf()).size() < getSelf().getPetLimit();
     }
 
     @Override
@@ -40,26 +41,29 @@ public class SpawnFaerie extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        int power = 7 + getSelf().get(Attribute.Arcane) / 10;
+        int power = 5 + getSelf().get(Attribute.Arcane);
         int ac = 4 + getSelf().get(Attribute.Arcane) / 10;
-        if (getSelf().has(Trait.leadership)) {
-            power += 5;
-        }
-        if (getSelf().has(Trait.tactician)) {
-            ac += 3;
-        }
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-            if (gender == Ptype.fairyfem) {
-                getSelf().pet = new FairyFem(getSelf(), power, ac);
-            } else {
-                getSelf().pet = new FairyMale(getSelf(), power, ac);
+            switch (gender) {
+                case fairyfem:
+                    c.addPet(getSelf(), new Fairy(getSelf(), Ptype.fairyfem, power, ac).getSelf());
+                case fairymale:
+                    c.addPet(getSelf(), new Fairy(getSelf(), Ptype.fairymale, power, ac).getSelf());
+                case fairyherm:
+                default:
+                    c.addPet(getSelf(), new Fairy(getSelf(), Ptype.fairyherm, power, ac).getSelf());
+
             }
         } else {
             if (target.human()) {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
-            getSelf().pet = new FairyFem(getSelf(), power, ac);
+            if (gender == Ptype.fairyfem) {
+                c.addPet(getSelf(), new FairyFem(getSelf(), power, ac).getSelf());
+            } else {
+                c.addPet(getSelf(), new FairyMale(getSelf(), power, ac).getSelf());
+            }
         }
         return true;
     }
@@ -96,8 +100,17 @@ public class SpawnFaerie extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " casts a spell as she extends her hand. In a flash of magic, a small, naked girl with butterfly wings appears in her palm.";
+    	if (gender == Ptype.fairyfem) {
+	        return String.format("%s casts a spell as %s extends %s hand. In a flash of magic,"
+	                        + " a small, naked girl with butterfly wings appears in %s palm.",
+	                        getSelf().subject(), getSelf().pronoun(), getSelf().possessiveAdjective(),
+	                        getSelf().possessiveAdjective());
+    	} else {
+	        return String.format("%s casts a spell as %s extends %s hand. In a flash of magic,"
+	                        + " a small, naked boy with butterfly wings appears in %s palm.",
+	                        getSelf().subject(), getSelf().pronoun(), getSelf().possessiveAdjective(),
+	                        getSelf().possessiveAdjective());
+    	}
     }
 
 }

@@ -5,12 +5,14 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Primed;
 
 public class AttireShift extends Skill {
 
     public AttireShift(Character self) {
-        super("Attrie Shift", self);
+        super("Attire Shift", self);
+        addTag(SkillTag.stripping);
     }
 
     @Override
@@ -31,14 +33,9 @@ public class AttireShift extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        getSelf().add(new Primed(getSelf(),-2));
+        getSelf().add(c, new Primed(getSelf(),-2));
         target.nudify();
-        if(getSelf().human()){
-            c.write(getSelf(),deal(c,0,Result.normal,target));
-        }
-        else if(target.human()){
-            c.write(getSelf(),receive(c,0,Result.normal,target));
-        }
+        writeOutput(c, Result.normal, target);
         getSelf().emote(Emotion.dominant, 15);
         target.emote(Emotion.nervous, 10);
         return true;
@@ -62,8 +59,9 @@ public class AttireShift extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return String.format("%s triggers a device on her arm and your clothes suddenly vanish. "
-                        + "What the fuck did %s just do?",getSelf().name(),getSelf().pronoun());
+        return String.format("%s triggers a device on her arm and %s clothes suddenly vanish. "
+                        + "What the fuck did %s just do?",getSelf().name(), target.nameOrPossessivePronoun(),
+                        getSelf().pronoun());
     }
 
 }

@@ -11,6 +11,8 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.stance.Anal;
 import nightgames.stance.AnalProne;
+import nightgames.stance.BehindFootjob;
+import nightgames.stance.Stance;
 import nightgames.status.Flatfooted;
 import nightgames.status.Frenzied;
 import nightgames.status.IgnoreOrgasm;
@@ -38,7 +40,8 @@ public class AssFuck extends Fuck {
                         && (c.getStance().behind(getSelf())
                                         || (c.getStance().prone(target) && !c.getStance().mobile(target)))
                         && getSelf().canAct()
-                        && (getTargetOrgan(target).isReady(target) || getSelf().has(Item.Lubricant)
+                        && c.getStance().reachBottom(getSelf())
+                        && (getTargetOrgan(target).isReady(target) || target.has(Trait.buttslut) || getSelf().has(Item.Lubricant)
                                         || getSelf().getArousal().percent() > 50 || getSelf().has(Trait.alwaysready)
                                         || getSelf().has(Trait.assmaster))
                         && (!target.hasPussy() || !PullOut.blockedByAddiction(getSelf()));
@@ -69,28 +72,36 @@ public class AssFuck extends Fuck {
         }
         c.write(getSelf(), Global.format(premessage, getSelf(), target));
 
-        int m = Global.random(5);
+        int m = Global.random(10, 15);
+        if (getSelf().has(Trait.strapped) && getSelf().has(Item.Strapon2)) {
+            m += 3;
+        }
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, premessage.length(), Result.normal, target));
         } else if (target.human()) {
-            if (getSelf().has(Trait.strapped) && getSelf().has(Item.Strapon2)) {
-                m += 3;
-            }
             if (!c.getStance().behind(getSelf()) && getSelf().has(Trait.strapped)) {
                 c.write(getSelf(), receive(c, premessage.length(), Result.upgrade, target));
-            } else if (getSelf().name().equals("Eve") && c.getStance().behind(getSelf())) {
+            } else if (getSelf().getType().equals("Eve") && c.getStance().behind(getSelf())) {
                 m += 5;
                 c.write(getSelf(), receive(c, premessage.length(), Result.special, target));
             } else {
                 c.write(getSelf(), receive(c, premessage.length(), Result.normal, target));
             }
+        } else if (c.isBeingObserved()) {
+            if (!c.getStance().behind(getSelf()) && getSelf().has(Trait.strapped)) {
+                c.write(getSelf(), receive(c, premessage.length(), Result.upgrade, target));
+            } else {
+                c.write(getSelf(), receive(c, premessage.length(), Result.normal, target));
+            }
         }
+
         boolean voluntary = getSelf().canMakeOwnDecision();
         if (c.getStance().behind(getSelf())) {
-            if (getSelf().name().equals("Eve")) {
+            if (getSelf().getType().equals("Eve")) {
                 c.setStance(new AnalProne(getSelf(), target), getSelf(), voluntary);
             } else {
-                c.setStance(new Anal(getSelf(), target), getSelf(), voluntary);
+                if (c.getStance().enumerate() == Stance.behindfootjob) {c.setStance(new BehindFootjob(getSelf(),target));}
+                else {c.setStance(new Anal(getSelf(), target), getSelf(), voluntary);}
             }
         } else {
             c.setStance(new AnalProne(getSelf(), target), getSelf(), voluntary);
@@ -104,7 +115,11 @@ public class AssFuck extends Fuck {
             getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m / 2, c, this);
         }
         getSelf().emote(Emotion.dominant, 100);
-        target.emote(Emotion.desperate, 50);
+        if (!target.has(Trait.analTraining1) && !target.has(Trait.shameless)) {
+            target.emote(Emotion.desperate, 50);
+        } else {
+            target.emote(Emotion.horny, 25);
+        }
         if (!target.has(Trait.Unflappable)) {
             target.add(c, new Flatfooted(target, 1));
         }
@@ -112,7 +127,7 @@ public class AssFuck extends Fuck {
             c.write(getSelf(),
                             String.format("Now with %s %s deeply embedded within %s ass,"
                                             + " %s mind clears itself of everything but fucking %s as hard as possible.",
-                            getSelf().possessivePronoun(), getSelf().body.getRandomCock().describe(getSelf()),
+                            getSelf().possessiveAdjective(), getSelf().body.getRandomCock().describe(getSelf()),
                             target.nameOrPossessivePronoun(), getSelf().nameOrPossessivePronoun(),
                             target.directObject()));
             getSelf().add(c, new Frenzied(getSelf(), 4));
@@ -123,7 +138,7 @@ public class AssFuck extends Fuck {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) >= 15;
+        return user.get(Attribute.Seduction) >= 15 || target.has(Trait.buttslut);
     }
 
     @Override
@@ -146,36 +161,42 @@ public class AssFuck extends Fuck {
         if (modifier == Result.normal) {
             return String.format(
                             (damage == 0 ? "You" : "After you")
-                                            + " make sure %s ass is sufficiently lubricated, you push your %s into her %s.",
+                                            + " make sure %s ass is sufficiently lubricated, you push your %s into %s %s.",
                             target.nameOrPossessivePronoun(), getSelfOrgan().describe(getSelf()),
-                            getTargetOrgan(target).describe(target));
+                            target.possessiveAdjective(), getTargetOrgan(target).describe(target));
         } else {
-            return target.name() + "'s ass is oiled up and ready to go, but you're still too soft to penetrate her.";
+            return target.name() + "'s ass is oiled up and ready to go, but you're still too soft to penetrate "+target.directObject()+".";
         }
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.upgrade) {
-            return getSelf().name()
-                            + " spreads your legs apart and teasingly pokes the strap-on against your anus. You try to struggle away but "
-                            + getSelf().name() + " pulls your hips closer and slowly pushes the dildo inside your ass.";
+            return String.format("%s %s legs apart and teasingly pokes the strap-on against %s anus."
+                            + " %s %s to struggle away, but %s %s %s hips closer and slowly pushes the dildo"
+                            + " inside %s ass.", getSelf().subjectAction("spread"), target.nameOrPossessivePronoun(),
+                            target.possessiveAdjective(),
+                            Global.capitalizeFirstLetter(target.pronoun()), target.action("try", "tries"),
+                            getSelf().subject(), getSelf().action("pull"), target.possessiveAdjective(), 
+                            target.possessiveAdjective());
         }
         if (modifier == Result.normal) {
             if (getSelf().has(Trait.strapped)) {
                 if (getSelf().has(Item.Strapon2)) {
-
-                    return getSelf().name()
-                                    + " aligns her strap-on behind you and pushes it into your lubricated ass. After pushing it in completely, "
-                                    + getSelf().name()
-                                    + " pushes a button on a controller which causes the Dildo to vibrate in your ass, giving you a slight shiver.";
+                    return String.format("%s %s strap-on behind %s and pushes it into %s lubricated ass. After pushing it"
+                                    + " in completely, %s pushes a button on a controller which causes the dildo to vibrate in"
+                                    + " %s ass, giving %s a slight shiver.", getSelf().subjectAction("align"), getSelf().possessiveAdjective(),
+                                    target.nameDirectObject(), target.possessiveAdjective(), getSelf().pronoun(), target.possessiveAdjective(),
+                                    target.directObject());
                 } else {
-                    return getSelf().name()
-                                    + " lubes up her strap-on, positions herself behind you, and shoves it into your ass.";
+                    return String.format("%s lubes up %s strap-on, positions %s behind %s, and shoves it into %s ass.", 
+                                    getSelf().name(), getSelf().possessiveAdjective(), getSelf().reflectivePronoun(), 
+                                    target.nameDirectObject(), target.possessiveAdjective());
                 }
             } else {
-                return getSelf().name()
-                                + " rubs her cock up and down your ass crack before thrusting her hips to penetrate you.";
+                return String.format("%s rubs %s cock up and down %s ass before thrusting %s hips to penetrate %s.",
+                                getSelf().name(), getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(),
+                                getSelf().possessiveAdjective(), target.directObject());
             }
         } else if (modifier == Result.special) {
             // Eve
@@ -191,8 +212,8 @@ public class AssFuck extends Fuck {
                                             + " fucking you at a furious pace.",
                             target.name(), getSelf().body.getRandomCock().describe(getSelf()));
         } else {
-            return getSelf().name()
-                            + " rubs her dick against your ass, but she's still flaccid and can't actually penetrate you.";
+            return String.format("%s rubs %s dick against %s ass, but it's still flaccid and can't actually penetrate %s.",
+                            getSelf().name(), getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(), target.directObject());
         }
     }
 

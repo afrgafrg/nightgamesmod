@@ -5,10 +5,12 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 
 public class ReverseFuck extends Fuck {
     public ReverseFuck(String name, Character self, int cooldown) {
         super(name, self, cooldown);
+        addTag(SkillTag.positioning);
     }
 
     public ReverseFuck(Character self) {
@@ -48,8 +50,8 @@ public class ReverseFuck extends Fuck {
         } else if (modifier == Result.miss) {
             if (!selfO.isReady(getSelf()) && !targetO.isReady(target)) {
                 return Global.format(
-                                "{self:subject-action:are|is} in a good position to fuck {other:direct-object}, but neither of you are aroused enough to follow through.",
-                                getSelf(), target);
+                                "{self:subject-action:are|is} in a good position to fuck {other:direct-object}, but neither of %s are aroused enough to follow through.",
+                                getSelf(), target, c.bothDirectObject(target));
             } else if (!getTargetOrgan(target).isReady(target)) {
                 return Global.format(
                                 "{self:subject-action:position|positions} {self:possessive} {self:body-part:pussy} on top of {other:possessive} {other:body-part:cock}, "
@@ -73,7 +75,7 @@ public class ReverseFuck extends Fuck {
 
     @Override
     public String describe(Combat c) {
-        return "Straddle your opponent and ride " + c.getOther(getSelf()).possessivePronoun() + " cock";
+        return "Straddle your opponent and ride " + c.getOpponent(getSelf()).possessiveAdjective() + " cock";
     }
 
     @Override

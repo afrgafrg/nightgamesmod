@@ -16,28 +16,30 @@ public class CoiledSex extends FemdomSexStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "Your limbs are coiled around " + bottom.nameOrPossessivePronoun() + " body and "
-                            + bottom.possessivePronoun() + " cock is inside you.";
+                            + bottom.possessiveAdjective() + " cock is inside you.";
         } else {
-            return "You're on top of " + top.nameDirectObject()
-                            + " with your cock trapped in her pussy and your face smothered in her cleavage.";
+            return String.format("%s on top of %s with %s cock trapped in %s pussy and %s face smothered in %s cleavage.",
+                            bottom.subjectAction("are", "is"), top.nameDirectObject(),
+                            bottom.possessiveAdjective(), top.possessiveAdjective(),
+                            bottom.possessiveAdjective(), top.possessiveAdjective());
         }
     }
 
     @Override
     public String image() {
-        return "coiledsex.png";
+        return "coiledsex.jpg";
     }
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
-    public boolean kiss(Character c) {
+    public boolean kiss(Character c, Character target) {
         return true;
     }
 
@@ -53,12 +55,12 @@ public class CoiledSex extends FemdomSexStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
@@ -67,36 +69,28 @@ public class CoiledSex extends FemdomSexStance {
     }
 
     @Override
-    public boolean feet(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean oral(Character c) {
-        return false;
-    }
-
-    @Override
     public boolean behind(Character c) {
         return false;
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return new Mount(top, bottom);
     }
 
     @Override
-    public Position reverse(Combat c) {
-        c.write(bottom, Global.format(
-                        "In a desperate gamble for dominance, {self:subject} piston wildly into {other:name-do}, making {other:direct-object} yelp and breaking {other:possessive} concentration. Shaking off {other:possessive} limbs coiled around {self:subject}, {self:subject} grab ahold of {other:possessive} legs and swing into a missionary position.",
-                        bottom, top));
+    public Position reverse(Combat c, boolean writeMessage) {
+        if (writeMessage) {
+            c.write(bottom, Global.format(
+                            "In a desperate gamble for dominance, {self:subject} piston wildly into {other:name-do}, making {other:direct-object} yelp and breaking {other:possessive} concentration. Shaking off {other:possessive} limbs coiled around {self:subject}, {self:subject} grab ahold of {other:possessive} legs and swing into a missionary position.",
+                            bottom, top));
+        }
         return new Missionary(bottom, top);
     }
 
     @Override
     public double pheromoneMod(Character self) {
-        return 10;
+        return 6;
     }
     
     @Override

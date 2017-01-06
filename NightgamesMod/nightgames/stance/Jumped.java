@@ -4,6 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.skills.damage.DamageType;
 
 public class Jumped extends FemdomSexStance {
     public Jumped(Character top, Character bottom) {
@@ -11,13 +12,16 @@ public class Jumped extends FemdomSexStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You are clinging to " + bottom.nameOrPossessivePronoun()
                             + " arms while her dick is buried deep in your pussy";
         } else {
-            return top.name()
-                            + " is clinging to your shoulders and gripping your waist with her thighs while she uses the leverage to ride you.";
+            return String.format("%s clinging to %s shoulders and gripping %s waist "
+                            + "with %s thighs while %s uses the leverage to ride %s.",
+                            top.subjectAction("are", "is"), bottom.nameOrPossessivePronoun(),
+                            bottom.possessiveAdjective(), top.possessiveAdjective(),
+                            top.pronoun(), bottom.directObject());
         }
     }
 
@@ -28,11 +32,11 @@ public class Jumped extends FemdomSexStance {
 
     @Override
     public boolean mobile(Character c) {
-        return false;
+        return c != bottom && c != top;
     }
 
     @Override
-    public boolean kiss(Character c) {
+    public boolean kiss(Character c, Character target) {
         return true;
     }
 
@@ -48,26 +52,16 @@ public class Jumped extends FemdomSexStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return false;
+        return c != bottom && c != top;
     }
 
     @Override
     public boolean reachBottom(Character c) {
-        return false;
+        return c != bottom && c != top;
     }
 
     @Override
     public boolean prone(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean feet(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean oral(Character c) {
         return false;
     }
 
@@ -77,14 +71,14 @@ public class Jumped extends FemdomSexStance {
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return new Neutral(top, bottom);
     }
 
     @Override
     public void decay(Combat c) {
         time++;
-        top.weaken(null, 2);
+        top.weaken(c, (int) bottom.modifyDamage(DamageType.stance, top, 2));
     }
 
     @Override
@@ -103,11 +97,13 @@ public class Jumped extends FemdomSexStance {
     }
 
     @Override
-    public Position reverse(Combat c) {
-        c.write(bottom, Global.format(
-                        "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} clitoris with {self:possessive} hands as {other:subject-action:try|tries} to ride {self:direct-object}. "
-                                        + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to push {other:direct-object} against a wall and fuck her in a standing position.",
-                        bottom, top));
+    public Position reverse(Combat c, boolean writeMessage) {
+        if (writeMessage) {
+            c.write(bottom, Global.format(
+                            "{self:SUBJECT-ACTION:pinch|pinches} {other:possessive} clitoris with {self:possessive} hands as {other:subject-action:try|tries} to ride {self:direct-object}. "
+                                            + "While {other:subject-action:yelp|yelps} with surprise, {self:subject-action:take|takes} the chance to push {other:direct-object} against a wall and fuck {other:direct-object} in a standing position.",
+                                            bottom, top));
+        }
         return new Standing(bottom, top);
     }
     

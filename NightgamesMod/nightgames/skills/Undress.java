@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.Stsflag;
 
@@ -12,6 +13,7 @@ public class Undress extends Skill {
 
     public Undress(Character self) {
         super("Undress", self);
+        addTag(SkillTag.undressing);
     }
 
     @Override
@@ -48,8 +50,8 @@ public class Undress extends Skill {
 
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, res, target));
-        } else if (target.human()) {
-            if (target.is(Stsflag.blinded))
+        } else if (c.shouldPrintReceive(target, c)) {
+            if (target.human() && target.is(Stsflag.blinded))
                 printBlinded(c);
             else
                 c.write(getSelf(), receive(c, 0, res, target));
@@ -69,7 +71,7 @@ public class Undress extends Skill {
 
     @Override
     public Tactics type(Combat c) {
-        return Tactics.stripping;
+        return Tactics.misc;
     }
 
     @Override
@@ -88,13 +90,17 @@ public class Undress extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().subject() + " tries to struggle out of your clothing, but it stubbornly clings onto her.";
+            return String.format("%s tries to struggle out of %s clothing, but it stubbornly clings onto %s.",
+                            getSelf().subject(), getSelf().possessiveAdjective(), getSelf().directObject());
         } else if (modifier == Result.weak) {
-            return getSelf().subject() + " manages to struggle out of some of her clothing.";
+            return String.format("%s manages to struggle out of some of %s clothing.", getSelf().subject(),
+                            getSelf().possessiveAdjective());
         }
         if (c.getStance().en != Stance.neutral) {
-            return getSelf().name() + " wiggles out of her clothes and tosses them aside.";
+            return String.format("%s wiggles out of %s clothes and tosses them aside.", getSelf().subject(),
+                            getSelf().possessiveAdjective());
         }
-        return getSelf().name() + " puts some space between you and strips naked.";
+        return String.format("%s puts some space between %s and strips naked.", getSelf().subject(), c.isBeingObserved()
+                        ? getSelf().reflectivePronoun() + " and " + target.nameDirectObject() : "you");
     }
 }

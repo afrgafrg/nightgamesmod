@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import nightgames.characters.Character;
+import nightgames.characters.Decider;
 import nightgames.characters.NPC;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -27,15 +28,15 @@ public class UseDraft extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        boolean hasItems = subChoices().size() > 0;
-        return hasItems && getSelf().canAct() && c.getStance().mobile(getSelf());
+        boolean hasItems = subChoices(c).size() > 0;
+        return hasItems && getSelf().canAct() && c.getStance().mobile(getSelf()) && !getSelf().isPet();
     }
 
     @Override
-    public Collection<String> subChoices() {
+    public Collection<String> subChoices(Combat c) {
         ArrayList<String> usables = new ArrayList<String>();
         for (Item i : getSelf().getInventory().keySet()) {
-            if (getSelf().has(i) && i.getEffects().get(0).drinkable()) {
+            if (getSelf().has(i) && i.getEffects().get(0).drinkable() && i.usable(getSelf())) {
                 usables.add(i.getName());
             }
         }
@@ -47,7 +48,7 @@ public class UseDraft extends Skill {
         double selfFitness = self.getFitness(c);
         double targetFitness = self.getOtherFitness(c, target);
         usables.stream().forEach(item -> {
-            double rating = self.rateAction(c, selfFitness, targetFitness, (newCombat, newSelf, newOther) -> {
+            double rating = Decider.rateAction(self, c, selfFitness, targetFitness, (newCombat, newSelf, newOther) -> {
                 for (ItemEffect e : item.getEffects()) {
                     e.use(newCombat, newSelf, newOther, item);
                 }
@@ -60,7 +61,7 @@ public class UseDraft extends Skill {
                 System.out.println("Item " + entry.getKey() + ": " + entry.getValue());
             });
         }
-        Item best = checks.entrySet().stream().max((first, second) -> {
+        Item best = checks.entrySet().stream().min((first, second) -> {
             double test = second.getValue() - first.getValue();
             if (test < 0) {
                 return -1;
@@ -90,7 +91,7 @@ public class UseDraft extends Skill {
                     usables.add(i);
                 }
             }
-            if (usables.size() > 0) {
+            if (usables.size() > 0 && getSelf() instanceof NPC) {
                 used = pickBest(c, (NPC) getSelf(), target, usables);
             }
         }
@@ -107,7 +108,7 @@ public class UseDraft extends Skill {
                 eventful = e.use(c, getSelf(), target, used) || eventful;
             }
             if (!eventful && shouldPrint(target)) {
-                c.write("...But nothing happened.");
+                c.write(getSelf(), "...But nothing happened.");
             }
             getSelf().consume(used, 1);
         }

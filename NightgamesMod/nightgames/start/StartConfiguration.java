@@ -17,7 +17,6 @@ import com.google.gson.JsonParseException;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
-import nightgames.global.Flag;
 import nightgames.items.clothing.Clothing;
 import nightgames.json.JsonUtils;
 
@@ -28,7 +27,7 @@ public class StartConfiguration {
     public PlayerConfiguration player;
     private Collection<NpcConfiguration> npcs;
     public NpcConfiguration npcCommon;
-    private Collection<Flag> flags;
+    private Collection<String> flags;
 
     private StartConfiguration() {
     }
@@ -45,7 +44,7 @@ public class StartConfiguration {
         return enabled;
     }
 
-    public Collection<Flag> getFlags() {
+    public Collection<String> getFlags() {
         return flags;
     }
 
@@ -85,9 +84,15 @@ public class StartConfiguration {
 
         cfg.npcs = new HashSet<>();
         JsonArray npcs = root.getAsJsonArray("npcs");
-        npcs.forEach(element -> cfg.npcs.add(NpcConfiguration.parse(element.getAsJsonObject())));
+        npcs.forEach(element -> {
+            try {
+                cfg.npcs.add(NpcConfiguration.parse(element.getAsJsonObject()));
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        });
         JsonArray flags = root.getAsJsonArray("flags");
-        cfg.flags = JsonUtils.collectionFromJson(flags, Flag.class);
+        cfg.flags = JsonUtils.collectionFromJson(flags, String.class);
         return cfg;
     }
 

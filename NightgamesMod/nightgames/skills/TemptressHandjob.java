@@ -6,12 +6,15 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.FiredUp;
 
 public class TemptressHandjob extends Handjob {
 
     public TemptressHandjob(Character self) {
         super("Skillful Handjob", self);
+        addTag(SkillTag.usesHands);
+        addTag(SkillTag.pleasure);
     }
 
     @Override
@@ -28,7 +31,7 @@ public class TemptressHandjob extends Handjob {
     public boolean resolve(Combat c, Character target) {
         int m = 7 + Global.random(getSelf().get(Attribute.Technique) / 2);
 
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (!target.body.getRandomCock().isReady(target)) {
                 m -= 7;
                 target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandomCock(), m, c, this);
@@ -66,27 +69,27 @@ public class TemptressHandjob extends Handjob {
             case miss:
                 return String.format("%s down to %s groin, but %s pulls %s hips back.",
                                 getSelf().subjectAction("reach", "reaches"), target.nameOrPossessivePronoun(),
-                                target.pronoun(), target.possessivePronoun());
+                                target.pronoun(), target.possessiveAdjective());
             case weak:
-                return String.format("%s %s limp %s and %s it expertly, but it remains flaccid despite %s best efforts",
-                                getSelf().subjectAction("grab", "grabs"), target.nameOrPossessivePronoun(),
-                                target.body.getRandomCock().describe(target), getSelf().action("fondle", "fondles"),
-                                getSelf().possessivePronoun());
+                return String.format("%s %s limp %s and %s it expertly, but it remains flaccid despite %s best efforts.",
+                                getSelf().subjectAction("grab"), target.nameOrPossessivePronoun(),
+                                target.body.getRandomCock().describe(target), getSelf().action("fondle"),
+                                getSelf().possessiveAdjective());
             case special:
                 return String.format(
                                 "%s %s limp %s and %s it expertly, and it grows fully hard under %s skilled touch.",
-                                getSelf().subjectAction("grab", "grabs"), target.nameOrPossessivePronoun(),
-                                target.body.getRandomCock().describe(target), getSelf().action("massage", "massages"),
-                                getSelf().possessivePronoun());
+                                getSelf().subjectAction("grab"), target.nameOrPossessivePronoun(),
+                                target.body.getRandomCock().describe(target), getSelf().action("massage"),
+                                getSelf().possessiveAdjective());
             default: // should be Result.normal
                 // already hard
                 switch (damage) {
                     case 0:
                         return String.format(
                                         "%s hold of %s %s and %s %s fingers over it briskly, hitting all the right spots.",
-                                        getSelf().subjectAction("take", "takes"), target.nameOrPossessivePronoun(),
-                                        target.body.getRandomCock().describe(target), getSelf().action("run", "runs"),
-                                        getSelf().possessivePronoun());
+                                        getSelf().subjectAction("take"), target.nameOrPossessivePronoun(),
+                                        target.body.getRandomCock().describe(target), getSelf().action("run"),
+                                        getSelf().possessiveAdjective());
                     case 1:
                         return String.format(
                                         "%s hold on %s %s tightens, and where once there were gentle touches there are now firm jerks.",

@@ -1,6 +1,7 @@
 package nightgames.stance;
 
 import nightgames.characters.Character;
+import nightgames.combat.Combat;
 
 public class Mount extends AbstractFacingStance {
 
@@ -9,11 +10,13 @@ public class Mount extends AbstractFacingStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You're on top of " + bottom.name() + ".";
         } else {
-            return top.name() + " is straddling you, with her enticing breasts right in front of you.";
+            return String.format("%s straddling %s, with %s enticing breasts right in front of %s.",
+                            top.subjectAction("are", "is"), bottom.nameDirectObject(),
+                            top.possessiveAdjective(), bottom.directObject());
         }
     }
 
@@ -30,11 +33,11 @@ public class Mount extends AbstractFacingStance {
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
-    public boolean kiss(Character c) {
+    public boolean kiss(Character c, Character target) {
         return true;
     }
 
@@ -55,7 +58,7 @@ public class Mount extends AbstractFacingStance {
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
@@ -64,13 +67,13 @@ public class Mount extends AbstractFacingStance {
     }
 
     @Override
-    public boolean feet(Character c) {
-        return false;
+    public boolean feet(Character c, Character target) {
+        return target == bottom && c != top && c != bottom;
     }
 
     @Override
-    public boolean oral(Character c) {
-        return false;
+    public boolean oral(Character c, Character target) {
+        return target == bottom && c != top && c != bottom;
     }
 
     @Override
@@ -96,5 +99,10 @@ public class Mount extends AbstractFacingStance {
     @Override
     public int dominance() {
         return 2;
+    }
+
+    @Override
+    public int distance() {
+        return 1;
     }
 }

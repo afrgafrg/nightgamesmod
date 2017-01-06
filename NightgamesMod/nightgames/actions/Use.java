@@ -7,9 +7,6 @@ import nightgames.status.Buzzed;
 import nightgames.status.Oiled;
 
 public class Use extends Action {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6212525023016041538L;
     private Item item;
 
@@ -27,7 +24,7 @@ public class Use extends Action {
 
     @Override
     public boolean usable(Character user) {
-        return user.has(item);
+        return user.has(item) && !user.bound();
     }
 
     @Override
@@ -37,7 +34,7 @@ public class Use extends Action {
                 Global.gui().message(
                                 "You cover yourself in slick oil. It's a weird feeling, but it should make it easier to escape from a hold.");
             }
-            user.add(new Oiled(user));
+            user.addNonCombat(new Oiled(user));
             user.consume(Item.Lubricant, 1);
             return Movement.oil;
         } else if (item == Item.EnergyDrink) {
@@ -52,7 +49,7 @@ public class Use extends Action {
             if (user.human()) {
                 Global.gui().message("You pop open a beer and chug it down, feeling buzzed and a bit slugish.");
             }
-            user.add(new Buzzed(user));
+            user.addNonCombat(new Buzzed(user));
             user.consume(Item.Beer, 1);
             return Movement.beer;
         }

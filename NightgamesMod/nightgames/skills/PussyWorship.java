@@ -7,19 +7,23 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 
 public class PussyWorship extends Skill {
 
     public PussyWorship(Character self) {
         super("Pussy Worship", self);
+        addTag(SkillTag.usesMouth);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.worship);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return target.crotchAvailable() && target.hasDick() && c.getStance().oral(getSelf())
+        return target.crotchAvailable() && target.hasDick() && c.getStance().oral(getSelf(), target)
                         && c.getStance().front(getSelf()) && getSelf().canAct()
-                        && !c.getStance().vaginallyPenetrated(target);
+                        && !c.getStance().vaginallyPenetrated(c, target);
     }
 
     @Override
@@ -60,11 +64,11 @@ public class PussyWorship extends Skill {
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
         Optional<BodyFetish> fetish = getSelf().body.getFetish("pussy");
-        return fetish.isPresent() && fetish.get().magnitude >= .5;
+        return user.isPetOf(target) || (fetish.isPresent() && fetish.get().magnitude >= .5);
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return 150;
     }
 
@@ -97,10 +101,10 @@ public class PussyWorship extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Global.format(
-                        "{self:subject} ecstatically crawls to you on {self:possessive} knees and attaches {self:possessive} {self:body-part:mouth} to "
-                                        + "{other:possessive} {other:body-part:pussy} while holding onto your legs. {self:SUBJECT} carefully takes a few licks of {other:possessive} slit before "
-                                        + "diving right in with her tongue to eat you out. Minutes pass and {self:subject} continues {self:possessive} attack on your cunt while idly playing with "
-                                        + "{self:reflective}. Feeling a bit too good, you manage to push {self:name-do} away from your sensitive womanhood lest she makes you cum accidentally.",
+                        "{self:subject} ecstatically crawls to {other:name-do} on {self:possessive} knees and attaches {self:possessive} {self:body-part:mouth} to "
+                                        + "{other:possessive} {other:body-part:pussy} while holding onto {other:possessive} legs. {self:SUBJECT} carefully takes a few licks of {other:possessive} slit before "
+                                        + "diving right in with {self:possessive} tongue to eat {other:name-do} out. Minutes pass and {self:subject} continues {self:possessive} attack on {other:name-possessive} cunt while idly playing with "
+                                        + "{self:reflective}. Feeling a bit too good, {other:pronoun-action:manage|manages} to push {self:name-do} away from {other:possessive} sensitive womanhood lest {self:pronoun} makes {other:direct-object} cum accidentally.",
                         getSelf(), target);
     }
 

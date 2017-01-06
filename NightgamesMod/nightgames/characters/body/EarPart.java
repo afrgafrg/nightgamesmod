@@ -8,8 +8,8 @@ import nightgames.combat.Combat;
 import nightgames.global.Global;
 
 public enum EarPart implements BodyPart, BodyPartMod {
-    pointed("pointed ", .2, 1.2, 1),
-    cat("cat ", .4, 1.5, 1.5),
+    pointed("pointed ", .1, 1.2, 1),
+    cat("cat ", .15, 1.5, 1.5),
     normal("normal ", 0, 1, 1);
 
     public String desc;
@@ -25,13 +25,18 @@ public enum EarPart implements BodyPart, BodyPartMod {
     }
 
     @Override
+    public String canonicalDescription() {
+        return desc + "ears";
+    }
+
+    @Override
     public void describeLong(StringBuilder b, Character c) {
         switch (this) {
             case cat:
-                b.append("Cute " + fullDescribe(c) + " tops " + c.possessivePronoun() + " head.");
+                b.append("Cute " + fullDescribe(c) + " tops " + c.possessiveAdjective() + " head.");
                 break;
             default:
-                b.append(Global.capitalizeFirstLetter(fullDescribe(c)) + " frames " + c.possessivePronoun() + " face.");
+                b.append(Global.capitalizeFirstLetter(fullDescribe(c)) + " frames " + c.possessiveAdjective() + " face.");
         }
     }
 

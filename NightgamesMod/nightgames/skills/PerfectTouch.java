@@ -15,7 +15,7 @@ public class PerfectTouch extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return c.getStance().mobile(getSelf()) && !target.torsoNude() && !c.getStance().prone(getSelf())
-                        && getSelf().canAct() && !c.getStance().connected();
+                        && getSelf().canAct() && !c.getStance().connected(c);
     }
 
     @Override
@@ -25,21 +25,17 @@ public class PerfectTouch extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (getSelf().human()) {
                 c.write(getSelf(), deal(c, 0, Result.normal, target));
-                c.write(target, target.nakedLiner(c));
-            } else if (target.human()) {
+                c.write(target, target.nakedLiner(c, target));
+            } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
             target.undress(c);
             target.emote(Emotion.nervous, 10);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -61,9 +57,9 @@ public class PerfectTouch extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return Math.round(Math.max(Math.min(150,
-                        2.5f * (getSelf().get(Attribute.Cunning) - c.getOther(getSelf()).get(Attribute.Cunning)) + 65),
+                        2.5f * (getSelf().get(Attribute.Cunning) - c.getOpponent(getSelf()).get(Attribute.Cunning)) + 65),
                         40));
     }
 
@@ -87,12 +83,20 @@ public class PerfectTouch extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name()
-                            + " lunges toward you, but you catch her hands before she can get ahold of your clothes.";
+            return String.format("%s lunges toward %s, but %s %s %s hands"
+                            + " before %s can get ahold of %s clothes.",
+                            getSelf().subject(), target.nameDirectObject(),
+                            target.pronoun(), target.action("catch"),
+                            target.possessiveAdjective(), getSelf().pronoun(),
+                            target.possessiveAdjective());
         } else {
-            return getSelf().name()
-                            + " lunges towards you, but dodges away without hitting you. She tosses aside a handful of clothes, at which point you realize you're "
-                            + "naked. How the hell did she manage that?";
+            return String.format("%s lunges towards %s, but dodges away without hitting %s. "
+                            + "%s tosses aside a handful of clothes, "
+                            + "at which point %s %s %s "
+                            + "naked. How the hell did %s manage that?",
+                            getSelf().subject(), target.nameDirectObject(), target.directObject(),
+                            getSelf().subject(), target.subjectAction("realize"), target.pronoun(),
+                            target.action("are", "is"), getSelf().pronoun());
         }
 
     }

@@ -9,14 +9,19 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 
 public class Bound extends Status {
-    private float toughness;
+    protected float toughness;
     private String binding;
 
     public Bound(Character affected, float dc, String binding) {
-        super("Bound", affected);
+        this("Bound", affected, dc, binding);
+    }
+
+    public Bound(String type, Character affected, float dc, String binding) {
+        super(type, affected);
         toughness = dc;
         this.binding = binding;
         flag(Stsflag.bound);
+        flag(Stsflag.debuff);
     }
 
     @Override
@@ -29,8 +34,13 @@ public class Bound extends Status {
         if (affected.human()) {
             return "Your hands are bound by " + binding + ".";
         } else {
-            return "Her hands are restrained by " + binding + ".";
+            return affected.possessiveAdjective() + " hands are restrained by " + binding + ".";
         }
+    }
+
+    @Override
+    public String getVariant() {
+        return binding;
     }
 
     @Override
@@ -82,11 +92,13 @@ public class Bound extends Status {
 
     @Override
     public void struggle(Character self) {
-        if (toughness > 50) {
-            toughness = Math.max(Math.round(toughness * .33f), 25);
-        } else {
-            toughness = Math.round(toughness * .5f);
-        }
+        int struggleAmount = 2 + (self.getLevel() + self.get(Attribute.Power) + self.get(Attribute.Cunning)) / 15;
+        toughness = Math.max(toughness - struggleAmount, 0);
+    }
+
+    @Override
+    public boolean lingering() {
+        return false;
     }
 
     @Override

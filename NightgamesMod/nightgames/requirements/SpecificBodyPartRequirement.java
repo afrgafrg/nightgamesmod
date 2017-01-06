@@ -6,7 +6,7 @@ import nightgames.combat.Combat;
 
 /**
  * Returns true if character self has a particular body part.
- * <p>
+ * <br/><br/>
  * This is a more specific requirements than BodyPartRequirement.
  */
 public class SpecificBodyPartRequirement extends BaseRequirement {
@@ -19,5 +19,9 @@ public class SpecificBodyPartRequirement extends BaseRequirement {
     @Override
     public boolean meets(Combat c, Character self, Character other) {
         return self.body.contains(part);
+    }
+    
+    public BodyPart getPart() {
+        return part;
     }
 }

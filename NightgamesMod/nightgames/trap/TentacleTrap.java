@@ -5,17 +5,18 @@ import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
 import nightgames.global.Global;
 import nightgames.items.Item;
+import nightgames.status.Flatfooted;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Oiled;
 
-public class TentacleTrap implements Trap {
-    private Character owner;
+public class TentacleTrap extends Trap {
 
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
+    public TentacleTrap() {
+        this(null);
+    }
+    
+    public TentacleTrap(Character owner) {
+        super("Tentacle Trap", owner);
     }
 
     @Override
@@ -36,9 +37,10 @@ public class TentacleTrap implements Trap {
                                 + "back into the floor. She'll left shivering, sticky, and unsatisfied. In effect, she's already defeated.");
             }
             target.tempt(target.getArousal().max());
+            target.getWillpower().set(target.getWillpower().max() / 3);;
             target.calm(null, 1);
-            target.add(new Oiled(target));
-            target.add(new Hypersensitive(target));
+            target.addNonCombat(new Oiled(target));
+            target.addNonCombat(new Hypersensitive(target));
             target.location().opportunity(target, this);
         } else {
             if (target.human()) {
@@ -52,11 +54,6 @@ public class TentacleTrap implements Trap {
                                                 + "they disappear, leaving her slightly bewildered.");
             }
         }
-    }
-
-    @Override
-    public boolean decoy() {
-        return false;
     }
 
     @Override
@@ -78,18 +75,9 @@ public class TentacleTrap implements Trap {
     }
 
     @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
+        victim.addNonCombat(new Flatfooted(victim, 1));
         enc.engage(new Combat(attacker, victim, attacker.location()));
         attacker.location().remove(this);
-    }
-
-    @Override
-    public String toString() {
-        return "Tentacle Trap";
     }
 }

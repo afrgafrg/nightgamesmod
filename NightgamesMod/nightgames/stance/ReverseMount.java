@@ -1,6 +1,7 @@
 package nightgames.stance;
 
 import nightgames.characters.Character;
+import nightgames.combat.Combat;
 
 public class ReverseMount extends AbstractBehindStance {
     public ReverseMount(Character top, Character bottom) {
@@ -9,31 +10,34 @@ public class ReverseMount extends AbstractBehindStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You are straddling " + bottom.name() + ", with your back to her.";
         } else {
-            return top.name() + " is sitting on your chest, facing your groin.";
+            return String.format("%s is sitting on %s chest, facing %s groin.",
+                            top.subject(), bottom.nameOrPossessivePronoun(), bottom.possessiveAdjective());
         }
     }
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
     public String image() {
-        if (bottom.hasPussy()) {
-            return "mount_m.jpg";
+        if (bottom.hasDick() && !top.hasDick()) {
+            return "rmount_f.jpg";
+        } else if (!bottom.hasDick() && !top.hasDick()) {
+            return "rmount_ff.jpg";
         } else {
-            return "mount_f.jpg";
+            return "rmount_m.jpg";
         }
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return false;
+    public boolean kiss(Character c, Character target) {
+        return c != top && c != bottom;
     }
 
     @Override
@@ -48,12 +52,12 @@ public class ReverseMount extends AbstractBehindStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return false;
+        return c != top && c != bottom;
     }
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return true;
     }
 
     @Override
@@ -62,13 +66,13 @@ public class ReverseMount extends AbstractBehindStance {
     }
 
     @Override
-    public boolean feet(Character c) {
-        return c == top;
+    public boolean feet(Character c, Character target) {
+        return target == bottom;
     }
 
     @Override
-    public boolean oral(Character c) {
-        return c == top;
+    public boolean oral(Character c, Character target) {
+        return target == bottom;
     }
 
     @Override
@@ -94,5 +98,10 @@ public class ReverseMount extends AbstractBehindStance {
     @Override
     public int dominance() {
         return 2;
+    }
+    
+    @Override
+    public int distance() {
+        return 1;
     }
 }

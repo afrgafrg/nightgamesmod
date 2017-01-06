@@ -2,9 +2,10 @@ package nightgames.skills;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Behind;
 import nightgames.stance.Stance;
 import nightgames.status.addiction.Addiction;
@@ -14,6 +15,8 @@ public class Cowardice extends Skill {
 
     public Cowardice(Character self) {
         super("Cowardice", self);
+        addTag(SkillTag.suicidal);
+        addTag(SkillTag.positioning);
     }
 
     @Override
@@ -33,11 +36,12 @@ public class Cowardice extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        c.setStance(new Behind(target, getSelf()));
-        if (getSelf().human()) {
+        c.setStance(new Behind(target, getSelf()), target, true);
+        if (getSelf().human() && getSelf() instanceof Player) {
+            Player player = (Player) getSelf();
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-            if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                Global.getPlayer().unaddictCombat(AddictionType.MIND_CONTROL, 
+            if (player.checkAddiction(AddictionType.MIND_CONTROL, target)) {
+                player.unaddictCombat(AddictionType.MIND_CONTROL, 
                                 target, Addiction.LOW_INCREASE, c);
                 c.write(getSelf(), "Acting submissively voluntarily reduces Mara's control over you.");
             }
@@ -54,7 +58,7 @@ public class Cowardice extends Skill {
 
     @Override
     public Tactics type(Combat c) {
-        return Tactics.negative;
+        return Tactics.misc;
     }
 
     @Override
@@ -64,8 +68,9 @@ public class Cowardice extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name() + " tries to sprint away, but you quickly grab " + getSelf().directObject()
-                        + " from behind before " + getSelf().pronoun() + " can escape.";
+        return String.format("%s tries to sprint away, but %s quickly %s %s from behind before %s can escape", 
+                            getSelf().subject(), target.subject(), target.action("grab"), 
+                            getSelf().directObject(), getSelf().pronoun());
     }
 
 }

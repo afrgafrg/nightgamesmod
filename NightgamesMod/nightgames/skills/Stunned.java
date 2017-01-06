@@ -20,9 +20,9 @@ public class Stunned extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
+        } else if (c.shouldPrintReceive(target, c)) {
             if (Global.random(3) >= 2) {
-                c.write(getSelf(), getSelf().stunLiner(c));
+                c.write(getSelf(), getSelf().stunLiner(c, target));
             } else {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
@@ -58,7 +58,8 @@ public class Stunned extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name() + " is on the floor, trying to catch her breath.";
+        return String.format("%s is on the floor, trying to catch %s breath.",
+                        getSelf().subject(), getSelf().possessiveAdjective());
     }
 
     @Override

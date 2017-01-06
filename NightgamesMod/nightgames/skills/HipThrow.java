@@ -7,12 +7,18 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 import nightgames.status.Falling;
 
 public class HipThrow extends Skill {
 
     public HipThrow(Character self) {
         super("Hip Throw", self);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.knockdown);
     }
 
     @Override
@@ -24,7 +30,7 @@ public class HipThrow extends Skill {
     public boolean usable(Combat c, Character target) {
         return !target.wary() && c.getStance().mobile(getSelf()) && c.getStance().mobile(target)
                         && !c.getStance().prone(getSelf()) && !c.getStance().prone(target) && getSelf().canAct()
-                        && !c.getStance().connected();
+                        && !c.getStance().connected(c);
     }
 
     @Override
@@ -34,22 +40,13 @@ public class HipThrow extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().check(Attribute.Power, target.knockdownDC())) {
-            int m = Global.random(6) + target.get(Attribute.Power) / 2;
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, m, Result.normal, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, m, Result.normal, target));
-            }
-            target.pain(c, m);
+        if (getSelf().check(Attribute.Power, target.knockdownDC() - target.get(Attribute.Cunning) / 2)) {
+            writeOutput(c, Result.normal, target);
+            target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(10, 16)));
             target.add(c, new Falling(target));
             target.emote(Emotion.angry, 5);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -79,12 +76,23 @@ public class HipThrow extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return "You see a momentary weakness in " + getSelf().name()
-                            + "'s guard and lunge toward her to take advantage of it. The next thing you know, you're hitting the floor behind her.";
+            return String.format("%s a momentary weakness in %s guard and %s toward %s to "
+                            + "take advantage of it. The next thing %s, %s %s "
+                            + "hitting the floor behind %s.",
+                            getSelf().subjectAction("see"), target.nameOrPossessivePronoun(),
+                            getSelf().action("lunge"), target.directObject(),
+                            getSelf().subjectAction("know"), getSelf().pronoun(),
+                            getSelf().action("are", "is"), target.directObject());
         } else {
-            return getSelf().name()
-                            + " grabs your arm and pulls you off balance, but you manage to plant your foot behind her leg sweep. This gives you a more stable stance than her and she has "
-                            + "to break away to stay on her feet.";
+            return String.format("%s grabs %s arm and pulls %s off balance, but %s %s"
+                            + " to plant %s foot behind %s leg sweep. This gives %s a more"
+                            + " stable stance than %s and %s has "
+                            + "to break away to stay on %s feet.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.directObject(),
+                            target.pronoun(), target.action("manage"), target.possessiveAdjective(),
+                            getSelf().possessiveAdjective(), target.nameDirectObject(),
+                            getSelf().nameDirectObject(), getSelf().pronoun(),
+                            getSelf().possessiveAdjective());
         }
     }
 

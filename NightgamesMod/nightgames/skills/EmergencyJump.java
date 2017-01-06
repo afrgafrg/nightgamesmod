@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Behind;
 import nightgames.status.Primed;
 
@@ -12,6 +13,8 @@ public class EmergencyJump extends Skill {
 
     public EmergencyJump(Character self) {
         super("Emergency Jump", self);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.escaping);
     }
 
     @Override
@@ -26,9 +29,9 @@ public class EmergencyJump extends Skill {
                         && !c.getStance()
                              .mobile(getSelf())
                         && !c.getStance()
-                             .penetrated(getSelf())
+                             .penetrated(c, getSelf())
                         && !c.getStance()
-                             .penetrated(target))
+                             .penetrated(c, target))
                         || getSelf().bound()) && !getSelf().stunned() && !getSelf().distracted()
                         && Primed.isPrimed(getSelf(), 2);
     }
@@ -40,9 +43,9 @@ public class EmergencyJump extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        getSelf().add(new Primed(getSelf(),-2));
+        getSelf().add(c, new Primed(getSelf(),-2));
         getSelf().free();
-        c.setStance(new Behind(getSelf(),target));
+        c.setStance(new Behind(getSelf(),target), getSelf(), true);
         if(getSelf().human()){
             c.write(getSelf(),deal(c,0,Result.normal,target));
         }
@@ -74,8 +77,9 @@ public class EmergencyJump extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format(
-                        "You thought you had %s right where you want %s, but %s seems to vanish completely and escape.",
-                        getSelf().name(), getSelf().directObject(), getSelf().pronoun());
+                        "%s thought %s had %s right where %s wanted %s, but %s seems to vanish completely and escape.",
+                        target.subject(), target.pronoun(), getSelf().name(), 
+                        target.pronoun(), getSelf().directObject(), getSelf().pronoun());
     }
 
 }

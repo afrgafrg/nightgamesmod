@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
@@ -23,7 +24,7 @@ public class DivineCharge extends Status {
 
     private String getPart(Combat c) {
         boolean penetrated = c.getStance()
-                              .vaginallyPenetrated(affected);
+                              .vaginallyPenetrated(c, affected);
         boolean inserted = c.getStance()
                             .inserted(affected);
         String part = "body";
@@ -41,8 +42,9 @@ public class DivineCharge extends Status {
 
     @Override
     public void tick(Combat c) {
-        if (!c.getStance().vaginallyPenetrated(affected) && !(affected.has(Trait.zealinspiring) && !Global.getPlayer()
-                        .getAddiction(AddictionType.ZEAL).map(Addiction::isInWithdrawal).orElse(false))) {
+        Character opponent = c.getOpponent(affected);
+        if (!c.getStance().vaginallyPenetrated(c, affected) && opponent.human() && !(affected.has(Trait.zealinspiring)
+                        && !((Player)opponent).getAddiction(AddictionType.ZEAL).map(Addiction::isInWithdrawal).orElse(false))) {
             magnitude = magnitude / 2;
             c.write(affected, "The holy energy seeps out of " + affected.getName() + ".");
             if (magnitude < .05f)
@@ -54,7 +56,7 @@ public class DivineCharge extends Status {
     public String initialMessage(Combat c, boolean replaced) {
         if (!replaced) {
             return String.format("%s concentrating divine energy in %s %s.\n", affected.subjectAction("are", "is"),
-                            affected.possessivePronoun(), getPart(c));
+                            affected.possessiveAdjective(), getPart(c));
         }
         return "";
     }

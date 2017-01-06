@@ -10,11 +10,13 @@ import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
+import nightgames.nskills.tags.SkillTag;
 
 public class Tear extends Skill {
 
     public Tear(Character self) {
         super("Tear Clothes", self);
+        addTag(SkillTag.stripping);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class Tear extends Skill {
         boolean isMedical = (getSelf().get(Attribute.Medicine) >= 12 && getSelf().has(Item.MedicalSupplies, 1));
         if (c.getStance().reachTop(getSelf()) && !target.getOutfit().slotEmpty(ClothingSlot.top)) {
             Clothing article = target.getOutfit().getTopOfSlot(ClothingSlot.top);
-            if (!article.is(ClothingTrait.indestructible) && isMedical
+            if (isMedical && !article.is(ClothingTrait.indestructible)
                             && (((getSelf().check(Attribute.Power,
                                             article.dc() + (target.getStamina().percent()
                                                             - (target.getArousal().percent()) / 4)
@@ -53,14 +55,14 @@ public class Tear extends Skill {
                     c.write(getSelf(),
                                     Global.format("Grabbing your scalpel, you jump forward. The sharp blade makes quick work of {other:possessive}} clothing and your skill with the blade allows you avoid harming them completely. {other:SUBJECT} can only look at you with shock as {other:possessive} shredded clothes float to the ground between you.",
                                                     getSelf(), target));
-                } else if (target.human()) {
+                } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(),
-                                    Global.format("{self:SUBJECT} leaps forward. {self:POSSESSIVE} hand is a blur but you spot the glint of steel in them. Reflexively, you cover yourself with your arms to prevent as much damage as possible. When nothing happens you open your eyes to see {self:subject} grinning at you, a scalpel still in {self:POSSESSIVE} hands. Looking down you see that some of your clothes have been cut to ribbons!",
+                                    Global.format("{self:SUBJECT} leaps forward. {self:POSSESSIVE} hand is a blur but {other:subject-action:spot|spots} the glint of steel in them. Reflexively, {other:pronoun-action:cover|covers} {other:reflective} with {other:possessive} arms to prevent as much damage as possible. When nothing happens {other:subject-action:open|opens} {other:possessive} eyes to see {self:subject} grinning at {other:direct-object}, a scalpel still in {self:possessive} hands. Looking down {other:pronoun-action:see|sees} that some of {other:possessive} clothes have been cut to ribbons!",
                                                     getSelf(), target));
                 }
                 target.shred(ClothingSlot.top);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target.nakedLiner(c));
+                    c.write(getSelf(), target.nakedLiner(c, target));
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
             } else if (!article.is(ClothingTrait.indestructible) && getSelf().get(Attribute.Animism) >= 12
@@ -72,14 +74,18 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You channel your animal spirit and shred " + target.name() + "'s "
                                     + article.getName() + " with claws you don't actually have.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " lunges towards you and rakes her nails across your "
-                                    + article.getName() + ", shredding the garment. That shouldn't be possible. Her "
-                                    + "nails are not that sharp, and if they were, you surely wouldn't have gotten away unscathed.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s lunges towards %s and rakes %s nails across %s %s, "
+                                    + "shredding the garment. That shouldn't be possible. %s "
+                                    + "nails are not that sharp, and if they were, %s surely wouldn't have gotten away unscathed.",
+                                    getSelf().subject(), target.nameDirectObject(), getSelf().possessiveAdjective(),
+                                    target.possessiveAdjective(), article.getName(),
+                                    Global.capitalizeFirstLetter(getSelf().pronoun()),
+                                    target.nameDirectObject()));
                 }
                 target.shred(ClothingSlot.top);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target.nakedLiner(c));
+                    c.write(getSelf(), target.nakedLiner(c, target));
                 }
             } else if (!article.is(ClothingTrait.indestructible)
                             && getSelf().check(Attribute.Power, article.dc()
@@ -88,20 +94,21 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), target.name() + " yelps in surprise as you rip her " + article.getName()
                                     + " apart.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " violently rips your " + article.getName() + " off.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s violently rips %s %s off.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
                 target.shred(ClothingSlot.top);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target, target.nakedLiner(c));
+                    c.write(target, target.nakedLiner(c, target));
                 }
             } else if (isMedical) {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You try to cut apart " + target.name() + "'s " + article.getName()
                                     + ", but the material is more durable than you expected.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " tries to cut your " + article.getName()
-                                    + ", but fails to remove them.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s tries to cut %s %s, but fails to remove them.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
                 return false;
@@ -109,56 +116,59 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You try to tear apart " + target.name() + "'s " + article.getName()
                                     + ", but the material is more durable than you expected.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " yanks on your " + article.getName()
-                                    + ", but fails to remove it.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s yanks on %s %s, but fails to remove it.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
             }
         } else if (!target.getOutfit().slotEmpty(ClothingSlot.bottom)) {
             Clothing article = target.getOutfit().getTopOfSlot(ClothingSlot.bottom);
-            if (!article.is(ClothingTrait.indestructible) && isMedical
-                            && (getSelf().check(Attribute.Power,
-                                            article.dc() + (target.getStamina().percent()
-                                                            - (target.getArousal().percent()) / 4)
-                                            + getSelf().get(Attribute.Medicine) * 4))
-                            || !target.canAct()) {
+            if (isMedical && !article.is(ClothingTrait.indestructible)
+                          && ((getSelf().check(Attribute.Power, article.dc() + (target.getStamina().percent() - (target.getArousal().percent()) / 4) + getSelf().get(Attribute.Medicine) * 4))
+                            || !target.canAct())) {
                 if (getSelf().human()) {
                     c.write(getSelf(),
                                     Global.format("Grabbing your scalpel, you jump forward. The sharp blade makes quick work of {other:possessive} clothing and your skill with the blade allows you avoid harming them completely. {other:SUBJECT} can only look at you with shock as {other:possessive} shredded clothes float to the ground between you.",
                                                     getSelf(), target));
-                } else if (target.human()) {
+                } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(),
-                                    Global.format("{self:SUBJECT} leaps forward. {self:POSSESSIVE} hand is a blur but you spot the glint of steel in them. Reflexively, you cover yourself with your arms to prevent as much damage as possible. When nothing happens you open your eyes to see {self:subject} grinning at you, a scalpel still in {self:POSSESSIVE} hands. Looking down you see that some of your clothes have been cut to ribbons!",
+                                    Global.format("{self:SUBJECT} leaps forward. {self:possessive} hand is a blur but {other:subject-action:spot|spots} the glint of steel in them. Reflexively, {other:pronoun-action:cover|covers} {other:reflective} with {other:possessive} arms to prevent as much damage as possible. When nothing happens {other:subject-action:open|opens} {other:possessive} eyes to see {self:subject} grinning at {other:direct-object}, a scalpel still in {self:possessive} hands. Looking down {other:pronoun-action:see|sees} that some of {other:possessive} clothes have been cut to ribbons!",
                                                     getSelf(), target));
                 }
                 target.shred(ClothingSlot.bottom);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target.nakedLiner(c));
+                    c.write(getSelf(), target.nakedLiner(c, target));
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
             } else if (!article.is(ClothingTrait.indestructible) && getSelf().get(Attribute.Animism) >= 12
-                            && getSelf().check(Attribute.Power,
+                            && (getSelf().check(Attribute.Power,
                                             article.dc() + (target.getStamina().percent()
                                                             - (target.getArousal().percent()) / 4)
                                             + getSelf().get(Attribute.Animism) * getSelf().getArousal().percent() / 100)
-                            || !target.canAct()) {
+                            || !target.canAct())) {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You channel your animal spirit and shred " + target.name() + "'s "
                                     + article.getName() + " with claws you don't actually have.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " lunges towards you and rakes her nails across your "
-                                    + article.getName() + ", shredding the garment. That shouldn't be possible. Her "
-                                    + "nails are not that sharp, and if they were, you surely wouldn't have gotten away unscathed.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s lunges towards %s and rakes %s nails across %s %s, "
+                                    + "shredding the garment. That shouldn't be possible. %s "
+                                    + "nails are not that sharp, and if they were, %s surely wouldn't have gotten away unscathed.",
+                                    getSelf().subject(), target.nameDirectObject(), getSelf().possessiveAdjective(),
+                                    target.possessiveAdjective(), article.getName(),
+                                    Global.capitalizeFirstLetter(getSelf().pronoun()),
+                                    target.nameDirectObject()));
                 }
                 target.shred(ClothingSlot.bottom);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target, target.nakedLiner(c));
+                    c.write(target, target.nakedLiner(c, target));
                 }
                 if (target.human() && target.crotchAvailable() && target.hasDick()) {
                     if (target.getArousal().get() >= 15) {
-                        c.write("Your boner springs out, no longer restrained by your pants.");
+                        c.write(getSelf(), String.format("%s boner springs out, no longer restrained by %s pants.",
+                                        target.nameOrPossessivePronoun(), target.possessiveAdjective()));
                     } else {
-                        c.write(getSelf().name() + " giggles as your flaccid dick is exposed");
+                        c.write(getSelf(), String.format("%s giggles as %s flaccid dick is exposed.",
+                                        getSelf().subject(), target.nameOrPossessivePronoun()));
                     }
                 }
                 target.emote(Emotion.nervous, 10);
@@ -169,18 +179,21 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), target.name() + " yelps in surprise as you rip her " + article.getName()
                                     + " apart.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " violently rips your " + article.getName() + " off.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s violently rips %s %s off.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
                 target.shred(ClothingSlot.bottom);
                 if (getSelf().human() && target.mostlyNude()) {
-                    c.write(target, target.nakedLiner(c));
+                    c.write(target, target.nakedLiner(c, target));
                 }
                 if (target.human() && target.crotchAvailable()) {
                     if (target.getArousal().get() >= 15) {
-                        c.write("Your boner springs out, no longer restrained by your pants.");
+                        c.write(getSelf(), String.format("%s boner springs out, no longer restrained by %s pants.",
+                                        target.nameOrPossessivePronoun(), target.possessiveAdjective()));
                     } else {
-                        c.write(getSelf().name() + " giggles as your flaccid dick is exposed");
+                        c.write(getSelf(), String.format("%s giggles as %s flaccid dick is exposed.",
+                                        getSelf().subject(), target.nameOrPossessivePronoun()));
                     }
                 }
                 target.emote(Emotion.nervous, 10);
@@ -188,9 +201,9 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You try to cut apart " + target.name() + "'s " + article.getName()
                                     + ", but the material is more durable than you expected.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " tries to cut your " + article.getName()
-                                    + ", but fails to remove them.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s tries to cut %s %s, but fails to remove them.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
                 return false;
@@ -198,9 +211,9 @@ public class Tear extends Skill {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You try to tear apart " + target.name() + "'s " + article.getName()
                                     + ", but the material is more durable than you expected.");
-                } else if (target.human()) {
-                    c.write(getSelf(), getSelf().name() + " yanks on your " + article.getName()
-                                    + ", but fails to remove them.");
+                } else if (c.shouldPrintReceive(target, c)) {
+                    c.write(getSelf(), String.format("%s yanks on %s %s, but fails to remove it.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
                 }
                 return false;
             }

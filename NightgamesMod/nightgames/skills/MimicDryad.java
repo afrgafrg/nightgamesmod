@@ -22,7 +22,7 @@ public class MimicDryad extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Slime) >= 10;
+        return user.human() && user.get(Attribute.Slime) >= 10;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MimicDryad extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
+        } else if (c.shouldPrintReceive(target, c)) {
             if (!target.is(Stsflag.blinded))
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             else 
@@ -48,6 +48,8 @@ public class MimicDryad extends Skill {
         getSelf().addTemporaryTrait(Trait.dryad, 10);
         getSelf().addTemporaryTrait(Trait.magicEyeFrenzy, 10);
         getSelf().addTemporaryTrait(Trait.frenzyingjuices, 10);
+        getSelf().addTemporaryTrait(Trait.RawSexuality, 10);
+        getSelf().addTemporaryTrait(Trait.temptingtits, 10);
         getSelf().body.temporaryAddOrReplacePartWithType(EarPart.pointed, 10);
         BreastsPart part = getSelf().body.getBreastsBelow(BreastsPart.h.size);
         if (part != null) {
@@ -77,7 +79,7 @@ public class MimicDryad extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Global.format("{self:NAME-POSSESSIVE} amorphous body quivers and collapses into a puddle. "
                         + "Starting from the center, the slime matter dyes itself green, transforming itself into a verdant emerald hue within seconds. "
-                        + "After reforming her features out of her slime, you see that {self:NAME} has taken on an appearance reminiscent of Rosea the dryad, "
+                        + "After reforming her features out of her slime, {other:subject-action:see|sees} that {self:NAME} has taken on an appearance reminiscent of Rosea the dryad, "
                         + "complete with a large slime-parody of a flower replacing where her usual vagina is.", getSelf(), target);
     }
 

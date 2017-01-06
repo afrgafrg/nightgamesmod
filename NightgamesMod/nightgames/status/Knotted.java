@@ -28,9 +28,9 @@ public class Knotted extends Status {
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         return String.format("The base of %s %s swells up, forming a tight seal within %s %s and keeping it inside.",
-                        opponent.nameOrPossessivePronoun(), c.getStance().insertedPartFor(opponent).describe(opponent),
+                        opponent.nameOrPossessivePronoun(), c.getStance().insertedPartFor(c, opponent).describe(opponent),
                         affected.nameOrPossessivePronoun(),
-                        c.getStance().insertablePartFor(affected).describe(affected));
+                        c.getStance().insertablePartFor(c, affected).describe(affected));
     }
 
     @Override
@@ -38,7 +38,8 @@ public class Knotted extends Status {
         if (affected.human()) {
             return opponent.nameOrPossessivePronoun() + " knotted dick is lodged inside of you, preventing escape.";
         } else {
-            return "The knot in you dick is keeping it fully entrenched within " + affected.name() + ".";
+            return "The knot in "+opponent.nameOrPossessivePronoun()+
+                            " dick is keeping it fully entrenched within " + affected.name() + ".";
         }
     }
 

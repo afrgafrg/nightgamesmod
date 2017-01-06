@@ -83,7 +83,6 @@ public class CombatStats {
         ((BasePersonality) ((NPC) c1).ai).character = (NPC) c1;
         ((BasePersonality) ((NPC) c2).ai).character = (NPC) c2;
         Combat cbt = new Combat(c1, c2, NULL_AREA);
-        cbt.automate();
         counter.incrementAndGet();
         synchronized (recordLock) {
             if (!cbt.winner.isPresent()) {
@@ -109,13 +108,7 @@ public class CombatStats {
 
     public static void main(String[] args) {
         new Global(true);
-        Global.newGame("Dummy");
-        Setup s1 = new Setup(1);
-        // new CombatStats(s1).test();
-
-        Setup s2 = new Setup(5);
-        // new CombatStats(s2).test();
-
+        Global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
         for (int i = 5; i < 75; i += 5) {
             Setup s3 = new Setup(i, new Reyka(), new Kat(), new Eve());
             new CombatStats(s3).test();
@@ -193,14 +186,14 @@ public class CombatStats {
                     c.ding();
                     Character partner;
                     do {
-                        partner = (Character) Global.pickRandom(combatants.toArray());
+                        partner = (Character) Global.pickRandom(combatants.toArray()).get();
                     } while (c == partner);
-                    Daytime.train(partner, c, (Attribute) Global.pickRandom(c.att.keySet().toArray()));
+                    Daytime.train(partner, c, (Attribute) Global.pickRandom(c.att.keySet().toArray()).get());
                 }
                 c.modMoney(level * 500);
                 Global.day = new Daytime(new Player("<player>"));
                 Global.day.advance(999);
-                Global.day.plan(true);
+                Global.day.plan();
             });
 
             return combatants;

@@ -9,10 +9,19 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.stance.StandingOver;
+import nightgames.status.Flatfooted;
 import nightgames.status.Winded;
 
-public class SpringTrap implements Trap {
-    private Character owner;
+public class SpringTrap extends Trap {
+    
+
+    public SpringTrap() {
+        this(null);
+    }
+    
+    public SpringTrap(Character owner) {
+        super("Spring Trap", owner);
+    }
 
     @Override
     public void trigger(Character target) {
@@ -26,14 +35,16 @@ public class SpringTrap implements Trap {
                                 + " right in the cooch. She eventually manages to extract the rope from between her legs "
                                 + "and collapses to the floor in pain.");
             }
+            int m = 50 + target.getLevel() * 5;
             if (target.has(ClothingTrait.armored)) {
-                target.pain(null, 3);
+                m /= 2;
+                target.pain(null, null, m);
             } else {
                 if (target.has(Trait.achilles)) {
-                    target.pain(null, 10);
+                    m += 20;
                 }
-                target.pain(null, 20);
-                target.add(new Winded(target));
+                target.pain(null, null, m);
+                target.addNonCombat(new Winded(target));
             }
             target.location().opportunity(target, this);
         } else if (target.human()) {
@@ -42,11 +53,6 @@ public class SpringTrap implements Trap {
                                             + "very unpleasant if you had kept walking.");
             target.location().remove(this);
         }
-    }
-
-    @Override
-    public boolean decoy() {
-        return false;
     }
 
     @Override
@@ -63,30 +69,15 @@ public class SpringTrap implements Trap {
     }
 
     @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Spring Trap";
-    }
-
-    @Override
     public boolean requirements(Character owner) {
         return owner.get(Attribute.Cunning) >= 10;
     }
 
     @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
+        victim.addNonCombat(new Flatfooted(victim, 1));
         enc.engage(new Combat(attacker, victim, attacker.location(), new StandingOver(attacker, victim)));
         attacker.location().remove(this);
     }
 
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
-    }
 }

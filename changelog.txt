@@ -1,3 +1,557 @@
+2.4.5.5.b
+GUI:
+- Redid the status panel a bit. The status panel should now scroll and the inventory was moved to its own window
+	- once again, stopgap solution
+
+2.4.5.5.a
+Minor:
+
+- Shortened some of the longer text choices as a stopgap measure to stop buttons from getting hidden.
+	- Will need to come back to this later for a real solution...
+
+2.4.5.5
+Bug fixes:
+- Fixed a crash bug with mind control
+- Fixed a crash bug with invitation
+	- (may be related to pets, but it may still show up. I changed it to display an error message instead of outright crashing)
+- Fixed fiery pussy making the owner of the dick hurt himself instead of the opponent hurting him
+- Fixed dirty fighter affecting self inflicted pain
+- Fixed willpower losses displaying for all NPCs when out of combat
+- Frottage and Ass fuck now requires being able to reach bottom
+- Facefuck and facesit now requires being able to reach top
+- Deflate knot now requires user to be able to respond
+- PC usage of smoke bomb is no longer free
+- NPCs now no longer summon a female imp when trying to summon a male one.
+	- Same with faeries
+
+Minor:
+- Eve prefers no cock mod now instead of primal. Not sure when this snuck in. Maybe in the next major release she'll get a custom one.
+- Made it more clear that pet's succubus pussies are supposed to share the stat gains with her master, not just buff the master.
+- Made incubus cock now drain willpower for the master as well
+- Made start configuration load flags as strings instead of flags
+	- (so now you can use the CHARACTER_NAMEDisabled flags with start configurations)
+
+2.4.5.4
+New:
+- Added some new threesome sex stances:
+	- XHF Daisy Chain (master fucking the target futa from behind with a cock and pet fucking target futa from the front with pussy)
+	- Reverse XHF Daisy Chain (pet fucking the target futa from behind with a cock and master fucking target futa from the front with pussy)
+	- FFX Trib (pet scissoring with the opponent while the master is holding her)
+- Added a "Struggle" action when you are bound outside of combat.
+- Added a minor new skill "Imaginary Bounds" that require 9 Hypnosis
+	- Most likely you wont see this skill at all, it's for future use
+- You can now summon both Male and Female versions of imps and faeries
+	- This was actually a bug fix, but I'll put it in new since people tend to skip over the bugs
+- Threesome skills now automatically strip off all of the pet's bottom clothing until his/her crotch is available
+- Added asshandler to the trait tree so you can actually get the later Fetish feats.
+
+Balance:
+- (Spoiler) Robo-web is now a binding. This is currently not in the game yet though, so still pending dndw' Mara changes.
+- Minor pets now cannot instantly vanquish human pets. They will now use their default tease skill upon "catching" them
+- Imps now get succubus pussy/incubus cock at level > 30
+- Changed how the Bound status works
+	- Struggling will no longer decrease the toughness by 50-66%
+		- Instead, it decreases toughness by 5 + your (cunning + power + level) / 20
+- Made traps actually scale with stats
+	- Most of them scale with Cunning and level, but some scale with arcane and/or dark
+
+Bug fixes:
+	- Fixed a ton of bugs with pets
+		- Angel now does not summon two of the same Apostles at once
+		- Actually gave non-human pets genitals so they can be used in threesomes
+		- Fixed thrust to use the right genitals when in threesomes
+		- Pets can no longer use Stand Up and when their master is in a dominant position.
+		- Fixed not being able to select ReverseThreesome
+			- For those curious, ReverseThreesome.copy was returning Threesome. GAH.
+		- Threesome skills can no longer be used when the target is mobile.
+		- Fixed some pets' skills so they don't just spam the same two skills over and over.
+		- Fixed the double penetration stance so the master can actually use anal thrusting skills.
+		- Fixed the spit roast and double pen images (They were swapped. Woops)
+	- Fixed text randomly disappearing/being blank when in encounters
+	- Fixed traps instantly unbinding you
+		- For those of you curious, the Bound status is non-lingering, so it gets removed immediately after application since it's a non-combat status...
+	- Trib can no longer be used while already scissoring
+	- Pussy grind no longer sets stance to Tribadism
+	- Fixed a crash bug when pets were vanquishing each other during skill usage
+	- Fixed some text issues.
+	- Added sub/dom bonuses to held oral and held paizuri stances, so they are no longer as attractive to characters with the submissive trait
+	- Made the autonomous pussy trait require having a pussy.
+	- Removed the skimpy trait from latex pants
+		- You were able to fuck with it on... which seems a bit weird
+	- Fixed a bug where the closet crashes if you rename Angel.
+	- Fixed a bug where the back button does not show up as <<<
+		- For those of you who are curious, since it was getting converted to html, <<< was getting treated as html tags... :|
+	- Fixed a bug where locator would display choices as "Start the match" instead of the character's names
+	- Fixed the fetish goblin using the wrong text display and not actually removing pets after vanquishing them.
+
+Minor:
+	- Added the ability to press up on the debug console to scroll through the command history
+	- Space bar will now automatically select Wait/Nothing in battle in addition to Next/Leave/Back outside of battle.
+
+2.4.5.3
+Bug fixes:
+- Fixed some more UI bugs and quirks
+	- Hopefully most of the buttons should be good now.
+- Fixed a crash bug that occurs if you rename Angel
+- Fixed a crash bug that can occur if Jewel wins while fucking someone with a strap-on
+- Made the "Airi has entered the game" message play only if she is not already a part of the game (basically any starts that include her but doesn't set the Airi flag...)
+- Changed Airi's transformation option choice from "Error" to "Transformation"
+
+Minor:
+- Changed "Pet Initiated Threesome" to only be usable when the stance has been in place for 2 or more turns.This hopefully stops the pet from preempting the master with a threesome prematurely.
+
+2.4.5.2
+Bug fixes:
+- Removed the "I LOVE RANDOM TEXT" from the item buttons that were used in testing... fuck.
+- Made the default closet UI size a bit smaller to make sure the buttons weren't getting cut off.
+
+Minor:
+- Changed the closet UI to use your entire body's attractiveness score instead of just the outfits.
+	- Trivia:
+		- Since beauty is in the eyes of the beholder... I had to make the attractiveness score based on a character's opinion. Who is Angel. 
+		- So yes, Angel's going to always judge your outfits. Hope you're not feeling shy.
+
+2.4.5.1
+Bug fixes:
+- Fixed a bug where leaving a choice prompt on the second page would make you unable to continue with no buttons appearing.
+- Fixed some word alignment issues
+- Fixed missing feat button tooltips
+- Word wrapped long button text to fix button crowding (sorry this may look kind of shitty right now, but it's the best I can do on short notice)
+
+2.4.5
+New:
+- Added a new skill Reverse Threesome which does exactly what the current threesome does (use pet's pussy if it exists to fuck the opponent).
+- Changed the Threesome skill to use the pet's dick if one exists to penetrate the opponent.
+- The 4 starting girls will now use their respective cock mods when they get to level 10 if they are already hermaphrodites
+- Reworked some of the UI. You can now filter skills by tactics as well as use more keys for hotkeys.
+	- Switch between tactics with 0-9
+	- Pick skills/commands with qwerty,asdfgh,zxcvbn.
+	- for those with azerty/dvorak keyboards... I'm sorry :\
+- Made your attractiveness display a bit more apparent in the combat and status descriptions, since it now factors more into the damage formula
+- Added a new Weakness: "Unpleasant"
+	- lowers your attractiveness by 25%
+- Added a new Weakness: "Buttslut"
+	- drastically increases anal pleasure damage received
+	- chance to become entranced when receiving anal pleasure
+	- upon seeing a erect cock or a strapon for the first time, automatically offers your own ass
+- Added some more stance images, mostly for futas/shemales
+
+Balance:
+- Changed the tempt modifiers of statuses to only apply to temptation damage instead of to any arousal based damage.
+	- This changes Bondage, Charmed, Cynical, Enthralled, Frenzied, IceStance, InducedEuphoria, Lovestruck, Shamed, Stunned, Winded, and MagicMilkAddiction
+	- More specifically the damage message should actually tell you how much damage you did, instead of pleasuring someone for 100 when they're stunned, but they actually take 0.
+- Desensitized 2 will no longer affected arousal over time / pure arousal damage.
+- Made temptation damage respect the staleness modifier like pleasure damage does
+- Made non-pheromone arousal over time not compound when from the same source.
+	- Each source of arousal over time will be replaced with the newest one when applied.
+- Submissive now only reduces your pleasure damage when in a dominant position by 1/3rd instead of 2/3rds.
+	- Now only increases pleasure in a submissive position by 50% instead of 100%
+	- Added a new Trait "Flexible Roles" that will remove the dominant penalty from the Submissive trait.
+		- This is only used by Cassie when you pick "Both" in her second specialization
+- Dark Tendrils now cost 20% of your maximum arousal (minor nerf from 15%)
+- Nerfed seduction bonus to charisma. It's still useful, but hopefully not as overwhelming as before
+	- A quirk of this is that being more attractive is now more effective, since it accounts for a bigger portion of the pleasure/temptation formula
+		- Nerfed most of the underwear "hotness" parameters so that keeping them on isn't always way more attractive than taking them off even for the most basic types
+	- Changed the attractiveness formulas a bit for breasts and cocks.
+		- They are generally less than they were before, but get bonuses from being completely uncovered (completely topless/bottomless)
+- Nerfed Angel's and Reyka's attractiveness (lol)
+	- Reyka's face in particular had such a high "hotness" rating that it was single handedly doubling her early game damage. 
+	- Angel's face was in a similar situation but not quite as bad (or would you say good?).
+	- So I had to hit them a bit with the ugly stick. Sorry dndw.
+- Made shemale start's breasts a bit larger (b -> d)
+- Made herms and shemale start's faces a bit more feminine (this affects no parts of gameplay yet)
+- Made shemales start with bra + panties instead of boxers
+- Changed maneuver's mojo cost to 15
+	- Also merged it with Flash Step (uses flash step if you have > 15% stamina and at least 6 Ki)
+- Merged Purr and Charm
+
+Bug fixes:
+- fixed a bug where everyone was getting the effects of "Brute's Charisma"
+	- Added some of your Power and Ki to your effective seduction when determining pleasure and temptation damage while dominant.
+- fixed a bug where temptation damage outside combat wasn't using the oblivious / unsatisfied traitsS
+- fixed a crash bug related to Angel's Zeal addiction
+- fixed a bug where pets that are player based (simulacrum mainly) always display as level 1
+- fixed bug with simulacrum where it would mention dicks when you didn't have a dick (used on a female PC)
+	- Note that by default simulacrum creates a hermaphrodite copy of females. If you would like it to create a male version instead, you can edit the data/globalflags.json file
+		- Change "femaleTGIntoHerm" to true
+	- Eventually this will have a UI for it.
+- fixed a bug where thrusting as a hermaphrodite in a threesome will rub your pussies together instead.
+- fixed a bug where the Futa++20 start would crash the game
+
+2.4.4.2
+Bug fixes:
+- fixed a bug that was causing consistent crashes when the player was inflicted with dominance addiction (may affect other addictions too)
+
+2.4.4.1
+Bug fixes:
+- Typos (reports courtesy of dndw)
+- Actually implemented the Piercing Odor trait
+- Untamed now only flips sexual positions when you are in a submissive position.
+	- Also increase chance to 25%
+
+2.4.4
+New:
+- Added specializations for Kat.
+	- Added 18 new traits for her.
+- Generalized some scenes for girls and herms.
+- You can now convince NPCs to get male genitalia when they have reached level 10 and you have a good relationship with them during the day time.
+- Merged in logicK's hard mode "both specializations" choices and added some new scenes for them.
+	- Picking the "[Hard Mode]" choices will make the character drastically more difficult to fight against. They will gain both traits for specializations as well as an additional trait point per level.
+	- Picking hard mode choices will also give you two additional trait points, one immediately and one at a higher level.
+- Merged in ThresholdFromBeyond's Titfuck/Breast Smother changes.
+	- I did nerf BreastSmother a bit though, since draining 10% of your willpower per use was a bit too much...
+- Merged in other body part fetish weaknesses (forgot who added this one, if it was you, please speak up :D)
+	- Breast Obsessed
+	- Ass addict
+	- Pussy Whipped
+	- Cock Craver
+- Added an ExpRate to the start menu to choose how fast the game goes.
+		- Slow is about 70% of the previous exp rate 
+		- Normal is about 150% of the previous exp rate
+		- Fast is about 225% of the previous exp rate
+		- Very Fast is about 450% of the previous exp rate
+	- Warning: High exp rates can have weird consequences. It is not well tested, so I cannot vouch for what will happen.
+- Added a Fast Combat Display option to the options menu
+	- Selecting this will bring back the old behaviour of not pressing next after each combat action
+- Added more messages for the opponent when they are cumming or when you are cumming (depends on how many orgasms they or you had)
+
+Balance changes:
+- Buffed Kat's maximum arousal and arousal growth.
+- Nerfed pheromones so that it does not stack infinitely. Now pheromones can only stack up to 5 times per unique source
+	- Pheromone can stack up to 10 times if the applier has the "Complex Aroma" trait
+- Further nerfed non-character pets. (Fairies were pleasuring people for 100 arousal at like level 15... :\)
+- Made certain short disables not give you the wary buff. This will buff Jewel because her short stuns will not make you invulnerable to disables for 3+ turns.
+- Made nymphomania + feral not always trigger. Instead nymphomania will use the nymphomania + animism attributes to determine trigger chance.
+- Made status multipliers for pleasure additive with other multipliers (they now factor into sensitivity) instead of having it be multiplicative with the other bonuses.
+	- This nerfs fetishes at higher levels.
+		- This was done after having a medium ass fetish and getting Spiral'd by Jewel. Did over 3000 pleasure damage... wtf
+- Lowered transformation costs for collectable items from Angel, Reyka, Kat and Jewel
+- Changed how sneaking works
+	- When moving, characters have a chance of detecting each other.
+	- Base detection difficulty = Cunning / 4 - (opponent's perception * 2)
+	- If you are hiding, difficulty +=  (20 + Cunning * 3 / 4)
+	- If you have the trait sneaky, difficulty + 20
+	- Roll a d20, if your cunning + roll(d20) > difficulty, then you succeed in detecting the opponent.
+		- if you roll 1, you critical miss and always fail in detection
+		- if you roll 20, you critical hit and always succeed in detection
+- Rebalanced Kiss
+	- Kiss now has a higher accuracy rate and higher unmodified base damage
+	- However now Kiss becomes stale much faster, and can has a lower floor (down to 25% of base effectiveness).
+- Thrust/fucking skills in general now have lower staleness increases.
+- Thrust/Ride now is less random
+- Grind damage up a tiny bit
+- Piston damage up a tiny bit
+- Trip and Maneuver now has a 1 turn cooldown.
+- Being stunned no longer drastically reduces your pleasure taken (still reduces temptation damage taken though)
+- The tease trait now only has a 1 in 4 chance of triggering, but will build 4 times the mojo.
+	- This is mostly done so you don't get spammed with messages.
+- Shameless no longer blocks flatfooted
+- Reduced willpower loss from overflow arousal to 25 * %overflow (from 50 * % overflow)
+
+Bug Fixes:
+- Fixed addictions randomly applying during night time.
+- Fixed pull out not working
+- Fixed some skill related bugs that was making things unintentionally usable and unusable in certain situations.
+- Changed Maya's camisole to only cover top instead of top + bottom and moved it to layer 1 so she can actually wear a blouse and skirt like she's supposed to. Woops.
+- Arm locked and leg locked now only persist while you are dominant
+- You will no longer orgasm from being pleasure earlier during the turn but and tempted afterwards
+- Fixed a bug where the insertion helps your opponents instead of you. Woops.
+
+Minor:
+- Made romantic the default strength
+- Removed asexual from the starting genders because it's very unsupported and you're much more likely to run into bugs with this.
+
+2.4.3.2
+Bug fixes:
+- All pet skills were incorrectly modifying their damage with seduction, causing them to do way too much. This was removed.
+- 69 stance was incorrectly counting as being penetrated. This was fixed.
+
+2.4.3.1
+Bug fixes:
+- Fixed a bug where Caroline's protection can cause fluid addictions to crash.
+- Fixed a long standing bug where outfits were never being loaded from saves.
+- Fixed a label issue with the clothing change UI (both the closet and the current outfit were being labeld closet)
+
+2.4.3
+Balance:
+- Heavily nerfed Kat's pheromones. Also nerfed feral, so she actually now loses more willpower in an orgasm than she gets back.
+- Biological damage modifiers have been halved (affects pheromones and sedate)
+- Biological defense now includes attributes in Seduction as well as Cunning/Science/Bio/Animism.
+- Knockdowns now has a new formula so that having over 300 stamina doesn't just make you immune to knockdowns.
+- Yui now gives 5 affection per visit, but caps out at a maximum of 20.
+
+New
+- Map now highlights cache drop locations
+- Orgasms done by pets will now skip the turn for the players.
+- Turned on system messages by default. Please note that you can turn it off in the options.
+
+Bug fixes:
+- Having a trap of your own will no longer make you unable to get cache rewards
+- Cassie, Angel and Jewel will no longer require an additional level up before getting their new Class traits after hitting 10.
+- Fixed an unintended bug where the match timer would increment every time phases changed, triggering the 0 willpower tiebreaker way too fast.
+- Fixed a bug where knocked downs never happened.
+- Fixed a bug where holy waters was not being consumed by Angel when training Divinity.
+- Fixed a lot of typo bugs (thanks for the bug reports as usual!)
+
+2.4.2
+- Made Jewel's level 20 focus actually trigger at lvl 20 instead of 10
+
+2.4.1
+- Fixed a bug where stance images were being displayed for non-observed fights
+- Decreased Jewel's willingness to spam edge
+- Fixed some typos
+
+2.4.0
+Balance changes:
+- MojoMaster now gives you +20 maximum mojo (New since rc1)
+- Pet counterattacks can only happen when you are mobile (New since rc1)
+- All drain now scales with dark and arcane (New since rc1)
+- Nerfed willpower loss from various drain sources to compensate (New since rc1)
+- Beguiling breasts now only work when you have dd cup breasts or bigger (yes cup sizes aren't a measure of size, stop being pedantic :D) (New since rc1)
+- The tempting tits now does not work if both characters have them. (New since rc1)
+- Skills now will display how accurate they are when you hover over them
+- Footjob now is less accurate (90 -> 80% base), but does much more pleasure damage (12-20 base)
+	- Now 100% accurate when opponent has a foot fetish
+- Bunshin assault and bunshin service now has a lower accuracy but more clones summoned (each clone's accuracy is rolled separately)
+	- Now costs 2 mojo per clone, and maximum of 15 clones at 30 ninjitsu
+- Use Dildo, Use Onahole, Kiss, Handjob and Finger now has 30 -> 50 base accuracy (100 when close to each other)
+	- Romantic nerfed to only add 40 -> 20 base accuracy (Kiss still has 70 base like before if you have the trait)
+- Knee now has 90 -> 80 accuracy
+- Lick nipples and suckle now has 90 -> 70 accuracy when neutral, but guaranteed when closer
+- Throw needle now has 70 base accuracy
+- Aphrodisiac, Sedate, and sensitize have all been nerfed to 65% accuracy base, guaranteed with Aersolizer
+	- Dissolve has been nerfed to 80%, guaranteed with Aersolizer
+	- Sedate has been increased to 50 exhaustion damage and 35 mojo damage
+	- Aphrodisiac has been increased to 10 arousal damage per turn, lasting up to 8 turns (scaled by biological damage).
+		- Aphrodisiac with a succubus pussy is no longer guaranteed without an Aersolizer
+	- Hypersensitive now increases pleasure damage taken by 30% -> 50%
+		- Now also increases pain by 50%
+		- Hypersensitive from ticklemonster now only lasts 5 turns. Hypersensitive from breast and cock growth only lasts for 10 turns.
+- Tortoise wrap no longer requires the attacker to have an active bondage fetish to use
+- Sweet scent no longer always misses (wtf)
+- Trip now has only one cunning check instead of two
+- Pussy training and cock training has been merged into sex training
+- Beguiling breasts now entrances you for 50 turns instead of lasting for 4 turns
+	- Beguiling breasts is now an aura, and can work on opposing pets
+- Upon orgasming, all mindgames status effects will be now removed.
+- Nymphomania now only has a percent chance of restoring willpower upon orgasming if you not also feral.
+- The footfetish weakness has been made to increase your footfetish magnitude during a fight while the opponent has no shoes on or have exposed shoes.
+- The take off shoes skill can now be used to tempt anyone that has a footfetish
+- Buffed insertion damage for fuck skills (the insertion trait did not change)
+- Assjob base damage buffed from 4-7 to 10-14
+	- This is increased by 3 if your bottom is naked and by 3 again if the opponent's crotch is open.
+- NPCs should use strategies only 50% of the time now. They were spamming certain strategies too much and it was making the game a bit boring.
+- Mojo now no longer grows. You are limited to the amount of mojo you start with.
+
+New:
+- Added a pet initiated threesome skill for pets (New since rc1)
+- Added a lot of the new traits to the trait tree. Changed some traits around so more are unlocked in higher levels and or have more requirements. (New since rc1)
+- Pretty much all the traits now unlock something better, so try getting some of the previously "useless" traits. (New since rc1)
+- Now each night has 5 combatants (accidental change, but decided to keep it in there for now) (New since rc1)
+- Completely reworked mojo. You now do not gain mojo per fight or level.
+	- Instead everyone starts with a set amount of maximum mojo that they will use for the rest of the game, barring certain traits.
+- Completely reworked how pets are handled. There are so many changes that it's hard to list everything here.
+	- The core change is that pets are treated like characters and can use skills on either the master or the opponent.
+	- Leadership now increases the level of pets summoned by 5.
+	- Tactician now also increases the maximum arousal and stamina of pets by 50%
+	- Pets now disappear if they orgasm or get knocked out or stunned.
+- Added some new summoning skills:
+	- Summon Yui can call the ninja to help you out in a fight at the cost of 1 affection per summon. This is unlocked at 10 affection with Yui.
+	- Simulacrum is a 12 divinity skill that creates a sex-changed copy of your opponent to fight for you temporarily.
+	- Threesome is a fuck skill that makes your pet to fuck your opponent.
+		- Added some new sex stances related to this:
+			- FFM Cowgirl
+			- FFM Cowgirl + Facesit
+			- MFF Missionary with Assist
+			- MFM Spitroast
+			- MFM Double Penetration
+- Changed how combat works. After each phase of combat, you advance the text by hitting next instead of all the text hitting you at once.
+- Changed how leveldowns work. Each level up is saved now, so that when you level down you get to exactly where you were before instead of randomly losing traits or attributes.
+- Flycatcher can now be used with 9 Ki or 18 Cunning
+	- Now instead of instantly downing the pet, it has a huge pain damage (30 - 50) targeted to a Pet
+	- Now costs 25% of your maximum stamina to use
+- New skill HoneyPot
+	- can be used with 9 Dark or 18 Seduction
+	- Does huge pleasure damage (30 - 50) targeted to a pet.
+- Jewel and Angel has been reworked
+	- At levels 10 and 20, after combat with the player, they will ask the player for your opinion on what she should focus on. The choice will influence what attributes and traits she will get upon leveling up.
+- Added new portraits for Angel
+- Cassie, Jewel, and Angel will now not advance into their classes until you pick their respective level 10 decision. They now also do not need 1000$ to advance (no idea why this was there, they don't even spend it...)
+- Added new traits
+	Angel: 
+	- Last Stand
+	- Sexual Dynamo
+	- Inspirational
+	- Sacrosanct
+	- Mandate of Heaven
+	- Piety
+	- Genuflection
+	- Showmanship
+	- Apostles
+	- Devotee Fervor
+	- Congregation
+
+	Angel's pet only traits
+	- Valkyire
+	- Oblivious
+	- Overwhelming presence
+	- Resurrection
+	- Kabbalah
+	- Healer
+	- Supplicant
+	- Protective
+	- Fallen Angel
+
+	Jewel (from dndw):
+	- Powerful cheeks
+	- Tempting ass
+	- Disabling blows
+	- Takedown
+	- Indomitable
+	- Confident dom
+	- Draining ass
+	- Edger
+	- Commanding Voice
+	- Mental Fortress
+	- Bewitching bottom
+	- Unquestionable
+	- Grapper
+	- Suave (I added this one, I found Jewel way too weak vs girls, especially when taking the ass fuck line)
+		- Adds level / 2 Seduction when fighting someone without a penis
+Kat's daytime scenes now give the relevant traits.
+- Affectionate now makes it so you have a 50% to increase the amount of affection you gain by 1 instead of only adding bonus affection on draws.
+- Added a new Trait "tease" for Kat's games scene.
+	- Builds 5% mojo if your opponent misses
+
+Bug fixes:
+- Fixed a bug where you could be made to orgasm in a simulation and finish the match because of it. (woahdude)
+- Fixed a bug where if you drastically outleveled someone, moves would be very inaccurate (yes wtf)
+- A bunch of bug and typo fixes (thanks guys for your bug reports)
+
+2.3.3
+Balance changes:
+- Pantymaster, and Bramaster have been removed
+- Dexterous has been buffed
+	- Now works with fondle breasts as well.
+	- Dexterous now will work with second layer clothing as well.
+		- This means you can now use finger, handjob, and fondle breasts with increased effectiveness when they are wearing shirt and pants (but not coats)
+- Romantic has been buffed
+	- Original effects: 
+		- Boost Kiss mojo gain by 5%
+		- Increase kiss pleasure damage by 3
+		- Increase deep kiss pleasure damage by 10
+	- New effects:
+		- Boost Kiss mojo gain by 5%
+		- Increase kiss accuracy from a base 30% when opponent is mobile to 70%.
+		- Increase kiss pleasure damage by 3
+		- Increase all advanced kisses (Kiss of Baptism, Drain Kiss, Deep Kiss) pleasure damage by 6
+		- Increases your charisma multiplier by your (opponent's arousal % - 70) when your opponent is below 30% arousal. (So at 0% arousal you have a 30% bonus and at 20%, you have a 10% bonus)
+			- This is pretty minor and is really only for flavour
+- Fixed a "bug?" not sure if this was intended, but counter pretty much never ever ever triggered. It can now trigger and has a base chance of 3% for skills.
+	- Counter chance increased by 3% for each of these traits: [clairvoyance, aikidonovice, fakeout]
+	- Counter is increased by certain statuses like WaterForm (+5), Nimble (+ Animism/2 * Arousal %)
+	- Counter chance is decreased by 1% for every 5 points of cunning your opponent has over you
+	- Counter chance is increased by 1% for every point of perception you have over the opponent and decreased the same way.
+	- Counter chance is increased by 1% for every 2 points of speed you have over the opponent and decreased the same way (maximum of +5 or -5 this way).
+- Locate will no longer consume a Talisman if you have one
+- Submissive (attribute) will now increase tempt damage for certain moves
+- Magic Missiles now has an increased base damage (it was to the point where upon becoming level 10, Cassie would just rather kick you rather than using her new skills because it sucked).
+	- Now does 10-19 base damage instead of 7-13.
+
+New:
+Cassie has been reworked:
+- At levels 10 and 20, after combat with the player, Cassie	will ask the player for your opinion on what she should focus on. The choice will influence what attributes and traits she will get upon leveling up.
+
+Introduced some new traits (some of them seem pretty OP, but really only comes into play in the extreme late game and are replacements for some equally OP traits):
+- Hawkeye
+	- +5% accuracy
+- Tempting Tits
+	- When your breasts are exposed, your tempt the opponent every turn if you are facing each other.
+	- When you are behind your opponent, you tempt the opponent every turn. More temptation damage if their top is off and your top is off/is more skimpy.
+- Beguiling breasts
+	- Once per fight, the first time your opponent sees your breasts, they are entranced for 4 turns
+- Sedative Cream
+	- Drinking milk will cause the opponent to be weakened by 10% and lose 1 Power for 20 turns.
+- Sweet Lips
+	- If you do oral pleasure from a submissive position, the opponent is also tempted for the base pleasure damage of the move.
+- Split SM Queen into different Traits
+	- SM Queen now applies dominance willpower loss every turn instead of every other turn in a dominant stance.
+	- (new) Sadist now automatically applies masochism to the opponent
+
+Bug fixes:
+- Fixed a bug that was causing charm, facesit, smother, and tempt to use the opponent's body's charisma bonus instead of the users. Woops.
+- Fixed a bug where doing Faerie play with Mara freezes the game
+- Fixed a bug where addiction overloading/day time visits were not being saved
+- Fixed a bug where the cause for Magic milk addiction was the player instead of Cassie
+- Fixed a bug where the Breeder addiction was not using voluntary insertion bonuses unless the player was also corrupted.
+- Fixed a bug where mouthpussy blowjobs was using a phantom cock from yourself instead of the opponents. Woops.
+- Fixed a bug where entranced wasn't let you masturbate.
+- Fixed a bug where drowsy was being affected by Personal Inertia twice.
+
+2.3.2.1
+
+- Actually fixed the bug with tentacles. Goddamn.
+
+2.3.2
+Bug fixes:
+- Fixed a crash bug still related to tentacles. Woops.
+- Fixed a crash bug related to spectating
+- Fixed a bug where any starts loaded after futanari time would fail to appear (extra comma in the json, guessing dndw fixed it but forgot to push)
+- Fixed a bug where Yui would join the game even though she's only half implemented. Woops.
+
+2.3.1
+Bug fixes:
+- Fixed a crash bug related to tentacles.
+	- Unfortunately this does change it a bit, in that it will use the character's stats in calculating pleasure damage whereas before it was using a dummy tentacles character. Oh well.
+- Fixed a crash bug related to the Glamour skill
+- Fixed a bug that caused AI opponents not to evaluate tickle and slap as stamina damage.
+- Stunned now 3 -> 2 turns and winded lasts 3-4 -> 4 turns.
+- Fixed a bug where characters will equip random clothing they own upon loading from a save. This removes compatibility with SUPER old saves. If you're using like < 1.9 saves, well, don't :P
+- Fixed a bunch of typos and grammar issues. I swear writing for nightgames is like doing madlibs...
+- Fixed a bug where Footjob strategy would cause the user to do squats. (repeatedly stand up and mount you)
+
+New:
+- Added WindUp strategy to Mara. Maybe she'll actually begin using some of those temporal skills...
+
+Balance:
+- Made windup a bit more attractive.
+	- Charging will now only cost charges * 5 mojo instead of charges * 10.
+- Dark Tendrils will now also knockdown upon successful bind.
+	- It now will arouse the user by 15% instead of by 5 flat.
+- Dominate will also now cost 10% arousal instead of a flat 10.
+
+2.3.0
+Bug fixes:
+- A lot of random miscellaneous stuff I've never noticed
+	- Fixed bug where you gain 5 mojo permanently every turn your naked as a exhibitionist... :(
+	- Fixed bug where you could not lick pussy from underneath a 69
+	- Many typo fixes
+
+New:
+- Added preset AI strategies that will hopefully spice up the game a bit more. Expect AIs to use some more of the lesser used skills
+- Added a new female Tighten variant: Vice. This will instantly make the target cum, but can only be used while the target is stunned or is under 25% stamina as well as having >50% arousal.
+	- Requires 24 Ninjutsu (so basically no one is going to use this yet)
+- Added a new arcane skill Glamour which increases the "hotness" multiplier for arousal damage by 2.0. Requires 6 arcane.
+
+Balance changes:
+- Changed how stamina works.
+	- Now all sources of healing is much less than before, so stamina damage will stick a bit more.
+	- Nerfed exercised and porn to give 1-2 points without fitness nut/expert googler, 2-4 with the perks.
+		- You can now only achieve a maximum of 100 + level * 8 arousal, and 100 + level * 5 stamina through training.
+			Hopefully this stops the stat ballooning at end game where you can just spam porn and have > 2000 maximum arousal.
+	- Taking points in power (and to a lesser extent cunning) will now both increase the amount of hurt you do, and the amount of stamina loss you get from taking damage.
+	- Getting knocked off your feet will stun you for 2 turns, and getting your stamina bar emptied will stun you for 4 turns.
+	- Being stunned/winded will reduce pleasure damage taken by 50%.
+	- Having a point in Divinity will upgrade the braced status after getting up, increasing the damage reduction and extending it to 6 turns.
+	- Shield now lasts for 7 turns (up from 4).
+	- Increased the pain threshold for reducing arousal from 4% up to 16.66%
+- Points in cunning will now decrease the amount of damage from toys taken as well as increasing damage dealt. Science will also increase toys damage, but will not add to defence.
+- Points in dark and arcane will increase the amount of drain damage dealt and decreased drain damage received.
+- Points in Bio/Animism/Science/Medicine will improve biological damage. So far this is limited to pheromones and aphrodisiacs. The same attributes will reduce damage from them with the addition of cunning to a lesser extent.
+- Mara now has a new perk "Deft hands" at 33 that increases her pleasure damage with hands by a flat 2-5.
+- Mara now has a new perk "Nimble toes" at 42 that increases her pleasure damage with feet by a flat 2-5.
+- Mara now has a new perk "Toymaster" at 36 that increases her skill effectiveness with toys.
+
 2.0.1 changelog
 Bug fixes:
 - Fixed a ton of Airi specific bugs (thanks dndw)

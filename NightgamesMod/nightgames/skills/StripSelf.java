@@ -7,16 +7,19 @@ import java.util.stream.Collectors;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Decider;
 import nightgames.characters.NPC;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
+import nightgames.nskills.tags.SkillTag;
 
 public class StripSelf extends Skill {
     public StripSelf(Character self) {
         super("Strip Self", self);
+        addTag(SkillTag.suicidal);
     }
 
     @Override
@@ -26,12 +29,12 @@ public class StripSelf extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        boolean hasClothes = subChoices().size() > 0;
-        return hasClothes && getSelf().canAct() && c.getStance().mobile(getSelf());
+        boolean hasClothes = subChoices(c).size() > 0;
+        return hasClothes && getSelf().canAct() && c.getStance().mobile(getSelf()) && !getSelf().isPet();
     }
 
     @Override
-    public Collection<String> subChoices() {
+    public Collection<String> subChoices(Combat c) {
         return getSelf().getOutfit().getAllStrippable().stream().map(clothing -> clothing.getName())
                         .collect(Collectors.toList());
     }
@@ -44,6 +47,13 @@ public class StripSelf extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         Clothing clothing = null;
+        int diff = getSelf().stripDifficulty(target);
+        if (!choice.isEmpty() && Global.random(50) < diff) {
+            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to remove the %s"
+                            + " from {self:possessive} body, but it stubbornly sticks"
+                            + " to {self:direct-object}.", getSelf(), target, choice));
+            return false;
+        }
         if (getSelf().human()) {
             Optional<Clothing> stripped = getSelf().getOutfit().getEquipped().stream()
                             .filter(article -> article.getName().equals(choice)).findAny();
@@ -51,13 +61,13 @@ public class StripSelf extends Skill {
                 clothing = getSelf().getOutfit().unequip(stripped.get());
                 c.getCombatantData(getSelf()).addToClothesPile(clothing);
             }
-        } else {
+        } else if (getSelf() instanceof NPC) {
             NPC self = (NPC) getSelf();
             HashMap<Clothing, Double> checks = new HashMap<>();
             double selfFit = self.getFitness(c);
             double otherFit = self.getOtherFitness(c, target);
             getSelf().getOutfit().getAllStrippable().stream().forEach(article -> {
-                double rating = self.rateAction(c, selfFit, otherFit, (newCombat, newSelf, newOther) -> {
+                double rating = Decider.rateAction(self, c, selfFit, otherFit, (newCombat, newSelf, newOther) -> {
                     newSelf.strip(article, newCombat);
                     return true;
                 });
@@ -85,7 +95,7 @@ public class StripSelf extends Skill {
             c.write(getSelf(), "Skill failed...");
         } else {
             c.write(getSelf(), Global.format(String.format("{self:SUBJECT-ACTION:strip|strips} off %s %s.",
-                            getSelf().possessivePronoun(), clothing.getName()), getSelf(), target));
+                            getSelf().possessiveAdjective(), clothing.getName()), getSelf(), target));
         }
         return true;
     }

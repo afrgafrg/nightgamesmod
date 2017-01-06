@@ -19,8 +19,8 @@ public class Piston extends Thrust {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canAct() && c.getStance().canthrust(getSelf())
-                        && c.getStance().havingSexOtherNoStrapped(getSelf());
+        return getSelf().canAct() && c.getStance().canthrust(c, getSelf())
+                        && c.getStance().havingSexOtherNoStrapped(c, getSelf());
     }
 
     @Override
@@ -32,8 +32,8 @@ public class Piston extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 12 + Global.random(8);
-        int mt = 8 + Global.random(5);
+        int m = 15 + Global.random(8);
+        int mt = 10 + Global.random(5);
         if (getSelf().has(Trait.experienced)) {
             mt = mt * 2 / 3;
         }
@@ -68,18 +68,24 @@ public class Piston extends Thrust {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.anal) {
-            return getSelf().name() + " relentlessly pegs you in the ass as you groan and try to endure the sensation.";
+            return String.format("%s relentlessly pegs %s in the ass as %s %s and try to endure the sensation.",
+                            getSelf().subject(), target.nameDirectObject(), target.pronoun(),
+                            target.action("groan"));
         } else if (modifier == Result.upgrade) {
-            return getSelf().name() + " pistons into you while pushing your shoulders on the ground; "
-                            + getSelf().name()
-                            + "'s tits are shaking above your head while her strapon stimulates your prostate.";
+            return String.format("%s pistons into %s while pushing %s shoulders on the ground; %s tits"
+                            + " are shaking above %s head while %s strapon stimulates %s prostate.",
+                            getSelf().subject(), target.nameDirectObject(), target.possessiveAdjective(),
+                            getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun(), 
+                            target.possessiveAdjective(), getSelf().possessiveAdjective());
         } else if (modifier == Result.reverse) {
-            return getSelf().name() + " bounces on your cock, relentlessly driving you both toward orgasm.";
+            return String.format("%s bounces on %s cock, relentlessly driving %s both toward orgasm.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(), 
+                            c.bothDirectObject(target));
         } else {
             return Global.format(
                             "{self:SUBJECT-ACTION:rapidly pound|rapidly pounds} {self:possessive} {self:body-part:cock} into {other:possessive} {other:body-part:pussy}, "
-                                            + "relentlessly driving you both toward orgasm",
-                            getSelf(), target);
+                                            + "relentlessly driving %s toward orgasm.",
+                            getSelf(), target, c.bothDirectObject(target));
         }
     }
 

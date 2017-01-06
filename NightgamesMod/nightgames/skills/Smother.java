@@ -6,6 +6,8 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 import nightgames.stance.Smothering;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
@@ -15,11 +17,15 @@ public class Smother extends Skill {
 
     public Smother(Character self) {
         super("Smother", self);
+        addTag(SkillTag.pleasureSelf);
+        addTag(SkillTag.dominant);
+        addTag(SkillTag.facesit);
+        addTag(SkillTag.weaken);
     }
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.smqueen);
+        return user.get(Attribute.Fetish) >= 5;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class Smother extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().crotchAvailable() && getSelf().canAct() && c.getStance().dom(getSelf())
-                        && (c.getStance().enumerate() == Stance.facesitting || c.getStance().enumerate() == Stance.smothering)
+                        && (c.getStance().isBeingFaceSatBy(c, target, getSelf()))
                         && !getSelf().has(Trait.shy);
     }
 
@@ -41,11 +47,7 @@ public class Smother extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        writeOutput(c, Result.normal, target);
 
         int m = 10;
         if (target.has(Trait.silvertongue)) {
@@ -55,18 +57,19 @@ public class Smother extends Skill {
         double n = 14 + Global.random(4);
         if (c.getStance().front(getSelf())) {
             // opponent can see self
-            n += 3 * getSelf().body.getCharismaBonus(target);
+            n += 3 * getSelf().body.getHotness(target);
         }
         if (target.has(Trait.imagination)) {
             n *= 1.5;
         }
 
-        target.tempt(c, getSelf(), getSelf().body.getRandom("ass"), (int) Math.round(n / 2));
+        target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("ass"), (int) Math.round(n / 2), this);
+        target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(10, 25)));
 
         target.loseWillpower(c, Math.max(10, target.getWillpower().max() * 10 / 100 ));
         target.add(c, new Shamed(target));
         if (c.getStance().enumerate() != Stance.smothering) {
-            c.setStance(new Smothering(getSelf(), target));
+            c.setStance(new Smothering(getSelf(), target), getSelf(), true);
         }
         if (Global.random(100) < 25 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .35));
@@ -76,7 +79,7 @@ public class Smother extends Skill {
 
     @Override
     public int getMojoBuilt(Combat c) {
-        return 50;
+        return 25;
     }
 
     @Override

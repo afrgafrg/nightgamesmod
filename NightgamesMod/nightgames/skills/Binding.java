@@ -5,12 +5,14 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Bound;
 
 public class Binding extends Skill {
 
     public Binding(Character self) {
         super("Binding", self, 4);
+        addTag(SkillTag.positioning);
     }
 
     @Override
@@ -36,11 +38,7 @@ public class Binding extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        writeOutput(c, Result.normal, target);
         target.add(c, new Bound(target, Math.min(10 + 3 * getSelf().get(Attribute.Arcane), 70), "seal"));
         target.emote(Emotion.nervous, 5);
         getSelf().emote(Emotion.confident, 20);
@@ -66,7 +64,7 @@ public class Binding extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return getSelf().name()
-                        + " gestures at you and casts a spell. A ribbon of light wraps around your wrists and holds them in place.";
+                        + " gestures at "+target.nameDirectObject()+" and casts a spell. A ribbon of light wraps around "+target.possessiveAdjective()+" wrists and holds them in place.";
     }
 
 }

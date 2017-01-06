@@ -21,12 +21,8 @@ public class Submit extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        c.setStance(new StandingOver(target, getSelf()));
+        writeOutput(c, Result.normal, target);
+        c.setStance(new StandingOver(target, getSelf()), target, false);
         return true;
     }
 

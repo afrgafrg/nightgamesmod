@@ -62,10 +62,98 @@
 	  "slots" : ["top"],
 	  "shops" : ["Boutique"],
   	  "sex" : ["all"],
-	  "hotness":0.4,
+	  "hotness":0.2,
       "name":"bra",
       "toughness":5,
       "exposure":0.8
+   },
+   {
+      "displayName":"frilly bra",
+      "buffs":[
+      ],
+      "price":900,
+      "prefix":"a ",
+      "attributes":[
+      ],
+      "layer":0,
+	  "slots" : ["top"],
+	  "shops" : ["Boutique"],
+  	  "sex" : ["all"],
+	  "hotness":0.25,
+      "name":"frillybra",
+      "toughness":7,
+      "exposure":0.8
+   },
+   {
+      "displayName":"frilly panties",
+      "buffs":[
+      ],
+      "price":1500,
+      "prefix":"a pair of ",
+      "attributes":[
+      ],
+      "layer":0,
+	  "slots" : ["bottom"],
+	  "shops" : ["Boutique"],
+  	  "sex" : ["all"],
+	  "hotness":0.25,
+      "name":"frillypanties",
+      "toughness":9,
+      "exposure":0.8
+   },
+   {
+	  "displayName":"lace panties",
+      "buffs":[
+      ],
+      "price":900,
+      "prefix":"a pair of ",
+      "attributes":[
+			"skimpy"
+      ],
+      "layer":0,
+	  "slots" : ["bottom"],
+	  "shops" : ["Boutique"],
+	  "sex" : ["all"],
+	  "hotness":0.3,
+      "name":"lacepanties",
+      "toughness":5,
+      "exposure":0.9
+	},
+   {
+      "displayName":"lacy bra",
+      "buffs":[
+      ],
+      "price":900,
+      "prefix":"a ",
+      "attributes":[
+    	"skimpy"
+      ],
+      "layer":0,
+	  "slots" : ["top"],
+	  "shops" : ["Boutique"],
+  	  "sex" : ["all"],
+	  "hotness":0.3,
+      "name":"lacybra",
+      "toughness":4,
+      "exposure":0.9
+   },
+   {
+      "displayName":"negligee",
+      "buffs":[
+      ],
+      "price":1800,
+      "prefix":"a ",
+      "attributes":[
+    	"skimpy"
+      ],
+      "layer":0,
+	  "slots" : ["top", "bottom"],
+	  "shops" : ["Boutique"],
+  	  "sex" : ["all"],
+	  "hotness":.7,
+      "name":"negligee",
+      "toughness":14,
+      "exposure":0.9
    },
    {
       "displayName":"pants",
@@ -97,7 +185,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["Boutique"],
   	  "sex" : ["female"],
-	  "hotness":0.3,
+	  "hotness":0.2,
       "name":"skirt",
       "toughness":12,
       "exposure":0.4
@@ -115,7 +203,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-	  "hotness":0.4,
+	  "hotness":0.2,
       "name":"panties",
       "toughness":15,
       "exposure":0.8
@@ -132,7 +220,7 @@
  	  "slots" : ["legs", "feet"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-	  "hotness":0.4,
+	  "hotness":0.2,
       "name":"stockings",
       "toughness":15,
       "exposure":1
@@ -151,7 +239,7 @@
  	  "slots" : ["bottom", "legs", "feet"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-	  "hotness":0.6,
+	  "hotness":0.4,
       "name":"garters",
       "toughness":15,
       "exposure":1
@@ -186,7 +274,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["male"],
-	  "hotness":0.3,
+	  "hotness":0.2,
       "name":"boxers",
       "toughness":15,
       "exposure":0.75
@@ -204,7 +292,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-	  "hotness":0.3,
+	  "hotness":0.15,
       "name":"underwear",
       "toughness":15,
       "exposure":0.75
@@ -222,7 +310,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-	  "hotness":0.45,
+	  "hotness":0.3,
       "name":"briefs",
       "toughness":15,
       "exposure":0.8
@@ -241,7 +329,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-	  "hotness":0.65,
+	  "hotness":0.35,
       "name":"thong",
       "toughness":7,
       "exposure":0.9
@@ -258,7 +346,7 @@
  	  "slots" : ["top"],
    	  "sex" : ["female"],
 	  "shops" : ["Boutique"],
-	  "hotness":0.5,
+	  "hotness":0.35,
       "name":"tanktop",
       "toughness":10,
       "exposure":0.6
@@ -293,7 +381,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-	  "hotness":0.4,
+	  "hotness":0.3,
       "name":"shorts",
       "toughness":15,
       "exposure":0.4
@@ -310,7 +398,7 @@
  	  "slots" : ["bottom", "legs"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-	  "hotness":0.25,
+	  "hotness":0.2,
       "name":"jeans",
       "toughness":17,
       "exposure":0.2
@@ -327,7 +415,7 @@
  	  "slots" : ["bottom", "legs"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-	  "hotness":0.5,
+	  "hotness":0.35,
       "name":"form-fitting jeans",
       "toughness":25,
       "exposure":0.4
@@ -397,7 +485,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-	  "hotness":0.65,
+	  "hotness":0.4,
       "name":"miniskirt",
       "toughness":12,
       "exposure":0.6
@@ -434,7 +522,7 @@
  	  "slots" : ["top"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-  	  "hotness":0.65,
+  	  "hotness":0.35,
       "name":"bikinitop",
       "toughness":0,
       "exposure":0.9
@@ -453,7 +541,7 @@
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
       "name":"bikinibottoms",
-   	  "hotness":0.65,
+   	  "hotness":0.35,
       "toughness":5,
       "exposure":0.9
    },
@@ -508,8 +596,8 @@
    	  "sex" : ["all"],
    	  "hotness":0.2,
       "name":"gi",
-      "toughness":5,
-      "exposure":0.2
+      "toughness":15,
+      "exposure":0.5
    },
    {
       "displayName":"chastity belt",
@@ -525,7 +613,7 @@
 	  "layer":0,
  	  "slots" : ["bottom"],
    	  "sex" : ["all"],
-   	  "hotness":0.5,
+   	  "hotness":0.35,
       "name":"chastitybelt",
       "toughness":24,
       "exposure":0.9
@@ -579,7 +667,7 @@
  	  "slots" : ["top", "bottom", "legs", "arms"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-   	  "hotness":-0.1,
+   	  "hotness":0.0,
       "name":"trenchcoat",
       "toughness":7,
       "exposure":0.2
@@ -596,7 +684,7 @@
  	  "slots" : ["top", "bottom"],
 	  "shops" : [],
    	  "sex" : ["all"],
-   	  "hotness":0.4,
+   	  "hotness":0.3,
       "name":"warpaint",
       "toughness":0,
       "exposure":0.95
@@ -651,7 +739,7 @@
  	  "slots" : ["bottom"],
    	  "shops" : ["XxxStore"],
    	  "sex" : ["female"],
-   	  "hotness":0.8,
+   	  "hotness":0.5,
       "name":"crotchlesspanties",
       "toughness":5,
       "exposure":0.99
@@ -670,7 +758,7 @@
    	  "shops" : ["XxxStore"],
  	  "slots" : ["top"],
    	  "sex" : ["female"],
-   	  "hotness":0.75,
+   	  "hotness":0.4,
       "name":"opencupbra",
       "toughness":5,
 	  "exposure":0.99
@@ -701,7 +789,6 @@
       "price":1500,
       "prefix":"",
       "attributes":[
-         "skimpy",
          "kinky"
       ],
 	  "layer":2,
@@ -726,7 +813,7 @@
  	  "slots" : ["top", "arms"],
    	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-   	  "hotness":0.15,
+   	  "hotness":0.3,
       "name":"silkShirt",
       "toughness":4,
       "exposure":0.4
@@ -744,7 +831,7 @@
  	  "slots" : ["top", "arms"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-   	  "hotness":0.15,
+   	  "hotness":0.2,
       "name":"blazer",
       "toughness":3,
       "exposure":0.3
@@ -762,7 +849,7 @@
  	  "slots" : ["bottom", "legs"],
 	  "shops" : ["ClothingStore"],
    	  "sex" : ["all"],
-   	  "hotness":0.15,
+   	  "hotness":0.3,
       "name":"dresspants",
       "toughness":15,
       "exposure":0.2
@@ -799,7 +886,7 @@
  	  "slots" : ["top", "bottom", "legs"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.45,
+   	  "hotness":0.4,
       "position":"TOPOUTER",
       "name":"vinedress",
       "toughness":15,
@@ -818,7 +905,7 @@
  	  "slots" : ["top"],
    	  "sex" : ["female"],
 	  "shops" : [],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"leafbra",
       "toughness":0,
       "exposure":0.99
@@ -836,7 +923,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"vinethong",
       "toughness":0,
       "exposure":0.99
@@ -854,7 +941,7 @@
  	  "slots" : ["top"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"slimebottom",
       "toughness":10,
       "exposure":0.99
@@ -872,7 +959,7 @@
  	  "slots" : ["bottom"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.25,
       "name":"slimetop",
       "toughness":20,
       "exposure":0.99
@@ -885,13 +972,14 @@
       "prefix":"",
       "attributes":[
          "open",
+         "persistent",
          "tentacleUnderwear"
       ],
 	  "layer":0,
  	  "slots" : ["bottom"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"opententaclebottom",
       "toughness":25,
       "exposure":0.95
@@ -904,13 +992,14 @@
       "prefix":"",
       "attributes":[
          "skimpy",
+         "persistent",
          "tentacleUnderwear"
       ],
 	  "layer":0,
  	  "slots" : ["bottom"],
 	  "shops" : [],
    	  "sex" : ["all"],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"tentaclebottom",
       "toughness":25,
       "exposure":0.95
@@ -923,14 +1012,55 @@
       "prefix":"",
       "attributes":[
          "skimpy",
+         "persistent",
          "tentacleSuit"
       ],
 	  "layer":0,
  	  "slots" : ["top", "bottom", "legs"],
 	  "shops" : [],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.5,
       "name":"tentacletop",
+      "toughness":25,
+      "exposure":0.6
+   },
+   {
+      "displayName":"harpoon dildo",
+      "buffs":[
+      ],
+      "price":0,
+      "prefix":"",
+      "attributes":[
+         "skimpy",
+         "persistent",
+         "harpoonDildo"
+      ],
+	  "layer":0,
+ 	  "slots" : ["top", "bottom", "legs"],
+	  "shops" : [],
+   	  "sex" : ["female"],
+   	  "hotness":0.3,
+      "name":"harpoondildo",
+      "toughness":25,
+      "exposure":0.6
+   },
+   {
+      "displayName":"harpoon onahole",
+      "buffs":[
+      ],
+      "price":0,
+      "prefix":"",
+      "attributes":[
+         "skimpy",
+         "persistent",
+         "harpoonOnahole"
+      ],
+	  "layer":0,
+ 	  "slots" : ["top", "bottom", "legs"],
+	  "shops" : [],
+   	  "sex" : ["male"],
+   	  "hotness":0.3,
+      "name":"harpoononahole",
       "toughness":25,
       "exposure":0.6
    },
@@ -947,7 +1077,7 @@
  	  "slots" : ["arms", "hands"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.2,
       "name":"operagloves",
       "toughness":2,
       "exposure":0.6
@@ -966,7 +1096,7 @@
  	  "slots" : ["feet"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-   	  "hotness":0.45,
+   	  "hotness":0.3,
       "name":"heels",
       "toughness":2,
       "exposure":0.6
@@ -986,7 +1116,7 @@
  	  "slots" : ["feet"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-   	  "hotness":0.65,
+   	  "hotness":0.4,
       "name":"highheels",
       "toughness":2,
       "exposure":0.6
@@ -1004,7 +1134,7 @@
  	  "slots" : ["arms", "top", "bottom", "legs"],
 	  "shops" : [],
    	  "sex" : ["all"],
-   	  "hotness":0.75,
+   	  "hotness":0.5,
       "name":"translucentshawl",
       "toughness":0,
       "exposure":0.99
@@ -1026,7 +1156,7 @@
  	  "slots" : ["feet"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-   	  "hotness":0.85,
+   	  "hotness":0.6,
       "name":"stilettopumps",
       "toughness":2,
       "exposure":0.6
@@ -1065,7 +1195,7 @@
  	  "slots" : ["feet", "legs"],
 	  "shops" : ["Boutique"],
    	  "sex" : ["female"],
-   	  "hotness":0.75,
+   	  "hotness":0.5,
       "name":"thighhighboots",
       "toughness":12,
       "exposure":0.2
@@ -1139,5 +1269,20 @@
       "name":"sandals",
       "toughness":5,
       "exposure":0.6
+   },
+   {
+      "displayName":"infrasound necklace",
+      "buffs": [],
+      "price": -1,
+      "prefix": "a jeweled ",
+      "attributes": ["infrasound", "open", "stylish"],
+      "layer":0,
+      "slots": ["neck"],
+      "shops": [],
+      "sex": ["all"],
+      "hotness": 0.2,
+      "name": "infrasoundnecklace",
+      "toughness":10,
+      "exposure": 0.9
    }
 ]

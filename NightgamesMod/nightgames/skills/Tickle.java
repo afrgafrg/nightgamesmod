@@ -7,13 +7,18 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
+import nightgames.skills.damage.Staleness;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Winded;
 
 public class Tickle extends Skill {
-
     public Tickle(Character self) {
-        super("Tickle", self);
+        // tickle has higher decay but pretty fast recovery
+        super("Tickle", self, 0, Staleness.build().withDefault(1.0).withFloor(.5).withDecay(.15).withRecovery(.20));
+        addTag(SkillTag.weaken);
+        addTag(SkillTag.staminaDamage);
     }
 
     @Override
@@ -28,9 +33,15 @@ public class Tickle extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().has(Trait.ticklemonster) || target.roll(this, c, accuracy(c))) {
-            if (target.crotchAvailable() && c.getStance().reachBottom(getSelf()) && !c.getStance().havingSex()) {
+        DamageType type = DamageType.technique;
+        if (getSelf().has(Trait.ticklemonster) || target.roll(getSelf(), c, accuracy(c, target))) {
+            if (target.crotchAvailable() && c.getStance().reachBottom(getSelf()) && !c.getStance().havingSex(c)) {
                 int bonus = 0;
                 int weak = 0;
                 Result result = Result.normal;
@@ -45,18 +56,11 @@ public class Tickle extends Skill {
                     result = Result.strong;
                     bonus += 5 + Global.random(4);
                     weak += 3 + Global.random(4);
+                    type = DamageType.gadgets;
                 }
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, result, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, result, target));
-                }
+                writeOutput(c, result, target);
                 if (getSelf().has(Trait.ticklemonster) && target.mostlyNude()) {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, Result.special, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, Result.special, target));
-                    }
+                    writeOutput(c, Result.special, target);
                     bonus += 5 + Global.random(4);
                     weak += 3 + Global.random(4);
                     if (Global.random(4) == 0) {
@@ -64,7 +68,7 @@ public class Tickle extends Skill {
                     }
                 }
                 if (result == Result.special) {
-                    target.add(c, new Hypersensitive(target));
+                    target.add(c, new Hypersensitive(target, 5));
                 }
                 if (target.has(Trait.ticklish)) {
                     bonus = 4 + Global.random(3);
@@ -73,16 +77,13 @@ public class Tickle extends Skill {
                                     getSelf(), target));
                 }
                 target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("skin"),
-                                2 + Global.random(4), bonus, c, false, this);
-                target.weaken(c, weak / 2 + 2 + target.get(Attribute.Perception) + Global.random(6));
+                                (int) getSelf().modifyDamage(type, target, 2 + Global.random(4)), bonus, c, false, this);
+                target.weaken(c, (int) getSelf().modifyDamage(type, target, weak + Global.random(10, 15)));
             } else if (hastickler() && Global.random(2) == 1) {
+                type = DamageType.gadgets;
+                int bonus = 0;
                 if (target.breastsAvailable() && c.getStance().reachTop(getSelf())) {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, Result.item, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, Result.item, target));
-                    }
-                    int bonus = 0;
+                    writeOutput(c, Result.item, target);
                     if (target.has(Trait.ticklish)) {
                         bonus = 4 + Global.random(3);
                         c.write(target, Global.format(
@@ -91,14 +92,8 @@ public class Tickle extends Skill {
                     }
                     target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("skin"),
                                     4 + Global.random(4), bonus, c, false, this);
-                    target.weaken(c, bonus / 2 + 2 + target.get(Attribute.Perception));
                 } else {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, Result.weak, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, Result.weak, target));
-                    }
-                    int bonus = 0;
+                    writeOutput(c, Result.weak, target);
                     if (target.has(Trait.ticklish)) {
                         bonus = 4 + Global.random(3);
                         c.write(target, Global.format(
@@ -107,14 +102,10 @@ public class Tickle extends Skill {
                     }
                     target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("skin"),
                                     4 + Global.random(2), bonus, c, false, this);
-                    target.weaken(c, bonus / 2 + target.get(Attribute.Perception));
                 }
+                target.weaken(c, (int) getSelf().modifyDamage(type, target, bonus + Global.random(5, 10)));
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.normal, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.normal, target));
-                }
+                writeOutput(c, Result.normal, target);
                 int bonus = 0;
                 if (target.has(Trait.ticklish)) {
                     bonus = 2 + Global.random(3);
@@ -122,19 +113,14 @@ public class Tickle extends Skill {
                                     "{other:SUBJECT-ACTION:squirm|squirms} uncontrollably from {self:name-possessive} actions. Yup definitely ticklish.",
                                     getSelf(), target));
                 }
-                int m = (int) Math.round((4 + Global.random(3)) * (1.5 - target.getExposure()));
-                int weak = (int) Math.round((bonus / 2 + Global.random(3 + target.get(Attribute.Perception)))
-                                * (1.5 - target.getExposure()));
-                target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("skin"), m,
+                int m = (int) Math.round((2 + Global.random(3)) * (.25 + target.getExposure()));
+                int weak = (int) Math.round(bonus / 2 * (.25 + target.getExposure()));
+                target.body.pleasure(getSelf(), getSelf().body.getRandom("hands"), target.body.getRandom("skin"), (int) getSelf().modifyDamage(type, target, m),
                                 bonus, c, false, this);
-                target.weaken(c, weak);
+                target.weaken(c, (int) getSelf().modifyDamage(type, target, weak + Global.random(4, 7)));
             }
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -188,24 +174,35 @@ public class Tickle extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " tries to tickle you, but fails to find a sensitive spot.";
+            return String.format("%s tries to tickle %s, but fails to find a sensitive spot.",
+                            getSelf().subject(), target.nameDirectObject());
         } else if (modifier == Result.special) {
-            return getSelf().name()
-                            + " tickles your nude body mercilessly, gradually working her way to your dick and balls. As her fingers start tormenting your privates, you struggle to "
-                            + "clear your head enough to keep from ejaculating immediately.";
+            return String.format("%s tickles %s nude body mercilessly, gradually working %s way to %s dick and balls. "
+                            + "As %s fingers start tormenting %s privates, %s %s to "
+                            + "clear %s head enough to keep from cumming immediately.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(), getSelf().possessiveAdjective(), target.possessiveAdjective(),
+                            target.pronoun(), target.action("struggle"), target.possessiveAdjective());
         } else if (modifier == Result.critical) {
-            return getSelf().name()
-                            + " teases your privates with her feather tickler. After she stops, you feel an unnatural sensitivity where the feathers touched you.";
+            return String.format("%s teases %s privates with %s feather tickler. After %s stops,"
+                            + " %s an unnatural sensitivity where the feathers touched %s.", getSelf().subject(),
+                            target.nameDirectObject(), getSelf().possessiveAdjective(), getSelf().pronoun(),
+                            target.subjectAction("feel"), target.directObject());
         } else if (modifier == Result.strong) {
-            return getSelf().name()
-                            + " brushes her tickler over your balls and teases the sensitive head of your penis.";
+            return String.format("%s brushes %s tickler over %s balls and teases the sensitive head of %s penis.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective());
         } else if (modifier == Result.item) {
-            return getSelf().name() + " runs her feather tickler across your nipples and abs.";
+            return String.format("%s runs %s feather tickler across %s nipples and abs.",
+                            getSelf().subject(), getSelf().possessiveAdjective(), 
+                            target.nameOrPossessivePronoun());
         } else if (modifier == Result.weak) {
-            return getSelf().name() + " pulls out a feather tickler and teases any exposed skin she can reach.";
+            return String.format("%s pulls out a feather tickler and teases any exposed skin %s can reach.",
+                            getSelf().subject(), getSelf().pronoun());
         } else {
-            return getSelf().name()
-                            + " suddenly springs toward you and tickles you relentlessly until you can barely breathe.";
+            return String.format("%s suddenly springs toward %s and tickles %s"
+                            + " relentlessly until %s can barely breathe.", getSelf().subject(),
+                            target.nameDirectObject(), target.directObject(), target.pronoun());
         }
     }
 

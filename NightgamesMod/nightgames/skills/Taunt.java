@@ -7,6 +7,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.status.Enthralled;
 import nightgames.status.Shamed;
 
 public class Taunt extends Skill {
@@ -27,28 +28,31 @@ public class Taunt extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        double m = (6 + Global.random(4) + getSelf().body.getHotness(getSelf(), target))
-                        * Math.min(2, 1 + getSelf().getExposure());
+        writeOutput(c, Result.normal, target);
+        double m = (6 + Global.random(4) + getSelf().body.getHotness(target)) / 3
+                        * Math.min(2, 1 + target.getExposure());
+        double chance = .25;
         if (target.has(Trait.imagination)) {
             m += 4;
-            target.tempt(c, getSelf(), (int) Math.round(m));
-            if (Global.random(4) >= 1) {
-                target.add(c, new Shamed(target));
-            }
-        } else {
-            target.tempt(c, getSelf(), (int) Math.round(m));
-            if (Global.random(4) >= 2 || getSelf().has(Trait.bitingwords)) {
-                target.add(c, new Shamed(target));
-            }
+            chance += .25;
+        } 
+        if (getSelf().has(Trait.bitingwords)) {
+            m += 4;
+            chance += .25;
+        } 
+        target.temptNoSource(c, getSelf(), (int) Math.round(m), this);
+        if (Global.randomdouble() < chance) {
+            target.add(c, new Shamed(target));
         }
         if (c.getStance().dom(getSelf()) && getSelf().has(Trait.bitingwords)) {
             int willpowerLoss = Math.max(target.getWillpower().max() / 50, 3) + Global.random(3);
             target.loseWillpower(c, willpowerLoss, 0, false, " (Biting Words)");
+        }
+        if (getSelf().has(Trait.commandingvoice) && Global.random(3) == 0) {
+            c.write(getSelf(), Global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
+                            + " authority that {self:subject-action:don't|doesn't} even consider not obeying."
+                            , getSelf(), target));
+            target.add(c, new Enthralled(target, getSelf(), 1, false));
         }
         target.emote(Emotion.angry, 30);
         target.emote(Emotion.nervous, 15);
@@ -59,7 +63,7 @@ public class Taunt extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Cunning) >= 8;
+        return user.get(Attribute.Cunning) >= 8 || user.get(Attribute.Power) >= 15;
     }
 
     @Override
@@ -85,7 +89,7 @@ public class Taunt extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().taunt(c);
+        return getSelf().taunt(c, target);
     }
 
     @Override

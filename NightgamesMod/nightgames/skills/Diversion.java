@@ -4,8 +4,10 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Global;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Behind;
 import nightgames.status.Flatfooted;
 
@@ -13,6 +15,7 @@ public class Diversion extends Skill {
 
     public Diversion(Character self) {
         super("Diversion", self);
+        addTag(SkillTag.undressing);
     }
 
     @Override
@@ -22,7 +25,7 @@ public class Diversion extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return !target.wary() && getSelf().canAct() && c.getStance().mobile(getSelf()) && c.getStance().facing()
+        return !target.wary() && getSelf().canAct() && c.getStance().mobile(getSelf()) && c.getStance().facing(getSelf(), target)
                         && !getSelf().torsoNude() && !c.getStance().prone(getSelf()) && !c.getStance().inserted();
     }
 
@@ -46,7 +49,7 @@ public class Diversion extends Skill {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
         }
-        c.setStance(new Behind(getSelf(), target));
+        c.setStance(new Behind(getSelf(), target), getSelf(), true);
         target.add(c, new Flatfooted(target, 1));
         return true;
     }
@@ -63,38 +66,24 @@ public class Diversion extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        if (modifier == Result.normal) {
-            // TODO this is kind of terrible (deal does the effect...)
-            Clothing article = getSelf().strip(ClothingSlot.top, c);
-            return "You quickly strip off your " + article.getName()
-                            + " and throw it to the right, while you jump to the left. " + target.getName()
-                            + " catches your discarded clothing, " + "losing sight of you in the process.";
-        } else {
-            // TODO this is kind of terrible (deal does the effect...)
-            Clothing article = getSelf().strip(ClothingSlot.bottom, c);
-            return "You quickly strip off your " + article.getName()
-                            + " and throw it to the right, while you jump to the left. " + target.getName()
-                            + " catches your discarded clothing, " + "losing sight of you in the process.";
-        }
+        Clothing article = getSelf().strip(modifier == Result.normal ? ClothingSlot.top : ClothingSlot.bottom, c);
+        return "You quickly strip off your " + article.getName()
+            + " and throw it to the right, while you jump to the left. " + target.getName()
+            + " catches your discarded clothing, " + "losing sight of you in the process.";
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character attacker) {
-        if (modifier == Result.normal) {
-            // TODO this is kind of terrible (deal does the effect...)
-            Clothing article = getSelf().strip(ClothingSlot.top, c);
-            return "You lose sight of " + getSelf().name()
-                            + " for just a moment, but then see her moving behind you in your peripheral vision. You quickly spin around and grab her, "
-                            + "but you find yourself holding just her " + article.getName()
-                            + ". Wait... what the fuck?";
-        } else {
-            // TODO this is kind of terrible (deal does the effect...)
-            Clothing article = getSelf().strip(ClothingSlot.bottom, c);
-            return "You lose sight of " + getSelf().name()
-                            + " for just a moment, but then see her moving behind you in your peripheral vision. You quickly spin around and grab her, "
-                            + "but you find yourself holding just her " + article.getName()
-                            + ". Wait... what the fuck?";
-        }
+        Clothing article = getSelf().strip(modifier == Result.normal ? ClothingSlot.top : ClothingSlot.bottom, c);
+        return String.format("%s sight of %s for just a moment, but then %s %s moving behind "
+                        + "%s in %s peripheral vision. %s quickly %s around and grab %s, "
+                        + "but you find yourself holding just %s %s. Wait... what the fuck?",
+                        attacker.subjectAction("lose"), getSelf().subject(), attacker.pronoun(),
+                        attacker.action("see"),
+                        getSelf().directObject(), attacker.directObject(),
+                        Global.capitalizeFirstLetter(attacker.subject()), attacker.action("spin"),
+                        getSelf().nameDirectObject(), getSelf().possessiveAdjective(),
+                        article.getName());
     }
 
     @Override

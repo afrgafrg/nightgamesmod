@@ -17,7 +17,8 @@ public class TreeAmbush extends Action {
     public boolean usable(Character user) {
         return user.location().id() == Movement.ftcTrail
                         && (user.get(Attribute.Power) >= 20 || user.get(Attribute.Animism) >= 10)
-                        && user.state != State.inTree;
+                        && user.state != State.inTree
+                        && !user.bound();
     }
 
     @Override
@@ -25,7 +26,7 @@ public class TreeAmbush extends Action {
         if (user.human()) {
             if (user.get(Attribute.Animism) >= 10) {
                 Global.gui().message(
-                                "Following your instincts, you clamber up a tree" + " to await a unwitting passerby.");
+                                "Following your instincts, you clamber up a tree" + " to await an unwitting passerby.");
             } else {
                 Global.gui().message("You climb up a tree that has a branch hanging over"
                                 + " the trail. It's hidden in the leaves, so you should be"

@@ -10,6 +10,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.skills.damage.DamageType;
 
 public class Engulfed extends Position {
 
@@ -21,13 +22,15 @@ public class Engulfed extends Position {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You have engulfed " + bottom.name() + " inside your slime body, with only "
-                            + bottom.possessivePronoun() + " face outside of you";
+                            + bottom.possessiveAdjective() + " face outside of you.";
         } else {
-            return top.name() + " is holding your entire body inside " + top.possessivePronoun()
-                            + " slime body, with only your face outside.";
+            return String.format("%s is holding %s entire body inside "
+                            + "%s slime body, with only %s face outside.",
+                            top.nameOrPossessivePronoun(), bottom.nameOrPossessivePronoun(),
+                            top.possessiveAdjective(), bottom.possessiveAdjective());
         }
     }
 
@@ -38,7 +41,7 @@ public class Engulfed extends Position {
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
@@ -51,8 +54,8 @@ public class Engulfed extends Position {
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return c == top;
+    public boolean kiss(Character c, Character target) {
+        return c == top || (target == top && c != bottom);
     }
 
     @Override
@@ -82,12 +85,12 @@ public class Engulfed extends Position {
 
 
     @Override
-    public boolean feet(Character c) {
+    public boolean feet(Character c, Character target) {
         return c == top;
     }
 
     @Override
-    public boolean oral(Character c) {
+    public boolean oral(Character c, Character target) {
         return c == top;
     }
 
@@ -107,28 +110,33 @@ public class Engulfed extends Position {
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return new Neutral(top, bottom);
     }
 
     @Override
-    public Position reverse(Combat c) {
+    public Position reverse(Combat c, boolean writeMessage) {
         if (bottom.has(Trait.slime)) {
-            c.write(bottom, String.format("%s %s slimy body around %s, reversing %s hold.",
-                            bottom.subjectAction("swirls", "swirl"), bottom.possessivePronoun(),
-                            top.nameOrPossessivePronoun(), top.possessivePronoun()));
-            return super.reverse(c);
+            if (writeMessage) {
+                c.write(bottom, String.format("%s %s slimy body a"
+                                + "round %s, reversing %s hold.",
+                                bottom.subjectAction("swirls", "swirl"), bottom.possessiveAdjective(),
+                                top.nameOrPossessivePronoun(), top.possessiveAdjective()));
+            }
+            return super.reverse(c, writeMessage);
         }
-        c.write(bottom, String.format("%s loose from %s slimy grip and %s away from %s.", 
-                        bottom.subjectAction("struggles", "struggle"), top.nameOrPossessivePronoun(),
-                        bottom.action("stagger", "staggers"), top.directObject()));
+        if (writeMessage) {
+            c.write(bottom, String.format("%s loose from %s slimy grip and %s away from %s.", 
+                            bottom.subjectAction("struggles", "struggle"), top.nameOrPossessivePronoun(),
+                            bottom.action("stagger", "staggers"), top.directObject()));
+        }
         return new Neutral(top, bottom);
     }
 
     @Override
     public void decay(Combat c) {
         time++;
-        bottom.weaken(c, 5);
+        bottom.weaken(c, (int) top.modifyDamage(DamageType.stance, bottom, 5));
         top.emote(Emotion.dominant, 10);
     }
 
@@ -138,7 +146,7 @@ public class Engulfed extends Position {
     }
 
     @Override
-    public List<BodyPart> topParts() {
+    public List<BodyPart> topParts(Combat c) {
         List<BodyPart> parts = new ArrayList<>();
         if (slimePitches) {
             parts.addAll(top.body.get("cock"));
@@ -186,5 +194,10 @@ public class Engulfed extends Position {
     @Override
     public int dominance() {
         return 5;
+    }
+    
+    @Override
+    public int distance() {
+        return 1;
     }
 }

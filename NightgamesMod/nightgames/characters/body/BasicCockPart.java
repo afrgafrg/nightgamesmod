@@ -10,6 +10,8 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingSlot;
 import nightgames.status.Sensitized;
 
 public enum BasicCockPart implements CockPart {
@@ -38,7 +40,7 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String describe(Character c) {
-        String syn = Global.pickRandom(synonyms);
+        String syn = Global.pickRandom(synonyms).get();
         return Global.maybeString(desc + " ") + (c.hasPussy() ? "girl-" : "") + syn;
     }
 
@@ -49,7 +51,7 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public String fullDescribe(Character c) {
-        String syn = Global.pickRandom(synonyms);
+        String syn = Global.pickRandom(synonyms).get();
         return desc + " " + (c.hasPussy() ? "girl-" : "") + syn;
     }
 
@@ -68,15 +70,28 @@ public enum BasicCockPart implements CockPart {
         return desc;
     }
 
+    @Override
+    public String canonicalDescription() {
+        return desc;
+    }
+
     public String getName() {
         return name();
     }
 
     @Override
     public double getHotness(Character self, Character opponent) {
-        double hotness = Math.log(size / 4 + 1) / Math.log(2) - 1;
+        double hotness = Math.log(size / 4 + 1) / Math.log(6) - .45;
         if (!opponent.hasPussy()) {
             hotness /= 2;
+        }
+        Clothing bottom = self.getOutfit().getTopOfSlot(ClothingSlot.top);
+        if (bottom == null) {
+            if (self.hasPussy()) {
+                hotness += .05;
+            } else {
+                hotness += .1;
+            }
         }
         return hotness;
     }
@@ -88,9 +103,9 @@ public enum BasicCockPart implements CockPart {
     @Override
     public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = getPleasureBase();
-        pleasureMod += self.has(Trait.cockTraining1) ? .5 : 0;
-        pleasureMod += self.has(Trait.cockTraining2) ? .7 : 0;
-        pleasureMod += self.has(Trait.cockTraining3) ? .7 : 0;
+        pleasureMod += self.has(Trait.sexTraining1) ? .5 : 0;
+        pleasureMod += self.has(Trait.sexTraining2) ? .7 : 0;
+        pleasureMod += self.has(Trait.sexTraining3) ? .7 : 0;
         return pleasureMod;
     }
 
@@ -232,7 +247,7 @@ public enum BasicCockPart implements CockPart {
     public int mod(Attribute a, int total) {
         switch (a) {
             case Speed:
-                return (int) -Math.round(Math.max(size - 6, 0));
+                return (int) -Math.round(Math.max(size - 6, 0)) / 2;
             case Seduction:
                 return (int) Math.round(Math.max(size - 6, 0));
             default:
@@ -261,6 +276,9 @@ public enum BasicCockPart implements CockPart {
 
     @Override
     public BodyPart applyMod(CockMod mod) {
+        if (mod == CockMod.error) {
+            return this;
+        }
         return new ModdedCockPart(this, mod);
     }
 }

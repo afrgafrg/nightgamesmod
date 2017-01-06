@@ -19,7 +19,7 @@ public class Energize extends Action {
 
     @Override
     public boolean usable(Character user) {
-        return user.get(Attribute.Arcane) >= 1 && user.location().mana() && !user.is(Stsflag.energized);
+        return user.get(Attribute.Arcane) >= 1 && user.location().mana() && !user.is(Stsflag.energized) && !user.bound();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class Energize extends Action {
                                             + "continuously and the first lesson you learned was how to siphon off the excess. You absorb as much as you can hold, until you're overflowing with mana.");
         }
         user.getMojo().fill();
-        user.add(new Energized(user, 20));
+        user.addNonCombat(new Energized(user, 20));
         return Movement.mana;
     }
 

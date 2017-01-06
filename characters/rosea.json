@@ -48,7 +48,7 @@
 				},
 				{
 					"level" : 15,
-					"trait" : "pussyTraining1"
+					"trait" : "sexTraining1"
 				},
 				{
 					"level" : 18,
@@ -68,7 +68,7 @@
 				},
 				{
 					"level" : 30,
-					"trait" : "pussyTraining2"
+					"trait" : "sexTraining2"
 				},
 				{
 					"level" : 33,
@@ -88,7 +88,7 @@
 				},
 				{
 					"level" : 45,
-					"trait" : "pussyTraining3"
+					"trait" : "sexTraining3"
 				},
 				{
 					"level" : 48,
@@ -232,7 +232,7 @@
 			}
 		],
 		"describe" : [{
-				"text" : "{self:name} can only be described as an green amazoness sprouting from a tree.<br>While her body beneath her thighs are invisible to you, her voluptuous upper body extends out from a giant flower blooming on the side of the large tree in the courtyard. Her long hair is a deeper shade of green and extends down to the small of her back. Numerous fleshy red flowers adorn her body, each one lewdly slightly opening and closing as if breathing. <br>She looks at you with a hungry look in her eyes."
+				"text" : "{self:name} can only be described as an green amazoness sprouting from a tree.<br/>While her body beneath her thighs are invisible to you, her voluptuous upper body extends out from a giant flower blooming on the side of the large tree in the courtyard. Her long hair is a deeper shade of green and extends down to the small of her back. Numerous fleshy red flowers adorn her body, each one lewdly slightly opening and closing as if breathing. <br/>She looks at you with a hungry look in her eyes."
 			}
 		],
 		"startBattle" : [{
@@ -240,7 +240,7 @@
 			}
 		],
 		"night" : [{
-				"text" : "Tired after the night's games, you start trudging back to your place. As you're about to leave the grounds however, you smell a sweet scene in the air. The aroma seems to arouse you, but at the same time making your accumulated fatigue disappear like magic. You grin and thank {self:name-do} in your mind."
+				"text" : "Tired after the night's games, you start trudging back to your place. As you're about to leave the grounds however, you smell a sweet scent in the air. The aroma seems to arouse you, but at the same time making your accumulated fatigue disappear like magic. You grin and thank {self:name-do} in your mind."
 			}
 		],
 		"victory" : [{
@@ -277,18 +277,18 @@
 			}
 		],
 		"victory3p" : [{
-				"text" : "Rosea brings you to an orgasm while {other:subject} holds you down."
+				"text" : "{self:name} brings you to an orgasm while {other:subject} holds you down."
 			}],
 		"victory3pAssist" :[{
-				"text" : "Rosea brings {other:name-do} to an orgasm while you hold {other:direct-object} down."
+				"text" : "{self:name} brings {other:name-do} to an orgasm while you hold {other:direct-object} down."
 			}
 		],
 		"intervene3p" : [{
-				"text" : "While the fight is happening between you and {other:subject}, Rosea sneaks up behind you and holds you down."
+				"text" : "While the fight is happening between you and {other:subject}, {self:name} sneaks up behind you and holds you down."
 			}
 		],
 		"intervene3pAssist": [{
-				"text" : "While the fight is happening, Rosea sneaks behind {other:name-do} and holds {other:direct-object} down."
+				"text" : "While the fight is happening, {self:name} sneaks behind {other:name-do} and holds {other:direct-object} down."
 			}
 		]
 	},
@@ -309,7 +309,7 @@
 			{"modMoney" : -1000}
 		],
 		"introduction" : "Rosea's a tree. If you want, I can plant her in the middle of the front lawn.",
-		"confirm" : "Alright, you'll see her tomorrow at dusk"
+		"confirm" : "Alright, you'll see her tomorrow at dusk."
 	},
 	"portraits" : [{
 			"requirements" : {

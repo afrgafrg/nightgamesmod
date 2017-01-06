@@ -7,11 +7,17 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 
 public class Flick extends Skill {
 
     public Flick(Character self) {
-        super("Flick", self, 3);
+        super("Flick", self, 2);
+        addTag(SkillTag.mean);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.staminaDamage);
     }
 
     @Override
@@ -31,38 +37,31 @@ public class Flick extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (target.has(Trait.brassballs)) {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.weak, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.weak, target));
-                }
+                writeOutput(c, Result.weak, target);
             } else {
                 int mojoLost = 25;
-                int m = Global.random(6) + 5;
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, m, Result.normal, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, m, Result.normal, target));
-                }
+                int m = Global.random(8) + 8;
+                writeOutput(c, Result.normal, target);
                 if (target.has(Trait.achilles)) {
                     m += 2 + Global.random(target.get(Attribute.Perception) / 2);
                     mojoLost = 40;
                 }
-                target.pain(c, m);
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));
                 target.loseMojo(c, mojoLost);
                 getSelf().emote(Emotion.dominant, 10);
                 target.emote(Emotion.angry, 15);
                 target.emote(Emotion.nervous, 15);
             }
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -70,7 +69,7 @@ public class Flick extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) >= 17 && !user.has(Trait.softheart);
+        return user.get(Attribute.Seduction) >= 17;
     }
 
     @Override
@@ -110,13 +109,19 @@ public class Flick extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " flicks at your balls, but hits only air.";
+            return String.format("%s flicks at %s balls, but hits only air.",
+                            getSelf().subject(), target.nameOrPossessivePronoun());
         } else if (modifier == Result.weak) {
-            return getSelf().name() + " flicks your balls, but " + " you barely feel a thing.";
+            return String.format("%s flicks %s balls, but %s barely %s a thing.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            target.pronoun(), target.action("feel"));
         } else {
-            return getSelf().name()
-                            + " gives you a mischievous grin and flicks each of your balls with her finger. It startles you more than anything, but it does hurt and "
-                            + "her seemingly carefree abuse of your jewels destroys your confidence.";
+            return String.format("%s gives %s a mischievous grin and flicks each of %s balls with %s finger. "
+                            + "It startles %s more than anything, but it does hurt and "
+                            + "%s seemingly carefree abuse of %s jewels destroys %s confidence.",
+                            getSelf().subject(), target.nameDirectObject(), target.possessiveAdjective(),
+                            getSelf().possessiveAdjective(), target.directObject(), getSelf().nameOrPossessivePronoun(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective());
         }
     }
 

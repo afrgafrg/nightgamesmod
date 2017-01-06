@@ -41,21 +41,22 @@ public class CockGrowth extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        Result res = target.roll(this, c, accuracy(c)) ? Result.normal : Result.miss;
+        Result res = target.roll(getSelf(), c, accuracy(c, target)) ? Result.normal : Result.miss;
         if (res == Result.normal && !target.hasDick()) {
             res = Result.special;
         }
 
-        boolean permanent = Global.random(20) == 0 && (getSelf().human() || target.human())
+        boolean permanent = Global.random(20) == 0 && (getSelf().human() || c.shouldPrintReceive(target, c))
                         && !target.has(Trait.stableform);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, permanent ? 1 : 0, res, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, permanent ? 1 : 0, res, target));
-        }
+
         if (res != Result.miss) {
-            target.add(c, new Hypersensitive(target));
+            target.add(c, new Hypersensitive(target, 10));
             CockPart part = target.body.getCockBelow(BasicCockPart.massive.size);
             if (permanent) {
                 if (part != null) {
@@ -71,6 +72,7 @@ public class CockGrowth extends Skill {
                 }
             }
         }
+        writeOutput(c, permanent ? 1 : 0, res, target);
         return res != Result.miss;
     }
 
@@ -109,19 +111,28 @@ public class CockGrowth extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         String message;
         if (modifier == Result.miss) {
-            message = getSelf().name()
-                            + " stops moving and begins chanting. You start feeling some tingling in your groin, but it quickly subsides as you dodge out of the way.";
+            message = String.format("%s moving and begins chanting. %s feeling some "
+                            + "tingling in %s groin, but it quickly subsides as %s %s out of the way.", 
+                            getSelf().subjectAction("stop"), Global.capitalizeFirstLetter(target.subjectAction("start")),
+                            target.possessiveAdjective(), target.pronoun(), target.action("dodge"));
         } else {
             if (modifier == Result.special) {
-                message = getSelf().name()
-                                + " stops moving and begins chanting. You feel your clit grow hot, and start expanding! "
-                                + "You try to hold it back with your hands, but the growth continues until you're the proud owner of a new small girl-dick. "
-                                + "The new sensations from your new maleness makes you tremble.";
+                message = String.format("%s moving and begins chanting. %s to feel %s clit grow hot, and start expanding! "
+                                + "%s try to hold it back with your hands, but the growth continues until %s %s the proud owner of a new %s. "
+                                + "The sensations from %s new maleness make %s tremble.",
+                                getSelf().subjectAction("stop"), Global.capitalizeFirstLetter(target.subjectAction("start")),
+                                target.possessiveAdjective(),
+                                Global.capitalizeFirstLetter(target.pronoun()), target.pronoun(), target.action("are", "is"), 
+                                target.body.getRandomCock().describe(target),
+                                target.possessiveAdjective(), target.directObject());
             } else {
-                message = getSelf().name()
-                                + " stops moving and begins chanting. You feel your cock grow hot, and start expanding! "
-                                + "You try to hold it back with your hands, but the growth continues until it's much larger than before. "
-                                + "The new sensations from your new larger cock makes you tremble.";
+                message = String.format("%s moving and begins chanting. %s feel %s cock grow hot, and start expanding! "
+                                + "%s try to hold it back with your hands, but the growth continues until it's much larger than before. "
+                                + "The new sensations from %s new larger cock make %s tremble.",
+                                getSelf().subjectAction("stop"), Global.capitalizeFirstLetter(target.subjectAction("start")),
+                                target.possessiveAdjective(),
+                                Global.capitalizeFirstLetter(target.pronoun()),
+                                target.possessiveAdjective(), target.directObject());
             }
             if (damage > 0) {
                 message += " You realize the effects are permanent!";

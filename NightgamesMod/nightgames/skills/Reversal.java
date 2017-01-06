@@ -5,12 +5,15 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Pin;
 
 public class Reversal extends Skill {
 
     public Reversal(Character self) {
         super("Reversal", self);
+        addTag(SkillTag.escaping);
+        addTag(SkillTag.positioning);
     }
 
     @Override
@@ -25,22 +28,14 @@ public class Reversal extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.normal, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.normal, target));
-            }
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            writeOutput(c, Result.normal, target);
 
-            c.setStance(new Pin(getSelf(), target));
+            c.setStance(new Pin(getSelf(), target), getSelf(), true);
             target.emote(Emotion.nervous, 10);
             getSelf().emote(Emotion.dominant, 10);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -62,9 +57,9 @@ public class Reversal extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return Math.round(Math.max(Math.min(150,
-                        2.5f * (getSelf().get(Attribute.Cunning) - c.getOther(getSelf()).get(Attribute.Cunning)) + 75),
+                        2.5f * (getSelf().get(Attribute.Cunning) - target.get(Attribute.Cunning)) + 75),
                         40));
     }
 
@@ -86,9 +81,13 @@ public class Reversal extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " tries to reverse your hold, but you stop her.";
+            return String.format("%s tries to reverse %s hold, but %s %s %s.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            target.pronoun(), target.action("stop"),
+                            getSelf().directObject());
         } else {
-            return getSelf().name() + " rolls you over and ends up on top.";
+            return String.format("%s rolls %s over and ends up on top.",
+                            getSelf().subject(), target.nameDirectObject());
         }
     }
 

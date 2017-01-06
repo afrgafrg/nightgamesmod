@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
+import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
@@ -17,7 +18,6 @@ import nightgames.skills.Carry;
 import nightgames.skills.Fly;
 import nightgames.skills.Fuck;
 import nightgames.skills.Invitation;
-import nightgames.skills.LegLock;
 import nightgames.skills.ReverseAssFuck;
 import nightgames.skills.ReverseCarry;
 import nightgames.skills.ReverseFly;
@@ -49,7 +49,6 @@ public class Frenzied extends DurationStatus {
         FUCK_SKILLS.add(new Fly(p));
         FUCK_SKILLS.add(new Fuck(p));
         FUCK_SKILLS.add(new Invitation(p));
-        FUCK_SKILLS.add(new LegLock(p));
         FUCK_SKILLS.add(new WildThrust(p));
         FUCK_SKILLS.add(new ReverseAssFuck(p));
         FUCK_SKILLS.add(new ReverseCarry(p));
@@ -59,26 +58,44 @@ public class Frenzied extends DurationStatus {
         FUCK_SKILLS.add(new ToggleKnot(p));
     }
 
+    private boolean selfInflicted;
     public Frenzied(Character affected, int duration) {
+        this(affected, duration, false);
+    }
+
+    public Frenzied(Character affected, int duration, boolean selfInflicted) {
         super("Frenzied", affected, duration);
         flag(Stsflag.frenzied);
+        if (!selfInflicted && !affected.has(Trait.Rut)) {
+            flag(Stsflag.debuff);
+        }
         flag(Stsflag.purgable);
+        this.selfInflicted = selfInflicted;
     }
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
+        if (affected.has(Trait.Rut)) {
+            return Global.format("There's a frenzied look in {self:name-possessive} eyes as {self:pronoun-action:eye|eyes} zeroes in on {other:name-possessive} crotch. "
+                            + "This could be bad.", affected, c.getOpponent(affected));
+        }
         return String.format("%s mind blanks, leaving only the bestial need to breed.",
                         affected.nameOrPossessivePronoun());
     }
 
     @Override
     public String describe(Combat c) {
+        String msg;
         if (affected.human()) {
-            return "You cannot think about anything other than fucking all those around.";
+            msg = "You cannot think about anything other than fucking all that moves.";
         } else {
-            return String.format("%s has a frenzied look in %s eyes, interested in nothing but raw, hard sex.",
-                            affected.name(), affected.possessivePronoun());
+            msg = String.format("%s has a frenzied look in %s eyes, interested in nothing but raw, hard sex.",
+                            affected.name(), affected.possessiveAdjective());
         }
+        if (affected.has(Trait.PrimalHeat)) {
+            msg += Global.format(" Somehow {self:possessive} crazed animal desperation makes {self:direct-object} seem more attractive than ever.", affected, c.getOpponent(affected));
+        }
+        return msg;
     }
 
     @Override
@@ -97,12 +114,14 @@ public class Frenzied extends DurationStatus {
 
     @Override
     public void onRemove(Combat c, Character other) {
-        affected.addlist.add(new Cynical(affected));
+        if (!selfInflicted) {
+            affected.addlist.add(new Cynical(affected));
+        }
     }
 
     @Override
     public boolean mindgames() {
-        return true;
+        return !selfInflicted;
     }
 
     @Override
@@ -168,10 +187,6 @@ public class Frenzied extends DurationStatus {
         if (c == null) {
             affected.removelist.add(this);
             affected.removeStatusNoSideEffects();
-        } else if (!c.getStance().inserted(affected)) {
-            affected.removelist.add(this);
-        } else {
-            setDuration(getDuration() + 2);
         }
     }
 
@@ -184,7 +199,7 @@ public class Frenzied extends DurationStatus {
     public Collection<Skill> allowedSkills(Combat c) {
         // Gather the preferred skills for which the character meets the
         // requirements
-        return FUCK_SKILLS.stream().filter(s -> s.requirements(c, affected, c.getOther(affected)))
+        return FUCK_SKILLS.stream().filter(s -> s.requirements(c, affected, c.getOpponent(affected)))
                         .map(s -> s.copy(affected)).collect(Collectors.toSet());
     }
 

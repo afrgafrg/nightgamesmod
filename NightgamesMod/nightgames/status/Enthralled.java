@@ -9,24 +9,35 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.pet.PetCharacter;
 
 public class Enthralled extends DurationStatus {
     private int timesRefreshed;
+    private boolean makesCynical;
     public Character master;
-
     public Enthralled(Character self, Character master, int duration) {
+        this(self, master, duration, duration > 1);
+    }
+
+    public Enthralled(Character self, Character master, int duration, boolean makesCynical) {
         super("Enthralled", self, duration);
         timesRefreshed = 0;
+        if (master.isPet()) {
+            master = ((PetCharacter) master).getSelf().owner();
+        }
         this.master = master;
         flag(Stsflag.enthralled);
+        flag(Stsflag.debuff);
+        flag(Stsflag.disabling);
         flag(Stsflag.purgable);
+        this.makesCynical = makesCynical;
     }
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         if (replaced) {
             return String.format("%s %s control of %s.\n", master.subjectAction("reinforce", "reinforces"),
-                            master.possessivePronoun(), affected.nameDirectObject());
+                            master.possessiveAdjective(), affected.nameDirectObject());
         } else {
             return String.format("%s now enthralled by %s.\n", affected.subjectAction("are", "is"), master.subject());
         }
@@ -35,10 +46,11 @@ public class Enthralled extends DurationStatus {
     @Override
     public String describe(Combat c) {
         if (affected.human()) {
-            return "You feel a constant pull on your mind, forcing you to obey " + master.possessivePronoun()
+            return "You feel a constant pull on your mind, forcing you to obey " + master.possessiveAdjective()
                             + " every command.";
         } else {
-            return affected.name() + " looks dazed and compliant, ready to follow your orders.";
+            return affected.name() + " looks dazed and compliant, ready to follow "
+                                +c.getOpponent(affected).nameOrPossessivePronoun()+" orders.";
         }
     }
 
@@ -80,16 +92,18 @@ public class Enthralled extends DurationStatus {
 
     @Override
     public void onRemove(Combat c, Character other) {
-        affected.addlist.add(new Cynical(affected));
+        if (makesCynical) {
+            affected.addlist.add(new Cynical(affected));
+        }
         if (c != null && affected.human()) {
             c.write(affected,
                             "Everything around you suddenly seems much clearer,"
                                             + " like a lens snapped into focus. You don't really remember why"
-                                            + " you were heading in the direction you where...");
+                                            + " you were heading in the direction you were...");
         } else if (affected.human()) {
             Global.gui().message("Everything around you suddenly seems much clearer,"
                             + " like a lens snapped into focus. You don't really remember why"
-                            + " you were heading in the direction you where...");
+                            + " you were heading in the direction you were...");
         }
     }
 
@@ -165,17 +179,18 @@ public class Enthralled extends DurationStatus {
 
     @Override
     public Status instance(Character newAffected, Character newOther) {
-        return new Enthralled(newAffected, newOther, getDuration());
+        return new Enthralled(newAffected, newOther, getDuration(), makesCynical);
     }
 
     @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getClass().getSimpleName());
         obj.addProperty("duration", getDuration());
+        obj.addProperty("makesCynical", makesCynical);
         return obj;
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Enthralled(null, null, obj.get("duration").getAsInt());
+        return new Enthralled(null, null, obj.get("duration").getAsInt(), obj.get("makesCynical").getAsBoolean());
     }
 }

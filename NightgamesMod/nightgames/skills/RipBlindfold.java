@@ -4,7 +4,6 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
 import nightgames.status.Blinded;
 import nightgames.status.Stsflag;
 
@@ -23,8 +22,7 @@ public class RipBlindfold extends Skill {
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance()
                                       .reachTop(getSelf())
-                        && target.is(Stsflag.blinded) && ((Blinded) target.getStatus(Stsflag.blinded)).getCause()
-                                                                                                      .equals("a blindfold");
+                        && target.is(Stsflag.blinded) && target.getStatus(Stsflag.blinded) instanceof Blinded;
     }
 
     @Override
@@ -41,26 +39,34 @@ public class RipBlindfold extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        if (!target.canAct() || !((Blinded) target.getStatus(Stsflag.blinded)).isVoluntary()) {
+            return 200;
+        }
+        int base = 60;
+        if (c.getStance().sub(target)) {
+            base = 100 - (base / 2);
+        }
+        if (c.getStance().penetratedBy(c, target, getSelf())) {
+            base = 100 - (base / 3);
+        }
+        return base;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        boolean hit = !target.canAct() || !((Blinded) target.getStatus(Stsflag.blinded)).isVoluntary();
-        if (c.getStance()
-             .sub(target))
-            hit |= Global.random(2) == 0;
-        if (c.getStance()
-             .penetratedBy(target, getSelf()))
-            hit |= Global.random(3) == 0;
-        hit |= target.roll(this, c, 60);
+        boolean hit = target.roll(getSelf(), c, accuracy(c, target));
 
         if (hit) {
             c.write(getSelf(),
                             String.format("%s %s blindfold and %s it off with a strong yank.",
-                                            getSelf().subjectAction("grab", "grabs"), target.nameOrPossessivePronoun(),
-                                            getSelf().action("pull", "pulls")));
+                                            getSelf().subjectAction("grab"), target.nameOrPossessivePronoun(),
+                                            getSelf().action("pull")));
             target.removeStatus(Stsflag.blinded);
         } else {
             c.write(getSelf(), String.format("%s at %s blindfold, but %s %s away from %s fingers.",
-                            getSelf().subjectAction("grasp", "grasps"), target.nameOrPossessivePronoun(),
-                            target.pronoun(), target.action("twist", "twists"), getSelf().possessivePronoun()));
+                            getSelf().subjectAction("grasp"), target.nameOrPossessivePronoun(),
+                            target.pronoun(), target.action("twist"), getSelf().possessiveAdjective()));
         }
 
         return hit;

@@ -1,6 +1,8 @@
 package nightgames.characters.body;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.google.gson.JsonObject;
 
@@ -17,6 +19,8 @@ public interface BodyPart {
     public boolean isType(String type);
 
     public String getType();
+
+    public String canonicalDescription();
 
     public String describe(Character c);
 
@@ -79,16 +83,16 @@ public interface BodyPart {
     }
 
     /**
-     * -1 is weak, 0 is none, 1 is strong<br>
-     * ex: <br>
+     * -1 is weak, 0 is none, 1 is strong<br/>
+     * ex: <br/>
      * <code>
-     	  PussyPart.fiery.counterValue(CockPart.primal) == -1   // fiery pussy builds mojo for primal cock<br>
-         CockPart.primal.counterValue(PussyPart.fiery) == 1    // the reverse case<br>
-         CockPart.primal.counterValue(PussyPart.succubus) == 0 // no effects: both parts function as normal<br>
-         </code> It must always hold that:<br>
+     	  PussyPart.fiery.counterValue(CockPart.primal) == -1   // fiery pussy builds mojo for primal cock<br/>
+         CockPart.primal.counterValue(PussyPart.fiery) == 1    // the reverse case<br/>
+         CockPart.primal.counterValue(PussyPart.succubus) == 0 // no effects: both parts function as normal<br/>
+         </code> It must always hold that:<br/>
      * <code>
-      X.counterValue(Y) == -1 <=> Y.counterValue(X) == 1<br>
-      X.counterValue(Y) == 0  <=> Y.counterValue(X) == 0<br>
+      X.counterValue(Y) == -1 <=> Y.counterValue(X) == 1<br/>
+      X.counterValue(Y) == 0  <=> Y.counterValue(X) == 0<br/>
       </code>
      * @param self TODO
      * @param other TODO
@@ -145,5 +149,11 @@ public interface BodyPart {
 
     public default boolean moddedPartCountsAs(Character self, BodyPartMod mod) {
         return getMod(self).countsAs(self, mod);
+    }
+
+    static List<String> genitalTypes = Arrays.asList("pussy", "cock", "ass");
+    
+    public default boolean isGenital() {
+        return genitalTypes.contains(getType());
     }
 }

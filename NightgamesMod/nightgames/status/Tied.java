@@ -10,13 +10,14 @@ import nightgames.combat.Combat;
 public class Tied extends DurationStatus {
 
     public Tied(Character affected) {
-        super("Tied Up", affected, 5);
-        flag(Stsflag.tied);
+        this(affected, 5);
     }
 
     public Tied(Character affected, int duration) {
         super("Tied Up", affected, duration);
         flag(Stsflag.tied);
+        flag(Stsflag.debuff);
+        flag(Stsflag.purgable);
     }
 
     @Override
@@ -25,7 +26,8 @@ public class Tied extends DurationStatus {
             return "The rope wrapped around you digs into your body, but only slows you down a bit.";
         }
 
-        return affected.name() + " squirms against the rope, but you know you tied it well.";
+        return String.format("%s squirms against the rope, but %s %s tied it well.", affected.subject(),
+                        c.getOpponent(affected).subjectAction("know"), c.getOpponent(affected).pronoun());
     }
 
     @Override

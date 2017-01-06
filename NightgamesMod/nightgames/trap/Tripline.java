@@ -7,36 +7,44 @@ import nightgames.combat.IEncounter;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.stance.StandingOver;
+import nightgames.status.Flatfooted;
 
-public class Tripline implements Trap {
-    private Character owner;
+public class Tripline extends Trap {
+    
+    public Tripline() {
+        this(null);
+    }
+    
+    public Tripline(Character owner) {
+        super("Tripline", owner);
+    }
 
     @Override
     public void trigger(Character target) {
+        int m = 30 + target.getLevel() * 5;
         if (target.human()) {
-            if (!target.check(Attribute.Perception, 20 - target.get(Attribute.Perception) + target.baseDisarm())) {
+            if (!target.check(Attribute.Perception, 20 + target.baseDisarm())) {
                 Global.gui().message("You trip over a line of cord and fall on your face.");
-                target.pain(null, 5);
+                target.pain(null, null, m);
                 target.location().opportunity(target, this);
             } else {
                 Global.gui().message("You spot a line strung across the corridor and carefully step over it.");
                 target.location().remove(this);
             }
         } else {
-            if (!target.check(Attribute.Perception, 15)) {
+            if (!target.check(Attribute.Perception, 20 + target.baseDisarm())) {
                 if (target.location().humanPresent()) {
                     Global.gui().message(target.name()
                                     + " carelessly stumbles over the tripwire and lands with an audible thud.");
                 }
-                target.pain(null, 5);
+                target.pain(null, null, m);
                 target.location().opportunity(target, this);
+            } else {
+                if (target.location().humanPresent()) {
+                    Global.gui().message("You see " + target.getName() + " carefully step over the carefully placed tripline." );
+                }
             }
         }
-    }
-
-    @Override
-    public boolean decoy() {
-        return false;
     }
 
     @Override
@@ -52,30 +60,15 @@ public class Tripline implements Trap {
     }
 
     @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Tripline";
-    }
-
-    @Override
     public boolean requirements(Character owner) {
         return true;
     }
 
     @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
+        victim.addNonCombat(new Flatfooted(victim, 1));
         enc.engage(new Combat(attacker, victim, attacker.location(), new StandingOver(attacker, victim)));
         victim.location().remove(this);
     }
 
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
-    }
 }

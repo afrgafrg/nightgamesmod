@@ -1,9 +1,13 @@
 package nightgames.debug;
 
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.swing.BoxLayout;
@@ -12,13 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import nightgames.characters.Character;
+import nightgames.characters.Attribute;
 import nightgames.characters.Trait;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.items.Item;
 
+@SuppressWarnings("unused")
 public class DebugGUIPanel extends JPanel {
     /**
      *
@@ -44,10 +52,24 @@ public class DebugGUIPanel extends JPanel {
                 output.setText(list.get(1) + " is not a valid charater");
             }
         }));
-        consoleCommands.add(new DebugCommand("(\\w+)\\.addTrait (\\w+)", (output, list) -> {
+        consoleCommands.add(new DebugCommand("(\\w+)\\.move (\\w+)", (output, list) -> {
             try {
                 Character target = Global.getCharacterByType(list.get(1));
-                target.add(Trait.valueOf(list.get(2)));
+                target.travel(Global.getMatch().getAreas().stream().filter(area -> area.name.toLowerCase().contains(list.get(2).toLowerCase())).findAny().get());
+            } catch (NullPointerException e) {
+                output.setText(list.get(1) + " is not a valid charater");
+            }
+        }));
+        consoleCommands.add(new DebugCommand("(\\w+)\\.addTrait (\\w+)", (output, list) -> {
+            try {
+            	Character target = Global.getCharacterByType(list.get(1));
+            	if (list.get(2).equals("all")) {
+            		for (Trait t : Trait.values()) {
+            			target.add(t);
+            		}
+            	} else {
+	                target.add(Trait.valueOf(list.get(2)));
+            	}
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             } catch (IllegalArgumentException e) {
@@ -72,6 +94,21 @@ public class DebugGUIPanel extends JPanel {
                     amt = Integer.valueOf(list.get(3));
                 }
                 target.gain(Item.valueOf(list.get(2)), amt);
+            } catch (NullPointerException e) {
+                output.setText(list.get(1) + " is not a valid charater");
+            } catch (IllegalArgumentException e) {
+                output.setText(list.get(2) + " is not a valid item");
+            }
+        }));
+
+        consoleCommands.add(new DebugCommand("(\\w+)\\.addAtt (\\w+) ?(\\d+)?", (output, list) -> {
+            try {
+                Character target = Global.getCharacterByType(list.get(1));
+                int amt = 1;
+                if (list.size() > 3 && list.get(3) != null) {
+                    amt = Integer.valueOf(list.get(3));
+                }
+                target.mod(Attribute.valueOf(list.get(2)), amt);
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             } catch (IllegalArgumentException e) {
@@ -112,9 +149,19 @@ public class DebugGUIPanel extends JPanel {
         consoleCommands.add(new DebugCommand("(\\w+)\\.list", (output, list) -> {
             try {
                 Character target = Global.getCharacterByType(list.get(1));
-                output.setText(String.format("Stamina [%s]\nArousal [%s]\nMojo [%s]\nWillpower [%s]\n",
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < target.traits.size(); i++) {
+                    sb.append(target.traits.get(i));
+                    if (i % 4 == 2) {
+                        sb.append("\n");
+                    } else if (i != target.traits.size() - 1) {
+                        sb.append(", ");
+                    }
+                }
+                String attString = target.att.entrySet().stream().map(e -> String.format("%s: %d", e.getKey(), e.getValue())).collect(Collectors.joining("\n"));
+                output.setText(String.format("Stamina [%s]\nArousal [%s]\nMojo [%s]\nWillpower [%s]\nAttractiveness: %.01f\n%s\n%s",
                                 target.getStamina().toString(), target.getArousal().toString(),
-                                target.getMojo().toString(), target.getWillpower().toString()));
+                                target.getMojo().toString(), target.getWillpower().toString(), target.body.getHotness(Global.getPlayer()), attString, sb.toString()));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             }
@@ -122,6 +169,8 @@ public class DebugGUIPanel extends JPanel {
     }
 
     private JTextArea out;
+    private static List<String> oldCommands = new ArrayList<>();
+    private static int index = 0 ;
 
     public DebugGUIPanel() {
         add(new JLabel("Debuggers"));
@@ -146,9 +195,37 @@ public class DebugGUIPanel extends JPanel {
         add(out);
 
         JTextField console = new JTextField();
+        console.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                index = oldCommands.size();
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_UP && !oldCommands.isEmpty()) {
+                    if (index == oldCommands.size() && !console.getText().isEmpty()) {
+                        oldCommands.add(console.getText());
+                    }
+                    if (index > 0) {
+                        index -= 1;
+                    }
+                    console.setText(oldCommands.get(index));
+                }
+                if (e.getKeyCode() == KeyEvent.VK_DOWN && !oldCommands.isEmpty()) {
+                    if (index < oldCommands.size() - 1) {
+                        index += 1;
+                    }
+                    console.setText(oldCommands.get(Math.min(oldCommands.size() - 1, index)));
+                }
+            }
+        });
         console.addActionListener(action -> {
             out.setText("");
             String command = console.getText();
+            if (!command.isEmpty()) {
+                oldCommands.add(command);
+            }
+            index = oldCommands.size();
             Optional<DebugCommand> opt =
                             consoleCommands.stream().filter(cc -> cc.checkAndExecute(out, command)).findFirst();
             if (!opt.isPresent()) {

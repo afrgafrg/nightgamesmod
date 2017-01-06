@@ -1,7 +1,9 @@
 package nightgames.characters;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import nightgames.actions.Action;
@@ -17,19 +19,11 @@ import nightgames.skills.Skill;
 public interface Personality extends Serializable {
     Skill act(HashSet<Skill> available, Combat c);
 
-    Action move(HashSet<Action> available, HashSet<Movement> radar);
+    Action move(Collection<Action> available, Collection<Movement> radar);
 
     NPC getCharacter();
 
     void rest(int time);
-
-    String bbLiner(Combat c);
-
-    String nakedLiner(Combat c);
-
-    String stunLiner(Combat c);
-
-    String taunt(Combat c);
 
     String victory(Combat c, Result flag);
 
@@ -39,7 +33,7 @@ public interface Personality extends Serializable {
 
     String intervene3p(Combat c, Character target, Character assist);
 
-    String describe(Combat c);
+    String describe(Combat c, Character self);
 
     String draw(Combat c, Result flag);
 
@@ -49,11 +43,7 @@ public interface Personality extends Serializable {
 
     void ding();
 
-    String startBattle(Character other);
-
     boolean fit();
-
-    String night();
 
     boolean checkMood(Combat c, Emotion mood, int value);
 
@@ -61,13 +51,7 @@ public interface Personality extends Serializable {
 
     void pickFeat();
 
-    String describeAll(Combat c);
-
-    String temptLiner(Combat c);
-
-    String orgasmLiner(Combat c);
-
-    String makeOrgasmLiner(Combat c);
+    String describeAll(Combat c, Character self);
 
     String getType();
 
@@ -80,6 +64,7 @@ public interface Personality extends Serializable {
     void resetAiModifiers();
 
     String resist3p(Combat combat, Character target, Character assist);
+    List<PreferredAttribute> getPreferredAttributes();
 
     Map<CommentSituation, String> getComments(Combat c);
 
@@ -94,5 +79,6 @@ public interface Personality extends Serializable {
 
     void setCharacter(NPC npc);
 
-    Growth getGrowth();
+    void applyBasicStats(Character self);
+    void applyStrategy(NPC self);
 }

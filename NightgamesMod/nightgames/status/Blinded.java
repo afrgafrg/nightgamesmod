@@ -7,6 +7,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.Global;
 
 public class Blinded extends Status {
 
@@ -19,6 +20,7 @@ public class Blinded extends Status {
         this.cause = cause;
         this.voluntary = voluntary;
         flag(Stsflag.blinded);
+        flag(Stsflag.debuff);
     }
 
     public boolean isVoluntary() {
@@ -27,12 +29,12 @@ public class Blinded extends Status {
     
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return String.format("%s eyes are now blocked by %s", affected.nameOrPossessivePronoun(), cause);
+        return Global.capitalizeFirstLetter(String.format("%s eyes are now blocked by %s", affected.nameOrPossessivePronoun(), cause));
     }
 
     @Override
     public String describe(Combat c) {
-        return String.format("%s eyesight is blocked by %s.", affected.nameOrPossessivePronoun(), cause);
+        return Global.capitalizeFirstLetter(String.format("%s eyesight is blocked by %s.", affected.nameOrPossessivePronoun(), cause));
     }
 
     @Override

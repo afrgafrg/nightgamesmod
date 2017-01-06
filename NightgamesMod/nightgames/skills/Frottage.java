@@ -5,15 +5,18 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
+import nightgames.characters.body.StraponPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 
 public class Frottage extends Skill {
 
     public Frottage(Character self) {
         super("Frottage", self);
+        addTag(SkillTag.pleasureSelf);
     }
 
     @Override
@@ -24,8 +27,9 @@ public class Frottage extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().sub(getSelf())
-                        && !c.getStance().havingSex() && target.crotchAvailable()
-                        && (getSelf().hasDick() && getSelf().crotchAvailable() || getSelf().has(Trait.strapped));
+                        && !c.getStance().havingSex(c) && target.crotchAvailable()
+                        && (getSelf().hasDick() && getSelf().crotchAvailable() || getSelf().has(Trait.strapped))
+                        && c.getStance().reachBottom(getSelf());
     }
 
     @Override
@@ -35,14 +39,14 @@ public class Frottage extends Skill {
 
     @Override
     public int getMojoBuilt(Combat c) {
-        return 15;
+        return 10;
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         int m = 6 + Global.random(8);
         BodyPart receiver = target.hasDick() ? target.body.getRandomCock() : target.body.getRandomPussy();
-        BodyPart dealer = getSelf().hasDick() ? getSelf().body.getRandomCock() : getSelf().body.getRandomPussy();
+        BodyPart dealer = getSelf().hasDick() ? getSelf().body.getRandomCock() : getSelf().has(Trait.strapped) ? StraponPart.generic : getSelf().body.getRandomPussy();
         if (getSelf().human()) {
             if (target.hasDick()) {
                 c.write(getSelf(), deal(c, m, Result.special, target));
@@ -96,14 +100,23 @@ public class Frottage extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return getSelf().name()
-                            + " thrusts her hips to prod your delicate jewels with her strapon dildo. As you flinch and pull your hips back, she presses the toy against your cock, teasing your sensitive parts.";
+            return String.format("%s thrusts %s hips to prod %s delicate jewels with %s strapon dildo. "
+                            + "As %s and %s %s hips back, %s presses the toy against %s cock, "
+                            + "teasing %s sensitive parts.",
+                            getSelf().subject(), getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(),
+                            getSelf().possessiveAdjective(),
+                            target.subjectAction("flinch", "flinches"), target.action("pull"), target.possessiveAdjective(),
+                            getSelf().subject(), target.possessiveAdjective(), target.possessiveAdjective());
         } else if (getSelf().hasDick()) {
-            return getSelf().name()
-                            + " pushes her girl-cock against your the sensitive head of you member, dominating your manhood.";
+            return String.format("%s pushes %s %s against the sensitive head of %s member, "
+                            + "dominating %s manhood.", getSelf().subject(), getSelf().possessiveAdjective(),
+                            getSelf().body.getRandomCock().describe(getSelf()), target.nameOrPossessivePronoun(),
+                            target.possessiveAdjective());
         } else {
-            return getSelf().name()
-                            + " pushes your cock against her soft thighs, rubbing your shaft up against her nether lips.";
+            return String.format("%s pushes %s cock against her soft thighs, rubbing %s shaft up"
+                            + " against %s nether lips.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            getSelf().possessiveAdjective());
         }
     }
 

@@ -9,7 +9,6 @@ import nightgames.combat.Combat;
 import nightgames.global.Global;
 
 public class Feral extends Status {
-
     public Feral(Character affected) {
         super("Feral", affected);
         flag(Stsflag.feral);
@@ -19,7 +18,7 @@ public class Feral extends Status {
     @Override
     public String describe(Combat c) {
         return String.format("%s seems beyond reason in %s feral lust.\n",
-                        Global.capitalizeFirstLetter(affected.subject()), affected.possessivePronoun());
+                        Global.capitalizeFirstLetter(affected.subject()), affected.possessiveAdjective());
     }
 
     @Override
@@ -56,7 +55,7 @@ public class Feral extends Status {
         if (affected.getArousal().percent() < 40) {
             affected.removelist.add(this);
         }
-        int ignoreOrgasmChance = Math.min(5, 2 + affected.get(Attribute.Animism) / 10);
+        int ignoreOrgasmChance = Math.max(5, 10 - affected.get(Attribute.Animism) / 20);
         if (Global.random(ignoreOrgasmChance) != 0) {
             affected.addlist.add(new IgnoreOrgasm(affected, 0));
         }

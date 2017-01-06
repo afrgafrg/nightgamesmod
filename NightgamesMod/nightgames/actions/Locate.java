@@ -29,7 +29,7 @@ public class Locate extends Action {
                 hasUnderwear = true;
             }
         }
-        return self.has(Trait.locator) && hasUnderwear;
+        return self.has(Trait.locator) && hasUnderwear && !self.bound();
     }
 
     @Override
@@ -38,7 +38,9 @@ public class Locate extends Action {
         gui.clearCommand();
         gui.clearText();
         gui.validate();
-        gui.message("Thinking back to your 'games' with Reyka, you take out a totem to begin a scrying ritual: ");
+        if (self.human()) {
+            gui.message("Thinking back to your 'games' with Reyka, you take out a totem to begin a scrying ritual: ");
+        }
         handleEvent(self, "Start");
         return Movement.locating;
     }
@@ -56,7 +58,7 @@ public class Locate extends Action {
             gui.clearText();
             gui.clearCommand();
             Global.getMatch().resume();
-        } else if ((target = Global.getNPC(choice)) != null) {
+        } else if ((target = Global.getCharacterByName(choice)) != null) {
             Area area = target.location();
             gui.clearText();
             if (area != null) {
@@ -67,15 +69,14 @@ public class Locate extends Action {
                                 + target.name()
                                 + " currently is. Your small talisman is already burning up in those creepy "
                                 + "purple flames, the smoke flowing from your nose straight to your crotch and setting another fire there.");
-                target.add(new Detected(target, 10));
+                target.addNonCombat(new Detected(target, 10));
             } else {
                 gui.message("Drawing on the dark energies inside the talisman, you attempt to scry for "
                                 + target.nameOrPossessivePronoun() + " location. "
                                 + "However, you draw a blank. Your small talisman is already burning up in those creepy "
                                 + "purple flames, the smoke flowing from your nose straight to your crotch and setting another fire there.");
             }
-            self.add(new Horny(self, self.getArousal().max() / 10, 10, "Scrying Ritual"));
-            self.consume(Item.Talisman, 1);
+            self.addNonCombat(new Horny(self, self.getArousal().max() / 10, 10, "Scrying Ritual"));
             gui.clearCommand();
             gui.choose(this, "Leave", self);
         } else {

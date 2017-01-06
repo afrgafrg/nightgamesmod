@@ -4,11 +4,12 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 
 public class Surrender extends Skill {
-
     public Surrender(Character self) {
         super("Surrender", self);
+        addTag(SkillTag.suicidal);
     }
 
     @Override
@@ -28,12 +29,8 @@ public class Surrender extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        getSelf().tempt(c, getSelf().getArousal().max());
+        writeOutput(c, Result.normal, target);
+        getSelf().temptNoSkillNoTempter(c, getSelf().getArousal().max());
         getSelf().loseWillpower(c, getSelf().getWillpower().max());
         return true;
     }
@@ -57,7 +54,7 @@ public class Surrender extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         return String.format(
                         "After giving up on the fight, %s start fantasizing about %s body. %s quickly find %s at the edge.",
-                        getSelf().subject(), target.possessivePronoun(),
+                        getSelf().subject(), target.possessiveAdjective(),
                         Global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
     }
 
@@ -65,7 +62,7 @@ public class Surrender extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format(
                         "After giving up on the fight, %s start fantasizing about %s body. %s quickly find %s at the edge.",
-                        getSelf().subject(), target.possessivePronoun(),
+                        getSelf().subject(), target.possessiveAdjective(),
                         Global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().reflectivePronoun());
     }
 

@@ -2,7 +2,6 @@ package nightgames.skills;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.pet.ImpFem;
@@ -13,7 +12,7 @@ public class SpawnImp extends Skill {
     private Ptype gender;
 
     public SpawnImp(Character self, Ptype gender) {
-        super("Summon Imp", self);
+        super("Summon Imp (" + gender.name() + ")", self);
         this.gender = gender;
     }
 
@@ -25,7 +24,7 @@ public class SpawnImp extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && getSelf().pet == null;
+                        && c.getPetsFor(getSelf()).size() < getSelf().getPetLimit();
     }
 
     @Override
@@ -41,26 +40,24 @@ public class SpawnImp extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().arouse(5, c);
-        int power = 8 + getSelf().get(Attribute.Dark) / 10;
+        int power = 5 + getSelf().get(Attribute.Dark);
         int ac = 2 + getSelf().get(Attribute.Dark) / 10;
-        if (getSelf().has(Trait.leadership)) {
-            power += 5;
-        }
-        if (getSelf().has(Trait.tactician)) {
-            ac += 3;
-        }
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
             if (gender == Ptype.impfem) {
-                getSelf().pet = new ImpFem(getSelf(), power, ac);
+                c.addPet(getSelf(), new ImpFem(getSelf(), power, ac).getSelf());
             } else {
-                getSelf().pet = new ImpMale(getSelf(), power, ac);
+                c.addPet(getSelf(), new ImpMale(getSelf(), power, ac).getSelf());
             }
         } else {
             if (target.human()) {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
-            getSelf().pet = new ImpFem(getSelf(), power, ac);
+            if (gender == Ptype.impfem) {
+                c.addPet(getSelf(), new ImpFem(getSelf(), power, ac).getSelf());
+            } else {
+                c.addPet(getSelf(), new ImpMale(getSelf(), power, ac).getSelf());
+            }
         }
         return true;
     }
@@ -98,9 +95,18 @@ public class SpawnImp extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " spreads out her dark aura and a demonic imp appears next to her in a burst of flame. The imp stands about waist height, with bright red hair, "
-                        + "silver skin and a long flexible tail. It's naked, clearly female, and surprisingly attractive given its inhuman features.";
+    	if (gender == Ptype.impfem) {
+	        return String.format("%s spreads out %s dark aura and a demonic imp appears next to %s"
+	                        + " in a burst of flame. The imp stands about waist height, with bright red hair, "
+	                        + "silver skin and a long flexible tail. It's naked, clearly female, and "
+	                        + "surprisingly attractive given its inhuman features.",
+	                        getSelf().subject(), getSelf().possessiveAdjective(), getSelf().directObject());
+    	} else {
+	        return String.format("%s spreads out %s dark aura and a demonic imp appears next to %s"
+	                        + " in a burst of flame. The imp stands about waist height, with bright red hair, "
+	                        + "silver skin and a long flexible tail. It's naked, clearly male, and "
+	                        + "surprisingly attractive given its inhuman features.",
+	                        getSelf().subject(), getSelf().possessiveAdjective(), getSelf().directObject());
+    	}
     }
-
 }

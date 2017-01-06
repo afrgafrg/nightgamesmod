@@ -8,11 +8,17 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 
 public class UseCrop extends Skill {
 
     public UseCrop(Character self) {
         super(Item.Crop.getName(), self);
+        addTag(SkillTag.usesToy);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
     }
 
     @Override
@@ -33,43 +39,35 @@ public class UseCrop extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            double m = Global.random(12, 18);
             if (target.crotchAvailable() && c.getStance().reachBottom(getSelf())) {
                 if (getSelf().has(Item.Crop2) && Global.random(10) > 7 && !target.has(Trait.brassballs)) {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, Result.critical, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, Result.critical, target));
-                    }
+                    writeOutput(c, Result.critical, target);
                     if (target.has(Trait.achilles)) {
-                        target.pain(c, 6);
+                        m += 6;
                     }
                     target.emote(Emotion.angry, 10);
-                    target.pain(c, 8 + Global.random(14) + target.get(Attribute.Perception));
+                    m += 8;
                 } else {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, Result.normal, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, Result.normal, target));
-                    }
-                    target.pain(c, 5 + Global.random(12) + target.get(Attribute.Perception) / 2);
+                    writeOutput(c, Result.normal, target);
+                    target.pain(c, getSelf(), 5 + Global.random(12) + target.get(Attribute.Perception) / 2);
                 }
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.weak, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.weak, target));
-                }
-                target.pain(c, 5 + Global.random(12));
+                writeOutput(c, Result.weak, target);
+                m -= Global.random(2, 6);
+                target.pain(c, getSelf(), 5 + Global.random(12));
             }
+            target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.gadgets, target, m));
             target.emote(Emotion.angry, 15);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -115,18 +113,29 @@ public class UseCrop extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             if (!target.has(Item.Crop)) {
-                return "You duck out of the way, as " + getSelf().name() + " swings her riding crop at you.";
+                return String.format("%s out of the way, as %s swings %s riding crop at %s.",
+                                target.subjectAction("duck"), getSelf().subject(),
+                                getSelf().possessiveAdjective(), target.directObject());
             } else {
-                return getSelf().name() + " swings her riding crop, but you draw your own crop and parry it.";
+                return String.format("%s swings %s riding crop, but %s %s own crop and %s it.",
+                                getSelf().subject(), getSelf().possessiveAdjective(),
+                                target.subjectAction("draw"), target.possessiveAdjective(),
+                                target.action("parry", "parries"));
             }
         } else if (modifier == Result.critical) {
-            return getSelf().name()
-                            + " hits you on the ass with her riding crop. The attachment on the end delivers a painful sting to your jewels. You groan in pain and fight the urge to "
-                            + "curl up in the fetal position.";
+            return String.format("%s hits %s on the ass with %s riding crop. "
+                            + "The attachment on the end delivers a painful sting to "
+                            + "%s jewels. %s in pain and %s the urge to "
+                            + "curl up in the fetal position.", getSelf().subject(),
+                            target.nameDirectObject(), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(), target.subjectAction("groan"),
+                            target.action("fight"));
         } else if (modifier == Result.weak) {
-            return getSelf().name() + " strikes you with a riding crop.";
+            return String.format("%s strikes %s with a riding crop.",
+                            getSelf().subject(), target.nameDirectObject());
         } else {
-            return getSelf().name() + " hits your bare ass with a riding crop hard enough to leave a painful welt.";
+            return String.format("%s hits %s bare ass with a riding crop hard enough to leave a painful welt.",
+                            getSelf().subject(), target.nameOrPossessivePronoun());
         }
     }
 

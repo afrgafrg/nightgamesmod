@@ -24,6 +24,8 @@ public class Seeded extends Status {
         this.time = 0;
         flag(hole.equals("ass") ? Stsflag.pegged : Stsflag.fucked);
         flag(Stsflag.seeded);
+        flag(Stsflag.debuff);
+        flag(Stsflag.purgable);
     }
 
     @Override
@@ -53,15 +55,15 @@ public class Seeded extends Status {
         } else {
             if (stage > 4) {
                 return Global.capitalizeFirstLetter(String.format(
-                                "A large white lilly grows from " + affected.possessivePronoun() + " %s\n",
+                                "A large white lilly grows from " + affected.possessiveAdjective() + " %s\n",
                                 hole.describe(affected)));
             } else if (stage > 3) {
                 return Global.capitalizeFirstLetter(String.format(
-                                "A small green bud peeks out from " + affected.possessivePronoun() + " %s\n",
+                                "A small green bud peeks out from " + affected.possessiveAdjective() + " %s\n",
                                 hole.describe(affected)));
             }
             return Global.capitalizeFirstLetter(String.format(
-                            "A lemon-sized seed is lodged firmly in " + affected.possessivePronoun() + " %s\n",
+                            "A lemon-sized seed is lodged firmly in " + affected.possessiveAdjective() + " %s\n",
                             hole.describe(affected)));
         }
     }
@@ -88,19 +90,19 @@ public class Seeded extends Status {
         if (time >= 3) {
             if (stage < 3) {
                 stage = 3;
-                if (affected.human() || other.human())
+                if (!c.shouldAutoresolve())
                 Global.gui().message(c, affected,
                                 Global.format("{other:name-possessive} seedling has finally flowered. A brilliant white lilly now covers {self:name-possessive} %s, displaying {self:possessive} verdant submission for everyone to see. "
                                                 + "While the little seedling has finally stopped sapping your vitality, the now-matured root network has somehow integrated with your nervous system and bloodsteam. As pulses of chemical and electrical obedience wrack {self:possessive} body, "
                                                 + "{self:subject-action:know|knows} that {self:pronoun} {self:action:have|has} lost this fight.",
                                 affected, other, hole.describe(affected), hole.describe(affected)));
             }
-            if (affected.human() || other.human())
+            if (!c.shouldAutoresolve())
             Global.gui().message(c, affected,
                             Global.format("The seedling churns against {self:possessive} inner walls, while sending a chemical cocktail of aphrodisiacs and narcotics directly into {self:possessive} bloodstream. "
                                             + "{self:possessive} mind blanks out as every thought is replaced with a feral need to mate.",
                             affected, other, hole.describe(affected)));
-            affected.heal(c, 100);
+            affected.heal(c, 100, " (Seedling)");
             affected.arouse(Math.max(Global.random(50, 100), affected.getArousal().max() / 4), c,
                             other.nameOrPossessivePronoun() + " seedling");
             affected.body.pleasure(other, seed, hole, Global.random(10, 20) + other.get(Attribute.Bio) / 2, c);
@@ -108,7 +110,7 @@ public class Seeded extends Status {
         } else if (time >= 2) {
             if (stage < 2) {
                 stage = 2;
-                if (affected.human() || other.human())
+                if (!c.shouldAutoresolve())
                 Global.gui().message(c, affected,
                                 Global.format("Having drained enough of {self:name-possessive} essence, the seed shows yet more changes. "
                                                 + "The roots growth thicker and more active, now constantly grinding against {self:possessive} walls. "
@@ -116,7 +118,7 @@ public class Seeded extends Status {
                                                 + "{self:SUBJECT-ACTION:worry|worries} about its implications, but the constant piston motion from your %s is making it hard to concentrate.",
                                 affected, other, hole.describe(affected), hole.describe(affected)));
             }
-            if (affected.human() || other.human())
+            if (!c.shouldAutoresolve())
             Global.gui().message(c, affected,
                             Global.format("The thick tuber-like roots inside {self:direct-object} constantly shift and scrape against {self:possessive} %s, leaving {self:direct-object} both horny and lenthargic at the same time.",
                                             affected, other, hole.describe(affected)));
@@ -125,21 +127,21 @@ public class Seeded extends Status {
         } else if (time >= 1) {
             if (stage < 1) {
                 stage = 1;
-                if (affected.human() || other.human())
+                if (!c.shouldAutoresolve())
                 Global.gui().message(c, affected,
                                 Global.format("With a quiet rumble, the seed burried inside {self:name-possessive} %s sprouts thin spindly roots that reach into {self:possessive} innards.",
                                                 affected, other, hole.describe(affected)));
             }
-            if (affected.human() || other.human())
+            if (!c.shouldAutoresolve())
             Global.gui().message(c, affected,
                             Global.format("{self:SUBJECT-ACTION:feel|feels} slow as the thin threadlike roots latch onto your inner walls and seem to leech your vigor.",
                                             affected, other, hole.describe(affected)));
             affected.drainStaminaAsMojo(c, other, Global.random(2, 6), 1.0f);
         } else {
-            if (affected.human() || other.human())
+            if (!c.shouldAutoresolve())
             Global.gui().message(c, affected, Global.format("The seed sits uncomfortably in {self:possessive} %s.",
                             affected, other, hole.describe(affected)));
-            affected.pain(c, 1, false, false);
+            affected.pain(c, other, 1, false, false);
         }
 
         affected.emote(Emotion.desperate, 10);

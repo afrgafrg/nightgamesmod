@@ -21,7 +21,7 @@ public class PlaceBlindfold extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().has(Item.Blindfold) && !target.is(Stsflag.blinded) && !c.getStance()
+        return getSelf().canAct() && getSelf().has(Item.Blindfold) && !target.is(Stsflag.blinded) && !c.getStance()
                                                                                  .mobile(target);
     }
 
@@ -39,21 +39,26 @@ public class PlaceBlindfold extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return target.canAct() ? 200 : 60;
+    }
+    
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (!target.canAct() || target.roll(this, c, 60)) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
             c.write(getSelf(),
                             String.format("%s a blindfold around %s head, covering %s eyes.",
-                                            getSelf().subjectAction("snap", "snaps"), target.nameOrPossessivePronoun(),
-                                            target.possessivePronoun()));
+                                            getSelf().subjectAction("snap"), target.nameOrPossessivePronoun(),
+                                            target.possessiveAdjective()));
             getSelf().remove(Item.Blindfold);
-            target.add(new Blinded(target, "a blindfold", false));
+            target.add(c, new Blinded(target, "a blindfold", false));
         } else {
             c.write(getSelf(),
                             String.format("%s out a blindfold and %s to place it around %s "
                                             + "head, but %s it away and throws it clear.",
-                                            getSelf().subjectAction("take", "takes"), getSelf().action("try", "tries"),
-                                            target.possessivePronoun(),
-                                            target.subjectAction("rip", "rips")));
+                                            getSelf().subjectAction("take"), getSelf().action("try", "tries"),
+                                            target.possessiveAdjective(),
+                                            target.subjectAction("rip")));
         }
         return true;
     }

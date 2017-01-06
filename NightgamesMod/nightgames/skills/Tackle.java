@@ -6,12 +6,20 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 import nightgames.stance.Mount;
+import nightgames.status.Winded;
 
 public class Tackle extends Skill {
 
     public Tackle(Character self) {
         super("Tackle", self);
+
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
+        addTag(SkillTag.knockdown);
     }
 
     @Override
@@ -22,30 +30,29 @@ public class Tackle extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))
+        if (getSelf().has(Trait.takedown) && target.getStamina().percent() <= 25) {
+            c.write(getSelf(), Global.format("While {other:subject-action:take|takes} a breath,"
+                            + " {self:subject-action:take|takes} careful aim at {other:possessive}"
+                            + " waist and {self:action:charge|charges} in at full speed. It's a perfect"
+                            + " hit, knocking the wind out of {other:subject} and allowing {self:subject}"
+                            + " to take {self:subject} place on top of {other:possessive} heaving chest."
+                            , getSelf(), target));
+            c.setStance(new Mount(getSelf(), target));
+            target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(15, 30)));
+            target.add(c, new Winded(target, 2));
+        }
+        if (target.roll(getSelf(), c, accuracy(c, target))
                         && getSelf().check(Attribute.Power, target.knockdownDC() - getSelf().get(Attribute.Animism))) {
             if (getSelf().get(Attribute.Animism) >= 1) {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.special, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.special, target));
-                }
-                target.pain(c, 4 + Global.random(6));
+                writeOutput(c, Result.special, target);
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(15, 30)));
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.normal, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.normal, target));
-                }
-                target.pain(c, 3 + Global.random(4));
+                writeOutput(c, Result.normal, target);
+                target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(10, 25)));
             }
-            c.setStance(new Mount(getSelf(), target));
+            c.setStance(new Mount(getSelf(), target), getSelf(), true);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -76,13 +83,17 @@ public class Tackle extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
+        if (getSelf().has(Trait.takedown) && target.getStamina().percent() <= 25) {
+            return 200;
+        }
+        
         int base = 80;
         if (getSelf().get(Attribute.Animism) >= 1) {
             base = 120 + (getSelf().getArousal().getReal() / 10);
         }
         return Math.round(Math.max(Math.min(150,
-                        2.5f * (getSelf().get(Attribute.Power) - c.getOther(getSelf()).get(Attribute.Power)) + base),
+                        2.5f * (getSelf().get(Attribute.Power) - c.getOpponent(getSelf()).get(Attribute.Power)) + base),
                         40));
     }
 
@@ -115,12 +126,16 @@ public class Tackle extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return getSelf().name() + " wiggles her butt cutely before leaping at you and pinning you to the floor.";
+            return String.format("%s wiggles her butt cutely before leaping at %s and pinning %s to the floor.",
+                            getSelf().subject(), target.nameDirectObject(), target.directObject());
         }
         if (modifier == Result.miss) {
-            return getSelf().name() + " tries to tackle you, but you sidestep out of the way.";
+            return String.format("%s tries to tackle %s, but %s %s out of the way.",
+                            getSelf().subject(), target.nameDirectObject(),
+                            target.pronoun(), target.action("sidestep"));
         } else {
-            return getSelf().name() + " bowls you over and sits triumphantly on your chest.";
+            return String.format("%s bowls %s over and sits triumphantly on %s chest.",
+                            getSelf().subject(), target.nameDirectObject(), target.possessiveAdjective());
         }
     }
 

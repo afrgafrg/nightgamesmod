@@ -9,12 +9,19 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.status.Flatfooted;
 
-public class DissolvingTrap implements Trap {
-    private Character owner;
+public class DissolvingTrap extends Trap {
+    
+    public DissolvingTrap() {
+        this(null);
+    }
+    
+    public DissolvingTrap(Character owner) {
+        super("Dissolving Trap", owner);
+    }
 
     @Override
     public void trigger(Character target) {
-        if (!target.check(Attribute.Perception, 20 - target.get(Attribute.Perception) + target.baseDisarm())) {
+        if (!target.check(Attribute.Perception, 25 + target.baseDisarm())) {
             if (target.human()) {
                 Global.gui().message(
                                 "You spot a liquid spray trap in time to avoid setting it off. You carefully manage to disarm the trap and pocket the potion.");
@@ -48,11 +55,6 @@ public class DissolvingTrap implements Trap {
     }
 
     @Override
-    public boolean decoy() {
-        return false;
-    }
-
-    @Override
     public boolean recipe(Character owner) {
         return owner.has(Item.Tripwire) && owner.has(Item.DisSol) && owner.has(Item.Sprayer)
                         && !owner.has(Trait.direct);
@@ -68,31 +70,13 @@ public class DissolvingTrap implements Trap {
     }
 
     @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Dissolving Trap";
-    }
-
-    @Override
     public boolean requirements(Character owner) {
         return owner.get(Attribute.Cunning) >= 11 && !owner.has(Trait.direct);
     }
 
     @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
-        victim.add(new Flatfooted(victim, 1));
+        victim.addNonCombat(new Flatfooted(victim, 1));
         enc.engage(new Combat(attacker, victim, attacker.location()));
-        attacker.location().trap = null;
-    }
-
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
     }
 }

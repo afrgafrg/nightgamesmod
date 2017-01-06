@@ -9,8 +9,12 @@ import nightgames.combat.Combat;
 
 public class Hypersensitive extends DurationStatus {
     public Hypersensitive(Character affected) {
-        super("Hypersensitive", affected, 20);
+        this(affected, 20);
+    }
+    public Hypersensitive(Character affected, int duration) {
+        super("Hypersensitive", affected, duration);
         flag(Stsflag.hypersensitive);
+        flag(Stsflag.debuff);
         flag(Stsflag.purgable);
     }
 
@@ -19,13 +23,18 @@ public class Hypersensitive extends DurationStatus {
         if (affected.human()) {
             return "Your skin tingles and feels extremely sensitive to touch.";
         } else {
-            return "She shivers from the breeze hitting her skin and has goosebumps";
+            return String.format("%s shivers from the breeze hitting %s skin and has goosebumps.",
+                            affected.pronoun(), affected.possessiveAdjective());
         }
     }
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return String.format("%s now hypersensitive.\n", affected.subjectAction("are", "is"));
+        if (!replaced) {
+            return String.format("%s now hypersensitive.\n", affected.subjectAction("are", "is"));
+        } else {
+            return "";
+        }
     }
 
     @Override
@@ -49,12 +58,12 @@ public class Hypersensitive extends DurationStatus {
 
     @Override
     public int damage(Combat c, int x) {
-        return 0;
+        return x / 2;
     }
 
     @Override
     public double pleasure(Combat c, BodyPart withPart, BodyPart targetPart, double x) {
-        return x / 3;
+        return x / 2;
     }
 
     @Override

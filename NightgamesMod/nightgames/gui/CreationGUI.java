@@ -92,6 +92,7 @@ public class CreationGUI extends JPanel {
 
     public CreationGUI() {
         setLayout(new BorderLayout(0, 0));
+        setOpaque(false);
 
         topPanel = new JPanel();
         add(topPanel, BorderLayout.NORTH);
@@ -110,6 +111,7 @@ public class CreationGUI extends JPanel {
 
         sexBox = new JComboBox<>();
         Arrays.stream(CharacterSex.values())
+              .filter(sex -> !CharacterSex.asexual.equals(sex))
               .forEach(s -> sexBox.addItem(s));
         topPanel.add(sexBox);
 
@@ -164,6 +166,8 @@ public class CreationGUI extends JPanel {
         panel_2.add(panel_4);
 
         JLabel lblSeduction = new JLabel("Seduction");
+        lblSeduction.setForeground(new Color(240, 240, 255));
+
         lblSeduction.setFont(new Font("Verdana", Font.BOLD, 15));
         panel_2.add(lblSeduction);
 
@@ -180,6 +184,8 @@ public class CreationGUI extends JPanel {
         panel_2.add(panel_5);
 
         JLabel lblCunning = new JLabel("Cunning");
+        lblCunning.setForeground(new Color(240, 240, 255));
+
         lblCunning.setFont(new Font("Verdana", Font.BOLD, 15));
         panel_2.add(lblCunning);
 
@@ -226,7 +232,7 @@ public class CreationGUI extends JPanel {
 
         btnPowMin = new JButton("-");
         btnPowMin.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        btnPowMin.setForeground(new Color(240, 240, 255));
+        //btnPowMin.setForeground(new Color(240, 240, 255));
         btnPowMin.setBackground(new Color(85, 98, 112));
         panel_2.add(btnPowMin);
         btnPowMin.addActionListener(arg0 -> {
@@ -252,7 +258,7 @@ public class CreationGUI extends JPanel {
 
         btnSedMin = new JButton("-");
         btnSedMin.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        btnSedMin.setForeground(new Color(240, 240, 255));
+        //btnSedMin.setForeground(new Color(240, 240, 255));
         btnSedMin.setBackground(new Color(85, 98, 112));
         panel_2.add(btnSedMin);
         btnSedMin.addActionListener(arg0 -> {
@@ -263,7 +269,7 @@ public class CreationGUI extends JPanel {
 
         btnSedPlus = new JButton("+");
         btnSedPlus.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        btnSedPlus.setForeground(new Color(240, 240, 255));
+        //btnSedPlus.setForeground(new Color(240, 240, 255));
         btnSedPlus.setBackground(new Color(85, 98, 112));
         panel_2.add(btnSedPlus);
         btnSedPlus.addActionListener(arg0 -> {
@@ -278,7 +284,7 @@ public class CreationGUI extends JPanel {
 
         btnCunMin = new JButton("-");
         btnCunMin.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        btnCunMin.setForeground(new Color(240, 240, 255));
+        //btnCunMin.setForeground(new Color(240, 240, 255));
         btnCunMin.setBackground(new Color(85, 98, 112));
         panel_2.add(btnCunMin);
         btnCunMin.addActionListener(arg0 -> {
@@ -289,7 +295,7 @@ public class CreationGUI extends JPanel {
 
         btnCunPlus = new JButton("+");
         btnCunPlus.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        btnCunPlus.setForeground(new Color(240, 240, 255));
+        //btnCunPlus.setForeground(new Color(240, 240, 255));
         btnCunPlus.setBackground(new Color(85, 98, 112));
         panel_2.add(btnCunPlus);
 
@@ -344,17 +350,17 @@ public class CreationGUI extends JPanel {
 
         StrengthBox = new JComboBox<>();
         StrengthBox.setBackground(new Color(0, 10, 30));
-        StrengthBox.setForeground(new Color(240, 240, 255));
-        StrengthBox.addItem(Trait.exhibitionist);
+        StrengthBox.setForeground(new Color(0, 200, 0));
         StrengthBox.addItem(Trait.romantic);
+        StrengthBox.addItem(Trait.exhibitionist);
         StrengthBox.addItem(Trait.dexterous);
         StrengthBox.addItem(Trait.experienced);
         StrengthBox.addItem(Trait.wrassler);
         StrengthBox.addItem(Trait.pimphand);
         StrengthBox.addItem(Trait.stableform);
         StrengthBox.addItem(Trait.brassballs);
-        StrengthBox.addItem(Trait.bramaster);
-        StrengthBox.addItem(Trait.pantymaster);
+        StrengthBox.addItem(Trait.attractive);
+        StrengthBox.addItem(Trait.largereserves);
         StrengthBox.addActionListener(
                         arg0 -> StrengthDescription.setText(((Trait) StrengthBox.getSelectedItem()).getDesc()));
         verticalBox.add(StrengthBox);
@@ -378,15 +384,21 @@ public class CreationGUI extends JPanel {
 
         WeaknessBox = new JComboBox<>();
         WeaknessBox.setBackground(new Color(0, 10, 30));
-        WeaknessBox.setForeground(new Color(240, 240, 255));
+        WeaknessBox.setForeground(new Color(240, 50, 50));
         WeaknessBox.addItem(Trait.insatiable);
+        WeaknessBox.addItem(Trait.unpleasant);
         WeaknessBox.addItem(Trait.imagination);
         WeaknessBox.addItem(Trait.achilles);
         WeaknessBox.addItem(Trait.ticklish);
         WeaknessBox.addItem(Trait.lickable);
         WeaknessBox.addItem(Trait.naive);
         WeaknessBox.addItem(Trait.footfetishist);
+        WeaknessBox.addItem(Trait.breastobsessed);
+        WeaknessBox.addItem(Trait.assaddict);
+        WeaknessBox.addItem(Trait.pussywhipped);
+        WeaknessBox.addItem(Trait.cockcraver);
         WeaknessBox.addItem(Trait.hairtrigger);
+        WeaknessBox.addItem(Trait.buttslut);
         WeaknessBox.addActionListener(
                         arg0 -> WeaknessDescription.setText(((Trait) WeaknessBox.getSelectedItem()).getDesc()));
         verticalBox.add(WeaknessBox);
@@ -399,6 +411,45 @@ public class CreationGUI extends JPanel {
         WeaknessDescription.setText(((Trait) WeaknessBox.getSelectedItem()).getDesc());
         verticalBox.add(WeaknessDescription);
 
+        JLabel expLbl = new JLabel("Exp Rate");
+        expLbl.setBackground(new Color(0, 10, 30));
+        expLbl.setForeground(new Color(240, 240, 255));
+
+        verticalBox.add(new JLabel("Exp Rate"));
+        JComboBox<String> ExpBox = new JComboBox<>();
+        ExpBox.setBackground(new Color(0, 10, 30));
+        ExpBox.setForeground(new Color(200, 200, 0));
+        ExpBox.addItem("Slow");
+        ExpBox.addItem("Normal");
+        ExpBox.addItem("Fast");
+        ExpBox.addItem("Very Fast");
+        ExpBox.setSelectedItem("Normal");
+        verticalBox.add(ExpBox);
+
+        JTextPane ExpDescription = new JTextPane();
+        ExpDescription.setBackground(new Color(18, 30, 49));
+        ExpDescription.setForeground(new Color(240, 240, 255));
+        ExpDescription.setPreferredSize(new Dimension(100, 100));
+        ExpDescription.setEditable(false);
+        ExpDescription.setText((String) ExpBox.getSelectedItem());
+
+        ExpBox.addActionListener(arg0 -> {
+            String rate = (String) ExpBox.getSelectedItem();
+            ExpDescription.setText(rate);
+            if ("Slow".equals(rate)) {
+                Global.xpRate = .5;
+            }
+            if ("Normal".equals(rate)) {
+                Global.xpRate = 1;
+            }
+            if ("Fast".equals(rate)) {
+                Global.xpRate = 1.5;
+            }
+            if ("Very Fast".equals(rate)) {
+                Global.xpRate = 3;
+            }
+        });
+        verticalBox.add(ExpDescription);
         separator_1 = new JSeparator();
         verticalBox.add(separator_1);
         power = 3;

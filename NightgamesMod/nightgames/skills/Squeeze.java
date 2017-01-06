@@ -10,11 +10,17 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 
 public class Squeeze extends Skill {
 
     public Squeeze(Character self) {
         super("Squeeze Balls", self);
+        addTag(SkillTag.mean);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.staminaDamage);
     }
 
     @Override
@@ -29,14 +35,22 @@ public class Squeeze extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            double m = Global.random(10, 20);
+            DamageType type = DamageType.physical;
             if (target.has(Trait.brassballs)) {
                 if (target.human()) {
                     c.write(getSelf(), receive(c, 0, Result.weak2, target));
                 } else if (getSelf().human()) {
                     c.write(getSelf(), deal(c, 0, Result.weak2, target));
                 }
+                m = 0;
             } else if (target.crotchAvailable()) {
                 if (getSelf().has(Item.ShockGlove) && getSelf().has(Item.Battery, 2)) {
                     getSelf().consume(Item.Battery, 2);
@@ -45,9 +59,10 @@ public class Squeeze extends Skill {
                     } else if (getSelf().human()) {
                         c.write(getSelf(), deal(c, 0, Result.special, target));
                     }
-                    target.pain(c, Global.random(8 + target.get(Attribute.Perception)) + 16);
+                    type = DamageType.gadgets;
+                    m += 15;
                     if (target.has(Trait.achilles)) {
-                        target.pain(c, 6);
+                        m += 5;
                     }
                 } else if (target.has(ClothingTrait.armored)) {
                     if (target.human()) {
@@ -55,7 +70,7 @@ public class Squeeze extends Skill {
                     } else if (getSelf().human()) {
                         c.write(getSelf(), deal(c, 0, Result.item, target));
                     }
-                    target.pain(c, Global.random(3));
+                    m *= .5;
                 } else {
                     if (target.human()) {
                         c.write(getSelf(), receive(c, 0, Result.normal, target));
@@ -63,9 +78,8 @@ public class Squeeze extends Skill {
                         c.write(getSelf(), deal(c, 0, Result.normal, target));
                     }
                     if (target.has(Trait.achilles)) {
-                        target.pain(c, 4);
+                        m += 5;
                     }
-                    target.pain(c, Global.random(7) + 5);
                 }
             } else {
                 if (target.human()) {
@@ -73,16 +87,13 @@ public class Squeeze extends Skill {
                 } else if (getSelf().human()) {
                     c.write(getSelf(), deal(c, 0, Result.weak, target));
                 }
-                target.pain(c, (int) Math.round(Global.random(7) + 5 - 5 * target.getExposure(ClothingSlot.bottom)));
+                m *= target.getExposure(ClothingSlot.bottom);
             }
+            target.pain(c, getSelf(), (int) getSelf().modifyDamage(type, target, m));
 
             target.emote(Emotion.angry, 15);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -90,7 +101,7 @@ public class Squeeze extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Power) >= 9;
+        return user.get(Attribute.Power) >= 9 && user.get(Attribute.Seduction) >= 9;
     }
 
     @Override
@@ -129,24 +140,36 @@ public class Squeeze extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " grabs at your balls, but misses.";
+            return String.format("%s grabs at %s balls, but misses.",
+                            getSelf().subject(), target.nameOrPossessivePronoun());
         } else if (modifier == Result.special) {
-            return getSelf().name()
-                            + " grabs your naked balls roughly in her gloved hand. A painful jolt of electricity shoots through your groin, sapping your will to fight.";
+            return String.format("%s grabs %s naked balls roughly in %s gloved hand. A painful jolt "
+                            + "of electricity shoots through %s groin, sapping %s will to fight.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            getSelf().possessiveAdjective(), target.possessiveAdjective(),
+                            target.possessiveAdjective());
         } else if (modifier == Result.weak) {
-            return getSelf().name() + " grabs your balls through your "
-                            + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName() + " and squeezes hard.";
+            return String.format("%s grabs %s balls through %s %s and squeezes hard.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            target.possessiveAdjective(), 
+                            target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName());
         } else if (modifier == Result.weak2) {
-            return getSelf().name() + " grins menacingly and firmly grabs your nuts. "
-                            + Global.capitalizeFirstLetter(getSelf().pronoun()) + " squeezes as hard as "
-                            + getSelf().pronoun() + "can, but you hardly feel it.";
+            return String.format("%s grins menacingly and firmly grabs %s nuts. %s squeezes as hard as "
+                            + "%s can, but %s hardly %s it.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(),
+                            Global.capitalizeFirstLetter(getSelf().subject()),
+                            getSelf().pronoun(), target.pronoun(), target.action("feel"));
         } else if (modifier == Result.item) {
-            return getSelf().name() + " grabs your crotch through your "
-                            + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName()
-                            + ", but you can barely feel it.";
+            return String.format("%s grabs %s crotch through %s %s, but %s can barely feel it.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName(),
+                            target.pronoun());
         } else {
-            return getSelf().name()
-                            + " reaches between your legs and grabs your exposed balls. You writhe in pain as she pulls and squeezes them.";
+            return String.format("%s reaches between %s legs and grabs %s exposed balls. %s "
+                            + "in pain as %s pulls and squeezes them.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            Global.capitalizeFirstLetter(target.subjectAction("writhe")),
+                            getSelf().subject());
         }
     }
 

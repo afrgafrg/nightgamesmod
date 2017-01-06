@@ -2,7 +2,6 @@ package nightgames.trap;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
 import nightgames.global.Global;
@@ -10,20 +9,30 @@ import nightgames.items.Item;
 import nightgames.status.Enthralled;
 import nightgames.status.Flatfooted;
 
-public class EnthrallingTrap implements Trap {
+public class EnthrallingTrap extends Trap {
 
-    private Character owner;
+    public EnthrallingTrap() {
+        this(null);
+    }
+
+    public void setStrength(Character user) {
+        setStrength(user.get(Attribute.Dark) + user.get(Attribute.Arcane) + user.getLevel() / 2);
+    }
+
+    public EnthrallingTrap(Character owner) {
+        super("Enthralling Trap", owner);
+    }
 
     @Override
     public void trigger(Character target) {
         if (target.human()) {
-            if (target.check(Attribute.Perception, 25 - target.get(Attribute.Perception) + target.baseDisarm())
+            if (target.check(Attribute.Perception, 25 + target.baseDisarm())
                             || !target.eligible(owner) || !owner.eligible(target)) {
                 Global.gui().message("As you step across the " + target.location().name
                                 + ", you notice a pentagram drawn on the floor,"
                                 + " appearing to have been drawn in cum. Wisely," + " you avoid stepping into it.");
             } else {
-                target.add(new Enthralled(target, owner, 5));
+                target.addNonCombat(new Enthralled(target, owner, 5 + getStrength() / 20));
                 target.location().opportunity(target, this);
                 Global.gui().message("As you step across the " + target.location().name
                                 + ", you are suddenly surrounded by purple flames. Your mind "
@@ -33,8 +42,7 @@ public class EnthrallingTrap implements Trap {
                                 + " whatever it was supposed to do. The lingering vision of two"
                                 + " large red irises staring at you suggest differently, though.");
             }
-
-        } else if (!target.check(Attribute.Perception, 10) && !target.check(Attribute.Cunning, 10)) {
+        } else if (target.check(Attribute.Perception, 25 + target.baseDisarm()) || !target.eligible(owner) || !owner.eligible(target)) {
             if (target.location().humanPresent()) {
                 Global.gui().message("You catch a bout of purple fire in your peripheral vision,"
                                 + "but once you have turned to look the flames are gone. All that is left"
@@ -42,14 +50,9 @@ public class EnthrallingTrap implements Trap {
                                 + " It would seem to be very easy to have your way with her now, but"
                                 + " who or whatever left that thing there will probably be thinking" + " the same.");
             }
-            target.add(new Enthralled(target, owner, 5));
+            target.addNonCombat(new Enthralled(target, owner, 5 + getStrength() / 20));
             target.location().opportunity(target, this);
         }
-    }
-
-    @Override
-    public boolean decoy() {
-        return false;
     }
 
     @Override
@@ -59,7 +62,7 @@ public class EnthrallingTrap implements Trap {
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.has(Trait.succubus);
+        return owner.get(Attribute.Dark) > 5;
     }
 
     @Override
@@ -73,26 +76,10 @@ public class EnthrallingTrap implements Trap {
     }
 
     @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
-        victim.add(new Flatfooted(victim, 1));
+        victim.addNonCombat(new Flatfooted(victim, 1));
         enc.engage(new Combat(attacker, victim, attacker.location()));
         attacker.location().remove(this);
     }
 
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Enthralling Trap";
-    }
 }

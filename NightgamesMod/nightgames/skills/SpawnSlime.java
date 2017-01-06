@@ -2,7 +2,6 @@ package nightgames.skills;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
@@ -22,7 +21,8 @@ public class SpawnSlime extends Skill {
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && !c.getStance().prone(getSelf())
-                        && getSelf().pet == null && getSelf().has(Item.Battery, 5);
+                        && c.getPetsFor(getSelf()).size() < getSelf().getPetLimit() 
+                        && getSelf().has(Item.Battery, 5);
     }
 
     @Override
@@ -38,20 +38,10 @@ public class SpawnSlime extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Battery, 5);
-        int power = 8 + getSelf().get(Attribute.Science) / 10;
+        int power = 5 + getSelf().get(Attribute.Science);
         int ac = 3 + getSelf().get(Attribute.Science) / 10;
-        if (getSelf().has(Trait.leadership)) {
-            power += 5;
-        }
-        if (getSelf().has(Trait.tactician)) {
-            ac += 3;
-        }
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        getSelf().pet = new Slime(getSelf(), power, ac);
+        writeOutput(c, Result.normal, target);
+        c.addPet(getSelf(), new Slime(getSelf(), power, ac).getSelf());
         return true;
     }
 
@@ -73,9 +63,9 @@ public class SpawnSlime extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " points a device at the floor and releases a blob of blue slime. The blob starts to move like a living thing and briefly takes on a vaguely humanoid shape "
-                        + "and smiles at you.";
+        return String.format("%s points a device at the floor and releases a blob of blue slime. The blob "
+                        + "starts to move like a living thing and briefly takes on a vaguely humanoid shape "
+                        + "and smiles at %s.", getSelf().subject(), target.nameDirectObject());
     }
 
 }

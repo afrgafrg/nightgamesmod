@@ -1,16 +1,19 @@
 package nightgames.skills;
 
-import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
+import nightgames.stance.Stance;
 
 public class UseDildo extends Skill {
 
     public UseDildo(Character self) {
         super(Item.Dildo.getName(), self);
+        addTag(SkillTag.usesToy);
     }
 
     @Override
@@ -22,35 +25,31 @@ public class UseDildo extends Skill {
     public boolean usable(Combat c, Character target) {
         return (getSelf().has(Item.Dildo) || getSelf().has(Item.Dildo2)) && getSelf().canAct() && target.hasPussy()
                         && c.getStance().reachBottom(getSelf()) && target.crotchAvailable()
-                        && !c.getStance().vaginallyPenetrated(target);
+                        && !c.getStance().vaginallyPenetrated(c, target);
+    }
+
+    @Override
+    public int accuracy(Combat c, Character target) {
+        return c.getStance().en == Stance.neutral ? 50 : 100;
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            int m;
             if (getSelf().has(Item.Dildo2)) {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.upgrade, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.upgrade, target));
-                }
-                int m = 5 + Global.random(15) + target.get(Attribute.Perception);
-                target.body.pleasure(getSelf(), null, target.body.getRandom("pussy"), m, c, this);
+                writeOutput(c, Result.upgrade, target);
+                m = Global.random(10, 20);
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.normal, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.normal, target));
-                }
-                int m = Global.random(10) + target.get(Attribute.Perception);
-                target.body.pleasure(getSelf(), null, target.body.getRandom("pussy"), m, c, this);
+                writeOutput(c, Result.normal, target);
+                m = Global.random(5, 15);
+                
             }
+
+            m = (int)getSelf().modifyDamage(DamageType.gadgets, target, m);
+            target.body.pleasure(getSelf(), null, target.body.getRandom("pussy"), m, c, this);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -88,7 +87,7 @@ public class UseDildo extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             return Global.format(
-                            "{self:SUBJECT-ACTION:try|tries} to slip a dildo into {other:direct-object}, but {other:subject} block it.",
+                            "{self:SUBJECT-ACTION:try|tries} to slip a dildo into {other:name-do}, but {other:pronoun-action:block|blocks} it.",
                             getSelf(), target);
         } else if (modifier == Result.upgrade) {
             return Global.format(
@@ -97,7 +96,7 @@ public class UseDildo extends Skill {
                             getSelf(), target);
         } else {
             return Global.format(
-                            "{self:SUBJECT-ACTION:rub|rubs} the dildo against {other:possessive} lower lips to lubricate it before {self:subject-action:thrust|thrusts} it inside {other:direct-object}. "
+                            "{self:SUBJECT-ACTION:rub|rubs} the dildo against {other:name-possessive} lower lips to lubricate it before {self:pronoun-action:thrust|thrusts} it inside {other:name-do}. "
                                             + "{other:SUBJECT} can't help but moan a little as {self:subject-action:pump|pumps} the rubber toy in and out of {other:possessive} {other:body-part:pussy}.",
                             getSelf(), target);
         }

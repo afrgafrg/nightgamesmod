@@ -1,6 +1,13 @@
 package nightgames.stance;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import nightgames.characters.Character;
+import nightgames.characters.body.BodyPart;
+import nightgames.combat.Combat;
+import nightgames.global.Global;
 
 public class SixNine extends AbstractBehindStance {
     public SixNine(Character top, Character bottom) {
@@ -15,23 +22,59 @@ public class SixNine extends AbstractBehindStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
+        String topParts = describeParts(top);
+        String bottomParts = describeParts(bottom);
         if (top.human()) {
-            return "You are on top of " + bottom.name()
-                            + " in the 69 position. Her pussy is right in front of your face and you can feel her breath on your dick.";
+            return String.format("You are on top of %s in the 69 position. %s %s is right in front of your face "
+                            + "and you can feel %s breath on your %s.", bottom.nameDirectObject(),
+                            Global.capitalizeFirstLetter(bottom.possessiveAdjective()), bottomParts,
+                            bottom.possessiveAdjective(), topParts);
         } else {
-            return "You and " + top.name()
-                            + " are on the floor in 69 position. She's sitting on top of you with her pussy right in front of your face and your dick in her mouth.";
+            return String.format("%s and %s are on the floor in 69 position. "
+                            + "%s sitting on top of %s with %s %s right in "
+                            + "front of %s face and %s %s in %s mouth.", bottom.subject(),
+                            top.subject(), top.subjectAction("are", "is"), bottom.nameDirectObject(),
+                            top.possessiveAdjective(), topParts, bottom.possessiveAdjective(),
+                            bottom.possessiveAdjective(), bottomParts, top.possessiveAdjective());
         }
     }
-
-    @Override
-    public boolean mobile(Character c) {
-        return c == top;
+    
+    private String describeParts(Character c) {
+        List<BodyPart> parts = parts(c);
+        if (parts.size() == 1)
+            return parts.get(0).describe(c);
+        return String.format("%s and %s", parts.get(0).describe(c), parts.get(1).describe(c));
     }
 
     @Override
-    public boolean kiss(Character c) {
+    public List<BodyPart> topParts(Combat c) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<BodyPart> bottomParts() {
+        return Collections.emptyList();
+    }
+
+    private List<BodyPart> parts(Character c) {
+        List<BodyPart> parts = new ArrayList<>(2);
+        if (c.hasDick())
+            parts.add(c.body.getRandomCock());
+        if (c.hasPussy())
+            parts.add(c.body.getRandomPussy());
+        if (parts.isEmpty())
+            parts.add(c.body.getRandomAss());
+        return parts;
+    }
+    
+    @Override
+    public boolean mobile(Character c) {
+        return c != bottom;
+    }
+
+    @Override
+    public boolean kiss(Character c, Character target) {
         return false;
     }
 
@@ -45,7 +88,7 @@ public class SixNine extends AbstractBehindStance {
     }
 
     @Override
-    public boolean facing() {
+    public boolean facing(Character c, Character target) {
         return false;
     }
 
@@ -61,7 +104,7 @@ public class SixNine extends AbstractBehindStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return false;
+        return c != bottom && c != bottom;
     }
 
     @Override
@@ -71,17 +114,17 @@ public class SixNine extends AbstractBehindStance {
 
     @Override
     public boolean prone(Character c) {
-        return true;
+        return c == top || c == bottom;
     }
 
     @Override
-    public boolean feet(Character c) {
+    public boolean feet(Character c, Character target) {
         return false;
     }
 
     @Override
-    public boolean oral(Character c) {
-        return true;
+    public boolean oral(Character c, Character target) {
+        return c == top || c == bottom;
     }
 
     @Override
@@ -95,7 +138,7 @@ public class SixNine extends AbstractBehindStance {
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return this;
     }
 
@@ -111,6 +154,11 @@ public class SixNine extends AbstractBehindStance {
     
     @Override
     public int dominance() {
+        return 1;
+    }
+    
+    @Override
+    public int distance() {
         return 1;
     }
 }

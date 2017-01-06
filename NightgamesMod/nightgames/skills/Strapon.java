@@ -10,7 +10,6 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.stance.Stance;
 import nightgames.status.Stsflag;
 
 public class Strapon extends Skill {
@@ -29,7 +28,7 @@ public class Strapon extends Skill {
         return getSelf().canAct() && !getSelf().has(Trait.strapped) && c.getStance().mobile(getSelf())
                         && !c.getStance().prone(getSelf())
                         && (getSelf().has(Item.Strapon) || getSelf().has(Item.Strapon2)) && !getSelf().hasDick()
-                        && !c.getStance().connected() && c.getStance().enumerate() != Stance.facesitting;
+                        && !c.getStance().connected(c) && !c.getStance().isFaceSitting(getSelf());
     }
 
     @Override
@@ -59,10 +58,11 @@ public class Strapon extends Skill {
                                 + " and fasten a strap on dildo onto yourself.");
             } else if (!target.is(Stsflag.blinded)){
                 c.write(getSelf(),
-                                getSelf().subject() + " takes off " + getSelf().possessivePronoun() + " "
-                                                + unequipped.get(
-                                                                0)
-                                + " and straps on a thick rubber cock and grins at you in a way that makes you feel a bit nervous.");
+                                String.format("%s takes off %s %s and straps on a thick rubber "
+                                                + "cock and grins at %s in a way that makes %s feel a bit nervous.",
+                                                getSelf().subject(), getSelf().possessiveAdjective(),
+                                                unequipped.get(0), target.nameDirectObject(),
+                                                target.directObject()));
             } else printBlinded(c);
         }
         if (!target.is(Stsflag.blinded)) {
@@ -84,7 +84,7 @@ public class Strapon extends Skill {
 
     @Override
     public Tactics type(Combat c) {
-        return Tactics.positioning;
+        return Tactics.misc;
     }
 
     @Override
@@ -94,8 +94,9 @@ public class Strapon extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " straps on a thick rubber cock and grins at you in a way that makes you feel a bit nervous.";
+        return String.format("%s straps on a thick rubber cock and grins in a way that "
+                        + "makes %s feel a bit nervous.", getSelf().subject(),
+                        target.nameDirectObject());
     }
 
 }

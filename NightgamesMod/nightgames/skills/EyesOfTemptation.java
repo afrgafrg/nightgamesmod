@@ -18,13 +18,13 @@ public class EyesOfTemptation extends Skill {
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
         return user.get(Attribute.Seduction) >= 45 || user.get(Attribute.Dark) >= 20
-                        || user.get(Attribute.Arcane) >= 10;
+                        || user.get(Attribute.Arcane) >= 15;
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canRespond() && c.getStance()
-                                          .facing()
+                                          .facing(getSelf(), target)
                         && !getSelf().is(Stsflag.blinded) && !target.wary();
     }
 
@@ -34,14 +34,15 @@ public class EyesOfTemptation extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return target.is(Stsflag.blinded) ? -100 : 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
         Result result = target.is(Stsflag.blinded) ? Result.special
-                        : target.roll(this, c, accuracy(c)) ? Result.normal : Result.miss;
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, result, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, result, target));
-        }
+                        : target.roll(getSelf(), c, accuracy(c, target)) ? Result.normal : Result.miss;
+        writeOutput(c, result, target);
         if (result == Result.normal) {
             target.add(c, new Enthralled(target, getSelf(), 5));
             getSelf().emote(Emotion.dominant, 50);
@@ -60,13 +61,8 @@ public class EyesOfTemptation extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
-        return 100;
-    }
-
-    @Override
     public Tactics type(Combat c) {
-        return Tactics.pleasure;
+        return Tactics.debuff;
     }
 
     @Override
@@ -82,7 +78,7 @@ public class EyesOfTemptation extends Skill {
                                 getSelf(), target);
             } else {
                 return Global.format(
-                                "There seems to be a bit of a lull in the fight. You're not sure what {other:name} is doing, but it isn't having any effect on you.",
+                                "There seems to be a bit of a lull in the fight. {self:SUBJECT-ACTION:are|is} not sure what {other:name} is doing, but it isn't having any effect on {self:direct-object}.",
                                 getSelf(), target);
             }
         } else {

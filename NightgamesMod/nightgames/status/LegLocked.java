@@ -1,7 +1,5 @@
 package nightgames.status;
 
-import static nightgames.requirements.RequirementShortcuts.eitherinserted;
-
 import com.google.gson.JsonObject;
 
 import nightgames.characters.Attribute;
@@ -9,16 +7,19 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.requirements.RequirementShortcuts;
 
 public class LegLocked extends Status {
     private float toughness;
 
     public LegLocked(Character affected, float dc) {
         super("Leg Locked", affected);
-        requirements.add(eitherinserted());
+        requirements.add(RequirementShortcuts.eitherinserted());
+        requirements.add(RequirementShortcuts.dom());
         requirements.add((c, self, other) -> toughness > .01);
         toughness = dc;
         flag(Stsflag.leglocked);
+        flag(Stsflag.debuff);
     }
 
     @Override
@@ -26,7 +27,9 @@ public class LegLocked extends Status {
         if (affected.human()) {
             return "Her legs are locked around your waist, preventing you from pulling out.";
         } else {
-            return "Your legs are wrapped around her waist, preventing her from pulling out.";
+            return String.format("%s legs are wrapped around %s waist, preventing %s from pulling out.",
+                            c.getOpponent(affected).nameOrPossessivePronoun(), affected.nameOrPossessivePronoun(),
+                            affected.directObject());
         }
     }
 

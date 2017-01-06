@@ -18,6 +18,7 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.skills.damage.DamageType;
 import nightgames.stance.Behind;
 import nightgames.stance.FaceSitting;
 import nightgames.stance.Mount;
@@ -71,7 +72,7 @@ public class Command extends Skill {
         positioning.retainAll(Arrays.asList(CommandType.MASTER_BEHIND, CommandType.MASTER_MOUNT,
                         CommandType.MASTER_REVERSE_MOUNT, CommandType.MASTER_FACESIT));
         if (!positioning.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(positioning.toArray(new CommandType[] {})), c, target);
+            executeCommand(Global.pickRandom(positioning.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
@@ -79,7 +80,7 @@ public class Command extends Skill {
         Set<CommandType> stripping = new HashSet<>(available);
         stripping.retainAll(Arrays.asList(CommandType.STRIP_MASTER, CommandType.STRIP_SLAVE));
         if (!stripping.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(stripping.toArray(new CommandType[] {})), c, target);
+            executeCommand(Global.pickRandom(stripping.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
@@ -87,7 +88,7 @@ public class Command extends Skill {
         Set<CommandType> oneoff = new HashSet<>(available);
         oneoff.retainAll(Arrays.asList(CommandType.MASTER_STRAPON, CommandType.SUBMIT));
         if (!oneoff.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(oneoff.toArray(new CommandType[] {})), c, target);
+            executeCommand(Global.pickRandom(oneoff.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
@@ -104,12 +105,12 @@ public class Command extends Skill {
         oral.retainAll(Arrays.asList(CommandType.GIVE_ANNILINGUS, CommandType.GIVE_BLOWJOB,
                         CommandType.GIVE_CUNNILINGUS));
         if (!oral.isEmpty() && Global.random(100) <= 75) {
-            executeCommand(Global.pickRandom(oral.toArray(new CommandType[] {})), c, target);
+            executeCommand(Global.pickRandom(oral.toArray(new CommandType[] {})).get(), c, target);
             return true;
         }
 
         // If none chosen yet, just pick anything
-        executeCommand(Global.pickRandom(available.toArray(new CommandType[] {})), c, target);
+        executeCommand(Global.pickRandom(available.toArray(new CommandType[] {})).get(), c, target);
         return true;
     }
 
@@ -130,6 +131,7 @@ public class Command extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
+        // Not used - executeCommand prints messages
         if (modifier == null) {
             return getSelf().name() + "'s order confuses you for a moment, snapping her control over you.";
         }
@@ -207,8 +209,9 @@ public class Command extends Skill {
         if (target.crotchAvailable())
             available.add(CommandType.MASTURBATE);
 
-        if (Global.getByTactics(c, Tactics.fucking)
+        if (getSelf().getSkills()
                   .stream()
+                  .filter(skill -> Tactics.fucking.equals(skill.type(c)))
                   .map(s -> s.copy(getSelf()))
                   .anyMatch(s -> s.requirements(c, getSelf(), target) && s.usable(c, target)))
             available.add(CommandType.MASTER_INSERT);
@@ -249,9 +252,10 @@ public class Command extends Skill {
         switch (chosen) {
             case GIVE_ANNILINGUS:
                 c.write(getSelf(),
-                                String.format("%s presents %s ass to you, and you"
-                                                + " instantly dive towards it and lick it fervently.", getSelf().name(),
-                                                getSelf().possessivePronoun()));
+                                String.format("%s presents %s ass to %s, and %s"
+                                                + " instantly %s towards it and %s it fervently.", getSelf().name(),
+                                                getSelf().possessiveAdjective(), target.nameDirectObject(),
+                                                target.pronoun(), target.action("dive"), target.action("lick")));
                 int m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomAss(),
                                 7 + Global.random(m), c, this);
@@ -262,11 +266,14 @@ public class Command extends Skill {
                 break;
             case GIVE_BLOWJOB:
                 c.write(getSelf(),
-                                String.format("%s holds up %s %s, and you simply can't resist"
-                                                + " the tantilizing appendage. You lower your head and lick and suck"
-                                                + " it all over.", getSelf().name(), getSelf().possessivePronoun(),
+                                String.format("%s holds up %s %s, and %s simply can't resist"
+                                                + " the tantilizing appendage. %s %s head and %s and %s"
+                                                + " it all over.", getSelf().name(), getSelf().possessiveAdjective(),
                                                 getSelf().body.getRandomCock()
-                                                              .describe(getSelf())));
+                                                              .describe(getSelf()), target.subject(),
+                                                              target.subjectAction("lower"),
+                                                              target.possessiveAdjective(), target.action("lick"),
+                                                              target.action("suck")));
                 m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomCock(),
                                 7 + Global.random(m), c, this);
@@ -278,10 +285,11 @@ public class Command extends Skill {
             case GIVE_CUNNILINGUS:
                 c.write(getSelf(), String.format(
                                 "%s spreads %s labia and before %s can"
-                                                + " even tell you what to do, you are already between %s legs"
+                                                + " even tell %s what to do, %s already between %s legs"
                                                 + " slavering away at it.",
-                                getSelf().name(), getSelf().possessivePronoun(), getSelf().pronoun(),
-                                getSelf().possessivePronoun()));
+                                getSelf().name(), getSelf().possessiveAdjective(), getSelf().pronoun(),
+                                target.directObject(), target.subjectAction("are", "is"),
+                                getSelf().possessiveAdjective()));
                 m = target.has(Trait.silvertongue) ? 15 : 10;
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomPussy(),
                                 7 + Global.random(m), c, this);
@@ -292,36 +300,45 @@ public class Command extends Skill {
                 break;
             case MASTER_BEHIND:
                 c.write(getSelf(),
-                                String.format("Freezing you in place with a mere"
-                                                + " glance, %s casually walks around you and grabs you from"
-                                                + " behind.", getSelf().name()));
-                c.setStance(new Behind(getSelf(), target));
+                                String.format("Freezing %s in place with a mere"
+                                                + " glance, %s casually walks around %s and grabs %s from"
+                                                + " behind.", target.directObject(), getSelf().name(),
+                                                target.nameDirectObject(),
+                                                target.directObject()));
+                c.setStance(new Behind(getSelf(), target), target, false);
                 getSelf().buildMojo(c, 5);
                 break;
             case MASTER_MOUNT:
                 c.write(getSelf(),
-                                String.format("%s tells you to remain still and"
-                                                + " gracefully lies down on you, %s face right above yours.",
-                                                getSelf().name(), getSelf().possessivePronoun()));
-                c.setStance(new Mount(getSelf(), target));
+                                String.format("%s tells %s to remain still and"
+                                                + " gracefully lies down on %s, %s face right above %ss.",
+                                                getSelf().name(), target.subject(), 
+                                                target.directObject(), getSelf().possessiveAdjective(),
+                                                target.possessiveAdjective()));
+                c.setStance(new Mount(getSelf(), target), target, false);
                 getSelf().buildMojo(c, 5);
                 break;
             case MASTER_REVERSE_MOUNT:
                 c.write(getSelf(),
-                                String.format("%s fixes you with an intense glare, telling"
-                                                + " you to stay put. Moving a muscle does not even begin to enter"
-                                                + " your thoughts as %s turns away from you and sits down on your"
-                                                + " belly.", getSelf().name(), getSelf().pronoun()));
-                c.setStance(new ReverseMount(getSelf(), target));
+                                String.format("%s fixes %s with an intense glare, telling"
+                                                + " %s to stay put. Moving a muscle does not even begin to enter"
+                                                + " %s thoughts as %s turns away from %s and sits down on %s"
+                                                + " belly.", getSelf().name(), target.subject(),
+                                                target.directObject(), target.possessiveAdjective(), getSelf().pronoun(),
+                                                target.directObject(), target.possessiveAdjective()));
+                c.setStance(new ReverseMount(getSelf(), target), target, false);
                 getSelf().buildMojo(c, 5);
                 break;
             case MASTER_STRAPON:
                 c.write(getSelf(),
                                 String.format("%s affixes an impressive-looking strapon"
-                                                + " to %s crotch. At first you are a bit intimidated, but once %s"
-                                                + " tells you that you like the look of it, you are practically"
-                                                + " salivating.", getSelf().name(), getSelf().possessivePronoun(),
-                                                getSelf().pronoun()));
+                                                + " to %s crotch. At first %s a bit intimidated, but once %s"
+                                                + " tells %s that %s the look of it, %s %s practically"
+                                                + " salivating.", getSelf().name(), getSelf().possessiveAdjective(),
+                                                target.directObject(),
+                                                target.subjectAction("are", "is"), 
+                                                getSelf().subject(), target.subjectAction("like"),
+                                                target.pronoun(), target.action("are", "is")));
                 if (getSelf().has(Item.Strapon2)) {
                     c.write(getSelf(), "The phallic toy vibrates softly but insistently, "
                                     + "obviously designed to make the recepient squeal.");
@@ -334,18 +351,21 @@ public class Command extends Skill {
                 BodyPart pleasured =
                                 target.body.getRandom(target.hasDick() ? "cock" : target.hasPussy() ? "pussy" : "ass");
                 c.write(getSelf(),
-                                String.format("Feeling a bit uninspired, %s just tells you"
-                                                + " to play with your %s for %s.", getSelf().name(),
+                                String.format("Feeling a bit uninspired, %s just tells %s"
+                                                + " to play with %s %s for %s.", getSelf().name(),
+                                                target.subject(), target.possessiveAdjective(),
                                                 pleasured.describe(target), getSelf().directObject()));
                 target.body.pleasure(target, target.body.getRandom("hands"), pleasured, 10 + Global.random(20), c, this);
                 break;
             case HURT_SELF:
                 c.write(getSelf(),
                                 String.format("Following a voiceless command,"
-                                                + " you slam your elbow into your gut as hard as you can."
+                                                + " %s %s elbow into %s gut as hard as %s can."
                                                 + " It hurts, but the look of pure amusement on %s face"
-                                                + " makes everything alright.", getSelf().nameOrPossessivePronoun()));
-                target.pain(c, 10 + Global.random(20));
+                                                + " makes everything alright.", target.subjectAction("slam"),
+                                                target.possessiveAdjective(), target.possessiveAdjective(),
+                                                target.pronoun(), getSelf().nameOrPossessivePronoun()));
+                target.pain(c, target, (int) target.modifyDamage(DamageType.physical, target, Global.random(30, 50)));
                 break;
             case STRIP_MASTER:
                 Clothing removed = getStripTarget(getSelf());
@@ -354,10 +374,14 @@ public class Command extends Skill {
                 getSelf().getOutfit()
                          .unequip(removed);
                 c.write(getSelf(),
-                                String.format("%s tells you to remove %s %s for %s."
-                                                + " You gladly comply, eager to see more of %s perfect physique.",
-                                                getSelf().name(), getSelf().possessivePronoun(), removed.getName(),
-                                                getSelf().directObject(), getSelf().possessivePronoun()));
+                                String.format("%s tells %s to remove %s %s for %s."
+                                                + " %s gladly %s, eager to see more of %s perfect physique.",
+                                                getSelf().subject(), target.subject(), 
+                                                getSelf().possessiveAdjective(), removed.getName(),
+                                                getSelf().directObject(), 
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("comply", "complies"),
+                                                getSelf().nameOrPossessivePronoun()));
                 break;
             case STRIP_SLAVE:
                 removed = getStripTarget(target);
@@ -366,28 +390,43 @@ public class Command extends Skill {
                 target.getOutfit()
                       .unequip(removed);
                 c.write(getSelf(),
-                                String.format("With a dismissive gesture, %s tells you"
-                                                + " that you would feel far better without your %s on. Of course!"
-                                                + " That would make <i>everything</i> better! You eagerly remove"
-                                                + " the offending garment.", getSelf().name(), removed.getName()));
+                                String.format("With a dismissive gesture, %s tells %s"
+                                                + " that %s would feel far better without %s %s on. Of course!"
+                                                + " That would make <i>everything</i> better! %s eagerly %s"
+                                                + " the offending garment.", getSelf().name(), 
+                                                target.subject(), target.pronoun(), 
+                                                target.possessiveAdjective(), removed.getName(),
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("remove")));
                 break;
             case SUBMIT:
                 c.write(getSelf(),
-                                String.format("%s stares deeply into your soul and tells"
-                                                + " you that you should lie down on the ground. You obey the order"
-                                                + " without hesitation.", getSelf().name()));
-                c.setStance(new StandingOver(getSelf(), target));
+                                String.format("%s stares deeply into %s soul and tells"
+                                                + " %s that %s should lie down on the ground. %s obey the order"
+                                                + " without hesitation.", getSelf().name(),
+                                                target.nameOrPossessivePronoun(), target.directObject(),
+                                                target.pronoun(), 
+                                                Global.capitalizeFirstLetter(target.subjectAction("obey"))));
+                c.setStance(new StandingOver(getSelf(), target), target, false);
                 break;
             case WORSHIP_COCK:
                 c.write(getSelf(),
-                                String.format("%s has a cock. You NEED that cock. You humbly"
-                                                + " beg for %s permission and %s is letting you! You enthusiastically"
-                                                + " throw yourself at %s feet and worship the beautiful %s with"
-                                                + " almost religious zeal. At the same time, you cannot contain your lust"
-                                                + " and simply must play with yourself.", getSelf().name(),
-                                                getSelf().possessivePronoun(), getSelf().pronoun(),
-                                                getSelf().possessivePronoun(), getSelf().body.getRandomCock()
-                                                                                             .describe(target)));
+                                String.format("%s has a cock. %s that cock. %s humbly"
+                                                + " %s for %s permission and %s is letting %s! %s enthusiastically"
+                                                + " %s %s at %s feet and %s the beautiful %s with"
+                                                + " almost religious zeal. At the same time, %s cannot contain %s lust"
+                                                + " and simply must play with %s.", getSelf().name(),
+                                                target.subjectAction("NEED", "NEEDS"),
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("beg"),
+                                                getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
+                                                target.directObject(),
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(), 
+                                                target.action("worship"),
+                                                getSelf().body.getRandomCock().describe(target),
+                                                target.pronoun(), target.possessiveAdjective(),
+                                                target.reflectivePronoun()));
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomCock(),
                                 10 + Global.random(8), c, this);
                 if (target.hasDick())
@@ -399,14 +438,22 @@ public class Command extends Skill {
                 break;
             case WORSHIP_PUSSY:
                 c.write(getSelf(),
-                                String.format("%s has a pussy. You NEED that pussy. You humbly"
-                                                + " beg for %s permission and %s is letting you! You enthusiastically"
-                                                + " throw yourself at %s feet and worship the beautiful %s with"
-                                                + " almost religious zeal. At the same time, you cannot contain your lust"
-                                                + " and simply must play with yourself.", getSelf().name(),
-                                                getSelf().possessivePronoun(), getSelf().pronoun(),
-                                                getSelf().possessivePronoun(), getSelf().body.getRandomPussy()
-                                                                                             .describe(getSelf())));
+                                String.format("%s has a pussy. %s that pussy. %s humbly"
+                                                + " %s for %s permission and %s is letting %s! %s enthusiastically"
+                                                + " %s %s at %s feet and %s the beautiful %s with"
+                                                + " almost religious zeal. At the same time, %s cannot contain %s lust"
+                                                + " and simply must play with %s.", getSelf().name(),
+                                                target.subjectAction("NEED", "NEEDS"),
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("beg"),
+                                                getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
+                                                target.directObject(),
+                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(), 
+                                                target.action("worship"),
+                                                getSelf().body.getRandomPussy().describe(target),
+                                                target.pronoun(), target.possessiveAdjective(),
+                                                target.reflectivePronoun()));
                 getSelf().body.pleasure(target, target.body.getRandom("mouth"), getSelf().body.getRandomPussy(),
                                 10 + Global.random(8), c, this);
                 if (target.hasDick())
@@ -418,11 +465,12 @@ public class Command extends Skill {
                 break;
             case MASTER_INSERT:
                 c.write(getSelf(),
-                                String.format("With a mischevous smile, %s tells you to be still,"
-                                                + " and that %s has a special surprise for you.", getSelf().name(),
-                                                getSelf().pronoun()));
-                Global.getByTactics(c, Tactics.fucking)
+                                String.format("With a mischevous smile, %s tells %s to be still,"
+                                                + " and that %s has a special surprise for %s.", getSelf().name(),
+                                                target.subject(), getSelf().pronoun(), target.directObject()));
+                getSelf().getSkills()
                       .stream()
+                      .filter(skill -> Tactics.fucking.equals(skill.type(c)))
                       .map(s -> s.copy(getSelf()))
                       .filter(s -> s.requirements(c, getSelf(), target) && s.usable(c, target))
                       .findAny()
@@ -430,9 +478,9 @@ public class Command extends Skill {
                       .resolve(c, target);
                 break;
             case MASTER_FACESIT:
-                c.write(getSelf(), String.format("%s stands over your face and slowly" + " lowers %s down onto it.",
-                                getSelf().name(), getSelf().reflectivePronoun()));
-                c.setStance(new FaceSitting(getSelf(), target));
+                c.write(getSelf(), String.format("%s stands over %s face and slowly lowers %s down onto it.",
+                                getSelf().name(), target.nameOrPossessivePronoun(), getSelf().reflectivePronoun()));
+                c.setStance(new FaceSitting(getSelf(), target), target, false);
                 break;
         }
     }

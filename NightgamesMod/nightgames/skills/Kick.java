@@ -9,11 +9,16 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 
 public class Kick extends Skill {
 
     public Kick(Character self) {
         super("Kick", self);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
+        addTag(SkillTag.positioning);
     }
 
     @Override
@@ -23,8 +28,8 @@ public class Kick extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().feet(getSelf()) && getSelf().canAct() && (!c.getStance().prone(getSelf())
-                        || getSelf().has(Trait.dirtyfighter) && !c.getStance().connected());
+        return c.getStance().feet(getSelf(), target) && getSelf().canAct() && (!c.getStance().prone(getSelf())
+                        || getSelf().has(Trait.dirtyfighter) && !c.getStance().connected(c));
     }
 
     @Override
@@ -33,33 +38,33 @@ public class Kick extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
         if (!target.getOutfit().slotUnshreddable(ClothingSlot.bottom) && getSelf().get(Attribute.Ki) >= 14
                         && Global.random(3) == 2) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.special, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.special, target));
-            }
+            writeOutput(c, Result.special, target);
             target.shred(ClothingSlot.bottom);
-        } else
-        if (target.roll(this, c, accuracy(c))) {
-            int m = Global.random(12) + Math.min(getSelf().get(Attribute.Power), 100);
+        } else if (target.roll(getSelf(), c, accuracy(c, target))) {
+            double m = Global.random(16, 21);
             if (target.has(Trait.brassballs)) {
                 m *= .8;
             }
             if (getSelf().human()) {
                 if (c.getStance().prone(getSelf())) {
-                    c.write(getSelf(), deal(c, m, Result.strong, target));
+                    c.write(getSelf(), deal(c, 0, Result.strong, target));
                 } else {
-                    c.write(getSelf(), deal(c, m, Result.normal, target));
+                    c.write(getSelf(), deal(c, 0, Result.normal, target));
 
                 }
-            } else if (target.human()) {
+            } else if (c.shouldPrintReceive(target, c)) {
                 if (c.getStance().prone(getSelf())) {
-                    c.write(getSelf(), receive(c, m, Result.strong, target));
+                    c.write(getSelf(), receive(c, 0, Result.strong, target));
                 } else {
-                    c.write(getSelf(), receive(c, m, Result.normal, target));
+                    c.write(getSelf(), receive(c, 0, Result.normal, target));
                 }
             }
             if (target.has(Trait.achilles) && !target.has(ClothingTrait.armored)) {
@@ -68,14 +73,10 @@ public class Kick extends Skill {
             if (target.has(ClothingTrait.armored)) {
                 m = m / 2;
             }
-            target.pain(c, m);
+            target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));
             target.emote(Emotion.angry, 20);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -132,18 +133,18 @@ public class Kick extends Skill {
             return getSelf().name() + "'s kick hits nothing but air.";
         }
         if (modifier == Result.special) {
-            return getSelf().name()
-                            + " launches a powerful kick straight at your groin, but pulls it back just before impact. You feel a chill run down your spine and your testicles "
-                            + "are grateful for the last second reprieve. Your "
-                            + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName()
-                            + " crumble off your body, practically disintegrating.... Still somewhat grateful.";
+            return Global.format("{self:SUBJECT} launches a powerful kick straight at {other:name-possessive} groin, but pulls it back "
+                            + "just before impact. {other:pronoun-action:feel|feels} a chill run down {other:possessive} spine and {other:possessive} {other:balls-vulva} "
+                            + "are grateful for the last second reprieve. {other:POSSESSIVE} %s crumble off {other:possessive} body,"
+                            + " practically disintegrating.... Still somewhat grateful.", getSelf(), target,
+                            target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName());
         }
         if (modifier == Result.strong) {
-            return "With " + getSelf().name()
-                            + " flat on her back, you quickly move in to press your advantage. Faster than you can react, her foot shoots up between "
-                            + "your legs, dealing a critical hit on your unprotected balls.";
+            return Global.format("With {other:name-do} flat on {other:possessive} back, {self:subject-action:quickly move|quickly moves} in to press {self:possessive} advantage. "
+                            + "Faster than {other:pronoun} can react, {self:possessive} foot shoots up between "
+                            + "{other:possessive} legs, dealing a critical hit on {other:possessive} unprotected {other:balls-vulva}.", getSelf(), target);
         } else {
-            return getSelf().name() + "'s foot lashes out into your delicate testicles with devastating force. ";
+            return Global.format("{self:NAME-POSSESSIVE} foot lashes out into {other:name-possessive} delicate {other:balls-vulva} with devastating force.", getSelf(), target);
         }
     }
 

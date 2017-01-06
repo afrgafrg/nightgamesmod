@@ -3,13 +3,15 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Mount;
 
 public class Straddle extends Skill {
 
     public Straddle(Character self) {
         super("Mount", self);
-
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.petDisallowed);
     }
 
     @Override
@@ -21,12 +23,8 @@ public class Straddle extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        c.setStance(new Mount(getSelf(), target));
+        writeOutput(c, Result.normal, target);
+        c.setStance(new Mount(getSelf(), target), getSelf(), true);
         return true;
     }
 
@@ -57,7 +55,9 @@ public class Straddle extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name() + " plops herself down on top of your stomach.";
+        return String.format("%s plops %s down on top of %s stomach.",
+                        getSelf().subject(), getSelf().reflectivePronoun(),
+                        target.nameOrPossessivePronoun());
     }
 
     @Override

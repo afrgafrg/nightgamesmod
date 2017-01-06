@@ -12,6 +12,7 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.stance.Stance;
 import nightgames.stance.StandingOver;
+import nightgames.status.BodyFetish;
 import nightgames.status.CockBound;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
@@ -31,15 +32,15 @@ public class PullOut extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return !target.hasStatus(Stsflag.knotted) && getSelf().canAct() && (c.getStance().en == Stance.facesitting
-                        || c.getStance().inserted() && c.getStance().dom(getSelf())) && !blockedByAddiction(getSelf());
+        return !target.hasStatus(Stsflag.knotted) && getSelf().canAct() && (c.getStance().isFaceSitting(getSelf())
+                        || c.getStance().havingSex(c, getSelf()) && c.getStance().dom(getSelf())) && !blockedByAddiction(getSelf());
     }
 
     public static boolean blockedByAddiction(Character user) {
         if (!user.human()) {
             return false;
         }
-        Player p = Global.getPlayer();
+        Player p = (Player) user;
         Optional<Addiction> addiction = p.getAddiction(AddictionType.BREEDER);
         if (!addiction.isPresent()) {
             return false;
@@ -60,68 +61,106 @@ public class PullOut extends Skill {
         } else {
             result = Result.special;
         }
+        boolean isLocked = getSelf().hasStatus(Stsflag.leglocked) || getSelf().hasStatus(Stsflag.armlocked);
+        int baseDifficulty = isLocked ? 17 : 10;
+        if (target.has(Trait.bewitchingbottom)) {
+            Optional<BodyFetish> fetish = getSelf().body.getFetish("ass");
+            if(fetish.isPresent()) {
+                baseDifficulty += 7 * fetish.get().magnitude;
+            }
+        }
+        if (target.has(Trait.stronghold)) {
+            baseDifficulty += 5;
+        }
+        int powerMod = Math.min(20, Math.max(5, target.get(Attribute.Power) - getSelf().get(Attribute.Power)));
         if (c.getStance().en == Stance.anal) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, result, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, result, target));
+            if (!target.has(Trait.powerfulcheeks)) {
+                writeOutput(c, result, target);
+                c.setStance(c.getStance().insertRandom(c));
+                return true;
+            } else if (getSelf().check(Attribute.Power, 
+                            baseDifficulty - getSelf().escape(c, target) + powerMod)) {
+                if (isLocked) {
+                    c.write(getSelf(), Global.format("Despite {other:name-possessive} inhumanly tight"
+                                    + " ass and {other:possessive} strong grip on {self:direct-object},"
+                                    + " {self:pronoun-action:manage|manages} to pull {self:body-part:cock}"
+                                    + " ever so slowly out of {other:direct-object}.", getSelf(), target));
+                } else {
+                    c.write(getSelf(), Global.format("{other:NAME-POSSESSIVE} ass clenches powerfully"
+                                    + " around {self:name-possessive} {self:body-part:cock} as"
+                                    + " {self:pronoun-action:try|tries} to pull out of"
+                                    + " it, but it proves insufficient as the hard shaft escapes its"
+                                    + " former prison.", getSelf(), target));
+                }
+                c.setStance(c.getStance().insertRandom(c));
+            } else if (!isLocked) {
+                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
+                                + " {other:name-possessive} lustrous ass, but {other:pronoun-action:squeeze|squeezes}"
+                                + " {other:possessive} asscheeks tightly around your {self:body-part:cock},"
+                                + " preventing your extraction.", getSelf(), target));
+                getSelf().body.pleasure(target, target.body.getRandomAss(), getSelf().body.getRandomCock(), 6, c, this);
+            } else {
+                String lockDesc = getSelf().hasStatus(Stsflag.leglocked) ? "legs" : "arms";
+                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to pull out of"
+                                + " {other:name-possessive} lustrous ass, but the combination"
+                                + " of {other:possessive} tightly squeezing ass and"
+                                + " powerful %s locks {self:pronoun} firmly inside of {other:direct-object}."
+                                , getSelf(), target, lockDesc));
+                getSelf().body.pleasure(target, target.body.getRandomAss(), getSelf().body.getRandomCock(), 10, c, this);
             }
-            c.setStance(c.getStance().insertRandom());
         } else if (result == Result.special) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, result, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, result, target));
-            }
-            c.setStance(new StandingOver(getSelf(), target));
+            writeOutput(c, Result.special, target);
+            c.setStance(new StandingOver(getSelf(), target), getSelf(), true);
         } else {
-            if (getSelf().hasStatus(Stsflag.leglocked) || getSelf().hasStatus(Stsflag.armlocked)
-                            || target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
+            if (isLocked || target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
                 boolean escaped = getSelf().check(Attribute.Power,
-                                10 - getSelf().escape(c) + target.get(Attribute.Power));
+                                10 - getSelf().escape(c, target) + target.get(Attribute.Power));
                 if (escaped) {
-                    if (getSelf().human()) {
-                        c.write(getSelf(), deal(c, 0, result, target));
-                    } else if (target.human()) {
-                        c.write(getSelf(), receive(c, 0, result, target));
-                    }
+                    writeOutput(c, result, target);
                 } else {
                     if (getSelf().hasStatus(Stsflag.leglocked)) {
-                        BodyPart part = c.getStance().anallyPenetrated(getSelf()) ? target.body.getRandom("ass")
+                        BodyPart part = c.getStance().anallyPenetrated(c, getSelf()) ? target.body.getRandom("ass")
                                         : target.body.getRandomPussy();
                         String partString = part.describe(target);
                         if (getSelf().human()) {
                             c.write(getSelf(), "You try to pull out of " + target.name() + "'s " + partString
-                                            + ", but her legs immediately tighten against your waist, holding you inside her. The mere friction from her action sends a shiver down your spine.");
+                                            + ", but her legs immediately tighten against your waist, holding you inside her. "
+                                            + "The mere friction from her action sends a shiver down your spine.");
                         } else {
-                            c.write(getSelf(), "She tries to pull out of " + target.nameOrPossessivePronoun() + " "
-                                            + partString
-                                            + ", but your legs immediately pull her back in, holding you inside her.");
+                            c.write(getSelf(), String.format("%s tries to pull out of %s %s, but %s legs immediately pull"
+                                            + " %s back in, holding %s inside %s.", getSelf().subject(), target.nameOrPossessivePronoun(),
+                                            partString, target.possessiveAdjective(), getSelf().directObject(), getSelf().nameDirectObject(),
+                                            target.directObject()));
                         }
                     } else if (getSelf().hasStatus(Stsflag.armlocked)) {
                         if (getSelf().human()) {
                             c.write(getSelf(), "You try to pull yourself off of " + target.name()
                                             + ", but she merely pulls you back on top of her, surrounding you in her embrace.");
                         } else {
-                            c.write(getSelf(), "She tries to pull herself off of " + target.name()
-                                            + ", but with a gentle pull of your hands, she collapses back on top of you.");
+                            c.write(getSelf(), String.format("%s tries to pull %s off of %s, but with "
+                                            + "a gentle pull of %s hands, %s collapses back on top of %s.",
+                                            getSelf().subject(), getSelf().reflectivePronoun(),
+                                            target.nameDirectObject(), target.possessiveAdjective(),
+                                            getSelf().pronoun(), target.directObject()));
                         }
                     } else if (target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
-                        BodyPart part = c.getStance().anallyPenetrated(target) ? target.body.getRandom("ass")
+                        BodyPart part = c.getStance().anallyPenetrated(c, target) ? target.body.getRandom("ass")
                                         : target.body.getRandomPussy();
                         String partString = part.describe(target);
                         if (getSelf().human()) {
                             c.write(getSelf(), "You try to pull yourself out of " + target.name() + "'s " + partString
                                             + ", but she clamps down hard on your cock while smiling at you. You almost cum from the sensation, and quickly abandon ideas about your escape.");
                         } else {
-                            c.write(getSelf(), "She tries to pull herself out of " + target.nameOrPossessivePronoun()
-                                            + " " + partString
-                                            + ", but you clamp down hard on her cock, and prevent her from pulling out.");
+                            c.write(getSelf(), String.format("%s tries to pull %s out of %s %s, but %s down "
+                                            + "hard on %s cock, and prevent %s from pulling out.", getSelf().subject(),
+                                            getSelf().reflectivePronoun(), target.possessiveAdjective(), partString,
+                                            target.subjectAction("pull"), target.possessiveAdjective(),
+                                            getSelf().directObject()));
                         }
                     }
                     int m = 8;
                     if (c.getStance().inserted(getSelf())) {
-                        BodyPart part = c.getStance().anallyPenetrated(target) ? target.body.getRandom("ass")
+                        BodyPart part = c.getStance().anallyPenetrated(c, target) ? target.body.getRandom("ass")
                                         : target.body.getRandomPussy();
                         getSelf().body.pleasure(target, part, getSelf().body.getRandomInsertable(), m, c, this);
                     }
@@ -130,17 +169,17 @@ public class PullOut extends Skill {
                 }
             } else if (getSelf().hasStatus(Stsflag.cockbound)) {
                 CockBound s = (CockBound) getSelf().getStatus(Stsflag.cockbound);
-                c.write(getSelf(), "You try to pull out of " + target.name() + "'s " + target.body.getRandomPussy()
-                                + ", but " + s.binding + " instantly reacts and pulls your dick back in.");
+                c.write(getSelf(), String.format("%s to pull out of %s %s, but %s instantly reacts "
+                                + "and pulls %s dick back in.", getSelf().subjectAction("try", "tries"),
+                                target.nameOrPossessivePronoun(), 
+                                target.body.getRandomPussy().describe(target),
+                                s.binding, getSelf().possessiveAdjective()));
                 int m = 8;
                 getSelf().body.pleasure(target, target.body.getRandom("pussy"), getSelf().body.getRandom("cock"), m, c, this);
                 return false;
-            } else if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, result, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, result, target));
-            }
-            c.setStance(c.getStance().insertRandom());
+            } else 
+                writeOutput(c, result, target);
+            c.setStance(c.getStance().insertRandom(c));
         }
         return true;
     }
@@ -174,13 +213,20 @@ public class PullOut extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.anal) {
-            return "You feel the pressure in your anus recede as " + getSelf().name() + " pulls out.";
+            return String.format("%s the pressure in %s anus recede as %s pulls out.",
+                            target.subjectAction("feel"), target.possessiveAdjective(),
+                            getSelf().subject());
         } else if (modifier == Result.reverse) {
-            return getSelf().name() + " lifts her hips more than normal, letting your dick slip completely out of her.";
+            return String.format("%s lifts %s hips more than normal, letting %s dick slip completely out of %s.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), getSelf().directObject());
         } else if (modifier == Result.normal) {
-            return getSelf().name() + " pulls her dick completely out of your pussy, leaving you feeling empty.";
+            return String.format("%s pulls %s dick completely out of %s pussy, leaving %s feeling empty.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), target.directObject());
         } else {
-            return getSelf().name() + " lifts herself off your face, giving you a brief respite.";
+            return String.format("%s lifts herself off %s face, giving %s a brief respite.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(), target.directObject());
         }
     }
 

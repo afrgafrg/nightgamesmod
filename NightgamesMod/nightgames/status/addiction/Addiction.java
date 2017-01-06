@@ -1,13 +1,17 @@
 package nightgames.status.addiction;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 import com.google.gson.JsonObject;
 
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.combat.Combat;
+import nightgames.global.DebugFlags;
 import nightgames.global.Global;
 import nightgames.status.Status;
+import nightgames.status.Stsflag;
 
 public abstract class Addiction extends Status {
 
@@ -19,17 +23,20 @@ public abstract class Addiction extends Status {
     public static final float MED_THRESHOLD = .4f;
     public static final float HIGH_THRESHOLD = .7f;
 
-    protected final String name;
     protected final Character cause;
     protected float magnitude;
     protected float combatMagnitude;
 
+    // should be saved
     private boolean didDaytime;
-    protected boolean inWithdrawal;
     private boolean overloading;
+    
+    protected final EnumSet<Stsflag> flags;
 
-    protected Addiction(String name, Character cause, float magnitude) {
-        super(name, Global.getPlayer());
+    protected boolean inWithdrawal;
+
+    protected Addiction(Player affected, String name, Character cause, float magnitude) {
+        super(name, affected);
         this.name = name;
         this.cause = cause;
         this.magnitude = magnitude;
@@ -37,16 +44,16 @@ public abstract class Addiction extends Status {
         didDaytime = false;
         inWithdrawal = false;
         overloading = false;
+        flags = EnumSet.noneOf(Stsflag.class);
     }
 
-    protected Addiction(String name, Character cause) {
-        this(name, cause, .01f);
+    protected Addiction(Player affected, String name, Character cause) {
+        this(affected, name, cause, .01f);
     }
 
     @Override
     public void tick(Combat c) {
         combatMagnitude += magnitude / 14.0;
-        System.out.println(combatMagnitude);
     }
     
     public final void clearDaytime() {
@@ -99,6 +106,8 @@ public abstract class Addiction extends Status {
         obj.addProperty("cause", cause.getType());
         obj.addProperty("magnitude", magnitude);
         obj.addProperty("combat", combatMagnitude);
+        obj.addProperty("overloading", overloading);
+        obj.addProperty("reenforced", didDaytime);
         return obj;
     }
 
@@ -129,8 +138,13 @@ public abstract class Addiction extends Status {
 
     public Optional<Status> startNight() {
         if (!didDaytime || overloading) {
-            if (!overloading)
-                alleviate(Global.randomfloat() / 4.f);
+            if (!overloading) {
+                float amount = Global.randomfloat() / 4.f;
+                if (Global.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
+                    System.out.println("Alleviating addiction " + this.getType() + " by " + amount);
+                }
+                alleviate(amount);
+            }
             if (isActive()) {
                 inWithdrawal = true;
                 Global.gui()
@@ -145,10 +159,10 @@ public abstract class Addiction extends Status {
         if (inWithdrawal) {
             Optional<Status> opt = withdrawalEffects();
             if (opt.isPresent() && !affected.has(opt.get()))
-                affected.add(opt.get().instance(affected, cause));
+                affected.addNonCombat(opt.get().instance(affected, cause));
         }
     }
-    
+
     public void endNight() {
         inWithdrawal = false;
         clearDaytime();
@@ -164,13 +178,14 @@ public abstract class Addiction extends Status {
     public Optional<Status> startCombat(Combat c, Character opp) {
         combatMagnitude = atLeast(Severity.MED) ? .2f : .0f;
         if (opp.equals(cause) && atLeast(Severity.LOW)) {
+            flags.forEach(affected::flagStatus);
             return addictionEffects();
         }
         return Optional.empty();
     }
 
     public void endCombat(Combat c, Character opp) {
-        // NOP
+        flags.forEach(affected::unflagStatus);
     }
 
     public boolean isActive() {
@@ -185,8 +200,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude + amt);
         if (getSeverity() != old) {
-            Global.gui()
-                  .message(describeIncrease());
+            Global.gui().message(describeIncrease());
         }
     }
 
@@ -194,8 +208,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude - amt);
         if (getSeverity() != old) {
-            Global.gui()
-                  .message(describeDecrease());
+            Global.gui().message(describeDecrease());
         }
     }
 
@@ -203,8 +216,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude + amt);
         if (getSeverity() != old) {
-            Global.gui()
-                  .message(describeCombatIncrease());
+            Global.gui().message(describeCombatIncrease());
         }
     }
 
@@ -212,8 +224,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude - amt);
         if (getSeverity() != old) {
-            Global.gui()
-                  .message(describeCombatDecrease());
+            Global.gui().message(describeCombatDecrease());
         }
     }
 
@@ -241,10 +252,12 @@ public abstract class Addiction extends Status {
               .message(describeIncrease());
     }
 
-    public static Addiction load(AddictionType type, Character cause, float mag, float combat) {
-        Addiction a = type.build(cause, mag);
+    public static Addiction load(Player player, AddictionType type, Character cause, float mag, float combat, boolean overloading, boolean reenforced) {
+        Addiction a = type.build(player, cause, mag);
         a.magnitude = mag;
         a.combatMagnitude = combat;
+        a.overloading = overloading;
+        a.didDaytime = reenforced;
         return a;
     }
 
@@ -253,6 +266,6 @@ public abstract class Addiction extends Status {
     }
 
     public boolean wasCausedBy(Character target) {
-        return target.getType().equals(cause.getType());
+        return target != null && target.getType().equals(cause.getType());
     }
 }

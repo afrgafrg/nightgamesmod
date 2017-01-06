@@ -7,30 +7,31 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
 
 public class BreastWorship extends Skill {
     public BreastWorship(Character self) {
         super("Breast Worship", self);
+        addTag(SkillTag.usesMouth);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.worship);
+        addTag(SkillTag.pleasureSelf);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return target.breastsAvailable() && c.getStance().reachTop(getSelf()) && c.getStance().front(getSelf())
                         && (getSelf().canAct() || c.getStance().enumerate() == Stance.nursing && getSelf().canRespond())
-                        && c.getStance().facing();
+                        && c.getStance().facing(getSelf(), target);
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
         int m = 8 + Global.random(6);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, results, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, results, target));
-        }
+        writeOutput(c, results, target);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
         }
@@ -44,7 +45,7 @@ public class BreastWorship extends Skill {
             getSelf().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), getSelf().body.getRandomHole(), m, c, this);
         }
         if (results == Result.special) {
-            getSelf().tempt(c, target, target.body.getRandomBreasts(), (3 + target.body.getRandomBreasts().size) * 2);
+            getSelf().temptWithSkill(c, target, target.body.getRandomBreasts(), (3 + target.body.getRandomBreasts().size) * 2, this);
             target.buildMojo(c, 10);
         } else {
             target.buildMojo(c, 5);
@@ -53,14 +54,14 @@ public class BreastWorship extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return 150;
     }
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
         Optional<BodyFetish> fetish = getSelf().body.getFetish("breasts");
-        return fetish.isPresent() && fetish.get().magnitude >= .5;
+        return user.isPetOf(target) || (fetish.isPresent() && fetish.get().magnitude >= .5);
     }
 
     @Override
@@ -89,11 +90,14 @@ public class BreastWorship extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
             return getSelf().name()
-                            + " worshipfully licks and sucks your nipples while uncontrollably playing with herself.";
+                            + " worshipfully licks and sucks "+target.nameOrPossessivePronoun()+
+                            " nipples while uncontrollably playing with "+getSelf().reflectivePronoun()+".";
         } else {
-            return getSelf().name()
-                            + " worshipfully licks and sucks your nipples while uncontrollably masturbating, drawing forth a gush of breast milk from your teats. "
-                            + "She drinks deeply of your milk, gurgling happily as more of the smooth liquid flows down her throat.";
+            return String.format("%s worshipfully licks and sucks %s nipples while uncontrollably masturbating, drawing forth "
+                            + "a gush of breast milk from %s teats. %s drinks deeply of %s milk, gurgling happily "
+                            + "as more of the smooth liquid flows down %s throat.",
+                            getSelf().name(), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            getSelf().name(), target.possessiveAdjective(), getSelf().possessiveAdjective());
         }
     }
 

@@ -66,7 +66,7 @@ public class TemptressStripTease extends StripTease {
             } else {
                 c.write(getSelf(), receive(c, 0, Result.weak, target));
             }
-            target.tempt(c, getSelf(), 10 + Global.random(Math.max(5, technique)));
+            target.temptNoSource(c, getSelf(), 10 + Global.random(Math.max(5, technique)), this);
             if (Global.random(2) == 0) {
                 target.add(c, new Charmed(target, Global.random(Math.min(3, technique))));
             }
@@ -78,7 +78,7 @@ public class TemptressStripTease extends StripTease {
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             }
 
-            target.tempt(c, getSelf(), 15 + Global.random(Math.max(10, technique)));
+            target.temptNoSource(c, getSelf(), 15 + Global.random(Math.max(10, technique)), this);
             target.add(c, new Charmed(target, Global.random(Math.min(5, technique))));
             getSelf().add(c, new Alluring(getSelf(), 5));
             getSelf().undress(c);
@@ -97,22 +97,28 @@ public class TemptressStripTease extends StripTease {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (isDance(c)) {
-            return getSelf().name() + " backs up a little and starts swinging"
-                            + " her hips side to side. Curious as to what's going on, you"
-                            + " cease your attacks and watch as she bends and curves, putting"
+            return String.format("%s backs up a little and starts swinging"
+                            + " her hips side to side. Curious as to what's going on, %s"
+                            + " %s attacks and watch as she bends and curves, putting"
                             + " on a slow dance that would be very arousing even if she weren't"
-                            + " naked. Now, without a stitch of clothing to obscure your view,"
-                            + " the sight stirs your imagination. You are shocked out of your"
-                            + " reverie when she plants a soft kiss on your lips, and you dreamily"
-                            + " gaze into her eyes as she gets back into a fighting stance.";
+                            + " naked. Now, without a stitch of clothing to obscure %s view,"
+                            + " the sight stirs %s imagination. %s shocked out of %s"
+                            + " reverie when she plants a soft kiss on %s lips, and %s dreamily"
+                            + " %s into her eyes as she gets back into a fighting stance.",
+                            getSelf().subject(), target.subjectAction("cease"),
+                            target.possessiveAdjective(), target.possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), target.subjectAction("are", "is"),
+                            target.possessiveAdjective(), target.possessiveAdjective(), target.pronoun(),
+                            target.action("gaze"));
         } else {
-            return getSelf().name() + " takes a few steps back and starts "
+            return String.format("%s takes a few steps back and starts "
                             + "moving sinously. She sensually runs her hands over her body, "
                             + "undoing straps and buttons where she encounters them, and starts"
                             + " peeling her clothes off slowly, never breaking eye contact."
-                            + " You can only gawk in amazement as her perfect body is revealed bit"
+                            + " %s can only gawk in amazement as her perfect body is revealed bit"
                             + " by bit, and the thought of doing anything to blemish such"
-                            + " perfection seems very unpleasant indeed.";
+                            + " perfection seems very unpleasant indeed.", getSelf().subject(),
+                            Global.capitalizeFirstLetter(target.subject()));
         }
     }
 
@@ -128,6 +134,6 @@ public class TemptressStripTease extends StripTease {
     }
 
     private boolean isDance(Combat c) {
-        return !super.usable(c, c.getOther(getSelf())) && usable(c, c.getOther(getSelf()));
+        return !super.usable(c, c.getOpponent(getSelf())) && usable(c, c.getOpponent(getSelf()));
     }
 }

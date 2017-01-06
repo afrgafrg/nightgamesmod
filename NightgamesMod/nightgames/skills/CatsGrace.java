@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.stance.Stance;
 import nightgames.status.Nimble;
 import nightgames.status.Stsflag;
 
@@ -20,7 +21,7 @@ public class CatsGrace extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return !getSelf().is(Stsflag.nimble) && getSelf().canAct() && c.getStance().mobile(getSelf())
+        return !getSelf().is(Stsflag.nimble) && c.getStance().en == Stance.neutral && getSelf().canAct() && c.getStance().mobile(getSelf())
                         && getSelf().getArousal().percent() >= 20;
     }
 
@@ -31,11 +32,7 @@ public class CatsGrace extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        writeOutput(c, Result.normal, target);
         getSelf().add(c, new Nimble(getSelf(), 4));
         return true;
     }
@@ -58,7 +55,8 @@ public class CatsGrace extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return getSelf().name()
-                        + " focuses for a moment and her movements start to speed up and become more animalistic.";
+                        + " focuses for a moment and "+getSelf().possessiveAdjective()
+                        +" movements start to speed up and become more animalistic.";
     }
 
 }

@@ -42,21 +42,17 @@ public class WindUp extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Primes time charges: first charge free, 10 Mojo for each additional charge";
+        return "Primes time charges: first charge free, 2 Mojo for each additional charge";
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         int charges = Math.min(4, getSelf().getMojo()
                                            .get()
-                        / 10);
-        getSelf().add(new Primed(getSelf(), charges + 1));
-        getSelf().spendMojo(c, charges * 10);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+                        / 5);
+        getSelf().add(c, new Primed(getSelf(), charges + 1));
+        getSelf().spendMojo(c, charges * 5);
+        writeOutput(c, Result.normal, target);
         return true;
     }
 
@@ -79,7 +75,7 @@ public class WindUp extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format("%s fiddles with a small device on %s wrist.", getSelf().name(),
-                        getSelf().possessivePronoun());
+                        getSelf().possessiveAdjective());
     }
 
 }

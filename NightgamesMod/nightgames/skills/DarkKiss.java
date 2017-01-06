@@ -1,9 +1,11 @@
 package nightgames.skills;
 
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
@@ -11,6 +13,7 @@ public class DarkKiss extends Skill {
 
     public DarkKiss(Character self) {
         super("Dark Kiss", self, 3);
+        addTag(SkillTag.dark);
     }
 
     @Override
@@ -25,10 +28,9 @@ public class DarkKiss extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return Global.getPlayer()
-                     .checkAddiction(AddictionType.CORRUPTION)
+        return getSelf() instanceof Player && ((Player)getSelf()).checkAddiction(AddictionType.CORRUPTION)
                         && c.getStance()
-                            .kiss(getSelf())
+                            .kiss(getSelf(), target)
                         && getSelf().canAct();
     }
 
@@ -42,9 +44,9 @@ public class DarkKiss extends Skill {
         assert getSelf().human();
         c.write(getSelf(), String.format("You lean in and plant an intense kiss on %s lips. The corruption which Reyka"
                         + " has imbued you with stirs, and greedily draws %s willpower in through your connection, growing"
-                        + " more powerful.", target.nameOrPossessivePronoun(), target.possessivePronoun()));
+                        + " more powerful.", target.nameOrPossessivePronoun(), target.possessiveAdjective()));
 
-        Addiction add = Global.getPlayer().getAddiction(AddictionType.CORRUPTION)
+        Addiction add = ((Player)getSelf()).getAddiction(AddictionType.CORRUPTION)
                         .orElseThrow(() -> new SkillUnusableException(this));
         float mag = add.getMagnitude();
         int min = (int) (mag * 3);
@@ -52,7 +54,7 @@ public class DarkKiss extends Skill {
         int amt = min + Global.random(mod);
         target.loseWillpower(c, amt, false);
         add.alleviateCombat(Addiction.HIGH_INCREASE);
-        Global.getPlayer().addict(AddictionType.CORRUPTION, null, Addiction.LOW_INCREASE);
+        ((Player)getSelf()).addict(AddictionType.CORRUPTION, null, Addiction.LOW_INCREASE);
         return true;
     }
 
@@ -64,6 +66,11 @@ public class DarkKiss extends Skill {
     @Override
     public Tactics type(Combat c) {
         return Tactics.pleasure;
+    }
+    
+    @Override
+    public boolean makesContact(){
+        return true;
     }
 
     @Override

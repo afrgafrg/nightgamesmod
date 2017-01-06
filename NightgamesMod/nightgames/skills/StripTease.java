@@ -7,12 +7,14 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Alluring;
 import nightgames.status.Stsflag;
 
 public class StripTease extends Skill {
     public StripTease(Character self) {
         super("Strip Tease", self);
+        addTag(SkillTag.undressing);
     }
 
     public StripTease(String string, Character self) {
@@ -46,22 +48,22 @@ public class StripTease extends Skill {
 
     @Override
     public int getMojoBuilt(Combat c) {
-        return 50;
+        return 30;
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            if (target.is(Stsflag.blinded))
+        } else if (c.shouldPrintReceive(target, c)) {
+            if (target.human() && target.is(Stsflag.blinded))
                 printBlinded(c);
             else
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         if (!target.is(Stsflag.blinded)) {
             int m = 15 + Global.random(5);
-            target.tempt(c, getSelf(), m);
+            target.temptNoSource(c, getSelf(), m, this);
             getSelf().add(c, new Alluring(getSelf(), 5));
         }
         target.emote(Emotion.horny, 30);
@@ -90,9 +92,11 @@ public class StripTease extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " asks for a quick time out and starts sexily slipping her clothes off. Although there are no time outs in the rules, you can't help staring "
-                        + "at the seductive display until she finishes with a cute wiggle of her naked ass.";
+        return String.format("%s asks for a quick time out and starts sexily slipping %s own clothes off."
+                        + " Although there are no time outs in the rules, %s can't help staring "
+                        + "at the seductive display until %s finishes with a cute wiggle of %s naked ass.",
+                        getSelf().subject(), getSelf().possessiveAdjective(), target.subject(),
+                        getSelf().pronoun(), getSelf().possessiveAdjective());
     }
 
     @Override

@@ -6,6 +6,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.Global;
 
 public class Oiled extends Status {
     public Oiled(Character affected) {
@@ -18,7 +19,8 @@ public class Oiled extends Status {
         if (affected.human()) {
             return "Your skin is slick with oil and kinda feels weird.";
         } else {
-            return affected.name() + " is shiny with lubricant, making you more tempted to touch and rub her skin.";
+            return String.format("%s is shiny with lubricant, making %s more tempted to touch and rub %s skin.",
+                            affected.subject(), c.getOpponent(affected).subject(), affected.possessiveAdjective());
         }
     }
 
@@ -44,6 +46,7 @@ public class Oiled extends Status {
 
     @Override
     public double pleasure(Combat c, BodyPart withPart, BodyPart targetPart, double x) {
+        c.write(affected, Global.format("{self:NAME-POSSESSIVE} slippery oiled form makes {self:direct-object} all the more sensitive.", affected, c.getOpponent(affected)));
         return x / 4;
     }
 

@@ -9,11 +9,15 @@ import nightgames.characters.body.FacePart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TailPart;
 import nightgames.characters.body.WingsPart;
+import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+import nightgames.skills.strategy.FacesitStrategy;
+import nightgames.skills.strategy.FootjobStrategy;
+import nightgames.skills.strategy.KnockdownStrategy;
 import nightgames.start.NpcConfiguration;
 
 public class Reyka extends BasePersonality {
@@ -24,78 +28,85 @@ public class Reyka extends BasePersonality {
     }
 
     public Reyka(Optional<NpcConfiguration> charConfig, Optional<NpcConfiguration> commonConfig) {
-        super("Reyka", 1, charConfig, commonConfig);
+        super("Reyka", 1, charConfig, commonConfig, false);
+        constructLines();
     }
 
-    protected void applyBasicStats() {
+    @Override
+    public void applyStrategy(NPC self) {
+        self.plan = Plan.hunting;
+        self.mood = Emotion.confident;
+
+        self.addPersonalStrategy(new FootjobStrategy());
+        self.addPersonalStrategy(new FacesitStrategy());
+        self.addPersonalStrategy(new KnockdownStrategy());
+    }
+
+    @Override
+    public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.incubus;
-        character.outfitPlan.add(Clothing.getByID("tanktop"));
-        character.outfitPlan.add(Clothing.getByID("miniskirt"));
-        character.outfitPlan.add(Clothing.getByID("garters"));
-        character.outfitPlan.add(Clothing.getByID("stilettopumps"));
-        character.change();
-        character.set(Attribute.Dark, 12);
-        character.set(Attribute.Seduction, 14);
-        character.set(Attribute.Cunning, 7);
-        character.set(Attribute.Speed, 5);
-        character.setTrophy(Item.ReykaTrophy);
-        character.getStamina().setMax(40);
-        character.getArousal().setMax(200);
-        character.getMojo().setMax(70);
-        character.add(Trait.succubus);
-        character.add(Trait.proheels);
-        character.add(Trait.masterheels);
-        character.add(Trait.darkpromises);
-        character.add(Trait.Confident);
-        character.add(Trait.shameless);
+        self.outfitPlan.add(Clothing.getByID("tanktop"));
+        self.outfitPlan.add(Clothing.getByID("miniskirt"));
+        self.outfitPlan.add(Clothing.getByID("garters"));
+        self.outfitPlan.add(Clothing.getByID("stilettopumps"));
+        self.change();
+        self.modAttributeDontSaveData(Attribute.Dark, 2);
+        self.modAttributeDontSaveData(Attribute.Seduction, 3);
+        self.modAttributeDontSaveData(Attribute.Cunning, 2);
+        self.setTrophy(Item.ReykaTrophy);
 
-        Global.gainSkills(character);
+        Global.gainSkills(self);
+        self.getStamina().setMax(50);
+        self.getArousal().setMax(120);
+        self.getMojo().setMax(110);
 
-        character.plan = Plan.hunting;
-        character.mood = Emotion.confident;
-        character.body.add(BreastsPart.dd);
-        character.body.add(PussyPart.succubus);
-        character.body.add(TailPart.demonic);
-        character.body.add(WingsPart.demonic);
-        character.body.add(EarPart.pointed);
-        character.body.add(new FacePart(4.5, 1.1));
-        character.initialGender = CharacterSex.female;
+        self.body.add(BreastsPart.dd);
+        self.body.add(PussyPart.succubus);
+        self.body.add(TailPart.demonic);
+        self.body.add(WingsPart.demonic);
+        self.body.add(EarPart.pointed);
+        self.body.add(new FacePart(0.5, 1.1));
+        self.initialGender = CharacterSex.female;
     }
 
     @Override
     public void setGrowth() {
-        growth.stamina = 1;
-        growth.arousal = 6;
-        growth.mojo = 2;
-        growth.bonusStamina = 1;
-        growth.bonusArousal = 3;
-        growth.bonusMojo = 2;
+        character.getGrowth().stamina = 1;
+        character.getGrowth().arousal = 6;
+        character.getGrowth().bonusStamina = 1;
+        character.getGrowth().bonusArousal = 3;
         preferredAttributes.add(c -> c.get(Attribute.Dark) < 50 && c.get(Attribute.Dark) <= c.get(Attribute.Fetish) + 10
                         ? Optional.of(Attribute.Dark) : Optional.empty());
-        preferredAttributes
-                        .add(c -> c.get(Attribute.Dark) > c.get(Attribute.Fetish) + 10 && c.get(Attribute.Fetish) < 50
+        preferredAttributes.add(c -> c.get(Attribute.Dark) > c.get(Attribute.Fetish) + 10 && c.get(Attribute.Fetish) < 50
                                         ? Optional.of(Attribute.Fetish) : Optional.empty());
         preferredAttributes.add(c -> Optional.of(Attribute.Seduction));
-        growth.addTrait(2, Trait.pussyTraining1);
-        growth.addTrait(5, Trait.tongueTraining1);
-        growth.addTrait(8, Trait.expertGoogler);
-        growth.addTrait(11, Trait.addictivefluids);
-        growth.addTrait(14, Trait.graceful);
-        growth.addTrait(17, Trait.insertion);
-        growth.addTrait(20, Trait.corrupting);
-        growth.addTrait(20, Trait.spiritphage);
-        growth.addTrait(23, Trait.tongueTraining2);
-        growth.addTrait(26, Trait.magicEyeTrance);
-        growth.addTrait(29, Trait.dickhandler);
-        growth.addTrait(32, Trait.lacedjuices);
-        growth.addTrait(35, Trait.energydrain);
-        growth.addTrait(38, Trait.pussyTraining2);
-        growth.addTrait(41, Trait.soulsucker);
-        growth.addTrait(44, Trait.analTraining1);
-        growth.addTrait(47, Trait.desensitized2);
-        growth.addTrait(50, Trait.pussyTraining3);
-        growth.addTrait(53, Trait.vaginaltongue);
-        growth.addTrait(56, Trait.carnalvirtuoso);
+
+        character.getGrowth().addTrait(0, Trait.succubus);
+        character.getGrowth().addTrait(0, Trait.proheels);
+        character.getGrowth().addTrait(0, Trait.masterheels);
+        character.getGrowth().addTrait(0, Trait.darkpromises);
+        character.getGrowth().addTrait(0, Trait.Confident);
+        character.getGrowth().addTrait(0, Trait.shameless);
+        character.getGrowth().addTrait(2, Trait.sexTraining1);
+        character.getGrowth().addTrait(5, Trait.tongueTraining1);
+        character.getGrowth().addTrait(8, Trait.expertGoogler);
+        character.getGrowth().addTrait(11, Trait.addictivefluids);
+        character.getGrowth().addTrait(14, Trait.graceful);
+        character.getGrowth().addTrait(17, Trait.insertion);
+        character.getGrowth().addTrait(20, Trait.corrupting);
+        character.getGrowth().addTrait(20, Trait.spiritphage);
+        character.getGrowth().addTrait(23, Trait.tongueTraining2);
+        character.getGrowth().addTrait(26, Trait.magicEyeTrance);
+        character.getGrowth().addTrait(29, Trait.dickhandler);
+        character.getGrowth().addTrait(32, Trait.lacedjuices);
+        character.getGrowth().addTrait(35, Trait.energydrain);
+        character.getGrowth().addTrait(38, Trait.sexTraining2);
+        character.getGrowth().addTrait(41, Trait.soulsucker);
+        character.getGrowth().addTrait(44, Trait.analTraining1);
+        character.getGrowth().addTrait(47, Trait.desensitized2);
+        character.getGrowth().addTrait(50, Trait.sexTraining3);
+        character.getGrowth().addTrait(53, Trait.vaginaltongue);
+        character.getGrowth().addTrait(56, Trait.carnalvirtuoso);
     }
 
     @Override
@@ -125,71 +136,95 @@ public class Reyka extends BasePersonality {
         Decider.visit(character);
         int r;
         for (int i = 0; i < time; i++) {
-            r = Global.random(4);
+            r = Global.random(8);
             if (r == 1) {
-                if (character.has(Trait.fitnessNut)) {
-                    character.getStamina().gain(2);
-                }
-                character.getStamina().gain(2);
-            } else if (r == 3) {
-                if (character.has(Trait.expertGoogler)) {
-                    character.getArousal().gain(8);
-                }
-                character.getArousal().gain(8);
-            } else if (r == 2) {
-                if (character.has(Trait.mojoMaster)) {
-                    character.getMojo().gain(1);
-                }
-                character.getMojo().gain(2);
+                Global.getDay().visit("Exercise", this.character, 0);
+            } else if (r == 0) {
+                Global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
         character.gain(Item.semen, Global.random(3) + 1);
         buyUpTo(Item.semen, 5);
     }
+    
+    private void constructLines() {
+        character.addLine(CharacterLine.BB_LINER, (c, self, other) -> {
+            return "Reyka looks at you with a pang of regret: <i>\"In hindsight, damaging"
+                            + " the source of my meal might not have been the best idea...\"</i>";
+        });
 
-    @Override
-    public String bbLiner(Combat c) {
-        return "Reyka looks at you with a pang of regret: <i>\"In hindsight, damaging"
-                        + " the source of my meal might not have been the best idea...\"</i>";
-    }
+        character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> {
+            return "<i>\"You could have just asked, you know.\"</i> As you gaze upon her naked form,"
+                            + " noticing the radiant ruby ardorning her bellybutton, you feel"
+                            + " sorely tempted to just give in to your desires. The hungry look"
+                            + " on her face as she licks her lips, though, quickly dissuades you" + " from doing so";
+        });
 
-    @Override
-    public String nakedLiner(Combat c) {
-        return "<i>\"You could have just asked, you know.\"</i> As you gaze upon her naked form,"
-                        + " noticing the radiant ruby ardorning her bellybutton, you feel"
-                        + " sorely tempted to just give in to your desires. The hungry look"
-                        + " on her face as she licks her lips, though, quickly dissuades you" + " from doing so";
-    }
+        character.addLine(CharacterLine.STUNNED_LINER, (c, self, other) -> {
+            return "Reyka is laying on the floor, her wings spread out behind her, panting for breath";
+        });
 
-    @Override
-    public String stunLiner(Combat c) {
-        return "Reyka is laying on the floor, her wings spread out behind her," + " panting for breath";
-    }
+        character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> {
+            return "\"You look like you will taste nice. Maybe if you let me have a taste, I will be nice to you too.\"";
+        });
 
-    @Override
-    public String taunt(Combat c) {
-        return "\"You look like you will taste nice. Maybe if let me have " + "a taste, I will be nice to you too.\"";
-    }
+        character.addLine(CharacterLine.TEMPT_LINER, (c, self, other) -> {
+            return "\"Why keep fighting? Wouldn't it just feel SO much better just to let me do what I do best?\"";
+        });
 
-    @Override
-    public String temptLiner(Combat c) {
-        return "\"Why keep fighting? Wouldn't it just feel SO much better just to let me do what I do best?\"";
+        character.addLine(CharacterLine.NIGHT_LINER, (c, self, other) -> {
+            return "You feel exhausted after yet another night of sexfighting. You're not complaining, of course; "
+                            + "what " + other.guyOrGirl()
+                            + " would when having this much sex with several different girls? Still, a weekend would "
+                            + "be nice sometime... About half way to your room, Reyka steps in front of you. Where did she come from? "
+                            + "<i>\"Listen, " + other.name()
+                            + ", I've been doing some thinking lately. You know very well I've had sex with a lot "
+                            + "of " + other.guyOrGirl()
+                            + "s and a fair amount of girls, too, right?\"</i> You just nod, wondering where this is going. <i>\"Well, "
+                            + "in all that time no one has ever made me feel the way you can. I don't know why, really, but I can't help "
+                            + "feeling there's something special about you.\"</i> You stand there, paralyzed, with a look of amazement "
+                            + "on your face. Reyka intimidates you. Hell, she is downright terrifying at times. To see and hear "
+                            + "her like this is like nothing you had ever expected from her. For a moment, you think this is all some "
+                            + "elaborate trick of some sort, but that thought vanishes the instant you see tears welling in her eyes. "
+                            + "<i>\"I just... We demons aren't supposed to feel like this, you know? We don't form relationships. It's all "
+                            + "just a constant power struggle, constant scheming and looking over your shoulder and sleeping with a "
+                            + "knife under your pillow. It has never bothered me before; it's simply what I am. That's what I used to "
+                            + "think, anyway. Now, I'm not so sure... about anything...\"</i> She quitely sobs while saying this, and you "
+                            + "embrace her. You hold her there for some time, before inviting her to spend the night at your place. "
+                            + "You don't even have sex when you get there, you just both lay down in your single bed, close to "
+                            + "each other, and enjoy a peaceful sleep together with your arms around her and her head on your shoulder.";
+        });
+
+        character.addLine(CharacterLine.ORGASM_LINER, (c, self, other) -> {
+            return "Reyka shudders, <i>\"Mmm it's been a while since I've felt that. Here, I'll return the favor\"</i>";
+        });
+
+        character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> {
+            return "With a devilish smile, Reyka brings her face close to yours <i>\"Mmmmm that smells great! Too bad I'm still pretty hungry.\"</i>";
+        });
+
+        character.addLine(CharacterLine.CHALLENGE, (c, self, other) -> {
+            return "<i>\"Yum, I was just looking for a tasty little morsel.\"</i><br/><br/>"
+                            + "Reyka strikes a seductive pose and the devilish smile"
+                            + " on her face reveals just what, or more specifically,"
+                            + " who she intends that morsel to be.";
+        });
     }
 
     @Override
     public String victory(Combat c, Result flag) {
         Character opponent = character.equals(c.p1) ? c.p2 : c.p1;
-        if (c.getStance().anallyPenetrated(opponent)) {
+        if (c.getStance().anallyPenetrated(c, opponent)) {
             return "Reyka alternates between long hard thrusts and sensual grinding to keep you from getting used to the stimulation, and the pleasure it is "
                             + "inflicting on you stops you from mustering the resolve to fight back. <i>\"I do love a good bit of pegging.\"</i> Reyka comments as she begins "
                             + "to gently rock the head of the strapon over your prostate, leaving you breathing hard as your mouth hangs open. <i>\"There's a special "
-                            + "pleasure in making a boy a little butt slave.\"</i> Her words shock you and cause your resistance to slip a little. <i>\"Hmmm?\"</i> She purrs <i>\"Would "
-                            + "you like that?\"</i> she asks, picking up the pace of her thrusting. <i>\"To be my little pet boy slut?\"</i> Your only response is to cum. Hard. Ropes "
-                            + "of cum fall to the ground below you.<p>Reyka pouts as she pulls out <i>\"Such a good waste of semen though.\"</i> she tuts. <i>\"Looks like you "
+                            + "pleasure in making a " + Global.getPlayer().boyOrGirl() + " a little butt slave.\"</i> Her words shock you and cause your resistance to slip a little. <i>\"Hmmm?\"</i> She purrs <i>\"Would "
+                            + "you like that?\"</i> she asks, picking up the pace of her thrusting. <i>\"To be my little pet " + Global.getPlayer().boyOrGirl() + " slut?\"</i> Your only response is to cum. Hard. Ropes "
+                            + "of cum fall to the ground below you.<br/><br/>Reyka pouts as she pulls out <i>\"Such a good waste of semen though.\"</i> she tuts. <i>\"Looks like you "
                             + "still owe me a meal.\"</i> She smirks in a way that makes your eyes flash quickly left to right, looking for an escape route. Reyka is too quick "
-                            + "however and soon you find yourself pinned with your still hard cock buried deep in her pussy.<p>She rides you until you cum again and she "
+                            + "however and soon you find yourself pinned with your still hard cock buried deep in her pussy.<br/><br/>She rides you until you cum again and she "
                             + "has cum twice herself. She stands up and begins collecting her clothes and her spoils as the victor. She turns to you. <i>\"The offer still "
-                            + "stands; you'd make a great sub if you're ever interesting in broadening your sexual horizons. Open minded men are hard to find.\"</i> She admits "
+                            + "stands; you'd make a great sub if you're ever interested in broadening your sexual horizons. Open minded men are hard to find.\"</i> She admits "
                             + "smiling. You shake your head; you don't think that sort of thing would really suit you. Her smile deflates some but she nods her head and "
                             + "turns to go. <i>\"Let me know if that ever changes, I'd definitely enjoy opening your mind,\"</i> she calls over her shoulder as she leaves.";
         }
@@ -203,7 +238,7 @@ public class Reyka extends BasePersonality {
                         + " you feel something shift in you, as if something that was there all"
                         + " along but has always gone unnoticed by you suddenly got yanked on."
                         + " Just before you pass out, you see her wings enveloping you both"
-                        + " in a dark, warm cocoon.<p> After what seems like an eternity,"
+                        + " in a dark, warm cocoon.<br/><br/> After what seems like an eternity,"
                         + " but what actually lasted for only a few minutes, you wake up and"
                         + " drowsily look around. You can see Reyka sitting cross-legged a few feet"
                         + " away, her wings folded neatly behind her back and her eyes fixed on" + " yours."
@@ -217,7 +252,7 @@ public class Reyka extends BasePersonality {
                         + " your soul now, I wouldn't be able to drink from you again. So I simply"
                         + " took a little nibble into it and let you recover. I will expect you to"
                         + " repay this kindness soon, and there is only one thing I will accept"
-                        + " as payment. I'll leave you to figure out what it is.\"</i><p> With that,"
+                        + " as payment. I'll leave you to figure out what it is.\"</i><br/><br/> With that,"
                         + " she walks off, her hips, barely covered by her short miniskirt,"
                         + " seductively waving good-bye. For now.";
     }
@@ -225,25 +260,25 @@ public class Reyka extends BasePersonality {
     @Override
     public String defeat(Combat paramCombat, Result flag) {
         character.arousal.empty();
-        if (character.has(Trait.succubus) && character.get(Attribute.Dark) >= 6) {
+        if (character.has(Trait.lacedjuices) && Global.random(3) == 0 ) {
             return "Reyka shivers as she approaches her climax and her legs fall open defenselessly. You can't resist taking advantage of this opening to deliver the "
                             + "coup de grace. You grab hold of her thighs and run your tongue across her wet pussy. Her love juice is surprisingly sweet and almost intoxicating, "
                             + "but you stay focused on your goal. You ravage her vulnerable love button with your tongue and a flood of tasty wetness hits you as she cums. You "
                             + "prolong her climax by continuing to lick her while lapping up as much of her love juice as you can. The taste seems almost familiar, but you can't "
-                            + "quite place it. Sweet and tangy like a desert wine? Not a perfect comparison, but not far off.<p>Reyka should be coming down from her peak, but "
+                            + "quite place it. Sweet and tangy like a desert wine? Not a perfect comparison, but not far off.<br/><br/>Reyka should be coming down from her peak, but "
                             + "she's still moaning quite passionately. Oh well, it can't hurt to drink up the last of her love juice. You're the one who made her juice herself, so "
                             + "it seems only fair. It is very tasty. Intoxicating was the word that came to mind early, but addictive seems to fit too. Reyka's flower is mostly "
-                            + "clean, but you stick your tongue deep inside to be sure. There seems to be some fresh love juice in this bit... and this one.... Here too.<p>Reyka's "
+                            + "clean, but you stick your tongue deep inside to be sure. There seems to be some fresh love juice in this bit... and this one.... Here too.<br/><br/>Reyka's "
                             + "pussy tenses up and you're treated to another flood of her wonderful flavor. You can't let this much juice go to waste. You diligantly continue to "
                             + "lick Reyka's trembling girl parts as she squeals in passion. You feel her hands grip your hair desperately and you have to hold her hips to keep her "
                             + "from squirming away. She's producing a decent amount of delicious nectar, but it occurs to you that she'll probably give you more if you focus on her "
                             + "clit. You target her pearl and lick it rapidly until she screams in pleasure and rewards you with another surge of juice. This seems like the best "
-                            + "way to get more of her wonderful juice. You could just stay here drinking this stuff all night, and you just may.<p>You suddenly feel Reyka's tail wrap "
+                            + "way to get more of her wonderful juice. You could just stay here drinking this stuff all night, and you just may.<br/><br/>You suddenly feel Reyka's tail wrap "
                             + "tightly around your balls. Your head jerks up in surprise and her thighs clamp together on it, holding you out of reach of her delicious honey pot. "
                             + "<i>\"Down lover\"</i> Reyka admonishes you as she covers her groin protectively. <i>\"I appreciate the dedication, but after a couple orgasms, I need a chance to "
-                            + "catch my breath.\"</i> You feel your head clear a bit and realize you completely fell victim to her addictive love juice.<p>Reyka uses her grip on your "
+                            + "catch my breath.\"</i> You feel your head clear a bit and realize you completely fell victim to her addictive love juice.<br/><br/>Reyka uses her grip on your "
                             + "head to force you onto your back. <i>\"I do love being eaten out, but right now I'm ready to be filled.\"</i> She releases the head scissor and positions herself "
-                            + "over your dick before dropping her hips to engulf you to the hilt. A jolt goes through you and you realize exactly how horny you are. I addition to "
+                            + "over your dick before dropping her hips to engulf you to the hilt. A jolt goes through you and you realize exactly how horny you are. In addition to "
                             + "not having any relief, Reyka's fluids have started to affect you. You're incredibly hard and sensitive, but even though Reyka is riding you intensely, "
                             + "your ejaculation feels painfully out of reach. You don't feel your climax start to build until Reyka is moaning and approaching yet another orgasm. Is "
                             + "that an innate succubus ability? Is she controlling the timing of your orgasm? You don't have time to dwell on the question, your hips thrust involuntarily "
@@ -260,7 +295,7 @@ public class Reyka extends BasePersonality {
                         + " in orgasm, the sound reverberating through your soul, the amount of"
                         + " fluids gushing into your willing mouth nearly drown you. After a few"
                         + " seconds she rolls off of you, although you don't notice it, having passed"
-                        + " out from the overdose of aphrodisiacs.<p>You come to your senses just"
+                        + " out from the overdose of aphrodisiacs.<br/><br/>You come to your senses just"
                         + " in time to see Reyka drinking down the load of cum you are shooting"
                         + " into her mouth. Somehow, you keep from passing out as she drinks"
                         + " some of your energy and soon, you see her face hovering over yours."
@@ -279,13 +314,13 @@ public class Reyka extends BasePersonality {
             return "<i>\"How kind of you to hold him for me, dear.\"</i> Reyka bows her head ever so slightly towards "
                             + assist.name() + " and then turns her gaze upon you prone form. "
                             + "She pulls a blindfold out of a small pocket in her miniskirt and secures it tightly over your eyes. <i>\"Wouldn't want to spoil the surprise, would we?\"</i> For "
-                            + "just a moment, you feel a slight pull on you mind, but the sensation passes quickly, replaced by that of one of her slender fingers invading your mouth. "
+                            + "just a moment, you feel a slight pull on your mind, but the sensation passes quickly, replaced by that of one of her slender fingers invading your mouth. "
                             + "It is covered with a fragrant liquid and given what you already know about her, there is little doubt in your mind of its origins. Your suspicions "
-                            + "are proven correct when the ahrodisiac reaches your loins, which respond as expected. Appearantly not one to stand on ceremony, Reyka immediatly "
-                            + "settles over you now rock hard dick and lowers herself down onto it. The sensation is beyond comparison, her pussy wiggles and twists around you almost "
+                            + "are proven correct when the aphrodisiac reaches your loins, which respond as expected. Apparently not one to stand on ceremony, Reyka immediately "
+                            + "settles over your now rock hard dick and lowers herself down onto it. The sensation is beyond comparison, her pussy wiggles and twists around you almost "
                             + "as if it has a mind of its own, a mind connected to your own, knowing what will bring you the most pleasure. Your experiences in sex-fighting have "
                             + "left you with impressive sexual stamina, but in the face of a succubus' unimpeded attentions, no man can hope to last. All too quickly you succumb "
-                            + "to the feelings, pouring your seed into the succubus. Just your seed. You where expecting her take so much more, but you just feel a little tired, "
+                            + "to the feelings, pouring your seed into the succubus. Just your seed. You were expecting her take so much more, but you just feel a little tired, "
                             + "not more so than after a regular orgasm. The mystery is unveiled when Reyka removes the blindfold with her left hand. In her right hand, she is "
                             + "holding a bottle. That bottle is firmly planted against the head of your still twitching dick and filled with your cum. <i>\"You looked scrumptuous, "
                             + "sitting there all helpless, but I was really in need of some supplies. Still, I didn't want to deny you the pleasure, so I crafted a teeny tiny "
@@ -299,10 +334,10 @@ public class Reyka extends BasePersonality {
                         + target.name() + ". When she is finished she squats down in front of her, bringing "
                         + "her tail up between them. <i>\"Where would you prefer it dear?\"</i>, she asks "
                         + target.name() + ", whose eyes grow wide in shock. She manages to stammer out a "
-                        + "few syllables, but nothing quite coherent. \"No preference? Then I guess I will simply choose for you\" She brings her spade-tipped tail between "
+                        + "few syllables, but nothing quite coherent. <i>\"No preference? Then I guess I will simply choose for you.\"</i> She brings her spade-tipped tail between "
                         + target.name() + "s "
                         + "legs and starts running the very tip rapidly across her labia. When it is sufficiently wet, she moves it slightly upwards and moves it briskly back and forth over "
-                        + target.name() + "'s clit.<p>" + target.name()
+                        + target.name() + "'s clit.<br/><br/>" + target.name()
                         + ", at first scared, now has her eyes closed and begins moaning feverishly. Just when she has almost reached her climax, "
                         + "Reyka digs her tail deep into " + target.name() + "'s drooling pussy. This sends "
                         + target.name() + " loudly over the edge. Her screams of pleasure are almost deafening, "
@@ -340,14 +375,14 @@ public class Reyka extends BasePersonality {
     }
 
     @Override
-    public String describe(Combat c) {
+    public String describe(Combat c, Character self) {
         return "Reyka the succubus stands before you, six feet tall with"
                         + " the most stunningly beautiful body you have ever seen."
                         + " Her long black hair enshrines her perfect face like a priceless"
                         + " painting. Her arms are slim and end in long-fingered,"
                         + " soft hands, nails polished shining red. Underneath, her long and"
                         + " perfectly formed legs and delicate feet stand in an imposing posture."
-                        + " Behind her, you see a pair of relatively small but powerful-looking bat wings.<br>"
+                        + " Behind her, you see a pair of relatively small but powerful-looking bat wings.<br/>"
                         + " Her gaze speaks of indescribable pleasure, but your mind reminds you"
                         + " of the cost of indulging in a succubus' body: Give her half a chance"
                         + " and she will suck out your very soul.";
@@ -387,39 +422,9 @@ public class Reyka extends BasePersonality {
     }
 
     @Override
-    public String startBattle(Character other) {
-        return "<i>\"Yum, I was just looking for a tasty little morsel.\"</i><p>"
-                        + "Reyka strikes a seductive pose and the devilish smile"
-                        + " on her face reveals just what, or more specifically,"
-                        + " who she intends that morsel to be.";
-    }
-
-    @Override
     public boolean fit() {
         return (!character.mostlyNude() || Global.random(3) == 1) && character.getStamina().percent() >= 50
                         && character.getArousal().percent() <= 50;
-    }
-
-    @Override
-    public String night() {
-        return "You feel exhausted after yet another night of sexfighting. You're not complaining, of course; "
-                        + "what guy would when having this much sex with several different girls? Still, a weekend would "
-                        + "be nice sometime... About half way to your room, Reyka steps in front of you. Where did she come from? "
-                        + "<i>\"Listen, " + Global.getPlayer().name()
-                        + ", I've been doing some thinking lately. You know very well I've had sex with a lot "
-                        + "of guys and a fair amount of girls, too, right?\"</i> You just nod, wondering where this is going. <i>\"Well, "
-                        + "in all that time no one has ever made me feel the way you can. I don't know why, really, but I can't help "
-                        + "feeling there's something special about you.\"</i> You stand there, paralyzed, with a look of amazement "
-                        + "on your face. Reyka intimidates you. Hell, she is downright terrifying at times. To see and hear "
-                        + "her like this is like nothing you had ever expected from her. For a moment, you think this is all some "
-                        + "elaborate trick of some sort, but that thought vanishes the instant you see tears welling in her eyes. "
-                        + "<i>\"I just... We demons aren't supposed to feel like this, you know? We don't form relationships. It's all "
-                        + "just a constant power struggle, constant scheming and looking over your shoulder and sleeping with a "
-                        + "knife under your pillow. It has never bothered me before; it's simply what I am. That's what I used to "
-                        + "think, anyway. Now, I'm not so sure... about anything...\"</i> She quitely sobs while saying this, and you "
-                        + "embrace her. You hold her there for some time, before inviting her to spend the night at your place. "
-                        + "You don't even have sex when you get there, you just both lay down in your single bed, close to "
-                        + "each other, and enjoy a peaceful sleep together with your arms around her and her head on your shoulder.";
     }
 
     @Override
@@ -432,15 +437,5 @@ public class Reyka extends BasePersonality {
             default:
                 return value >= 100;
         }
-    }
-
-    @Override
-    public String orgasmLiner(Combat c) {
-        return "Reyka shudders, <i>\"Mmm it's been a while since I've felt that. Here, I'll return the favor\"</i>";
-    }
-
-    @Override
-    public String makeOrgasmLiner(Combat c) {
-        return "With a devilish smile, Reyka brings her face close to yours <i>\"Mmmmm that smells great! Too bad I'm still pretty hungry.\"</i>";
     }
 }

@@ -1,9 +1,11 @@
 package nightgames.skills;
 
 import nightgames.characters.Character;
+import nightgames.characters.body.Body;
 import nightgames.characters.body.CockMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Global;
 import nightgames.status.Knotted;
 import nightgames.status.Stsflag;
 
@@ -24,7 +26,7 @@ public class ToggleKnot extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return isActive(target) || getSelf().canAct() && c.getStance().inserted(getSelf());
+        return (getSelf().canRespond() && isActive(target)) || (getSelf().canAct() && c.getStance().inserted(getSelf()));
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ToggleKnot extends Skill {
 
     @Override
     public String getLabel(Combat c) {
-        if (isActive(c.getOther(getSelf()))) {
+        if (isActive(c.getOpponent(getSelf()))) {
             return "Deflate Knot";
         }
         return "Inflate Knot";
@@ -46,32 +48,43 @@ public class ToggleKnot extends Skill {
             if (getSelf().human()) {
                 c.write(getSelf(),
                                 "Deciding she's had enough for now, you let your cock return to its regular shape, once again permitting movement.");
-            } else if (target.human()) {
-                String part = c.getStance().insertedPartFor(target).describe(target);
-                c.write(getSelf(), "You feel the intense pressure in your " + part + " recede as " + target.name()
-                                + " allows her knot to deflate.");
+            } else if (c.shouldPrintReceive(target, c)) {
+                String part = Global.pickRandom(c.getStance().partsFor(c, target)).orElse(Body.nonePart).describe(target);
+                c.write(getSelf(), String.format("%s the intense pressure in %s %s "
+                                + "recede as %s allows %s knot to deflate.", target.subjectAction("feel"),
+                                target.possessiveAdjective(), part, getSelf().subject(),
+                                getSelf().possessiveAdjective()));
             }
             target.removeStatus(Stsflag.knotted);
         } else {
             if (getSelf().human()) {
                 c.write(getSelf(),
                                 "You'd like to stay inside " + target.name() + " for a bit, so you "
-                                                + (c.getStance().canthrust(getSelf()) ? "thrust" : "buck up")
+                                                + (c.getStance().canthrust(c, getSelf()) ? "thrust" : "buck up")
                                                 + " as deep inside of her as you can and send a mental command to the base of your cock, where your"
                                                 + " knot soon swells up, locking you inside,");
-            } else if (target.human()) {
+            } else if (c.shouldPrintReceive(target, c)) {
                 String firstPart;
                 if (c.getStance().dom(getSelf())) {
-                    firstPart = getSelf().name() + " bottoms out inside of you, and something quickly feels off.";
+                    firstPart = String.format("%s bottoms out inside of %s, and something quickly feels off%s.",
+                                    getSelf().subject(), target.nameDirectObject(),
+                                    c.isBeingObserved() ? " to " + target.directObject() : "");
                 } else {
-                    firstPart = getSelf().name()
-                                    + " pulls you all the way onto her cock. As soon as your pelvis touches hers, something starts happening.";
+                    firstPart = String.format("%s pulls %s all the way onto %s cock."
+                                    + "As soon as %s pelvis touches %s, something starts happening.",
+                                    getSelf().subject(), target.nameDirectObject(),
+                                    getSelf().possessiveAdjective(), getSelf().possessiveAdjective(),
+                                    (target.human() || target.useFemalePronouns()) 
+                                    ? target.possessiveAdjective() + "s" : "s");
                 }
-                c.write(getSelf(),
-                                firstPart + " A ball swells up at the base of her dick, growing to the size of a small apple. You're not"
-                                                + " getting it out of you any time soon...");
+                c.write(getSelf() ,String.format("%s A ball swells up at the base of %s dick,"
+                                + " growing to the size of a small apple. %s not"
+                                                + " getting <i>that</i> out of %s any time soon...",
+                                                firstPart, getSelf().nameOrPossessivePronoun(),
+                                                Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                                                target.reflectivePronoun()));
             }
-            target.add(c, new Knotted(target, getSelf(), c.getStance().anallyPenetrated(target)));
+            target.add(c, new Knotted(target, getSelf(), c.getStance().anallyPenetrated(c, target)));
         }
         return true;
     }

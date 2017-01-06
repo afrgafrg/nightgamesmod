@@ -21,6 +21,7 @@ public class TailFucked extends Status {
         this.other = other;
         requirements.add(eitherinserted());
         flag(Stsflag.bound);
+        flag(Stsflag.debuff);
         flag(hole.equals("ass") ? Stsflag.pegged : Stsflag.fucked);
     }
 
@@ -33,7 +34,7 @@ public class TailFucked extends Status {
         }
         return Global.capitalizeFirstLetter(String.format("%s now fucking %s %s with %s %s\n",
                         other.subjectAction("are", "is"), affected.nameOrPossessivePronoun(), hole.describe(affected),
-                        other.possessivePronoun(), tail.describe(other)));
+                        other.possessiveAdjective(), tail.describe(other)));
     }
 
     @Override
@@ -43,15 +44,9 @@ public class TailFucked extends Status {
         if (hole == null || tail == null) {
             return "";
         }
-        if (affected.human()) {
-            return Global.capitalizeFirstLetter(String.format("%s fucking %s %s with %s %s\n",
+        return Global.capitalizeFirstLetter(String.format("%s fucking %s %s with %s %s\n",
                             other.subjectAction("are", "is"), affected.nameOrPossessivePronoun(),
-                            hole.describe(affected), other.possessivePronoun(), tail.describe(other)));
-        } else {
-            return Global.capitalizeFirstLetter(String.format("%s fucking %s %s with %s %s\n",
-                            other.subjectAction("are", "is"), affected.nameOrPossessivePronoun(),
-                            hole.describe(affected), other.possessivePronoun(), tail.describe(other)));
-        }
+                            hole.describe(affected), other.possessiveAdjective(), tail.describe(other)));
     }
 
     @Override

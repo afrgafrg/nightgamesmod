@@ -1,5 +1,6 @@
 package nightgames.trap;
 
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
@@ -8,8 +9,19 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingSlot;
 
-public class Spiderweb implements Trap {
-    private Character owner;
+public class Spiderweb extends Trap {
+
+    public Spiderweb() {
+        this(null);
+    }
+    
+    public Spiderweb(Character owner) {
+        super("Spiderweb", owner);
+    }
+
+    public void setStrength(Character user) {
+        setStrength(user.get(Attribute.Cunning) + user.get(Attribute.Science) + user.getLevel() / 2);
+    }
 
     @Override
     public void trigger(Character target) {
@@ -36,18 +48,13 @@ public class Spiderweb implements Trap {
     }
 
     @Override
-    public boolean decoy() {
-        return false;
-    }
-
-    @Override
     public boolean recipe(Character owner) {
         return owner.has(Item.Rope, 4) && owner.has(Item.Spring, 2) && owner.has(Item.Tripwire);
     }
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.has(Trait.spider);
+        return owner.has(Trait.spider) && !owner.has(Trait.roboweb);
     }
 
     @Override
@@ -58,11 +65,6 @@ public class Spiderweb implements Trap {
         owner.consume(Item.Spring, 2);
         return "With quite a bit of time and effort, you carefully setup a complex series of spring loaded snares. Anyone who gets caught in this will be rendered as helpless "
                         + "as a fly in a web.";
-    }
-
-    @Override
-    public Character owner() {
-        return owner;
     }
 
     @Override
@@ -86,7 +88,7 @@ public class Spiderweb implements Trap {
                             + "now and fondles your balls. When you cum, you shoot your load onto her face and chest. You hang in the rope web, literally and figuratively drained. "
                             + attacker.name() + " " + "gratiously unties you and helps you down.");
         }
-        if (victim.getOutfit().getBottomOfSlot(ClothingSlot.bottom).getLayer() == 0) {
+        if (victim.getOutfit().getBottomOfSlot(ClothingSlot.bottom) != null) {
             attacker.gain(victim.getTrophy());
         }
         victim.nudify();
@@ -100,15 +102,4 @@ public class Spiderweb implements Trap {
         victim.location().remove(this);
     }
 
-    @Override
-    public String toString() {
-        return "Spiderweb";
-    }
-
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
-    }
 }

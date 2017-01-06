@@ -5,11 +5,13 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 
 public class NakedBloom extends Skill {
 
     public NakedBloom(Character self) {
         super("Naked Bloom", self);
+        addTag(SkillTag.stripping);
     }
 
     @Override
@@ -37,8 +39,8 @@ public class NakedBloom extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-            c.write(target, target.nakedLiner(c));
-        } else if (target.human()) {
+            c.write(target, target.nakedLiner(c, target));
+        } else if (c.shouldPrintReceive(target, c)) {
             c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         target.nudify();
@@ -64,9 +66,11 @@ public class NakedBloom extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " mumbles a spell and you're suddenly surrounded by an eruption of flower petals. As the petals settle, you realize you've been stripped completely "
-                        + "naked.";
+        return String.format("%s mumbles a spell and %s suddenly surrounded by an eruption of flower petals. "
+                        + "As the petals settle, %s %s %s %s been stripped completely "
+                        + "naked.", getSelf().subject(), target.subjectAction("are", "is"),
+                        target.pronoun(), target.action("realize"), target.pronoun(),
+                        target.action("have", "has"));
     }
 
 }

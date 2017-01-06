@@ -8,6 +8,8 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.Staleness;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
 import nightgames.status.addiction.Addiction;
@@ -15,11 +17,18 @@ import nightgames.status.addiction.AddictionType;
 
 public class Thrust extends Skill {
     public Thrust(String name, Character self) {
-        super(name, self);
+        // thrust skills become stale very slowly and recovers pretty fast
+        this(name, self, Staleness.build().withDecay(.05).withDefault(1.0).withRecovery(.10).withFloor(.5));
+    }
+    public Thrust(String name, Character self, Staleness staleness) {
+        super(name, self, 0 , staleness);
+        addTag(SkillTag.fucking);
+        addTag(SkillTag.thrusting);
+        addTag(SkillTag.pleasureSelf);
     }
 
     public Thrust(Character self) {
-        super("Thrust", self);
+        this("Thrust", self);
     }
 
     @Override
@@ -29,38 +38,41 @@ public class Thrust extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelfOrgan(c) != null && getTargetOrgan(c, target) != null && getSelf().canAct()
-                        && c.getStance().canthrust(getSelf()) && c.getStance().havingSexOtherNoStrapped(getSelf());
+        return getSelfOrgan(c, target) != null && getTargetOrgan(c, target) != null && getSelf().canRespond()
+                        && c.getStance().canthrust(c, getSelf()) && c.getStance().havingSexOtherNoStrapped(c, getSelf());
     }
 
-    public BodyPart getSelfOrgan(Combat c) {
-        if (c.getStance().inserted(getSelf())) {
+    public BodyPart getSelfOrgan(Combat c, Character target) {
+        if (c.getStance().penetratedBy(c, target, getSelf())) {
             return getSelf().body.getRandomInsertable();
-        } else if (c.getStance().anallyPenetratedBy(getSelf(), c.getOther(getSelf()))) {
+        } else if (c.getStance().anallyPenetratedBy(c, getSelf(), target)) {
             return getSelf().body.getRandom("ass");
-        } else {
+        } else if (c.getStance().vaginallyPenetratedBy(c, getSelf(), target)) {
             return getSelf().body.getRandomPussy();
+        } else {
+            return null;
         }
     }
 
     public BodyPart getTargetOrgan(Combat c, Character target) {
-        if (c.getStance().inserted(target)) {
+        if (c.getStance().penetratedBy(c, getSelf(), target)) {
             return target.body.getRandomInsertable();
-        } else if (c.getStance().anallyPenetratedBy(c.getOther(getSelf()), getSelf())) {
+        } else if (c.getStance().anallyPenetratedBy(c, target, getSelf())) {
             return target.body.getRandom("ass");
-        } else {
+        } else if (c.getStance().vaginallyPenetratedBy(c, target, getSelf())) {
             return target.body.getRandomPussy();
         }
+        return null;
     }
 
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int m = 5 + Global.random(14);
-        if (c.getStance().anallyPenetrated(target) && getSelf().has(Trait.assmaster)) {
+        int m = 8 + Global.random(11);
+        if (c.getStance().anallyPenetrated(c, target) && getSelf().has(Trait.assmaster)) {
             m *= 1.5;
         }
-        
+
         float mt = Math.max(1, m / 3.f);
 
         if (getSelf().has(Trait.experienced)) {
@@ -68,9 +80,14 @@ public class Thrust extends Skill {
         }
         mt = target.modRecoilPleasure(c, mt);
 
-        if (getSelf().human() || target.human()) {
-            Player p = Global.getPlayer();
-            Character npc = c.getOther(p);
+        Player p = null;
+        if (getSelf().human()) {
+            p = (Player) getSelf();
+        } else if (target.human()) {
+            p = (Player) target;
+        }
+        if (p != null) {
+            Character npc = c.getOpponent(p);
             if (p.checkAddiction(AddictionType.BREEDER, npc)) {
                 float bonus = .3f * p.getAddiction(AddictionType.BREEDER).map(Addiction::getCombatSeverity)
                                 .map(Enum::ordinal).orElse(0);
@@ -90,8 +107,15 @@ public class Thrust extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        BodyPart selfO = getSelfOrgan(c);
+        BodyPart selfO = getSelfOrgan(c, target);
         BodyPart targetO = getTargetOrgan(c, target);
+        if (selfO == null || targetO == null) {
+        	System.err.println("Something very odd happened during thrust, stance is " + c.getStance());
+        	System.err.println(getSelf().save().toString());
+        	System.err.println(target.save().toString());
+        	c.write("Something very weird happened, please make a bug report with the logs.");
+        	return false;
+        }
         Result result;
         if (c.getStance().inserted(target)) {
             result = Result.reverse;
@@ -101,11 +125,7 @@ public class Thrust extends Skill {
             result = Result.normal;
         }
 
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, result, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, result, target));
-        }
+        writeOutput(c, result, target);
 
         int[] m = getDamage(c, target);
         assert m.length >= 2;
@@ -144,7 +164,7 @@ public class Thrust extends Skill {
         } else if (modifier == Result.reverse) {
             return Global.format(
                             "You rock your hips against {other:direct-object}, riding her smoothly. "
-                                            + "Despite the slow place, {other:subject} soon starts gasping and mewing with pleasure.",
+                                            + "Despite the slow pace, {other:subject} soon starts gasping and mewing with pleasure.",
                             getSelf(), target);
         } else {
             return "You thrust into " + target.name()
@@ -156,25 +176,37 @@ public class Thrust extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.anal) {
+            String res;
             if (getSelf().has(Trait.strapped)) {
-                String res = getSelf().name()
-                                + " thrusts her hips, pumping her artificial cock in and out of your ass and pushing on your prostate.";
-                if (getSelf().has(Trait.assmaster)) {
-                    return res + getSelf().name()
-                                    + "'s penchant for fucking people in the ass makes her thrusting that much more powerful, and that much more intense for the both of you.";
-                }
-                return res;
+                res = String.format("%s thrusts her hips, pumping her artificial cock in and out"
+                                + " of %s ass and pushing on %s %s.", getSelf().subject(),
+                                target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                                target.hasBalls() ? "prostate" : "innermost parts");
+                
             } else {
-                return getSelf().name() + "'s cock slowly pumps the inside of your rectum.";
+                res = String.format("%s cock slowly pumps the inside of %s rectum.",
+                                getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun());
             }
+            if (getSelf().has(Trait.assmaster)) {
+                res += String.format(" %s penchant for fucking people in the ass makes "
+                                + "%s thrusting that much more powerful, and that much more "
+                                + "intense for the both of %s.", getSelf().nameOrPossessivePronoun(),
+                                getSelf().possessiveAdjective(),
+                                c.bothDirectObject(target));
+            }
+            return res;
         } else if (modifier == Result.reverse) {
-            return getSelf().name()
-                            + " rocks her hips against you, riding you smoothly and deliberately. Despite the slow pace, the sensation of her hot "
-                            + getSelfOrgan(c).fullDescribe(getSelf()) + " surrounding "
-                            + "your dick is gradually driving you to your limit.";
+            return String.format("%s rocks %s hips against %s, riding %s smoothly and deliberately. "
+                            + "Despite the slow pace, the sensation of %s hot %s surrounding "
+                            + "%s dick is gradually driving %s to %s limit.", getSelf().subject(),
+                            getSelf().possessiveAdjective(), target.nameDirectObject(),
+                            target.directObject(), getSelf().nameOrPossessivePronoun(),
+                            getSelfOrgan(c, target).describe(getSelf()),
+                            target.nameOrPossessivePronoun(), target.directObject(),
+                            target.possessiveAdjective());
         } else {
             return Global.format(
-                            "{self:subject} thrusts into {other:name-possessive} {other:body-part:pussy} in a slow steady rhythm, leaving you gasping.",
+                            "{self:subject} thrusts into {other:name-possessive} {other:body-part:pussy} in a slow steady rhythm, leaving {other:direct-object} gasping.",
                             getSelf(), target);
         }
     }
@@ -194,10 +226,15 @@ public class Thrust extends Skill {
     }
 
     @Override
+    public Character getDefaultTarget(Combat c) {
+        return c.getStance().getPartner(c, getSelf());
+    }
+
+    @Override
     public boolean makesContact() {
         return true;
     }
-    
+
     @Override
     public Stage getStage() {
         return Stage.FINISHER;

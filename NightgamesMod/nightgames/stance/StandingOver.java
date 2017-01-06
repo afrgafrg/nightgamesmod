@@ -1,6 +1,7 @@
 package nightgames.stance;
 
 import nightgames.characters.Character;
+import nightgames.combat.Combat;
 
 public class StandingOver extends AbstractFacingStance {
 
@@ -10,11 +11,13 @@ public class StandingOver extends AbstractFacingStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You are standing over " + bottom.name() + ", who is helpless on the ground.";
         } else {
-            return "You are flat on your back, while " + top.name() + " stands over you.";
+            return String.format("%s flat on %s back, while %s stands over %s.",
+                            bottom.subjectAction("are", "is"), bottom.possessiveAdjective(),
+                            top.subject(), bottom.directObject());
         }
     }
 
@@ -24,8 +27,8 @@ public class StandingOver extends AbstractFacingStance {
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return c == top;
+    public boolean kiss(Character c, Character target) {
+        return c != top && c != bottom;
     }
 
     @Override
@@ -49,12 +52,12 @@ public class StandingOver extends AbstractFacingStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return c == top;
+        return c != top && c != bottom;
     }
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return c != top && c != bottom;
     }
 
     @Override
@@ -63,13 +66,13 @@ public class StandingOver extends AbstractFacingStance {
     }
 
     @Override
-    public boolean feet(Character c) {
-        return c == top;
+    public boolean feet(Character c, Character target) {
+        return target == bottom;
     }
 
     @Override
-    public boolean oral(Character c) {
-        return c == top;
+    public boolean oral(Character c, Character target) {
+        return target == bottom && c != top;
     }
 
     @Override
@@ -91,9 +94,14 @@ public class StandingOver extends AbstractFacingStance {
     public double pheromoneMod(Character self) {
         return 1.5;
     }
-    
+
     @Override
     public int dominance() {
         return 1;
+    }
+    
+    @Override
+    public int distance() {
+        return 2;
     }
 }

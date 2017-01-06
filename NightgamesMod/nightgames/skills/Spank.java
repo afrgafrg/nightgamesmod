@@ -7,6 +7,8 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 import nightgames.status.Shamed;
 import nightgames.status.Stsflag;
 
@@ -14,42 +16,40 @@ public class Spank extends Skill {
 
     public Spank(Character self) {
         super("Spank", self);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return !c.getStance().prone(target) && c.getStance().reachBottom(getSelf()) && getSelf().canAct();
+        return !c.getStance().prone(target) && c.getStance().distance() <= 1 && !c.getStance().sub(getSelf()) && c.getStance().reachBottom(getSelf()) && getSelf().canAct();
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
+        double m = Global.random(6, 13);
         if (getSelf().has(Trait.disciplinarian)) {
             boolean shamed = Global.random(10) >= 5 || !target.is(Stsflag.shamed) && getSelf().canSpend(5);
             if (shamed) {
                 getSelf().spendMojo(c, 5);
             }
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.special, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.special, target));
-            }
+            writeOutput(c, Result.special, target);
             if (shamed) {
                 target.add(c, new Shamed(target));
                 target.emote(Emotion.angry, 10);
                 target.emote(Emotion.nervous, 15);
             }
             if (target.has(Trait.achilles)) {
-                target.pain(c, 5);
+                m += 10;
+            } else {
+                m += 5;
             }
-            target.pain(c, Global.random(6 + target.get(Attribute.Perception) / 2) + 3);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.normal, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.normal, target));
-            }
-            target.pain(c, Global.random(6) + 3);
+            writeOutput(c, Result.normal, target);
         }
+        target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));
+
         target.emote(Emotion.angry, 25);
         target.emote(Emotion.nervous, 15);
         target.loseMojo(c, 10);
@@ -72,7 +72,7 @@ public class Spank extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return c.getStance().dom(getSelf()) ? 100 : 65;
     }
 
@@ -84,13 +84,13 @@ public class Spank extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You try to spank " + target.name() + ", but she dodges away.";
+            return "You try to spank " + target.name() + ", but "+target.pronoun()+" dodges away.";
         }
         if (modifier == Result.special) {
             return "You bend " + target.name()
-                            + " over your knee and spank her, alternating between hitting her soft butt cheek and her sensitive pussy.";
+                            + " over your knee and spank "+target.directObject()+", alternating between hitting "+target.possessiveAdjective()+" soft butt cheek and "+target.possessiveAdjective()+" sensitive pussy.";
         } else {
-            return "You spank " + target.name() + " on her naked butt cheek.";
+            return "You spank " + target.name() + " on "+target.possessiveAdjective()+" naked butt cheek.";
         }
 
     }
@@ -98,14 +98,22 @@ public class Spank extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " aims a slap at your ass, but you dodge it.";
+            return String.format("%s aims a slap at %s ass, but %s %s it.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.pronoun(),
+                            target.action("dodge"));
         }
         if (modifier == Result.special) {
-            return getSelf().name()
-                            + " bends you over like a misbehaving child and spanks your ass twice. The third spank aims lower and connects solidly with your ballsack, "
-                            + "injuring your manhood along with your pride.";
+            String victim = target.hasBalls() ? "balls" : "clit";
+            String hood = target.hasBalls() ? "manhood" : "womanhood";
+            return String.format("%s bends %s over like a misbehaving child and spanks %s"
+                            + " ass twice. The third spank aims lower and connects solidly with %s %s, "
+                            + "injuring %s %s along with %s pride.", getSelf().subject(),
+                            target.nameDirectObject(), target.possessiveAdjective(),
+                            target.possessiveAdjective(), victim, target.possessiveAdjective(),
+                            hood, target.possessiveAdjective());
         } else {
-            return getSelf().name() + " lands a stinging slap on your bare ass.";
+            return String.format("%s lands a stinging slap on %s bare ass.",
+                            getSelf().subject(), target.nameOrPossessivePronoun());
         }
 
     }

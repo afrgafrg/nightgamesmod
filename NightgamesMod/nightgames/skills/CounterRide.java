@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Cowgirl;
 import nightgames.stance.Missionary;
 
@@ -12,6 +13,9 @@ public class CounterRide extends CounterBase {
     public CounterRide(Character self) {
         super("Sex Counter", self, 5, Global.format(
                         "{self:SUBJECT-ACTION:invite|invites} the opponent with {self:possessive} body.", self, self));
+        addTag(SkillTag.fucking);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.counter);
     }
 
     @Override
@@ -21,6 +25,10 @@ public class CounterRide extends CounterBase {
 
     @Override
     public void resolveCounter(Combat c, Character target) {
+    	if (target.isPet()) {
+    		c.write("Something weird happened, pets shouldn't trigger counters.");
+    		return;
+    	}
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
         } else {
@@ -96,21 +104,24 @@ public class CounterRide extends CounterBase {
         if (modifier == Result.setup && getSelf().hasPussy()) {
             return Global.format(
                             "{self:SUBJECT} turns around and bends over her ass seductively waving in the air. She slowly "
-                                            + "teases her glistening lower lips and spread them apart, inviting you in to her embrace.",
+                                            + "teases her glistening lower lips and spread them apart, inviting {other:name-do} in to her depths.",
                             getSelf(), target);
         } else if (modifier == Result.setup && getSelf().hasDick()) {
             return Global.format(
-                            "{self:SUBJECT} takes out her cock and strokes it to full mast. She then lets her dick go and it swings back and forth, catching your gaze.",
+                            "{self:SUBJECT} takes out her cock and strokes it to full mast. She then lets her dick go and it swings back and forth, catching {other:name-possessive} gaze.",
                             getSelf(), target);
         } else if (getSelf().hasPussy() && target.hasDick()) {
             return Global.format(
-                            "As {other:subject} approaches {self:name}, she suddenly disappears from your view; half a second later, your legs are swept out from under you. "
-                                            + "With a soft giggle, {self:name} swiftly mounts you and starts riding your cock.",
+                            "As {other:subject-action:approach|approaches} {self:name}, {self:pronoun} suddenly disappears from "
+                            + "{other:possessive} view; half a second later, {other:possessive} legs are swept out from under {other:direct-object}. "
+                                            + "With a soft giggle, {self:name} swiftly mounts {other:name-do} and starts riding {other:possessive} cock.",
                             getSelf(), target);
         } else {
             return Global.format(
-                            "As {other:subject} approaches {self:name}, she suddenly disappears from your view; half a second later, your legs are swept out from under you. "
-                                            + "With a sexy grin, {self:name} wrenches your legs apart and plunges into your slobbering vagina.",
+                            "As {other:subject} approaches {self:name}, she suddenly disappears from {other:name-possessive} view; half a second "
+                            + "later, {other:possessive} legs are swept out from under {other:direct-object}. "
+                                            + "With a sexy grin, {self:name} wrenches {other:name-possessive}"
+                                            + " legs apart and plunges into {other:possessive} slobbering vagina.",
                             getSelf(), target);
         }
     }

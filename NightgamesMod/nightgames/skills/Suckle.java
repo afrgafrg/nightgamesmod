@@ -6,29 +6,28 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 
 public class Suckle extends Skill {
     public Suckle(Character self) {
         super("Suckle", self);
+        addTag(SkillTag.usesMouth);
+        addTag(SkillTag.pleasure);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return target.breastsAvailable() && c.getStance().reachTop(getSelf()) && c.getStance().front(getSelf())
                         && (getSelf().canAct() || c.getStance().enumerate() == Stance.nursing && getSelf().canRespond())
-                        && c.getStance().facing();
+                        && c.getStance().facing(getSelf(), target) && c.getStance().en != Stance.neutral;
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         Result results = target.has(Trait.lactating) ? Result.special : Result.normal;
         int m = (getSelf().get(Attribute.Seduction) > 10 ? 8 : 4) + Global.random(6);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, results, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, results, target));
-        }
+        writeOutput(c, Result.normal, target);
         if (getSelf().has(Trait.silvertongue)) {
             m += 4;
         }
@@ -72,12 +71,18 @@ public class Suckle extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return getSelf().name()
-                            + " licks and sucks your nipples, sending a surge of excitement straight to your groin.";
+            return String.format("%s licks and sucks %s nipples, sending a "
+                            + "surge of excitement straight to %s groin.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            target.possessiveAdjective());
         } else {
-            return getSelf().name()
-                            + " licks and sucks your nipples, drawing forth a gush of breast milk from your teats. "
-                            + "She drinks deeply of your milk, gurgling happily as more of the smooth liquid flows down her throat.";
+            return String.format("%s licks and sucks %s nipples, drawing forth "
+                            + "a gush of breast milk from %s teats. "
+                            + "%s drinks deeply of %s milk, gurgling happily as more of the"
+                            + " smooth liquid flows down %s throat.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            getSelf().possessiveAdjective());
         }
     }
 

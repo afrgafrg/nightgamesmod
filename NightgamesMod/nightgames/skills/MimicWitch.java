@@ -20,7 +20,7 @@ public class MimicWitch extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Slime) >= 10;
+        return user.human() && user.get(Attribute.Slime) >= 10;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MimicWitch extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
+        } else if (c.shouldPrintReceive(target, c)) {
             if (!target.is(Stsflag.blinded))
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             else 
@@ -47,6 +47,8 @@ public class MimicWitch extends Skill {
         getSelf().addTemporaryTrait(Trait.enchantingVoice, 10);
         getSelf().addTemporaryTrait(Trait.magicEyeEnthrall, 10);
         getSelf().addTemporaryTrait(Trait.lactating, 10);
+        getSelf().addTemporaryTrait(Trait.beguilingbreasts, 10);
+        getSelf().addTemporaryTrait(Trait.sedativecream, 10);
         BreastsPart part = getSelf().body.getBreastsBelow(BreastsPart.h.size);
         if (part != null) {
             getSelf().body.temporaryAddOrReplacePartWithType(part.upgrade(), 10);
@@ -75,7 +77,7 @@ public class MimicWitch extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Global.format("{self:NAME-POSSESSIVE} amorphous body shakes violently and her human-features completely dissolve. "
                         + "After briefly becoming something that resembles a mannequin, her goo shifts colors into a glowing purple hue. "
-                        + "Facial features forms again out of her previously smooth slime into something very familiar to you. "
+                        + "Facial features forms again out of her previously smooth slime into something very familiar to {other:name-do}. "
                         + "Looks like {self:NAME} is mimicking Cassie's witch form!", getSelf(), target);
     }
 

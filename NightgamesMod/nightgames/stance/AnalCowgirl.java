@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import nightgames.characters.Character;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.Global;
 
 public class AnalCowgirl extends AnalSexStance {
 
@@ -15,23 +16,25 @@ public class AnalCowgirl extends AnalSexStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return String.format("You're sitting on top of %s with your ass squeezing her cock.",
                             bottom.nameDirectObject());
         } else {
-            return "You're flat on your back with your cock buried inside " + top.nameOrPossessivePronoun() + " ass.";
+            return String.format("%s flat on %s back with %s cock buried inside %s ass.",
+                            bottom.subjectAction("are", "is"), bottom.possessiveAdjective(),
+                            bottom.possessiveAdjective(), top.nameOrPossessivePronoun());
         }
     }
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return false;
+    public boolean kiss(Character c, Character target) {
+        return c != top && c != bottom;
     }
 
     @Override
@@ -51,22 +54,12 @@ public class AnalCowgirl extends AnalSexStance {
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
     public boolean prone(Character c) {
         return c == bottom;
-    }
-
-    @Override
-    public boolean feet(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean oral(Character c) {
-        return false;
     }
 
     @Override
@@ -80,7 +73,7 @@ public class AnalCowgirl extends AnalSexStance {
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return new Mount(top, bottom);
     }
 
@@ -96,12 +89,12 @@ public class AnalCowgirl extends AnalSexStance {
 
         if (!inserter.hasInsertable()) {
             if (inserter.human()) {
-                c.write("With " + inserter.possessivePronoun()
+                c.write("With " + inserter.possessiveAdjective()
                                 + " pole gone, you groan in frustration and cease your merciless movements.");
             } else {
                 c.write(inserted.name() + " groans with frustration with the sudden disappearance of your pole.");
             }
-            c.setStance(insertRandom());
+            c.setStance(insertRandom(c));
         }
         if (inserted.body.getRandom("ass") == null) {
             if (inserted.human()) {
@@ -110,17 +103,17 @@ public class AnalCowgirl extends AnalSexStance {
             } else {
                 c.write(inserted.name() + " groans with frustration with the sudden disappearance of her asshole.");
             }
-            c.setStance(insertRandom());
+            c.setStance(insertRandom(c));
         }
     }
 
     @Override
-    public boolean anallyPenetrated(Character self) {
+    public boolean anallyPenetrated(Combat combat, Character self) {
         return self == top;
     }
 
     @Override
-    public List<BodyPart> topParts() {
+    public List<BodyPart> topParts(Combat c) {
         return Arrays.asList(top.body.getRandomAss()).stream().filter(part -> part != null && part.present())
                         .collect(Collectors.toList());
     }
@@ -129,6 +122,16 @@ public class AnalCowgirl extends AnalSexStance {
     public List<BodyPart> bottomParts() {
         return Arrays.asList(bottom.body.getRandomInsertable()).stream().filter(part -> part != null && part.present())
                         .collect(Collectors.toList());
+    }
+    
+    @Override
+    public Position reverse(Combat c, boolean writeMessage) {
+        if (writeMessage) {
+            c.write(bottom, Global
+                            .format("{self:SUBJECT-ACTION:manage|manages} to unbalance {other:name-do} and push {other:direct-object} forward onto {other:possessive} hands and knees. {self:SUBJECT-ACTION:follow|follows} {other:direct-object}, still inside {other:possessive} tight ass, and {self:SUBJECT-ACTION:continue|continues} "
+                                            + "to fuck {other:direct-object} from behind.", bottom, top));
+        }
+        return new Anal(bottom, top);
     }
     
     @Override

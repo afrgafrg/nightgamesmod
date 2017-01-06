@@ -6,11 +6,13 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.nskills.tags.SkillTag;
 
 public class StealClothes extends Skill {
 
     public StealClothes(Character self) {
         super("Steal Clothes", self);
+        addTag(SkillTag.stripping);
     }
 
     @Override
@@ -65,13 +67,13 @@ public class StealClothes extends Skill {
             getSelf().outfit.equip(stripped);
             top = false;
         } else {
-            c.write("<b>Error: Couldn't strip anything in StealClothes#resolve</b>");
+            c.write(getSelf(), "<b>Error: Couldn't strip anything in StealClothes#resolve</b>");
             return false;
         }
         c.write(getSelf(), String.format(
                         "%s %s with %s quick movements, and before %s %s what's" + " going on, %s %s graces %s %s.",
-                        getSelf().subjectAction("dazzle", "dazzles"), target.subject(), getSelf().possessivePronoun(),
-                        target.pronoun(), target.action("realize", "realizes"), target.possessivePronoun(),
+                        getSelf().subjectAction("dazzle"), target.subject(), getSelf().possessiveAdjective(),
+                        target.pronoun(), target.action("realize"), target.possessiveAdjective(),
                         stripped.getName(), getSelf().nameOrPossessivePronoun(), top ? "chest" : "hips"));
         return true;
     }

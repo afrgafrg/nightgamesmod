@@ -5,16 +5,19 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
-import nightgames.stance.TribadismStance;
+import nightgames.nskills.tags.SkillTag;
 
 public class PussyGrind extends Skill {
 
     public PussyGrind(String name, Character self, int cooldown) {
         super(name, self, cooldown);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.fucking);
+        addTag(SkillTag.petDisallowed);
     }
 
     public PussyGrind(Character self) {
-        super("Pussy Grind", self);
+        this("Pussy Grind", self, 0);
     }
 
     public BodyPart getSelfOrgan() {
@@ -27,8 +30,8 @@ public class PussyGrind extends Skill {
     }
 
     public boolean fuckable(Combat c, Character target) {
-        return BodyPart.hasType(c.getStance().partsFor(getSelf()), "pussy")
-                        && BodyPart.hasType(c.getStance().partsFor(target), "pussy");
+        return BodyPart.hasType(c.getStance().partsFor(c, getSelf()), "pussy")
+                        && BodyPart.hasType(c.getStance().partsFor(c, target), "pussy");
     }
 
     @Override
@@ -40,12 +43,7 @@ public class PussyGrind extends Skill {
     public boolean resolve(Combat c, Character target) {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        c.setStance(new TribadismStance(getSelf(), target));
+        writeOutput(c, Result.normal, target);
         int m = 10 + Global.random(10);
         int otherm = 5 + Global.random(6);
         target.body.pleasure(getSelf(), selfO, targetO, m, c, this);
@@ -88,9 +86,11 @@ public class PussyGrind extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
             return Global.format(
-                            "{self:SUBJECT} rocks your tangled bodies back and forth, grinding her crotch into yours. You moan passionately as the stimulation overwhelms you. "
-                                            + "Soon the floor is drenched with the fruits of your combined labor.",
-                            getSelf(), target);
+                            "{self:SUBJECT} rocks {other:name-possessive} tangled bodies back and forth, grinding {self:possessive}"
+                            + " crotch into %s. {other:SUBJECT-ACTION:moan|moans} passionately as the stimulation overwhelms {other:direct-object}. "
+                                            + "Soon the floor is drenched with the fruits of %s combined labor.",
+                            getSelf(), target, target.human() ? "yours" : target.useFemalePronouns() ? "hers" : "his",
+                                            c.bothPossessive(target));
         }
         return "Bad stuff happened";
     }

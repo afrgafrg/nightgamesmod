@@ -7,12 +7,17 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
 import nightgames.status.Abuff;
 
 public class ArmBar extends Skill {
 
     public ArmBar(Character self) {
         super("Armbar", self);
+        addTag(SkillTag.hurt);
+        addTag(SkillTag.staminaDamage);
+        addTag(SkillTag.positioning);
     }
 
     @Override
@@ -22,23 +27,20 @@ public class ArmBar extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return 90;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
-            int m = Global.random(10) + getSelf().get(Attribute.Power) / 2;
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, m, Result.normal, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, m, Result.normal, target));
-            }
-            target.pain(c, m);
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            int m = (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(6, 10));
+            writeOutput(c, m, Result.normal, target);
+            target.pain(c, getSelf(), m);
             target.add(c, new Abuff(target, Attribute.Power, -4, 5));
             target.emote(Emotion.angry, 15);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
         return true;
@@ -67,7 +69,7 @@ public class ArmBar extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You grab at " + target.name() + "'s arm, but she pulls it free.";
+            return "You grab at " + target.name() + "'s arm, but "+target.pronoun()+" pulls it free.";
         } else {
             return "You grab " + target.name()
                             + "'s arm at the wrist and pull it to your chest in the traditional judo submission technique.";
@@ -77,11 +79,16 @@ public class ArmBar extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " grabs your wrist, but you pry it out of her grasp.";
+            return String.format("%s %s wrist, but %s %s it out of %s grasp.",
+                            getSelf().subjectAction("grab"), target.nameOrPossessivePronoun(),
+                            target.pronoun(), target.action("pry", "pries"), getSelf().possessiveAdjective());
         } else {
-            return getSelf().name()
-                            + " pulls your arm between her legs, forcibly overextending your elbow. The pain almost makes you tap out, but you manage to yank your arm "
-                            + "out of her grip.";
+            return String.format("%s %s arm between %s legs, forcibly overextending %s elbow. "
+                            + "The pain almost makes %s tap out, but %s %s to yank %s arm out of %s grip",
+                            getSelf().subjectAction("pull"), target.nameOrPossessivePronoun(), 
+                            getSelf().possessiveAdjective(), target.possessiveAdjective(), target.pronoun(),
+                            target.pronoun(), target.action("manage"), target.possessiveAdjective(),
+                            getSelf().possessiveAdjective());
         }
     }
 

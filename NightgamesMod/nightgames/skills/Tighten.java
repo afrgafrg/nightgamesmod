@@ -7,12 +7,14 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
 
 public class Tighten extends Thrust {
     public Tighten(Character self) {
         super("Tighten", self);
+        removeTag(SkillTag.pleasureSelf);
     }
 
     @Override
@@ -22,8 +24,8 @@ public class Tighten extends Thrust {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && c.getStance().penetratedBy(getSelf(), target)
-                        && c.getStance().havingSexNoStrapped() && target.hasDick();
+        return getSelf().canRespond() && c.getStance().penetratedBy(c, getSelf(), target)
+                        && c.getStance().havingSexNoStrapped(c) && target.hasDick();
     }
 
     @Override
@@ -39,7 +41,7 @@ public class Tighten extends Thrust {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        BodyPart selfO = getSelfOrgan(c);
+        BodyPart selfO = getSelfOrgan(c, target);
         BodyPart targetO = getTargetOrgan(c, target);
         Result result;
         if (c.getStance().inserted(target)) {
@@ -50,11 +52,7 @@ public class Tighten extends Thrust {
             result = Result.normal;
         }
 
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, result, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, result, target));
-        }
+        writeOutput(c, result, target);
 
         int[] m = getDamage(c, target);
         assert (m.length >= 2);
@@ -62,7 +60,7 @@ public class Tighten extends Thrust {
         if (m[0] != 0)
             target.body.pleasure(getSelf(), selfO, targetO, m[0], c, this);
         if (m[1] != 0)
-            getSelf().body.pleasure(target, targetO, selfO, m[1], -10000, c, false, this);
+            getSelf().body.pleasure(target, targetO, selfO, m[1], 0, c, false, this);
         if (selfO.isType("ass") && Global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
@@ -83,7 +81,7 @@ public class Tighten extends Thrust {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (c.getStance().en == Stance.anal) {
             return Global.format(
-                            "{self:SUBJECT-ACTION:rhythmically squeeze|rhythmically squeezes} {self:possessive} {self:body-part:ass} around {other:possessive} dick, milking {other:direct-object} for all that {self:subject-action:are|is} worth.",
+                            "{self:SUBJECT-ACTION:rhythmically squeeze|rhythmically squeezes} {self:possessive} {self:body-part:ass} around {other:possessive} dick, milking {other:direct-object} for all that {self:pronoun-action:are|is} worth.",
                             getSelf(), target);
         } else {
             return Global.format(

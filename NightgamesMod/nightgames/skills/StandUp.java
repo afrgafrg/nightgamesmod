@@ -3,28 +3,26 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.StandingOver;
 
 public class StandUp extends Skill {
 
     public StandUp(Character self) {
         super("Stand Up", self);
+        addTag(SkillTag.positioning);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().getUp(getSelf()) && !c.getStance().mobile(target)
-                        && !c.getStance().inserted();
+                        && !c.getStance().havingSex(c, getSelf());
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        c.setStance(new StandingOver(getSelf(), target));
+        writeOutput(c, Result.normal, target);
+        c.setStance(new StandingOver(getSelf(), target), getSelf(), true);
         return true;
     }
 
@@ -60,7 +58,9 @@ public class StandUp extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().getName() + " relinquishes her hold on you and stands back up.";
+        return String.format("%s relinquishes %s hold on %s and stands back up.",
+                        getSelf().subject(), getSelf().possessiveAdjective(),
+                        target.nameDirectObject());
     }
 
     @Override

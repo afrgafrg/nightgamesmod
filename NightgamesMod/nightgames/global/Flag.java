@@ -51,13 +51,6 @@ public enum Flag {
     threesome,
     bodyShop,
     hardmode,
-    AngelDisabled,
-    CassieDisabled,
-    MaraDisabled,
-    ReykaDisabled,
-    KatDisabled,
-    JewelDisabled,
-    AiriEnabled,
     systemMessages,
     malePref,
     masturbationSemen,
@@ -74,8 +67,19 @@ public enum Flag {
     extendedLogs, 
     YuiLoyalty, 
     YuiAvailable, 
-    Yui, 
-    YuiUnlocking;
+    Yui,
+    YuiWalletReturned,
+    YuiUnlocking,
+    FemalePronounsOnly,
+    skipMM,
+    skipFF,
+    hermHasBalls,
+    shemaleNoBalls,
+    femaleTGIntoHerm, 
+    SuperTraitMode,
+    AutoNext,
+    NoFTC
+    ;
     
     public static boolean exists(String flag) {
         return Arrays.stream(values()).anyMatch(f -> f.name().equals(flag));

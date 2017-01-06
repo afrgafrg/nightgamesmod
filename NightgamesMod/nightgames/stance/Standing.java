@@ -3,6 +3,7 @@ package nightgames.stance;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.skills.damage.DamageType;
 
 public class Standing extends MaledomSexStance {
     public Standing(Character top, Character bottom) {
@@ -10,17 +11,19 @@ public class Standing extends MaledomSexStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
-            return "You are holding " + bottom.name() + " in the air while buried deep in her pussy";
+            return "You are holding " + bottom.name() + " in the air while buried deep in her pussy.";
         } else {
-            return top.name() + " is holding you in her arms while pumping into your girl parts.";
+            return String.format("%s is holding %s in %s arms while pumping into %s girl parts.",
+                            top.subject(), bottom.nameDirectObject(), top.possessiveAdjective(),
+                            bottom.possessiveAdjective());
         }
     }
 
     @Override
     public boolean mobile(Character c) {
-        return false;
+        return c != top && c != bottom;
     }
 
     @Override
@@ -29,8 +32,8 @@ public class Standing extends MaledomSexStance {
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return true;
+    public boolean kiss(Character c, Character target) {
+        return c == top || c == bottom;
     }
 
     @Override
@@ -50,26 +53,16 @@ public class Standing extends MaledomSexStance {
 
     @Override
     public boolean reachTop(Character c) {
-        return false;
+        return c != top && c != bottom;
     }
 
     @Override
     public boolean reachBottom(Character c) {
-        return false;
+        return c != top && c != bottom;
     }
 
     @Override
     public boolean prone(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean feet(Character c) {
-        return false;
-    }
-
-    @Override
-    public boolean oral(Character c) {
         return false;
     }
 
@@ -79,14 +72,14 @@ public class Standing extends MaledomSexStance {
     }
 
     @Override
-    public Position insertRandom() {
+    public Position insertRandom(Combat c) {
         return new Neutral(top, bottom);
     }
 
     @Override
     public void decay(Combat c) {
         time++;
-        top.weaken(null, 2);
+        top.weaken(c, (int) bottom.modifyDamage(DamageType.stance, top, 2));
     }
 
     @Override
@@ -106,12 +99,14 @@ public class Standing extends MaledomSexStance {
     }
 
     @Override
-    public Position reverse(Combat c) {
-        c.write(bottom, Global.format(
-                        "self:SUBJECT-ACTION:wrap|wraps} {self:possessive} legs around {other:name-possessive} waist and suddenly {self:action:pull|pulls} {other:direct-object} into a deep kiss. {other:SUBJECT-ACTION:are|is} so surprised by this sneak attack that {other:subject-action:don't|doesn't} "
-                                        + "even notice {other:reflective} falling forward until {other:subject-action:feel|feels} {self:possessive} limbs wrapped around {other:possessive} body. {self:PRONOUN} {self:action:move|moves} {self:possessive} hips experimentally, enjoying the control "
-                                        + "{self:pronoun} {self:action:have|has} coiled around {other:direct-object}.",
-                        bottom, top));
+    public Position reverse(Combat c, boolean writeMessage) {
+        if (writeMessage) {
+            c.write(bottom, Global.format(
+                            "{self:SUBJECT-ACTION:wrap|wraps} {self:possessive} legs around {other:name-possessive} waist and suddenly {self:action:pull|pulls} {other:direct-object} into a deep kiss. {other:SUBJECT-ACTION:are|is} so surprised by this sneak attack that {other:subject-action:don't|doesn't} "
+                                            + "even notice {other:reflective} falling forward until {other:subject-action:feel|feels} {self:possessive} limbs wrapped around {other:possessive} body. {self:PRONOUN} {self:action:move|moves} {self:possessive} hips experimentally, enjoying the control "
+                                            + "{self:pronoun} {self:action:have|has} coiled around {other:direct-object}.",
+                            bottom, top));
+        }
         return new CoiledSex(bottom, top);
     }
     

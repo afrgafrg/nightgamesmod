@@ -25,7 +25,7 @@ public class MimicSuccubus extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Slime) >= 10;
+        return user.human() && user.get(Attribute.Slime) >= 10;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class MimicSuccubus extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
+        } else if (c.shouldPrintReceive(target, c)) {
             if (!target.is(Stsflag.blinded))
                 c.write(getSelf(), receive(c, 0, Result.normal, target));
             else 
@@ -52,6 +52,7 @@ public class MimicSuccubus extends Skill {
         getSelf().addTemporaryTrait(Trait.soulsucker, 10);
         getSelf().addTemporaryTrait(Trait.energydrain, 10);
         getSelf().addTemporaryTrait(Trait.spiritphage, 10);
+        getSelf().addTemporaryTrait(Trait.vaginaltongue, 10);
         getSelf().body.temporaryAddOrReplacePartWithType(WingsPart.demonicslime, 10);
         getSelf().body.temporaryAddOrReplacePartWithType(TailPart.demonicslime, 10);
         getSelf().body.temporaryAddOrReplacePartWithType(EarPart.pointed, 10);
@@ -83,7 +84,7 @@ public class MimicSuccubus extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Global.format("{self:NAME-POSSESSIVE} mercurial form seems to suddenly expand, then collapse onto itself. "
                         + "Her crystal blue goo glimmers and shifts into a deep obsidian. After reforming her features out of "
-                        + "her eratically flowing slime, you see that she has taken on an appearance reminiscent of Reyka's succubus form, "
+                        + "her eratically flowing slime, {other:subject-action:see|sees} that she has taken on an appearance reminiscent of Reyka's succubus form, "
                         + "complete with large translucent gel wings, a thick tail and her characteristic laviscious grin.", getSelf(), target);
     }
 

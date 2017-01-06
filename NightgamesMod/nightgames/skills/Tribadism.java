@@ -5,16 +5,21 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.stance.Stance;
 import nightgames.stance.TribadismStance;
 
 public class Tribadism extends Skill {
 
     public Tribadism(String name, Character self, int cooldown) {
         super(name, self, cooldown);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.fucking);
+        addTag(SkillTag.petDisallowed);
     }
 
     public Tribadism(Character self) {
-        super("Tribadism", self);
+        this("Tribadism", self, 0);
     }
 
     public BodyPart getSelfOrgan() {
@@ -34,32 +39,28 @@ public class Tribadism extends Skill {
         if (possible) {
             stancePossible = true;
             if (selfO.isType("pussy")) {
-                stancePossible &= !c.getStance().vaginallyPenetrated(getSelf());
+                stancePossible &= !c.getStance().vaginallyPenetrated(c, getSelf());
             }
             if (targetO.isType("pussy")) {
-                stancePossible &= !c.getStance().vaginallyPenetrated(target);
+                stancePossible &= !c.getStance().vaginallyPenetrated(c, target);
             }
         }
-        stancePossible &= !c.getStance().havingSex();
+        stancePossible &= !c.getStance().havingSex(c);
         return possible && stancePossible && getSelf().clothingFuckable(selfO) && target.crotchAvailable();
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return fuckable(c, target) && c.getStance().mobile(getSelf()) && !c.getStance().mobile(target)
-                        && getSelf().canAct();
+                        && getSelf().canAct() && c.getStance().en != Stance.trib;
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
-        c.setStance(new TribadismStance(getSelf(), target));
+        writeOutput(c, Result.normal, target);
+        c.setStance(new TribadismStance(getSelf(), target), getSelf(), true);
         int otherm = 10;
         int m = 10;
         target.body.pleasure(getSelf(), selfO, targetO, m, c, this);
@@ -102,9 +103,11 @@ public class Tribadism extends Skill {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         if (modifier == Result.normal) {
-            String message = getSelf().name()
-                            + " grabs your leg and slides her crotch against yours. She then grinds her "
-                            + selfO.describe(getSelf()) + " against your wet " + targetO.describe(target) + ".";
+            String message = String.format("%s grabs %s leg and slides her crotch against %s."
+                            + " She then grinds her %s against %s wet %s.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            selfO.describe(getSelf()), target.possessiveAdjective(),
+                            targetO.describe(getSelf()));
             return message;
         }
         return "Bad stuff happened";

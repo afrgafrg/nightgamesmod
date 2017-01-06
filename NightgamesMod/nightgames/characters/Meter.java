@@ -43,7 +43,7 @@ public class Meter implements Serializable, Cloneable {
         return Math.min(max, temporaryMax);
     }
 
-    float trueMax() {
+    public float trueMax() {
         return max;
     }
     
@@ -100,13 +100,13 @@ public class Meter implements Serializable, Cloneable {
         max = i;
         current = max();
     }
-    
+
     public void setTemporaryMax(int i) {
         if (i <= 0) {
             i = Integer.MAX_VALUE;
         }
         temporaryMax = i;
-        current = max();
+        current = Math.min(current, max());
     }
 
     public int percent() {
@@ -121,5 +121,9 @@ public class Meter implements Serializable, Cloneable {
     @Override
     public String toString() {
         return String.format("current: %s / max: %s", Global.formatDecimal(current), Global.formatDecimal(max()));
+    }
+
+    public double remaining() {
+        return max() - getReal();
     }
 }

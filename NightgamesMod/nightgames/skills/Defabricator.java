@@ -4,12 +4,15 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Global;
 import nightgames.items.Item;
+import nightgames.nskills.tags.SkillTag;
 
 public class Defabricator extends Skill {
 
     public Defabricator(Character self) {
         super("Defabricator", self);
+        addTag(SkillTag.stripping);
     }
 
     @Override
@@ -30,12 +33,10 @@ public class Defabricator extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-            c.write(target, target.nakedLiner(c));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        getSelf().consume(Item.Battery, 8);
+        writeOutput(c, Result.normal, target);
+        if (getSelf().human() || c.isBeingObserved())
+            c.write(target, target.nakedLiner(c, target));
         target.nudify();
         return true;
     }
@@ -58,9 +59,11 @@ public class Defabricator extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().name()
-                        + " points a device at you and light shines from it like it's a simple flashlight. The device's function is immediately revealed as your clothes just vanish "
-                        + "in the light. You're left naked in seconds.";
+        return String.format("%s points a device at %s and light shines from it like it's a simple flashlight. "
+                        + "The device's function is immediately revealed as %s clothes just vanish "
+                        + "in the light. %s left naked in seconds.", getSelf().subject(),
+                        target.nameDirectObject(), target.possessiveAdjective(), 
+                        Global.capitalizeFirstLetter(target.subjectAction("are", "is")));
     }
 
 }

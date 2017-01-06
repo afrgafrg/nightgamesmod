@@ -23,34 +23,23 @@ public class Tie extends Skill {
         return !target.wary() && getSelf().canAct() && c.getStance().reachTop(getSelf())
                         && !c.getStance().reachTop(target)
                         && (getSelf().has(Item.ZipTie) || getSelf().has(Item.Handcuffs)) && c.getStance().dom(getSelf())
-                        && !target.is(Stsflag.bound);
+                        && !target.is(Stsflag.bound)
+                        && !target.is(Stsflag.maglocked);
     }
 
     @Override
     public boolean resolve(Combat c, Character target) {
         if (getSelf().has(Item.Handcuffs, 1)) {
             getSelf().consume(Item.Handcuffs, 1);
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.special, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.special, target));
-            }
+            writeOutput(c, Result.special, target);
             target.add(c, new Bound(target, 75, "handcuffs"));
         } else {
             getSelf().consume(Item.ZipTie, 1);
-            if (target.roll(this, c, accuracy(c))) {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.normal, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.normal, target));
-                }
+            if (target.roll(getSelf(), c, accuracy(c, target))) {
+                writeOutput(c, Result.normal, target);
                 target.add(c, new Bound(target, 50, "ziptie"));
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.miss, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.miss, target));
-                }
+                writeOutput(c, Result.miss, target);
                 return false;
             }
         }
@@ -73,7 +62,7 @@ public class Tie extends Skill {
     }
 
     @Override
-    public int accuracy(Combat c) {
+    public int accuracy(Combat c, Character target) {
         return 80;
     }
 
@@ -91,11 +80,15 @@ public class Tie extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " tries to tie you down, but you keep your arms free.";
+            return String.format("%s tries to tie %s down, but %s %s %s arms free.",
+                            getSelf().subject(), target.nameDirectObject(),
+                            target.pronoun(), target.action("keep"), target.possessiveAdjective());
         } else if (modifier == Result.special) {
-            return getSelf().name() + " restrains you with a pair of handcuffs.";
+            return String.format("%s restrains %s with a pair of handcuffs.",
+                            getSelf().subject(), target.nameDirectObject());
         } else {
-            return getSelf().name() + " secures your hands with a ziptie.";
+            return String.format("%s secures %s hands with a ziptie.",
+                            getSelf().subject(), target.nameOrPossessivePronoun());
         }
     }
 

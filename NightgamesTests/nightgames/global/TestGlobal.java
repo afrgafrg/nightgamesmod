@@ -1,6 +1,5 @@
 package nightgames.global;
 
-import nightgames.characters.Player;
 import nightgames.gui.GUI;
 import nightgames.gui.TestGUI;
 
@@ -8,7 +7,11 @@ import nightgames.gui.TestGUI;
  * Creates a version of Global that has no visible GUI.
  */
 public class TestGlobal extends Global {
-    @Override protected GUI makeGUI() {
+    public TestGlobal() {
+        super(false);
+    }
+
+    @Override protected GUI makeGUI(boolean headless) {
         return new TestGUI();
     }
 }

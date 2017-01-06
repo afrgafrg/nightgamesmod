@@ -20,7 +20,7 @@ public class TentaclePart extends GenericBodyPart {
     static String allowedAttachTypes[] = {"ass", "mouth", "pussy", "hands", "feet", "tail", "cock"};
 
     public static void pleasureWithTentacles(Combat c, Character target, int strength, BodyPart targetPart) {
-        target.body.pleasure(DUMMY_CHARACTER, DUMMY_PART, targetPart, strength, c);
+        target.body.pleasure(c.getOpponent(target), DUMMY_PART, targetPart, strength, c);
     }
     
     public static TentaclePart randomTentacle(String desc, Body body, String fluids, double hotness, double pleasure,
@@ -94,8 +94,8 @@ public class TentaclePart extends GenericBodyPart {
                     Combat c) {
         if (with.isType(attachpoint) && Global.random(3) > -1) {
             c.write(self, Global.format("Additionally, {self:name-possessive} " + fullDescribe(self)
-                            + " takes the opportunity to squirm against {other:name-possessive} "
-                            + target.fullDescribe(opponent), self, opponent));
+                            + " take the opportunity to squirm against {other:name-possessive} "
+                            + target.fullDescribe(opponent) + ".", self, opponent));
             opponent.body.pleasure(self, this, target, 5, c);
         }
         return 0;

@@ -27,15 +27,15 @@ public class BunshinService extends Skill {
                         && getSelf().canAct() && !c.getStance()
                                                    .behind(target)
                         && !c.getStance()
-                             .penetrated(target)
+                             .penetrated(c, target)
                         && !c.getStance()
-                             .penetrated(getSelf())
+                             .penetrated(c, getSelf())
                         && target.mostlyNude();
     }
 
     @Override
     public int getMojoCost(Combat c) {
-        return 20;
+        return numberOfClones(c) * 2;
     }
 
     @Override
@@ -43,21 +43,28 @@ public class BunshinService extends Skill {
         return "Pleasure your opponent with shadow clones: 4 mojo per attack (min 2))";
     }
 
+    private int numberOfClones(Combat c) {
+        return Math.min(Math.min(getSelf().getMojo().get()/2, getSelf().get(Attribute.Ninjutsu)/2), 15);
+    }
+
+    @Override
+    public int accuracy(Combat c, Character target) {
+        return 25 + getSelf().get(Attribute.Speed) * 5;
+    }
+
     @Override
     public boolean resolve(Combat c, Character target) {
-        int clones = Math.min(Math.min(getSelf().getMojo()
-                                                .get()
-                        / 4, getSelf().get(Attribute.Ninjutsu) / 3), 5);
-        getSelf().buildMojo(c, (5 - clones) * 4);
+        int clones = numberOfClones(c);
         Result r;
-        if (getSelf().human()) {
-            c.write(String.format("You form %d shadow clones and rush forward.", clones));
-        } else if (target.human()) {
-            c.write(String.format("%s moves in a blur and suddenly you see %d of %s approaching you.", getSelf().name(),
-                            clones, getSelf().pronoun()));
+        if(getSelf().human()){
+            c.write(getSelf(), String.format("You form %d shadow clones and rush forward.",clones));
+        }
+        else if(c.shouldPrintReceive(target, c)){
+            c.write(getSelf(), String.format("%s moves in a blur and suddenly %s %d of %s approaching %s.",getSelf().name(),
+                            target.subjectAction("see"),clones,getSelf().pronoun(),target.reflectivePronoun()));
         }
         for (int i = 0; i < clones; i++) {
-            if (target.roll(this, c, accuracy(c) + getSelf().get(Attribute.Speed) + getSelf().getLevel())) {
+            if (target.roll(getSelf(), c, accuracy(c, target))) {
                 switch (Global.random(4)) {
                     case 0:
                         r = Result.weak;
@@ -90,17 +97,9 @@ public class BunshinService extends Skill {
                                         this);
                         break;
                 }
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, r, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, r, getSelf()));
-                }
+                writeOutput(c, r, target);
             } else {
-                if (getSelf().human()) {
-                    c.write(getSelf(), deal(c, 0, Result.miss, target));
-                } else if (target.human()) {
-                    c.write(getSelf(), receive(c, 0, Result.miss, getSelf()));
-                }
+                writeOutput(c, Result.miss, target);
             }
         }
         return true;
@@ -135,9 +134,9 @@ public class BunshinService extends Skill {
             }
         }else if(modifier==Result.critical){
             if(target.hasDick()){
-                return String.format("Your clone attacks %s's sensitive penis, rubbing and stroking %s glans.",target.name(),target.possessivePronoun());
+                return String.format("Your clone attacks %s's sensitive penis, rubbing and stroking %s glans.",target.name(),target.possessiveAdjective());
             }else{
-                return String.format("Your clone slips between %s's legs to lick and suck %s swollen clit.",target.name(),target.possessivePronoun());
+                return String.format("Your clone slips between %s's legs to lick and suck %s swollen clit.",target.name(),target.possessiveAdjective());
             }
         }else{
             return String.format("A clone pinches and teases %s's nipples",target.name());
@@ -147,26 +146,34 @@ public class BunshinService extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if(modifier==Result.miss){
-            return String.format("You manage to avoid one of the shadow clones.");
+            return String.format("%s to avoid one of the shadow clones.",
+                            target.subjectAction("manage"));
         }else if(modifier==Result.weak){
-            return String.format("One of the %ss grabs you and kisses you enthusiastically.",getSelf().name());
+            return String.format("One of the %ss grabs %s and kisses %s enthusiastically.",getSelf().name(),
+                            target.subject(), target.directObject());
         }else if(modifier==Result.strong){
             if(target.hasBalls()){
-                return String.format("A clone gently grasps and massages your sensitive balls.");
+                return String.format("A clone gently grasps and massages %s sensitive balls.",
+                                target.nameOrPossessivePronoun());
             }else{
-                return String.format("A clone teases and tickles your inner thighs and labia.");
+                return String.format("A clone teases and tickles %s inner thighs and labia.",
+                                target.nameOrPossessivePronoun());
             }
         }else if(modifier==Result.critical){
             if(target.hasDick()){
-                return String.format("One of the %s clones kneels between your legs to lick and suck your cock.",getSelf().name());
+                return String.format("One of the %s clones kneels between %s legs to lick and suck %s cock.",getSelf().name(),
+                                target.nameOrPossessivePronoun(), target.possessiveAdjective());
             }else{
-                return String.format("One of the %s clones kneels between your legs to lick your nether lips.",getSelf().name());
+                return String.format("One of the %s clones kneels between %s legs to lick %s nether lips.",getSelf().name(),
+                                target.nameOrPossessivePronoun(), target.possessiveAdjective());
             }
         }else{
             if(getSelf().hasBreasts()){
-                return String.format("A %s clone presses her boobs against you and teases your nipples.",getSelf().name());
+                return String.format("A %s clone presses her boobs against %s and teases %s nipples.",getSelf().name(),
+                                target.subject(), target.possessiveAdjective());
             }else{
-                return String.format("A %s clone caresses your chest and teases your nipples.",getSelf().name());
+                return String.format("A %s clone caresses %s chest and teases %s nipples.",getSelf().name(),
+                                target.nameOrPossessivePronoun(), target.possessiveAdjective());
             }
             
         }

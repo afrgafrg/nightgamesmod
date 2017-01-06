@@ -56,6 +56,11 @@ public class GenericBodyPart implements BodyPart {
     }
 
     @Override
+    public String canonicalDescription() {
+        return desc;
+    }
+
+    @Override
     public void describeLong(StringBuilder b, Character c) {
         String parsedDesc = Global.format(descLong, c, c);
         b.append(parsedDesc);
@@ -110,7 +115,7 @@ public class GenericBodyPart implements BodyPart {
             pleasureMod += self.has(Trait.dexterous) ? .4 : 0;
         }
         if (type.equals("hands")) {
-            pleasureMod += self.has(Trait.pimphand) ? .5 : 0;
+            pleasureMod += self.has(Trait.pimphand) ? .2 : 0;
         }
         return pleasureMod;
     }
@@ -161,13 +166,25 @@ public class GenericBodyPart implements BodyPart {
         int bonus = 0;
         if (self.has(ClothingTrait.nursegloves) && type.equals("hands")) {
             c.write(self, Global
-                            .format("{self:name-possessive} rubber gloves provide an unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
-                                            + target.describe(opponent), self, opponent));
+                            .format("{self:name-possessive} rubber gloves provide a unique sensation as {self:subject-action:run|runs} {self:possessive} hands over {other:possessive} "
+                                            + target.describe(opponent) + ".", self, opponent));
             bonus += 5 + Global.random(5);
             if (Global.random(5) == 0) {
                 c.write(self, "Unfortunately, the gloves wear out with their usage.");
-                self.shred(ClothingSlot.hands);
+                self.shred(ClothingSlot.arms);
             }
+        }
+        if (type.equals("hands") && self.has(Trait.defthands)) {
+            c.write(self, Global
+                            .format("{self:name-possessive} hands dance across {other:possessive} "
+                                            + target.describe(opponent) + ", hitting all the right spots.", self, opponent));
+            bonus += Global.random(2, 6);
+        }
+        if (type.equals("feet") && self.has(Trait.nimbletoes)) {
+            c.write(self, Global
+                            .format("{self:name-possessive} nimble toes adeptly massage {other:possessive} "
+                                            + target.describe(opponent) + " elicting a quiet gasp.", self, opponent));
+            bonus += Global.random(2, 6);
         }
         return bonus;
     }

@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Stsflag;
 import nightgames.status.Tied;
@@ -13,18 +14,18 @@ public class TortoiseWrap extends Skill {
 
     public TortoiseWrap(Character self) {
         super("Tortoise Wrap", self);
+        addTag(SkillTag.positioning);
     }
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return getSelf().getPure(Attribute.Fetish) >= 21;
+        return getSelf().getPure(Attribute.Fetish) >= 24;
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().reachTop(getSelf()) && !c.getStance().reachTop(target)
-                        && getSelf().has(Item.Rope) && c.getStance().dom(getSelf()) && !target.is(Stsflag.tied)
-                        && getSelf().is(Stsflag.bondage);
+                        && getSelf().has(Item.Rope) && c.getStance().dom(getSelf()) && !target.is(Stsflag.tied);
     }
 
     @Override
@@ -35,11 +36,7 @@ public class TortoiseWrap extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.Rope, 1);
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        writeOutput(c, Result.normal, target);
         target.add(c, new Tied(target));
         target.add(c, new Hypersensitive(target));
         return true;
@@ -62,17 +59,19 @@ public class TortoiseWrap extends Skill {
                                         + "in a traditional bondage wrap. %s moans softly as the "
                                         + "rope digs into %s supple skin.",
                         target.name(), nightgames.global.Global.capitalizeFirstLetter(target.pronoun()),
-                        target.possessivePronoun());
+                        target.possessiveAdjective());
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return String.format("%s ties you up with a complex series of knots. "
-                        + "Surprisingly, instead of completely incapacitating you, "
-                        + "%s wraps you in a way that only "
-                        + "slightly hinders your movement. However, the discomfort of "
-                        + "the rope wrapping around you seems to make your sense of " + "touch more pronounced.",
-                        getSelf().name(), getSelf().pronoun());
+        return String.format("%s ties %s up with a complex series of knots. "
+                        + "Surprisingly, instead of completely incapacitating %s, "
+                        + "%s wraps %s in a way that only "
+                        + "slightly hinders %s movement. However, the discomfort of "
+                        + "the rope wrapping around %s seems to make %s sense of touch more pronounced.",
+                        getSelf().name(), target.nameDirectObject(), target.directObject(),
+                        getSelf().pronoun(), target.directObject(), target.possessiveAdjective(),
+                        target.pronoun(), target.possessiveAdjective());
     }
 
 }

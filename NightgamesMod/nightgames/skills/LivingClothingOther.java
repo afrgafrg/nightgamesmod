@@ -7,10 +7,13 @@ import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+import nightgames.nskills.tags.SkillTag;
 
 public class LivingClothingOther extends Skill {
     public LivingClothingOther(Character self) {
         super("Living Clothing: Other", self, 8);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.debuff);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class LivingClothingOther extends Skill {
         message = "You power up your fabricator and dial the knob to the emergency reclothing setting. "
                         + "You hit the button and dark tentacles squirm out of the device. " + "You hold "
                         + target.subject() + " down and point the tentacles at her body. "
-                        + "The undulating tentacles coils around " + target.possessivePronoun()
+                        + "The undulating tentacles coils around " + target.possessiveAdjective()
                         + " body and wraps itself into a living suit.";
         return message;
     }
@@ -66,11 +69,13 @@ public class LivingClothingOther extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         String message;
-        message = "While holding you down, " + getSelf().subject() + " powers up " + getSelf().possessivePronoun()
-                        + " fabricator and dials the knob to the emergency reclothing setting. "
-                        + Global.capitalizeFirstLetter(getSelf().pronoun())
-                        + " hits the button and dark tentacles squirm out of the device."
-                        + "The created tentacles coils around your body and wraps itself into a living suit.";
+        message = String.format("While holding %s down, %s powers up %s fabricator and dials the knob"
+                        + " to the emergency reclothing setting. %s hits the button and dark tentacles squirm"
+                        + " out of the device. The created tentacles coils around %s body and"
+                        + " wrap themselves into a living suit.", target.nameDirectObject(),
+                        getSelf().subject(), getSelf().possessiveAdjective(),
+                        Global.capitalizeFirstLetter(getSelf().pronoun()),
+                        target.nameOrPossessivePronoun());
         return message;
     }
 

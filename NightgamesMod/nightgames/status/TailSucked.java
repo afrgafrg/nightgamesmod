@@ -8,6 +8,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
 import nightgames.skills.TailSuck;
+import nightgames.skills.damage.DamageType;
 
 public class TailSucked extends Status {
 
@@ -21,13 +22,15 @@ public class TailSucked extends Status {
         requirements.add((c, self, other) -> c != null && self != null && other != null
                         && new TailSuck(other).usable(c, self));
         flag(Stsflag.bound);
+        flag(Stsflag.debuff);
         flag(Stsflag.tailsucked);
+        flag(Stsflag.inserted);
     }
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
         return String.format("%s tail is sucking %s energy straight from %s %s.", sucker.nameOrPossessivePronoun(),
-                        affected.nameOrPossessivePronoun(), affected.possessivePronoun(),
+                        affected.nameOrPossessivePronoun(), affected.possessiveAdjective(),
                         affected.body.getRandomCock().describe(affected));
     }
 
@@ -39,7 +42,7 @@ public class TailSucked extends Status {
         }
         return String.format("%s tail keeps churning around %s " + "%s, sucking in %s vital energies.",
                         sucker.nameOrPossessivePronoun(), affected.nameOrPossessivePronoun(),
-                        affected.body.getRandomCock().describe(affected), affected.possessivePronoun());
+                        affected.body.getRandomCock().describe(affected), affected.possessiveAdjective());
     }
 
     @Override
@@ -53,13 +56,13 @@ public class TailSucked extends Status {
 
         c.write(sucker, String.format("%s tail sucks powerfully, and %s" + " some of %s strength being drawn in.",
                         sucker.nameOrPossessivePronoun(), affected.subjectAction("feel", "feels"),
-                        affected.possessivePronoun()));
+                        affected.possessiveAdjective()));
 
         Attribute toDrain = Global.pickRandom(affected.att.entrySet().stream().filter(e -> e.getValue() != 0)
-                        .map(e -> e.getKey()).toArray(Attribute[]::new));
+                        .map(e -> e.getKey()).toArray(Attribute[]::new)).get();
         affected.addlist.add(new Abuff(affected, toDrain, -power, 20));
         sucker.addlist.add(new Abuff(sucker, toDrain, power, 20));
-        affected.drain(c, sucker, 1 + Global.random(power * 3));
+        affected.drain(c, sucker, (int) sucker.modifyDamage(DamageType.drain, affected, 10));
         affected.drainMojo(c, sucker, 1 + Global.random(power * 3));
     }
 

@@ -6,12 +6,16 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 
 public class Footjob extends Skill {
 
     public Footjob(Character self) {
         super("Footjob", self);
+        addTag(SkillTag.usesFeet);
+        addTag(SkillTag.pleasure);
+        addTag(SkillTag.dominant);
     }
 
     @Override
@@ -21,7 +25,7 @@ public class Footjob extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return (target.hasDick() || target.hasPussy()) && c.getStance().feet(getSelf()) && target.crotchAvailable()
+        return (target.hasDick() || target.hasPussy()) && c.getStance().feet(getSelf(), target) && target.crotchAvailable()
                         && c.getStance().prone(getSelf()) != c.getStance().prone(target) && getSelf().canAct()
                         && !c.getStance().inserted() && getSelf().outfit.hasNoShoes();
     }
@@ -43,12 +47,17 @@ public class Footjob extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return target.body.getFetish("feet").isPresent() ? 200 : 80;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.roll(this, c, accuracy(c))) {
-            int m = 8 + Global.random(6);
+        if (target.roll(getSelf(), c, accuracy(c, target))) {
+            int m = Global.random(12, 20);
             if (getSelf().human()) {
                 c.write(getSelf(), Global.format(deal(c, m, Result.normal, target), getSelf(), target));
-            } else if (target.human()) {
+            } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), Global.format(receive(c, m, Result.normal, target), getSelf(), target));
             }
             if (target.hasDick()) {
@@ -62,7 +71,7 @@ public class Footjob extends Skill {
         } else {
             if (getSelf().human()) {
                 c.write(getSelf(), Global.format(deal(c, 0, Result.miss, target), getSelf(), target));
-            } else if (target.human()) {
+            } else if (c.shouldPrintReceive(target, c)) {
                 c.write(getSelf(), Global.format(receive(c, 0, Result.miss, target), getSelf(), target));
             }
             return false;
@@ -121,18 +130,28 @@ public class Footjob extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().name() + " swings her foot at your groin, but misses.";
+            return String.format("%s swings %s foot at %s groin, but misses.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun());
         } else {
             if (target.hasDick()) {
-                return getSelf().name()
-                                + " rubs your dick with the sole of her soft foot. From time to time, she teases you by pinching the glans between her toes and jostling your balls.";
+                return String.format("%s rubs %s dick with the sole of %s soft foot. From time to time,"
+                                + " %s teases %s by pinching the glans between %s toes and jostling %s balls.",
+                                getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
+                                getSelf().subject(), target.directObject(), getSelf().possessiveAdjective(),
+                                target.possessiveAdjective());
             }
             if (target.hasPussy()) {
-                return getSelf().name()
-                                + " toes the lips of your slit with her foot. From time to time, she teases you by slipping her big toe inside and wiggling it around.";
+                return String.format("%s teases the lips of %s slit with %s foot. From time "
+                                + "to time, %s teases %s by slipping %s big toe inside and wiggling it around.",
+                                getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
+                                getSelf().subject(), target.directObject(), getSelf().possessiveAdjective());
             }
-            return getSelf().name()
-                            + " toes your asshole with her foot. From time to time, she teases you by pressing her big toe at your sphincter and nudging it.";
+            return String.format("%s teases %s asshole with %s foot. From time to time, %s "
+                            + "teases %s by pressing %s big toe at %s sphincter and nudging it.",
+                            getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
+                            getSelf().subject(), target.directObject(), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective());
         }
     }
 

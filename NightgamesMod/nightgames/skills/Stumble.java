@@ -2,6 +2,7 @@ package nightgames.skills;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
@@ -35,19 +36,19 @@ public class Stumble extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (Global.random(2) == 0) {
-            c.setStance(new Mount(target, getSelf()));
+            c.setStance(new Mount(target, getSelf()), target, false);
         } else {
-            c.setStance(new ReverseMount(target, getSelf()));
+            c.setStance(new ReverseMount(target, getSelf()), target, false);
         }
         if (getSelf().human()) {
-            c.write(deal(c, 0, Result.normal, target));
-            if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL, target)) {
-                Global.getPlayer().unaddictCombat(AddictionType.MIND_CONTROL, 
+            c.write(getSelf(), deal(c, 0, Result.normal, target));
+            if (((Player)getSelf()).checkAddiction(AddictionType.MIND_CONTROL, target)) {
+                ((Player)getSelf()).unaddictCombat(AddictionType.MIND_CONTROL, 
                                 target, Addiction.LOW_INCREASE, c);
                 c.write(getSelf(), "Acting submissively voluntarily reduces Mara's control over you.");
             }
         } else {
-            c.write(receive(c, 0, Result.normal, target));
+            c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
         return true;
     }
@@ -59,7 +60,7 @@ public class Stumble extends Skill {
 
     @Override
     public Tactics type(Combat c) {
-        return Tactics.negative;
+        return Tactics.misc;
     }
 
     @Override
@@ -70,9 +71,11 @@ public class Stumble extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format(
-                        "%s stumbles and falls, grabbing you to catch %sself. Unfortunately, "
-                                        + "you can't keep your balance and you fall on top of %s. Maybe that's not so unfortunate.",
-                        getSelf().name(), getSelf().directObject(), getSelf().directObject());
+                        "%s stumbles and falls, grabbing %s to catch %s. Unfortunately, "
+                                        + "%s can't keep %s balance and %s %s on top of %s. Maybe that's not so unfortunate.",
+                        getSelf().name(), target.nameDirectObject(), getSelf().reflectivePronoun(), 
+                        target.subject(), target.possessiveAdjective(), target.pronoun(),
+                        target.action("fall"), getSelf().directObject());
     }
 
 }

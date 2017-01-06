@@ -34,13 +34,9 @@ public class Haste extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        getSelf().add(new Primed(getSelf(), -1));
-        getSelf().add(new Abuff(getSelf(), Attribute.Speed, 10, 6));
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        getSelf().add(c, new Primed(getSelf(), -1));
+        getSelf().add(c, new Abuff(getSelf(), Attribute.Speed, 10, 6));
+        writeOutput(c, Result.normal, target);
         return true;
     }
 
@@ -64,7 +60,7 @@ public class Haste extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format(
                         "%s hits a button on %s wristwatch and suddenly speeds up. %s is moving so fast that %s seems to blur.",
-                        getSelf().name(), getSelf().possessivePronoun(), getSelf().pronoun(), getSelf().pronoun());
+                        getSelf().name(), getSelf().possessiveAdjective(), getSelf().pronoun(), getSelf().pronoun());
     }
 
 }

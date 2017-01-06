@@ -3,6 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Stsflag;
@@ -30,30 +31,22 @@ public class Sensitize extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        return getSelf().has(Item.Aersolizer) ? 200 : 65;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().consume(Item.SPotion, 1);
         if (getSelf().has(Item.Aersolizer)) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.special, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.special, getSelf()));
-            }
-            target.add(c, new Hypersensitive(target));
-        } else if (target.roll(this, c, accuracy(c))) {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.normal, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.normal, getSelf()));
-            }
-            target.add(c, new Hypersensitive(target));
+            writeOutput(c, Result.special, target);
+        } else if (target.roll(getSelf(), c, accuracy(c, target))) {
+            writeOutput(c, Result.normal, target);
         } else {
-            if (getSelf().human()) {
-                c.write(getSelf(), deal(c, 0, Result.miss, target));
-            } else if (target.human()) {
-                c.write(getSelf(), receive(c, 0, Result.miss, target));
-            }
+            writeOutput(c, Result.miss, target);
             return false;
         }
+        target.add(c, new Hypersensitive(target));
         return true;
     }
 
@@ -85,14 +78,20 @@ public class Sensitize extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return getSelf().name()
-                            + " inserts a bottle into the attachment on her arm. You're suddenly surrounded by a cloud of minty gas. Your skin becomes hot, but goosebumps appear anyway. "
-                            + "Even the air touching your skin makes you shiver.";
+            return String.format("%s inserts a bottle into the attachment on %s arm. %s "
+                            + "suddenly surrounded by a cloud of minty gas. %s skin becomes"
+                            + " hot, but goosebumps appear anyway. "
+                            + "Even the air touching %s skin makes %s shiver.", getSelf().subject(),
+                            getSelf().possessiveAdjective(), 
+                            Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                            target.possessiveAdjective(), target.possessiveAdjective(),
+                            target.directObject());
         } else if (modifier == Result.miss) {
-            return getSelf().name() + " splashes a bottle of liquid in your direction, but none of it hits you.";
+            return String.format("%s splashes a bottle of liquid in %s direction, but none of it hits %s.",
+                            getSelf().subject(), target.nameDirectObject(), target.directObject());
         } else {
-            return getSelf().name()
-                            + " throws a bottle of strange liquid at you. The skin it touches grows hot and oversensitive.";
+            return String.format("%s throws a bottle of strange liquid at %s. The skin it touches grows hot"
+                            + " and oversensitive.", getSelf().subject(), target.nameDirectObject());
         }
     }
 

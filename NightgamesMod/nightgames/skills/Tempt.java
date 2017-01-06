@@ -8,6 +8,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
 import nightgames.status.Enthralled;
+import nightgames.status.Trance;
 
 public class Tempt extends Skill {
 
@@ -22,16 +23,14 @@ public class Tempt extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, 0, Result.normal, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, 0, Result.normal, target));
-        }
+        writeOutput(c, Result.normal, target);
         double m = 4 + Global.random(4);
+
         if (c.getStance().front(getSelf())) {
             // opponent can see self
-            m += 3 * getSelf().body.getCharismaBonus(target);
+            m += 2 * getSelf().body.getHotness(target);
         }
+
         if (target.has(Trait.imagination)) {
             m *= 1.5;
         }
@@ -45,9 +44,14 @@ public class Tempt extends Skill {
                             Global.format("{self:NAME-POSSESSIVE} words fall on fertile grounds. {other:NAME-POSSESSIVE} will to resist crumbles in light of {self:possessive} temptation.",
                                             getSelf(), target));
             target.add(c, new Enthralled(target, getSelf(), 3));
+        } else if (getSelf().has(Trait.commandingvoice) && Global.random(3) == 0) {
+            c.write(getSelf(), Global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
+                            + " authority that {self:subject-action:don't|doesn't} even consider not obeying."
+                            , getSelf(), target));
+            target.add(c, new Trance(target, 1, false));
         }
 
-        target.tempt(c, getSelf(), n);
+        target.temptNoSource(c, getSelf(), n, this);
         target.emote(Emotion.horny, 10);
         getSelf().emote(Emotion.confident, 10);
         return true;
@@ -75,12 +79,12 @@ public class Tempt extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().temptLiner(c);
+        return getSelf().temptLiner(c, target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().temptLiner(c);
+        return getSelf().temptLiner(c, target);
     }
 
     @Override

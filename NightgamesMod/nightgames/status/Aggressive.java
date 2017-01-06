@@ -38,14 +38,14 @@ public class Aggressive extends DurationStatus {
             return "Affected by " + cause + ", you are incapable of anything but an all-out assault.";
         }
         return String.format("%s has an aggressive look on %s face: eyes wide open, teeth bared.", affected.name(),
-                        affected.possessivePronoun());
+                        affected.possessiveAdjective());
     }
 
     @Override
     public Collection<Skill> allowedSkills(Combat c) {
         return CONTACT_SKILLS.stream()
-                        .filter(s -> s.requirements(c, affected, c.getOther(affected))
-                                        && Skill.skillIsUsable(c, s, c.getOther(affected)))
+                        .filter(s -> s.requirements(c, affected, c.getOpponent(affected))
+                                        && Skill.skillIsUsable(c, s))
                         .map(s -> s.copy(affected)).collect(Collectors.toSet());
     }
 

@@ -6,14 +6,18 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.FlowerSex;
 
 public class CounterFlower extends CounterBase {
     public CounterFlower(Character self) {
         super("Flower Counter", self, 5,
-                        Global.format("<b>The giant flower at the base of {self:name-possessive} legs are open, with the petals waving invitingly.",
+                        Global.format("<b>The giant flower at the base of {self:name-possessive} legs are open, with the petals waving invitingly.</b>",
                                         self, self),
                         2);
+        addTag(SkillTag.fucking);
+        addTag(SkillTag.positioning);
+        addTag(SkillTag.counter);
     }
 
     @Override
@@ -37,7 +41,7 @@ public class CounterFlower extends CounterBase {
     @Override
     public void resolveCounter(Combat c, Character target) {
         target.nudify();
-        if (target.hasDick() && getSelf().hasPussy()) {
+        if (target.hasDick() && getSelf().hasPussy() && !target.isPet()) {
             if (getSelf().human()) {
                 c.write(getSelf(), deal(c, 0, Result.normal, target));
             } else {
@@ -114,14 +118,16 @@ public class CounterFlower extends CounterBase {
         } else if (modifier == Result.miss) {
             return Global.format(
                             "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
-                                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
-                                            + "{other:PRONOUN} forces your hips forward before frowning when she discovers you don't have the right equipment.",
+                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
+                            + " {self:PRONOUN} forces {other:possessive} hips forward before frowning"
+                            + " when she discovers {other:pronoun-action:don't|doesn't} have the right equipment.",
                             getSelf(), target);
         } else {
             return Global.format(
                             "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
-                                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
-                                            + "{other:PRONOUN} coils her limbs around yours, forcing your face inside her fragrant cleavage and your cock inside her warm sticky flower cunt.",
+                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
+                            + "{self:PRONOUN} coils her limbs around {other:possessive}s, forcing {other:possessive}"
+                            + " face inside her fragrant cleavage and {other:possessive} cock inside her warm sticky flower cunt.",
                             getSelf(), target);
         }
     }

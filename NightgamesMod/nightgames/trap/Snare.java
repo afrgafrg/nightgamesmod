@@ -8,18 +8,28 @@ import nightgames.global.Global;
 import nightgames.items.Item;
 import nightgames.status.Bound;
 
-public class Snare implements Trap {
-    private Character owner;
+public class Snare extends Trap {
+    public Snare() {
+        this(null);
+    }
+
+    public Snare(Character owner) {
+        super("Snare", owner);
+    }
+
+    public void setStrength(Character user) {
+        setStrength(user.get(Attribute.Cunning) + user.getLevel() / 2);
+    }
 
     @Override
     public void trigger(Character target) {
-        if (target.check(Attribute.Perception, 20 - target.get(Attribute.Perception) + target.baseDisarm())) {
+        if (target.check(Attribute.Perception, 25 + getStrength() + target.baseDisarm())) {
             if (target.human()) {
                 Global.gui().message("You notice a snare on the floor in front of you and manage to disarm it safely");
             }
             target.location().remove(this);
         } else {
-            target.add(new Bound(target, 30, "rope"));
+            target.addNonCombat(new Bound(target, 30 + getStrength() / 2, "snare"));
             if (target.human()) {
                 Global.gui().message(
                                 "You hear a sudden snap and you're suddenly overwhelmed by a blur of ropes. The tangle of ropes trip you up and firmly bind your arms.");
@@ -29,11 +39,6 @@ public class Snare implements Trap {
             }
             target.location().opportunity(target, this);
         }
-    }
-
-    @Override
-    public boolean decoy() {
-        return false;
     }
 
     @Override
@@ -48,17 +53,7 @@ public class Snare implements Trap {
         owner.consume(Item.Rope, 1);
         return "You carefully rig up a complex and delicate system of ropes on a tripwire. In theory, it should be able to bind whoever triggers it.";
     }
-
-    @Override
-    public Character owner() {
-        return owner;
-    }
-
-    @Override
-    public String toString() {
-        return "Snare";
-    }
-
+    
     @Override
     public boolean requirements(Character owner) {
         return owner.get(Attribute.Cunning) >= 9;
@@ -68,12 +63,5 @@ public class Snare implements Trap {
     public void capitalize(Character attacker, Character victim, IEncounter enc) {
         enc.engage(new Combat(attacker, victim, attacker.location()));
         attacker.location().remove(this);
-    }
-
-    @Override
-    public void resolve(Character active) {
-        if (active != owner) {
-            trigger(active);
-        }
     }
 }

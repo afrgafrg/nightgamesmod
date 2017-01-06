@@ -36,9 +36,9 @@ public abstract class MaledomSexStance extends Position {
                 c.write("With your phallus gone, you groan in frustration and cease your merciless movements.");
             } else {
                 c.write(inserter.name() + " groans with frustration with the sudden disappearance of "
-                                + inserter.possessivePronoun() + " pole.");
+                                + inserter.possessiveAdjective() + " pole.");
             }
-            c.setStance(insertRandom());
+            c.setStance(insertRandom(c));
         }
         if (!inserted.hasPussy()) {
             if (inserted.human()) {
@@ -48,8 +48,13 @@ public abstract class MaledomSexStance extends Position {
                 c.write("You groan with frustration with the sudden disappearance of "
                                 + inserted.nameOrPossessivePronoun() + " pussy.");
             }
-            c.setStance(insertRandom());
+            c.setStance(insertRandom(c));
         }
+    }
+
+    @Override
+    public boolean oral(Character c, Character target) {
+        return false;
     }
 
     @Override
@@ -58,8 +63,13 @@ public abstract class MaledomSexStance extends Position {
     }
 
     @Override
-    public List<BodyPart> topParts() {
-        return Arrays.asList(top.body.getRandomInsertable()).stream().filter(part -> part != null && part.present())
+    public boolean feet(Character c, Character target) {
+        return false;
+    }
+
+    @Override
+    public List<BodyPart> topParts(Combat c) {
+        return Arrays.asList(domSexCharacter(c).body.getRandomInsertable()).stream().filter(part -> part != null && part.present())
                         .collect(Collectors.toList());
     }
 
@@ -72,5 +82,10 @@ public abstract class MaledomSexStance extends Position {
     @Override
     public double pheromoneMod(Character self) {
         return 2;
+    }
+    
+    @Override
+    public int distance() {
+        return 1;
     }
 }

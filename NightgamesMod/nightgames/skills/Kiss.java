@@ -7,6 +7,10 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.nskills.tags.SkillTag;
+import nightgames.skills.damage.DamageType;
+import nightgames.skills.damage.Staleness;
+import nightgames.stance.Stance;
 import nightgames.status.Lovestruck;
 
 public class Kiss extends Skill {
@@ -14,12 +18,15 @@ public class Kiss extends Skill {
     private static final int divineCost = 30;
 
     public Kiss(Character self) {
-        super("Kiss", self);
+        // kiss starts off strong, but becomes stale fast. It recovers pretty quickly too, but makes spamming it less effective
+        super("Kiss", self, 0, Staleness.build().withDefault(1.0).withFloor(.20).withDecay(.50).withRecovery(.10));
+        addTag(SkillTag.usesMouth);
+        addTag(SkillTag.pleasure);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().kiss(getSelf()) && getSelf().canAct();
+        return c.getStance().kiss(getSelf(), target) && getSelf().canAct();
     }
 
     @Override
@@ -39,28 +46,42 @@ public class Kiss extends Skill {
     }
 
     @Override
+    public int accuracy(Combat c, Character target) {
+        int accuracy = c.getStance().en == Stance.neutral ? 70 : 100;
+        if (getSelf().has(Trait.romantic)) {
+            accuracy += 20;
+        }
+        return accuracy;
+    }
+
+    @Override
     public boolean resolve(Combat c, Character target) {
-        int m = 2 + Global.random(2);
+        int m = Global.random(6, 10);
+        if (!target.roll(getSelf(), c, accuracy(c, target))) {
+            writeOutput(c, Result.miss, target);
+            return false;
+        }
         boolean deep = getLabel(c).equals("Deep Kiss");
         if (getSelf().has(Trait.romantic)) {
-            m += 3;
-            if (deep) {
-                m += 7;
+            m += 2;
+            // if it's an advanced kiss.
+            if (!getLabel(c).equals("Kiss")) {
+                m += 2;
             }
         }
         Result res = Result.normal;
         if (getSelf().get(Attribute.Seduction) >= 9) {
-            m += 2 + Global.random(2);
+            m += Global.random(4, 6);
             res = Result.normal;
         } else {
             res = Result.weak;
         }
         if (deep) {
-            m += 5;
+            m += 2;
             res = Result.special;
         }
         if (getSelf().has(Trait.experttongue)) {
-            m += 5;
+            m += 2;
             res = Result.special;
         }
         if (getSelf().has(Trait.soulsucker)) {
@@ -68,16 +89,12 @@ public class Kiss extends Skill {
         }
         if (getLabel(c).equals(divineString)) {
             res = Result.divine;
-            m += 20;
+            m += 12;
         }
-        if (getSelf().human()) {
-            c.write(getSelf(), deal(c, m, res, target));
-        } else if (target.human()) {
-            c.write(getSelf(), receive(c, m, res, target));
-        }
+        writeOutput(c, res, target);
         if (res == Result.upgrade) {
-            target.drain(c, getSelf(), 10);
-            target.loseWillpower(c, Global.random(3) + 2);
+            target.drain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.drain, target, target.getStamina().max() / 8));
+            target.drainWillpowerAsMojo(c, getSelf(), (int) getSelf().modifyDamage(DamageType.drain, target, 2), 2);
         }
         if (res == Result.divine) {
             target.buildMojo(c, 50);
@@ -118,6 +135,10 @@ public class Kiss extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        if (modifier == Result.miss) {
+            return "You pull " + target.name()
+                            + " in for a kiss, but " + target.pronoun() + " pushes your face away. Rude. (Maybe you should try pinning her down?)";
+        }
         if (modifier == Result.divine) {
             return "You pull " + target.name()
                             + " to you and kiss her passionately, sending your divine aura into her body though her mouth. "
@@ -159,36 +180,71 @@ public class Kiss extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
+        if (modifier == Result.miss) {
+            return getSelf().subject()
+                            + " pulls you in for a kiss, but you manage to push her face away.";
+        }
         if (modifier == Result.divine) {
-            return getSelf().name()
-                            + " seductively pulls you into a deep kiss. As first you try to match her enthusiastic tongue with your own, but she starts using her divine energy to directly attack your soul. "
-                            + "Golden waves of ecstacy flow through your body, completely shattering every single thought you hold and replacing them with "
-                            + getSelf().getName() + ".";
+            return String.format("%s seductively pulls %s into a deep kiss. As first %s %s to match %s enthusiastic"
+                            + " tongue with %s own, but %s starts using %s divine energy to directly attack %s soul. "
+                            + "Golden waves of ecstacy flow through %s body, completely shattering every single thought %s and replacing them with %s.",
+                            getSelf().subject(), target.nameDirectObject(), target.pronoun(),
+                            target.action("try", "tries"), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(), getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.nameOrPossessivePronoun(), target.possessiveAdjective(), 
+                            target.subjectAction("hold"), getSelf().reflectivePronoun());
         }
         if (modifier == Result.upgrade) {
-            return getSelf().name()
-                            + " seductively pulls you into a deep kiss. As first you try to match her enthusiastic tongue with your own, but you're quickly overwhelmed. "
-                            + "You start to feel weak as the kiss continues, and you realize she's draining you; her kiss is sapping your will to fight through your connection! "
-                            + "You try to resist, but her splendid tonguework prevents you from mounting much of a defense.";
+            return String.format("%s seductively pulls %s into a deep kiss. As first %s %s to match %s "
+                            + "enthusiastic tongue with %s own, but %s %s quickly overwhelmed. "
+                            + "%s to feel weak as the kiss continues, and %s %s %s is "
+                            + "draining %s; %s kiss is sapping %s will to fight through %s connection! "
+                            + "%s to resist, but %s splendid tonguework prevents "
+                            + "%s from mounting much of a defense.",
+                            getSelf().subject(), target.nameDirectObject(), target.subject(),
+                            target.action("try", "tries"), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(), target.pronoun(), target.action("are", "is"),
+                            Global.capitalizeFirstLetter(target.subjectAction("start")),
+                            target.pronoun(), target.action("realize"), getSelf().subject(),
+                            target.directObject(), getSelf().possessiveAdjective(), 
+                            target.nameOrPossessivePronoun(), c.bothPossessive(target), 
+                            Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
+                            getSelf().nameOrPossessivePronoun(), target.directObject());
         }
         if (modifier == Result.special) {
-            return getSelf().name()
-                            + " seductively pulls you into a deep kiss. As first you try to match her enthusiastic tongue with your own, but you're quickly overwhelmed. She draws "
-                            + "your tongue into her mouth and sucks on it in a way that seems to fill your mind with a pleasant, but intoxicating fog.";
+            return String.format("%s seductively pulls %s into a deep kiss. As first %s %s to match %s "
+                            + "enthusiastic tongue with %s own, but %s %s quickly overwhelmed. %s draws "
+                            + "%s tongue into %s mouth and sucks on it in a way that seems to fill %s "
+                            + "mind with a pleasant, but intoxicating fog.",
+                            getSelf().subject(), target.nameDirectObject(), target.pronoun(),
+                            target.action("try", "tries"), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(), target.pronoun(), target.action("are", "is"),
+                            getSelf().subject(), target.nameOrPossessivePronoun(),
+                            getSelf().possessiveAdjective(), target.possessiveAdjective());
         } else if (modifier == Result.weak) {
-            return getSelf().name()
-                            + " presses her lips against yours in a passionate, if not particularly skillful, kiss.";
+            return String.format("%s presses %s lips against %s in a passionate, if not particularly skillful, kiss.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.human() ? "yours" : target.nameOrPossessivePronoun());
         } else {
             switch (Global.random(3)) {
                 case 0:
-                    return getSelf().name()
-                                    + " grabs you and kisses you passionately on the mouth. As you break for air, she gently nibbles on your bottom lip.";
+                    return String.format("%s grabs %s and kisses %s passionately on the mouth. "
+                                    + "As %s for air, %s gently nibbles on %s bottom lip.",
+                                    getSelf().subject(), target.nameDirectObject(), target.directObject(),
+                                    target.subjectAction("break"), getSelf().subject(), target.possessiveAdjective());
                 case 1:
-                    return getSelf().name()
-                                    + " peppers quick little kisses around your mouth before suddenly taking your lips forcefully and invading your mouth with her tongue.";
+                    return String.format("%s peppers quick little kisses around %s mouth before suddenly"
+                                    + " taking %s lips forcefully and invading %s mouth with %s tongue.",
+                                    getSelf().subject(), target.nameOrPossessivePronoun(),
+                                    target.possessiveAdjective(), target.possessiveAdjective(),
+                                    getSelf().possessiveAdjective());
                 default:
-                    return getSelf().name()
-                                    + " kisses you softly and romantically, slowly drawing you into her embrace. As you part, she teasingly brushes her lips against yours.";
+                    return String.format("%s kisses %s softly and romantically, slowly drawing %s into %s "
+                                    + "embrace. As %s part, %s teasingly brushes %s lips against %s.",
+                                    getSelf().subject(), target.nameDirectObject(), target.directObject(),
+                                    getSelf().possessiveAdjective(), c.bothSubject(target),
+                                    getSelf().subject(), target.possessiveAdjective(),
+                                    target.human() ? "yours" : target.possessiveAdjective());
             }
         }
     }

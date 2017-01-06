@@ -31,6 +31,7 @@ public class TestGUI extends GUI {
     public Combat beginCombat(Character p1, Character p2) {
         combat = new Combat(p1, p2, p1.location());
         combat.addObserver(this);
+        combat.setBeingObserved(true);
         return combat;
     }
 
@@ -44,7 +45,7 @@ public class TestGUI extends GUI {
     public void clearCommand() {}
 
     @Override
-    public void addSkill(Skill action, Combat com) {}
+    public void addSkill(Combat com, Skill action, Character target) {}
 
     @Override
     public void next(Combat combat) {}
@@ -53,13 +54,7 @@ public class TestGUI extends GUI {
     public void promptAmbush(IEncounter enc, Character target) {}
 
     @Override
-    public void update(Observable arg0, Object arg1) {
-        if (combat != null) {
-            if (combat.phase == 0 || combat.phase == 2) {
-                combat.next();
-            }
-        }
-    }
+    public void update(Observable arg0, Object arg1) {}
 
     @Override
     public void endCombat() {

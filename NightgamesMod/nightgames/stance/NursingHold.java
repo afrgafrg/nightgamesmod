@@ -14,6 +14,7 @@ import nightgames.skills.Skill;
 import nightgames.skills.Struggle;
 import nightgames.skills.Suckle;
 import nightgames.skills.Wait;
+import nightgames.skills.damage.DamageType;
 
 public class NursingHold extends AbstractFacingStance {
     public NursingHold(Character top, Character bottom) {
@@ -21,19 +22,21 @@ public class NursingHold extends AbstractFacingStance {
     }
 
     @Override
-    public String describe() {
+    public String describe(Combat c) {
         if (top.human()) {
             return "You are cradling " + bottom.nameOrPossessivePronoun()
                             + " head in your lap with your breasts dangling in front of " + bottom.directObject();
         } else {
-            return top.name()
-                            + " is holding your head in her lap, with her enticing breasts right in front of your mouth.";
+            return String.format("%s is holding %s head in %s lap, with %s enticing "
+                            + "breasts right in front of %s mouth.", top.subject(),
+                            bottom.nameOrPossessivePronoun(), top.possessiveAdjective(),
+                            top.possessiveAdjective(), bottom.possessiveAdjective());
         }
     }
 
     @Override
     public boolean mobile(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
@@ -42,8 +45,8 @@ public class NursingHold extends AbstractFacingStance {
     }
 
     @Override
-    public boolean kiss(Character c) {
-        return false;
+    public boolean kiss(Character c, Character target) {
+        return target == top && c != bottom;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class NursingHold extends AbstractFacingStance {
 
     @Override
     public boolean reachBottom(Character c) {
-        return c == top;
+        return c != bottom;
     }
 
     @Override
@@ -72,13 +75,13 @@ public class NursingHold extends AbstractFacingStance {
     }
 
     @Override
-    public boolean feet(Character c) {
-        return false;
+    public boolean feet(Character c, Character target) {
+        return target == bottom && c != top && c != bottom;
     }
 
     @Override
-    public boolean oral(Character c) {
-        return false;
+    public boolean oral(Character c, Character target) {
+        return target == bottom && c != top && c != bottom;
     }
 
     @Override
@@ -94,7 +97,7 @@ public class NursingHold extends AbstractFacingStance {
     @Override
     public void decay(Combat c) {
         time++;
-        bottom.weaken(null, 5);
+        bottom.weaken(c, (int) top.modifyDamage(DamageType.temptation, bottom, 3));
         top.emote(Emotion.dominant, 10);
     }
 
@@ -104,8 +107,8 @@ public class NursingHold extends AbstractFacingStance {
     }
 
     @Override
-    public Collection<Skill> availSkills(Character c) {
-        if (c == top) {
+    public Collection<Skill> availSkills(Combat c, Character self) {
+        if (self != bottom) {
             return Collections.emptySet();
         } else {
             Collection<Skill> avail = new HashSet<Skill>();
@@ -131,5 +134,9 @@ public class NursingHold extends AbstractFacingStance {
     @Override
     public int dominance() {
         return 3;
+    }
+    @Override
+    public int distance() {
+        return 1;
     }
 }

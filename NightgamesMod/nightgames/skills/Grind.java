@@ -22,8 +22,8 @@ public class Grind extends Thrust {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canAct() && c.getStance().canthrust(getSelf())
-                        && c.getStance().havingSexOtherNoStrapped(getSelf()) && c.getStance().en != Stance.anal;
+        return getSelf().canAct() && c.getStance().canthrust(c, getSelf())
+                        && c.getStance().havingSexOtherNoStrapped(c, getSelf()) && c.getStance().en != Stance.anal;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class Grind extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int results[] = new int[2];
 
-        int ms = 8;
-        int mt = 5;
+        int ms = 12;
+        int mt = 6;
         if (getLabel(c).equals(divineName)) {
             ms = 16;
             mt = 10;
@@ -80,13 +80,13 @@ public class Grind extends Thrust {
             if (getLabel(c).equals(divineName)) {
                 return Global.format(
                                 "{self:SUBJECT-ACTION:fill|fills} {self:possessive} pussy with divine power until it's positively dripping with glowing golden mists. {self:PRONOUN} {self:action:then grind|grinds} against {other:direct-object} with {self:possessive} "
-                                                + getSelfOrgan(c).fullDescribe(getSelf())
+                                                + getSelfOrgan(c, target).fullDescribe(getSelf())
                                                 + ", stimulating {other:possessive} entire manhood, completely obliterating any resistance from {other:possessive} mind.",
                                 getSelf(), target);
             }
             return Global.format(
                             "{self:SUBJECT-ACTION:grind|grinds} against {other:direct-object} with {self:possessive} "
-                                            + getSelfOrgan(c).fullDescribe(getSelf())
+                                            + getSelfOrgan(c, target).fullDescribe(getSelf())
                                             + ", stimulating {other:possessive} entire manhood and bringing {other:direct-object} closer to climax.",
                             getSelf(), target);
         } else {

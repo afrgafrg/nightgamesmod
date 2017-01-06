@@ -46,7 +46,7 @@ public class ImbueFetish extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         chosenFetish = Global.pickRandom(
-                        POSSIBLE_FETISHES.stream().filter(part -> getSelf().body.has(part)).toArray(String[]::new));
+                        POSSIBLE_FETISHES.stream().filter(part -> getSelf().body.has(part)).toArray(String[]::new)).get();
         if (getSelf().human()) {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
         } else {
@@ -78,11 +78,16 @@ public class ImbueFetish extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return "You feel a tiny prick in your arm, and when you look you see a small"
-                        + " needle sticking out. You remove the needle, but when you look back at " + getSelf().name()
-                        + " - who has a maniacal look on " + getSelf().possessivePronoun()
-                        + " face - you feel an unnaturally strong attraction towards " + getSelf().possessivePronoun()
-                        + " " + chosenFetish + ".";
+        return String.format("%s a tiny prick in %s arm, and when %s %s %s %s a small"
+                        + " needle sticking out. %s the needle, but when %s %s back at %s"
+                        + " - who has a maniacal look on %s face - %s %s an unnaturally "
+                        + "strong attraction towards %s.",
+                        target.subjectAction("feel"), target.possessiveAdjective(), target.pronoun(),
+                        target.action("look"), target.pronoun(), target.action("see"),
+                        Global.capitalizeFirstLetter(target.subjectAction("remove")),
+                        target.pronoun(), target.action("look"), getSelf().nameDirectObject(),
+                        getSelf().possessiveAdjective(), target.pronoun(), target.action("feel"),
+                        chosenFetish);
     }
 
 }

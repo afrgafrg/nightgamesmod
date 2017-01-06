@@ -39,6 +39,10 @@ public class RequirementShortcuts {
         return new BodyPartRequirement(type);
     }
 
+    public static CashRequirement cash(int cost) {
+        return new CashRequirement(cost);
+    }
+
     public static DomRequirement dom() {
         return new DomRequirement();
     }

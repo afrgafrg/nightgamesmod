@@ -18,6 +18,8 @@ public interface RequirementLoader<T> {
 
     BodyPartRequirement loadBodyPart(T reqData);
 
+    CashRequirement loadCash(T reqData);
+
     DomRequirement loadDom(T reqData);
 
     DurationRequirement loadDuration(T reqData);

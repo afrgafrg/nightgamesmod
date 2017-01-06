@@ -109,6 +109,10 @@ public class JsonRequirementLoader implements RequirementLoader<JsonElement> {
         return new BodyPartRequirement(reqData.getAsString());
     }
 
+    @Override public CashRequirement loadCash(JsonElement reqData) {
+        return new CashRequirement(reqData.getAsInt());
+    }
+
     @Override public DomRequirement loadDom(JsonElement reqData) {
         return new DomRequirement();
     }

@@ -133,9 +133,9 @@ public class Reyka extends BasePersonality {
         for (int i = 0; i < time; i++) {
             r = Rng.rng.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
         character.gain(Item.semen, Rng.rng.random(3) + 1);
@@ -214,7 +214,7 @@ public class Reyka extends BasePersonality {
                             + "inflicting on you stops you from mustering the resolve to fight back. <i>\"I do love a good bit of pegging.\"</i> Reyka comments as she begins "
                             + "to gently rock the head of the strapon over your prostate, leaving you breathing hard as your mouth hangs open. <i>\"There's a special "
                             + "pleasure in making a " + Global.global.getPlayer().boyOrGirl() + " a little butt slave.\"</i> Her words shock you and cause your resistance to slip a little. <i>\"Hmmm?\"</i> She purrs <i>\"Would "
-                            + "you like that?\"</i> she asks, picking up the pace of her thrusting. <i>\"To be my little pet " + Global.getPlayer().boyOrGirl() + " slut?\"</i> Your only response is to cum. Hard. Ropes "
+                            + "you like that?\"</i> she asks, picking up the pace of her thrusting. <i>\"To be my little pet " + Global.global.getPlayer().boyOrGirl() + " slut?\"</i> Your only response is to cum. Hard. Ropes "
                             + "of cum fall to the ground below you.<br/><br/>Reyka pouts as she pulls out <i>\"Such a good waste of semen though.\"</i> she tuts. <i>\"Looks like you "
                             + "still owe me a meal.\"</i> She smirks in a way that makes your eyes flash quickly left to right, looking for an escape route. Reyka is too quick "
                             + "however and soon you find yourself pinned with your still hard cock buried deep in her pussy.<br/><br/>She rides you until you cum again and she "
@@ -255,7 +255,7 @@ public class Reyka extends BasePersonality {
     @Override
     public String defeat(Combat paramCombat, Result flag) {
         character.arousal.empty();
-        if (character.hasTrait(Trait.lacedjuices) && Global.global.random(3) == 0 ) {
+        if (character.hasTrait(Trait.lacedjuices) && Rng.rng.random(3) == 0 ) {
             return "Reyka shivers as she approaches her climax and her legs fall open defenselessly. You can't resist taking advantage of this opening to deliver the "
                             + "coup de grace. You grab hold of her thighs and run your tongue across her wet pussy. Her love juice is surprisingly sweet and almost intoxicating, "
                             + "but you stay focused on your goal. You ravage her vulnerable love button with your tongue and a flood of tasty wetness hits you as she cums. You "

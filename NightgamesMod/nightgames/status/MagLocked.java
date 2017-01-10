@@ -46,18 +46,18 @@ public class MagLocked extends Status {
     @Override
     public String describe(Combat c) {
         if (count == 1) {
-            return Global.format(
+            return Global.global.format(
                             "A single inactive MagLock hangs around one of {self:name-possessive}"
                                             + " wrists. It's harmless for now, but any more would be dangerous.",
                             affected, c.getOpponent(affected));
         } else if (count == 2) {
-            return Global.format(
+            return Global.global.format(
                             "{other:NAME-POSSESSIVE} two MagLocks, placed around {self:name-possessive}"
                                             + " wrists, have locked together behind {self:possessive} back and"
                                             + " are restraining {self:possessive} movement.",
                             affected, c.getOpponent(affected));
         } else {
-            return Global.format(
+            return Global.global.format(
                             "Hogtied by {other:name-possessive} MagLocks,"
                                             + "{self:subject-action:are|is} completely immobilized.",
                             affected, c.getOpponent(affected));
@@ -79,8 +79,8 @@ public class MagLocked extends Status {
             c.getOpponent(affected).consume(Item.Battery, count - 1);
             if (count == 3) flag(Stsflag.hogtied);
         }
-        if (!c.getOpponent(affected).has(Item.Battery)) {
-            c.write(Global.format(
+        if (!c.getOpponent(affected).hasTrait(Item.Battery)) {
+            c.write(Global.global.format(
                             "<b>{other:NAME-POSSESSIVE} MagLocks have run out of power and "
                                             + "fall harmlessly off of {self:subject} and onto the ground.",
                             affected, c.getOpponent(affected)));

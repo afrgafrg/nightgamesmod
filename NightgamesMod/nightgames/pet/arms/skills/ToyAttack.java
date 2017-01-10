@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.ToysPart;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.RoboArm;
@@ -25,12 +26,12 @@ public class ToyAttack extends ArmSkill {
     @Override
     public boolean resolve(Combat c, RoboArm arm, Character owner, Character target) {
 
-        int m = 5 + Global.random(15);
+        int m = 5 + Rng.rng.random(15);
         m = (int) owner.modifyDamage(DamageType.gadgets, target, m);
         if (c.getStance()
              .penetrated(c, target) && target.hasDick()) {
             c.write(PetCharacter.DUMMY,
-                            Global.format("It would seem {self:name-possessive} %s"
+                            Global.global.format("It would seem {self:name-possessive} %s"
                                             + " is taking pity on {other:name-possessive} {other:body-part:cock},"
                                             + " neglected as it currently is. The malleable material at its tip forms"
                                             + " a tight, elastic hole, which gobbles up the sensitive rod. It gives some"
@@ -41,10 +42,10 @@ public class ToyAttack extends ArmSkill {
         } else if (c.getStance()
                     .penetrated(c, owner)) {
             boolean anal = !target.body.has("pussy");
-            String cock = target.has(Trait.strapped) ? "strapon" : "{other:body-part:cock}";
+            String cock = target.hasTrait(Trait.strapped) ? "strapon" : "{other:body-part:cock}";
             String hole = anal ? "{other:body-part:ass}" : "{other:body-part:pussy}";
             c.write(PetCharacter.DUMMY,
-                            Global.format("{other:NAME-POSSESSIVE} %s may be occupied right now,"
+                            Global.global.format("{other:NAME-POSSESSIVE} %s may be occupied right now,"
                                             + " but that won't stop {self:name-possessive} %s from going after {other:possessive}"
                                             + " %s! The soft material at its tip solidifies into a hard, intimidatingly long"
                                             + " dildo, and it wastes little time in going after the poor hole. The pain only lasts"
@@ -57,18 +58,18 @@ public class ToyAttack extends ArmSkill {
             boolean cockAvaiable = target.body.has("cock") && !c.getStance().penetratedBy(c, owner, target);
             
             if (pussyAvaiable && cockAvaiable) {
-                part = Global.random(3) == 0 ? "pussy" : Global.random(2) == 0 ? "cock" : "ass";
+                part = Rng.rng.random(3) == 0 ? "pussy" : Rng.rng.random(2) == 0 ? "cock" : "ass";
             } else if (cockAvaiable) {
-                part = Global.random(2) == 0 ? "cock" : "ass";
+                part = Rng.rng.random(2) == 0 ? "cock" : "ass";
             } else if (pussyAvaiable) {
-                part = Global.random(2) == 0 ? "pussy" : "ass";
+                part = Rng.rng.random(2) == 0 ? "pussy" : "ass";
             } else {
                 part = "ass";
             }
             if (c.getStance()
-                 .dom(owner) || Global.random(100) < owner.get(Attribute.Science) + owner.get(Attribute.Cunning)) {
+                 .dom(owner) || Rng.rng.random(100) < owner.get(Attribute.Science) + owner.get(Attribute.Cunning)) {
                 if (part.equals("pussy")) {
-                    c.write(PetCharacter.DUMMY, Global.format("{self:NAME-POSSESSIVE} %s shapes itself"
+                    c.write(PetCharacter.DUMMY, Global.global.format("{self:NAME-POSSESSIVE} %s shapes itself"
                                     + " into a cock-like column of material and shoots straight at"
                                     + " {other:name-possessive} unprotected {other:body-part:pussy}."
                                     + " The slippery dildo has no trouble pushing past {other:possessive}"
@@ -76,13 +77,13 @@ public class ToyAttack extends ArmSkill {
                                     , owner, target, arm.getName()));
                     target.body.pleasure(owner, ToysPart.dildo, target.body.getRandomPussy(), m, c);
                 } else if (part.equals("cock")) {
-                    c.write(PetCharacter.DUMMY, Global.format("The particles at the tip of {self:NAME-POSSESSIVE}"
+                    c.write(PetCharacter.DUMMY, Global.global.format("The particles at the tip of {self:NAME-POSSESSIVE}"
                                     + " %s arrange themselves into a cup-like shape. That cup soon settles"
                                     + " around {other:name-possessive} {other:body-part:cock}, and it"
                                     + " massages it with vigor.", owner, target, arm.getName()));
                     target.body.pleasure(owner, ToysPart.onahole, target.body.getRandomCock(), m, c);
                 } else {
-                    c.write(PetCharacter.DUMMY, Global.format("{self:NAME-POSSESSIVE} %s forms a dildo at its"
+                    c.write(PetCharacter.DUMMY, Global.global.format("{self:NAME-POSSESSIVE} %s forms a dildo at its"
                                     + " end and sneaks up behind {other:name-do}. Before "
                                     + "{other:pronoun-action:have|has} a chance to react, the toy worms its"
                                     + " way past {other:possessive} asscheeks and plunges into {other:possessive}"
@@ -91,7 +92,7 @@ public class ToyAttack extends ArmSkill {
                     target.body.pleasure(owner, ToysPart.dildo, target.body.getRandomAss(), m, c);
                 }
             } else {
-                c.write(PetCharacter.DUMMY, Global.format("The amorphous head of {self:name-possessive}"
+                c.write(PetCharacter.DUMMY, Global.global.format("The amorphous head of {self:name-possessive}"
                                 + " %s wiggles and churns, but fails to take on any recognizable shape."
                                 , owner, target, arm.getName()));
             }

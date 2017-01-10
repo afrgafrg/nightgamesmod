@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 
 public class Edge extends Skill {
@@ -18,7 +19,7 @@ public class Edge extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.edger);
+        return user.hasTrait(Trait.edger);
     }
 
     @Override
@@ -32,8 +33,8 @@ public class Edge extends Skill {
     @Override
     public float priorityMod(Combat c) {
         float mod = 0.f;
-        if (getSelf().has(Trait.dexterous) || getSelf().has(Trait.defthands) ||
-                        getSelf().has(Trait.limbTraining1)) {
+        if (getSelf().hasTrait(Trait.dexterous) || getSelf().hasTrait(Trait.defthands) ||
+                        getSelf().hasTrait(Trait.limbTraining1)) {
             mod += .5f;
         }
         if (c.getOpponent(getSelf()).getArousal().percent() >= 100 
@@ -61,24 +62,24 @@ public class Edge extends Skill {
         boolean hit = !target.canAct() || c.getStance().dom(getSelf())
                         || target.roll(getSelf(), c, accuracy(c, target));
         if (!hit) {
-            c.write(getSelf(), Global.format("{self:NAME-POSSESSIVE} hands descend towards"
+            c.write(getSelf(), Global.global.format("{self:NAME-POSSESSIVE} hands descend towards"
                             + "{other:name-possessive} {other:body-part:cock}, but "
                             + "{other:pronoun} succeeds in keeping them well away.", getSelf(), target));
             return false;
         } else if (target.getArousal().percent() < 100) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:jerk|jerks} {other:name-possessive}"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:jerk|jerks} {other:name-possessive}"
                             + " {other:body-part:cock} slowly yet deliberately with both hands.", getSelf(), target));
         } else {
-            c.write(getSelf(), Global.format("{other:SUBJECT-ACTION:are|is} already so close to cumming, but"
+            c.write(getSelf(), Global.global.format("{other:SUBJECT-ACTION:are|is} already so close to cumming, but"
                             + " {self:name-possessive} hands make such careful, calculated movements all over"
                             + " {other:possessive} {other:body-part:cock} that {other:pronoun-action:stay|stays}"
                             + " <i>just</i> away from that impending peak. "
                             + "{other:PRONOUN-ACTION:<i>do</i>|<i>does</i>} thrash around a lot, trying desperately"
                             + " to get that little bit of extra stimulation, and it's draining"
                             + " {other:possessive} energy quite rapidly.", getSelf(), target));
-            target.weaken(c, Math.min(30, Global.random((target.getArousal().percent() - 100) / 10)));
+            target.weaken(c, Math.min(30, Rng.rng.random((target.getArousal().percent() - 100) / 10)));
         }
-        target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("hands"), 20 + Global.random(8), this);
+        target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("hands"), 20 + Rng.rng.random(8), this);
         target.emote(Emotion.horny, 30);
         getSelf().emote(Emotion.confident, 15);
         getSelf().emote(Emotion.dominant, 15);

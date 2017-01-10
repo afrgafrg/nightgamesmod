@@ -26,7 +26,7 @@ public class Sedate extends Skill {
 
     @Override
     public int accuracy(Combat c, Character target) {
-        return getSelf().has(Item.Aersolizer) ? 200 : 65;
+        return getSelf().hasTrait(Item.Aersolizer) ? 200 : 65;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class Sedate extends Skill {
                             + "%s suddenly surrounded by a cloud of dense fog. The "
                             + "fog seems to fill %s head and %s body feels heavy.",
                             getSelf().subject(), getSelf().possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.action("are", "is")),
+                            Grammar.capitalizeFirstLetter(target.action("are", "is")),
                             target.possessiveAdjective(), target.possessiveAdjective());
         } else if (modifier == Result.miss) {
             return String.format("%s splashes a bottle of liquid in %s direction, but none of it hits %s.",

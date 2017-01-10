@@ -17,13 +17,13 @@ public class Collar extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.trainingcollar);
+        return user.hasTrait(Trait.trainingcollar);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().reachTop(getSelf()) && !target.canRespond()
-                        && (!target.is(Stsflag.collared) || getSelf().has(Item.Battery, 5));
+                        && (!target.is(Stsflag.collared) || getSelf().hasTrait(Item.Battery, 5));
     }
 
     @Override
@@ -43,11 +43,11 @@ public class Collar extends Skill {
         if (target.is(Stsflag.collared)) {
             getSelf().consume(Item.Battery, 5);
             ((Collared) target.getStatus(Stsflag.collared)).recharge();
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:replace|replaces} the batteries"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:replace|replaces} the batteries"
                             + " of {other:name-possessive} collar, so it can keep going for longer.",
                             getSelf(), target));
         } else {
-            c.write(getSelf(), Global.format("Able to take {self:possessive} time - given"
+            c.write(getSelf(), Global.global.format("Able to take {self:possessive} time - given"
                             + " {other:name-possessive} current situation - {self:subject-action:pull|pulls}"
                             + " out a metal collar and {self:action:lock|locks} it in place around"
                             + " {other:name-possessive} neck. <i>\"Is that comfortable, {other:name}?\"</i>"

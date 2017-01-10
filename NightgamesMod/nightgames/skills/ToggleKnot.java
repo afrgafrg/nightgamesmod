@@ -49,7 +49,7 @@ public class ToggleKnot extends Skill {
                 c.write(getSelf(),
                                 "Deciding she's had enough for now, you let your cock return to its regular shape, once again permitting movement.");
             } else if (c.shouldPrintReceive(target, c)) {
-                String part = Global.pickRandom(c.getStance().partsFor(c, target)).orElse(Body.nonePart).describe(target);
+                String part = Rng.rng.pickRandom(c.getStance().partsFor(c, target)).orElse(Body.nonePart).describe(target);
                 c.write(getSelf(), String.format("%s the intense pressure in %s %s "
                                 + "recede as %s allows %s knot to deflate.", target.subjectAction("feel"),
                                 target.possessiveAdjective(), part, getSelf().subject(),
@@ -81,7 +81,7 @@ public class ToggleKnot extends Skill {
                                 + " growing to the size of a small apple. %s not"
                                                 + " getting <i>that</i> out of %s any time soon...",
                                                 firstPart, getSelf().nameOrPossessivePronoun(),
-                                                Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                                                Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")),
                                                 target.reflectivePronoun()));
             }
             target.add(c, new Knotted(target, getSelf(), c.getStance().anallyPenetrated(c, target)));

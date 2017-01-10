@@ -28,7 +28,7 @@ public class SixNine extends AbstractBehindStance {
         if (top.human()) {
             return String.format("You are on top of %s in the 69 position. %s %s is right in front of your face "
                             + "and you can feel %s breath on your %s.", bottom.nameDirectObject(),
-                            Global.capitalizeFirstLetter(bottom.possessiveAdjective()), bottomParts,
+                            Grammar.capitalizeFirstLetter(bottom.possessiveAdjective()), bottomParts,
                             bottom.possessiveAdjective(), topParts);
         } else {
             return String.format("%s and %s are on the floor in 69 position. "

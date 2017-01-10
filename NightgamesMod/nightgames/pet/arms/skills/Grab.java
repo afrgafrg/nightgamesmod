@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatantData;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.RoboArm;
 import nightgames.status.Bound;
@@ -26,19 +27,19 @@ public class Grab extends ArmSkill {
     @Override
     public boolean resolve(Combat c, RoboArm arm, Character owner, Character target) {
         boolean sub = c.getStance().dom(owner);
-        boolean success = sub || Global.random(100) < 10 + owner.get(Attribute.Science);
+        boolean success = sub || Rng.rng.random(100) < 10 + owner.get(Attribute.Science);
         CombatantData data = c.getCombatantData(target);
         
         if (success) {
             if (data.getIntegerFlag(FLAG) == 0) {
-                c.write(PetCharacter.DUMMY, Global.format("A %s, not content with hovering behind"
+                c.write(PetCharacter.DUMMY, Global.global.format("A %s, not content with hovering behind"
                                 + " {self:name-possessive} back, lunges forward and seizes"
                                 + " {other:subject} by a wrist. It doesn't impede {other:possessive}"
                                 + " movements very much, but if another arm were to join it, that"
                                 + " could be trouble.", owner, target, arm.getName()));
                 data.setIntegerFlag(FLAG, 1);
             } else {
-                c.write(PetCharacter.DUMMY, Global.format("Another %s shoots out from behind {self:subject}"
+                c.write(PetCharacter.DUMMY, Global.global.format("Another %s shoots out from behind {self:subject}"
                                 + " and catches {other:name-possessive} second wrist. The two"
                                 + " robotic arms lock together behind {other:possessive} back,"
                                 + " immobilizing {other:possessive} arms.", owner, target, arm.getName()));
@@ -47,7 +48,7 @@ public class Grab extends ArmSkill {
             }
             return true;
         } else {
-            c.write(PetCharacter.DUMMY, Global.format("A %s flies towards one of {other:name-possessive}"
+            c.write(PetCharacter.DUMMY, Global.global.format("A %s flies towards one of {other:name-possessive}"
                             + " wrists, but {other:pronoun-action:pull|pulls} {other:possessive}"
                             + " hand away just in time.", owner, target, arm.getName()));
         }

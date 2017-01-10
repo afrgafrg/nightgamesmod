@@ -21,7 +21,7 @@ public class RoboWebbed extends Bound {
 
     @Override
     public String describe(Combat c) {
-        return Global.format("{self:SUBJECT-ACTION:are|is} hopelessly tangled up in"
+        return Global.global.format("{self:SUBJECT-ACTION:are|is} hopelessly tangled up in"
                         + " synthetic webbing, which is sending pleasurable sensations"
                         + " through {self:possessive} entire body.", affected, Global.noneCharacter());
     }
@@ -32,7 +32,7 @@ public class RoboWebbed extends Bound {
         int dmg = (int) (affected.getArousal().max() * .25);
         // Message handled in describe
         if (c == null) {
-            Global.gui().message(Global.format("{self:SUBJECT-ACTION:are|is} hopelessly tangled up in"
+            Global.global.gui().message(Global.global.format("{self:SUBJECT-ACTION:are|is} hopelessly tangled up in"
                             + " synthetic webbing, which is sending pleasurable sensations"
                             + " through {self:possessive} entire body.", affected, Global.noneCharacter()));
             affected.tempt(dmg);

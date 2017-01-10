@@ -27,12 +27,13 @@ public class Rng {
         return random.nextInt(end - start) + start;
     }
 
-    public <T> T pickRandom(T[] arr) {
-        if (arr.length == 0) return null;
-        return arr[random(arr.length)];
+    @SafeVarargs
+    public final <T> Optional<T> pickRandom(T ... arr) {
+        if (arr.length == 0) return Optional.empty();
+        return Optional.of(arr[random(arr.length)]);
     }
 
-    public <T> Optional<T> pickRandom(List<T> list) {
+    public final <T> Optional<T> pickRandom(List<T> list) {
         if (list.size() == 0) {
             return Optional.empty();
         } else {
@@ -42,6 +43,10 @@ public class Rng {
 
     public double randomdouble() {
         return random.nextDouble();
+    }
+
+    public double randomdouble(double multiplier) {
+        return randomdouble() * multiplier;
     }
 
     // finds a centered random number from [0, d] (inclusive)

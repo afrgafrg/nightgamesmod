@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
 
@@ -18,7 +19,7 @@ public class TakeOffShoes extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return (user.get(Attribute.Cunning) >= 5 && !user.human()) || target.body.getFetish("feet").isPresent() && getSelf().has(Trait.direct);
+        return (user.get(Attribute.Cunning) >= 5 && !user.human()) || target.body.getFetish("feet").isPresent() && getSelf().hasTrait(Trait.direct);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class TakeOffShoes extends Skill {
         getSelf().strip(ClothingSlot.feet, c);
         if (target.body.getFetish("feet").isPresent() && target.body.getFetish("feet").get().magnitude > .25) {
             writeOutput(c, Result.special, target);
-            target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("feet"), Global.random(17, 26), this);
+            target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("feet"), Rng.rng.random(17, 26), this);
         } else {
             writeOutput(c, Result.normal, target);
         }
@@ -62,7 +63,7 @@ public class TakeOffShoes extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return Global.format("{self:SUBJECT} take a moment to slide off {self:possessive} footwear with slow exaggerated motions. {other:SUBJECT-ACTION:gulp|gulps}. "
+            return Global.global.format("{self:SUBJECT} take a moment to slide off {self:possessive} footwear with slow exaggerated motions. {other:SUBJECT-ACTION:gulp|gulps}. "
                             + "While {other:pronoun-action:know|knows} what {self:pronoun} are doing, it changes nothing as desire fills {other:possessive} eyes.", getSelf(), target);
         }
         return "You take a moment to kick off your footwear.";
@@ -71,7 +72,7 @@ public class TakeOffShoes extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return Global.format("{self:SUBJECT} takes a moment to slide off {self:possessive} footwear with slow exaggerated motions. {other:SUBJECT-ACTION:gulp|gulps}. "
+            return Global.global.format("{self:SUBJECT} takes a moment to slide off {self:possessive} footwear with slow exaggerated motions. {other:SUBJECT-ACTION:gulp|gulps}. "
                             + "While {other:pronoun-action:know|knows} what {self:pronoun} is doing, it changes nothing as desire fills {other:possessive} eyes.", getSelf(), target);
         }
         return getSelf().subject() + " takes a moment to kick off " + getSelf().possessiveAdjective() + " footwear.";

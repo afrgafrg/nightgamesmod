@@ -11,7 +11,9 @@ import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
 import nightgames.status.Stsflag;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class Anilingus extends Skill {
     private static final String worshipString = "Ass Worship";

@@ -48,7 +48,7 @@ public class HypnoVisor extends Status {
     public void tick(Combat c) {
         Player p = (Player) affected;
         p.addict(AddictionType.MIND_CONTROL, cause, Addiction.LOW_INCREASE / 2);
-        c.write(affected, Global.format("The Hypno Visor is corrupting your mind, rewiring it"
+        c.write(affected, Global.global.format("The Hypno Visor is corrupting your mind, rewiring it"
                         + " to follow {other:name-possessive} commands.", affected, cause));
     }
     

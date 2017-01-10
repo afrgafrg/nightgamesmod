@@ -74,7 +74,7 @@ public class Kat extends BasePersonality {
     private static final String KAT_PHEROMONE_FOCUS = "KatPheromoneFocus";
     private static final String KAT_FRENZY_FOCUS = "KatFrenzyFocus";
     private void useSpeed() {
-        Global.flag(KAT_SPEED_FOCUS);
+        Global.global.flag(KAT_SPEED_FOCUS);
         character.getGrowth().addTrait(13, Trait.FeralAgility);
         character.getGrowth().addTrait(19, Trait.NimbleRecovery);
         character.getGrowth().addTrait(34, Trait.CrossCounter);
@@ -83,7 +83,7 @@ public class Kat extends BasePersonality {
     }
 
     private void usePower() {
-        Global.flag(KAT_POWER_FOCUS);
+        Global.global.flag(KAT_POWER_FOCUS);
         character.getGrowth().addTrait(13, Trait.FeralStrength);
         character.getGrowth().addTrait(19, Trait.Unwavering);
         character.getGrowth().addTrait(34, Trait.Untamed);
@@ -91,13 +91,13 @@ public class Kat extends BasePersonality {
     }
 
     private void usePheromones() {
-        Global.flag(KAT_PHEROMONE_FOCUS);
+        Global.global.flag(KAT_PHEROMONE_FOCUS);
         character.getGrowth().addTrait(22, Trait.lacedjuices);
         character.getGrowth().addTrait(28, Trait.BefuddlingFragrance);
-        if (Global.checkFlag(KAT_SPEED_FOCUS)) {
+        if (Global.global.checkFlag(KAT_SPEED_FOCUS)) {
             character.getGrowth().addTrait(43, Trait.FastDiffusion);
         }
-        if (Global.checkFlag(KAT_POWER_FOCUS)){
+        if (Global.global.checkFlag(KAT_POWER_FOCUS)){
             character.getGrowth().addTrait(43, Trait.PiercingOdor);
         }
         character.getGrowth().addTrait(49, Trait.ComplexAroma);
@@ -105,13 +105,13 @@ public class Kat extends BasePersonality {
     }
 
     private void useFrenzy() {
-        Global.flag(KAT_FRENZY_FOCUS);
+        Global.global.flag(KAT_FRENZY_FOCUS);
         character.getGrowth().addTrait(22, Trait.Rut);
         character.getGrowth().addTrait(28, Trait.PrimalHeat);
-        if (Global.checkFlag(KAT_SPEED_FOCUS)) {
+        if (Global.global.checkFlag(KAT_SPEED_FOCUS)) {
             character.getGrowth().addTrait(43, Trait.Jackhammer);
         }
-        if (Global.checkFlag(KAT_POWER_FOCUS)){
+        if (Global.global.checkFlag(KAT_POWER_FOCUS)){
             character.getGrowth().addTrait(43, Trait.Piledriver);
         }
         character.getGrowth().addTrait(49, Trait.MindlessDesire);

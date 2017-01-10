@@ -150,7 +150,7 @@ public class ZealAddiction extends Addiction {
     @Override
     protected String describeCombatIncrease() {
         return "You feel an increasingly strong desire to do whatever " + cause.name()
-                        + " wants. " + Global.capitalizeFirstLetter(cause.pronoun()) + "'s a goddess, after all!";
+                        + " wants. " + Grammar.capitalizeFirstLetter(cause.pronoun()) + "'s a goddess, after all!";
     }
 
     @Override

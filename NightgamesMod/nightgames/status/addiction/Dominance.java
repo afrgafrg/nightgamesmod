@@ -31,9 +31,9 @@ public class Dominance extends Addiction {
     public static boolean mojoIsBlocked(Combat c) {
         if (c == null)
             return false;
-        Player player = Global.getPlayer();
+        Player player = Global.global.getPlayer();
         Character opp = c.getOpponent(player);
-        if (!Global.getPlayer()
+        if (!Global.global.getPlayer()
                    .checkAddiction(AddictionType.DOMINANCE, opp))
             return false;
         int sev = player.getAddictionSeverity(AddictionType.DOMINANCE)
@@ -47,10 +47,10 @@ public class Dominance extends Addiction {
     protected Optional<Status> withdrawalEffects() {
         if (originalWill < 0) {
             double mod = Math.min(1.0, 1.0 / (double) getSeverity().ordinal() + .4);
-            originalWill = Global.getPlayer()
+            originalWill = Global.global.getPlayer()
                                     .getWillpower()
                                     .max();
-            Global.getPlayer()
+            Global.global.getPlayer()
                   .getWillpower()
                   .setTemporaryMax((int) (originalWill * mod));
         }
@@ -225,7 +225,7 @@ public class Dominance extends Addiction {
 
     @Override
     public Status loadFromJson(JsonObject obj) {
-        return new Dominance(Global.getPlayer(), Global.getCharacterByType(obj.get("cause")
+        return new Dominance(Global.global.getPlayer(), Global.getCharacterByType(obj.get("cause")
                                                           .getAsString()),
                         (float) obj.get("magnitude")
                                    .getAsInt());

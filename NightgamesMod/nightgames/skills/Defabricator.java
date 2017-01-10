@@ -63,7 +63,7 @@ public class Defabricator extends Skill {
                         + "The device's function is immediately revealed as %s clothes just vanish "
                         + "in the light. %s left naked in seconds.", getSelf().subject(),
                         target.nameDirectObject(), target.possessiveAdjective(), 
-                        Global.capitalizeFirstLetter(target.subjectAction("are", "is")));
+                        Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")));
     }
 
 }

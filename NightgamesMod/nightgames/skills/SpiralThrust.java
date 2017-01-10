@@ -101,7 +101,7 @@ public class SpiralThrust extends Thrust {
             return String.format("%s drills into %s ass with extraordinary power. %s head seems to go"
                             + " blank and %s %s face down to the ground as %s arms turn to jelly and give out.",
                             getSelf().subject(), target.nameOrPossessivePronoun(),
-                            Global.capitalizeFirstLetter(target.nameOrPossessivePronoun()),
+                            Grammar.capitalizeFirstLetter(target.nameOrPossessivePronoun()),
                             target.pronoun(), target.action("fall"), target.possessiveAdjective());
         } else if (modifier != Result.reverse) {
             return Global.global.format(

@@ -53,8 +53,8 @@ public class Slap extends Skill {
                                                     + " enough to throw {other:pronoun} to the ground.", getSelf(),
                                     target));
                 }
-                if (getSelf().has(Trait.VolatileSubstrate)) {
-                    target.add(c, new Slimed(target, getSelf(), Global.global.random(2, 4)));
+                if (getSelf().hasTrait(Trait.VolatileSubstrate)) {
+                    target.add(c, new Slimed(target, getSelf(), Rng.rng.random(2, 4)));
                 }
                 target.emote(Emotion.nervous, 40);
                 target.emote(Emotion.angry, 30);

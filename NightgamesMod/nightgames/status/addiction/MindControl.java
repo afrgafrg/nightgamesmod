@@ -256,7 +256,7 @@ public class MindControl extends Addiction {
                     case cowgirl:
                         succeeded = true;
                         description = "You turn your head away as you feel your orgasm coming on, wary of " + controller.name() + "'s"
-                                        + " hypnotic eyes. " + Global.capitalizeFirstLetter(controller.pronoun()) + "'s"
+                                        + " hypnotic eyes. " + Grammar.capitalizeFirstLetter(controller.pronoun()) + "'s"
                                         + " not having it, though. " + controller.pronoun() + " grabs your head"
                                         + " and forces your eyelids open with " + controller.directObject()+ " thumbs. ";
                         break;
@@ -264,7 +264,7 @@ public class MindControl extends Addiction {
                         if (pos instanceof AnalCowgirl) {
                             succeeded = true;
                             description = "You turn your head away as you feel your orgasm coming on, wary of " + controller.name() + "'s"
-                                            + " hypnotic eyes. " + Global.capitalizeFirstLetter(controller.pronoun()) + "'s"
+                                            + " hypnotic eyes. " + Grammar.capitalizeFirstLetter(controller.pronoun()) + "'s"
                                             + " not having it, though. " + controller.pronoun() + " grabs your head"
                                             + " and forces your eyelids open with " + controller.directObject() + " thumbs. ";
                             break;
@@ -281,7 +281,7 @@ public class MindControl extends Addiction {
                         succeeded = true;
                         if (pos.dom(controller)) {
                             description = "You turn your head away as you feel your orgasm coming on, wary of " + controller.name() + "'s"
-                                            + " hypnotic eyes. " + Global.capitalizeFirstLetter(controller.pronoun()) + "'s"
+                                            + " hypnotic eyes. " + Grammar.capitalizeFirstLetter(controller.pronoun()) + "'s"
                                             + " not having it, though. " + controller.pronoun() + " twists your head back"
                                             + " and forces your eyelids open with " + controller.directObject() + " thumbs. ";
                         } else {
@@ -294,7 +294,7 @@ public class MindControl extends Addiction {
                         if (pos.dom(controller)) {
                             succeeded = true;
                             description = "You turn your head away as you feel your orgasm coming on, wary of " + controller.name() + "'s"
-                                            + " hypnotic eyes. " + Global.capitalizeFirstLetter(controller.pronoun()) + "'s"
+                                            + " hypnotic eyes. " + Grammar.capitalizeFirstLetter(controller.pronoun()) + "'s"
                                             + " not having it, though. " + controller.pronoun() + " grabs your head"
                                             + " and forces your eyelids open with " + controller.directObject() + " thumbs. ";
                         } else {
@@ -332,7 +332,7 @@ public class MindControl extends Addiction {
                         }
                         break;
                     default:
-                        if (pos.facing(Global.getPlayer(), controller)) {
+                        if (pos.facing(Global.global.getPlayer(), controller)) {
                             succeeded = true;
                             description = controller.name() + " gazes into your eyes as " + controller.pronoun()
                                             + " pushes you over the edge. ";

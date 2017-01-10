@@ -5,6 +5,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Skill;
@@ -33,19 +34,19 @@ public class ImpAssault extends SimpleEnemySkill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = 8 + getSelf().getLevel() + Global.random(5);
+            int m = 8 + getSelf().getLevel() + Rng.rng.random(5);
             if (target.hasBalls()) {
-                if (target.has(Trait.achilles) && !target.has(ClothingTrait.armored)) {
+                if (target.hasTrait(Trait.achilles) && !target.hasTrait(ClothingTrait.armored)) {
                     m += 8;
                 }
-                c.write(getSelf(), Global.format("While {other:name-possessive} attention is focused on {self:possessive} master, "
+                c.write(getSelf(), Global.global.format("While {other:name-possessive} attention is focused on {self:possessive} master, "
                                 + "{self:subject} creeps close to {other:direct-object} and uppercuts {other:direct-object} in the balls.", 
                                 getSelf(), target));
                 target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));
                 target.emote(Emotion.nervous, 10);
                 target.emote(Emotion.angry, 10);
             } else {
-                c.write(getSelf(), Global.format("{self:SUBJECT} runs up to {other:name-do} and punches {other:direct-object} in the gut.", getSelf(), target));
+                c.write(getSelf(), Global.global.format("{self:SUBJECT} runs up to {other:name-do} and punches {other:direct-object} in the gut.", getSelf(), target));
                 target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, m));
                 target.emote(Emotion.nervous, 10);
                 target.emote(Emotion.angry, 10);

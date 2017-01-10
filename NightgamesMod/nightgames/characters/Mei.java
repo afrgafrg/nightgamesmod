@@ -6,7 +6,7 @@ import java.util.Optional;
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart.Mod;
 import nightgames.characters.body.FacePart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TailPart;
@@ -36,7 +36,7 @@ public class Mei extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
         character.outfitPlan.add(Clothing.getByID("negligee"));
         character.outfitPlan.add(Clothing.getByID("lacythong"));
         character.outfitPlan.add(Clothing.getByID("garters"));
@@ -50,7 +50,7 @@ public class Mei extends BasePersonality {
         character.getStamina().setMax(100);
         character.getArousal().setMax(150);
         character.rank = 1;
-        Global.gainSkills(character);
+        Global.global.gainSkills(character);
 
         character.getMojo().setMax(110);
 
@@ -160,13 +160,13 @@ public class Mei extends BasePersonality {
                                    + "I wonder if I'm just pent up... ah well, no point in minding the details.\"<i/> Mei cracks her fingers. <i>\"Since we're doing this, I'm going all out!\"</i>"
                                    + "<br/><br/>"
                                    + "Errr... while you're glad she's so adaptable, it looks like the fight's become a two on one!";
-               } else if (self.has(Trait.fallenAngel) && meiFought == 1) {
+               } else if (self.hasTrait(Trait.fallenAngel) && meiFought == 1) {
                    other.setFlag(FOUGHT_MEI_PET, 2);
                    return "After {self:SUBJECT} materializes as usual, she notices that her body has changed. "
                                    + "Pitch black feathered wings grow out of her shoulder blades, and a thick demonic tail sprouts from her bum. "
                                    + "With her eyes wide, Mei exclaims <i>\"Oh wow, what am I supposed to be now? Some kind of fallen angel? "
                                    + "I knew I've been reading too much fantasy smut before bed...\"</i>";
-               } else if (self.has(Trait.fallenAngel)) {
+               } else if (self.hasTrait(Trait.fallenAngel)) {
                    return "{self:SUBJECT} opens her eyes and stretches her black wings. "
                                    + "<i>This dream again? Well, it got pretty hot last time, so no complaints from me! So cum again for me will you? "
                                    + "My little demon pussy seems pretty hungry!</i>";

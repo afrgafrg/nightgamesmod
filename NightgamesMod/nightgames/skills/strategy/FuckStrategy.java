@@ -9,7 +9,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Skill;
 import nightgames.skills.Tactics;
@@ -21,7 +21,7 @@ public class FuckStrategy extends AbstractStrategy {
         if (self.getMood().equals(Emotion.horny)) {
             weight *= 2;
         }
-        if (self.has(Trait.leveldrainer)) {
+        if (self.hasTrait(Trait.leveldrainer)) {
             weight *= 4;
         }
         return weight;
@@ -66,6 +66,6 @@ public class FuckStrategy extends AbstractStrategy {
     
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(4, 8);
+        return Rng.rng.random(4, 8);
     }
 }

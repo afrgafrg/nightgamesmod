@@ -62,7 +62,7 @@ public class Plasticized extends DurationStatus {
     public int regen(Combat c) {
         super.regen(c);
         if (c != null && c.getStance().mobile(affected)) {
-        	c.write(affected, Global.format("It's impossible for {self:name-do} to stay on {self:possessive} feet.", affected, c.getOpponent(affected)));
+        	c.write(affected, Global.global.format("It's impossible for {self:name-do} to stay on {self:possessive} feet.", affected, c.getOpponent(affected)));
         	affected.add(c, new Falling(affected));
         }
         affected.emote(Emotion.nervous, 5);
@@ -132,6 +132,6 @@ public class Plasticized extends DurationStatus {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Plasticized(Global.noneCharacter(), obj.get("duration").getAsInt());
+        return new Plasticized(NPC.NONE_CHARACTER, obj.get("duration").getAsInt());
     }
 }

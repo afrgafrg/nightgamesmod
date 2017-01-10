@@ -169,7 +169,7 @@ public class Squeeze extends Skill {
             return String.format("%s reaches between %s legs and grabs %s exposed balls. %s "
                             + "in pain as %s pulls and squeezes them.", getSelf().subject(),
                             target.nameOrPossessivePronoun(), target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("writhe")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("writhe")),
                             getSelf().subject());
         }
     }

@@ -61,7 +61,7 @@ public class UseCrop extends Skill {
                 }
             } else {
                 writeOutput(c, Result.weak, target);
-                m -= Global.global.random(2, 6);
+                m -= Rng.rng.random(2, 6);
                 target.pain(c, getSelf(), 5 + Rng.rng.random(12));
             }
             target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.gadgets, target, m));

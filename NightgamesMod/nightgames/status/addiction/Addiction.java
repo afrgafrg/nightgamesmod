@@ -10,6 +10,7 @@ import nightgames.global.Rng;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
 
+import java.util.EnumSet;
 import java.util.Optional;
 
 public abstract class Addiction extends Status {
@@ -137,8 +138,8 @@ public abstract class Addiction extends Status {
 
     public Optional<Status> startNight() {
         if (!didDaytime || overloading) {
-            if (!overloading)
-                alleviate(Rng.rng.randomfloat() / 4.f);
+            if (!overloading) {
+                float amount = Rng.rng.randomfloat() / 4.f;
                 if (Global.global.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
                     System.out.println("Alleviating addiction " + this.getType() + " by " + amount);
                 }
@@ -243,7 +244,7 @@ public abstract class Addiction extends Status {
         NONE,
         LOW,
         MED,
-        HIGH;
+        HIGH
     }
 
     public void describeInitial() {

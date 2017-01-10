@@ -32,7 +32,7 @@ public class Sensitize extends Skill {
 
     @Override
     public int accuracy(Combat c, Character target) {
-        return getSelf().has(Item.Aersolizer) ? 200 : 65;
+        return getSelf().hasTrait(Item.Aersolizer) ? 200 : 65;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Sensitize extends Skill {
                             + " hot, but goosebumps appear anyway. "
                             + "Even the air touching %s skin makes %s shiver.", getSelf().subject(),
                             getSelf().possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")),
                             target.possessiveAdjective(), target.possessiveAdjective(),
                             target.directObject());
         } else if (modifier == Result.miss) {

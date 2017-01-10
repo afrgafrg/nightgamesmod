@@ -6,7 +6,7 @@ import java.util.Optional;
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart.Mod;
 import nightgames.characters.body.FacePart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.WingsPart;
@@ -35,7 +35,7 @@ public class Sarah extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
         character.outfitPlan.add(Clothing.getByID("frillybra"));
         character.outfitPlan.add(Clothing.getByID("frillypanties"));
 
@@ -47,7 +47,7 @@ public class Sarah extends BasePersonality {
         character.getStamina().setMax(150);
         character.getArousal().setMax(100);
         character.rank = 1;
-        Global.gainSkills(character);
+        Global.global.gainSkills(character);
 
         character.getMojo().setMax(90);
 
@@ -158,7 +158,7 @@ public class Sarah extends BasePersonality {
                                     + "<br/><br/>You look questioningly at Angel and she sighs "
                                     + "<i>\"Sarah is actually a bit too shy to bring into the games, even unconsciously. "
                                     + "Instead of having her freak out, I thought I'd just have her mind come for the ride. Don't worry, I guarantee that she'll enjoy it.\"</i>";
-                } else if (self.has(Trait.valkyrie) && sarahFought == 1) {
+                } else if (self.hasTrait(Trait.valkyrie) && sarahFought == 1) {
                     other.setFlag(FOUGHT_SARAH_PET, 2);
                     return "After {self:SUBJECT} materializes as usual from a brillant burst of light, you see that she looks different. "
                                     + "Sarah was always rather tall, but now she looks positively Amazonian. "
@@ -166,7 +166,7 @@ public class Sarah extends BasePersonality {
                                     + "To top it off, a pair of large angelic wings crown her upper back, completing her look as a valkyrie in service to her Goddess. "
                                     + "<br/><br/>"
                                     + "Angel smiles mischievously at you <i>\"Isn't she beautiful? I love Sarah the way she is, but in a fight, a Goddess does need her guardians.\"</i>";
-                } else if (self.has(Trait.valkyrie)) {
+                } else if (self.hasTrait(Trait.valkyrie)) {
                     return "{self:SUBJECT} emerges from the pillar of light and stands at attention. "
                                     + "Angel walks over to {self:direct-object} and kisses her on the cheek. <i>\"Sarah dear, let's teach {other:direct-object} the proper way to worship a Goddess.\"<i>";
                 } else {

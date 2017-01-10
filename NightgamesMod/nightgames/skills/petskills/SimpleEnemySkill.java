@@ -18,10 +18,10 @@ public abstract class SimpleEnemySkill extends Skill {
     }
 
     protected boolean gendersMatch(Character other) {
-        if (other.useFemalePronouns() && getSelf().useFemalePronouns() && Global.checkFlag(Flag.skipFF)) {
+        if (other.useFemalePronouns() && getSelf().useFemalePronouns() && Global.global.checkFlag(Flag.skipFF)) {
             return false;
         }
-        if (!other.useFemalePronouns() && !getSelf().useFemalePronouns() && Global.checkFlag(Flag.skipMM)) {
+        if (!other.useFemalePronouns() && !getSelf().useFemalePronouns() && Global.global.checkFlag(Flag.skipMM)) {
             return false;
         }
         return true;

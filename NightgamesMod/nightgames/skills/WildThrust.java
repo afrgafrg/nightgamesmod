@@ -39,7 +39,7 @@ public class WildThrust extends Thrust {
     @Override
     public boolean resolve(Combat c, Character target) {
         boolean effective = super.resolve(c, target);
-        if (effective && c.getStance().sub(getSelf()) && getSelf().has(Trait.Untamed) && Global.global.random(4) == 0 ) {
+        if (effective && c.getStance().sub(getSelf()) && getSelf().hasTrait(Trait.Untamed) && Rng.rng.random(4) == 0 ) {
             c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:fuck|fucks} {other:name-do} with such abandon that it leaves {other:direct-object} "
                             + "momentarily dazed. {self:SUBJECT-ACTION:do|does} not let this chance slip and {self:action:rotate|rotates} {self:possessive} body so that {self:pronoun-action:are|is} on top!", getSelf(), target));
             c.setStance(c.getStance().reverse(c, false));
@@ -127,7 +127,7 @@ public class WildThrust extends Thrust {
             return String.format("%s pistons wildly into %s while pushing %s shoulders on the ground; %s tits "
                             + "are shaking above %s head while %s strapon stimulates %s %s.", getSelf().subject(),
                             target.nameDirectObject(), target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(getSelf().possessiveAdjective()), target.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(getSelf().possessiveAdjective()), target.possessiveAdjective(),
                             getSelf().possessiveAdjective(), target.possessiveAdjective(),
                             target.hasBalls() ? "prostate" : "insides");
         } else if (modifier == Result.reverse) {

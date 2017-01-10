@@ -18,7 +18,7 @@ public class Doggy extends MaledomSexStance {
         } else {
             return String.format("Things aren't going well for %s. %s %s down on %s hands and knees, while %s"
                             + " is fucking %s from behind.", bottom.subject(),
-                            Global.capitalizeFirstLetter(bottom.pronoun()), bottom.action("are", "is"),
+                            Grammar.capitalizeFirstLetter(bottom.pronoun()), bottom.action("are", "is"),
                             bottom.possessiveAdjective(), top.subject(), bottom.directObject());
         }
     }

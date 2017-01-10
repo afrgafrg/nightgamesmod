@@ -5,11 +5,8 @@ import java.util.Optional;
 
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
+import nightgames.characters.body.CockPart.Mod;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
@@ -35,7 +32,7 @@ public class Caroline extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
         character.outfitPlan.add(Clothing.getByID("lacybra"));
         character.outfitPlan.add(Clothing.getByID("lacepanties"));
         character.outfitPlan.add(Clothing.getByID("stockings"));
@@ -48,7 +45,7 @@ public class Caroline extends BasePersonality {
         character.getStamina().setMax(120);
         character.getArousal().setMax(120);
         character.rank = 1;
-        Global.gainSkills(character);
+        Global.global.gainSkills(character);
 
         character.getMojo().setMax(110);
 
@@ -138,7 +135,7 @@ public class Caroline extends BasePersonality {
                                     + "<br/><br/>"
                                     + "Caroline looks around and spots you and Angel. <i>\"Hmmm I'm not entirely sure what's going on here, "
                                     + "but looks like some kind of sex fight? Sounds fun, I'm in!\"</i> You groan. Well she sure is adaptable...";
-                } else if (self.has(Trait.kabbalah) && carolineFought == 1) {
+                } else if (self.hasTrait(Trait.kabbalah) && carolineFought == 1) {
                     other.setFlag(FOUGHT_CAROLINE_PET, 2);
                     return "Caroline emerges again from the runic circles you're used to seeing by now. However, she looks a bit different. "
                                     + "Angel must have shared some more of her divine power with her in thet summoning since Caroline now sports translucent "
@@ -148,14 +145,14 @@ public class Caroline extends BasePersonality {
                                     + "Caroline seems a bit surprised too. She inspects herself for a moment and tries tracing something in front of herself. "
                                     + "From her fingertips a glowing pattern emerges from thin air. Caroline smiles and says <i>\"This is way cool. "
                                     + "I wonder what else I can do?\"</i>";
-                } else if (self.has(Trait.kabbalah)) {
+                } else if (self.hasTrait(Trait.kabbalah)) {
                     return "{self:SUBJECT} emerges from the runic portal and unfurls her ethereal wings. "
                                     + "<i>\"Hmmm I can't seem to remember any of this during the day time, but I'm having so much fun I can't really complain. Ready {other:name}?\"</i>";
                 } else {
                     return "{self:SUBJECT} opens her eyes and takes in the situation. Oooh a rematch? I'm game!</i>";
                 }
             }
-            return Global.format("{self:SUBJECT} quickly scans the situation and with an approving look from Angel, she gets ready to attack!</i>", self, other);
+            return Global.global.format("{self:SUBJECT} quickly scans the situation and with an approving look from Angel, she gets ready to attack!</i>", self, other);
         });
     }
 

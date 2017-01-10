@@ -119,7 +119,7 @@ public class FFMCowgirlThreesome extends FemdomSexStance {
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
-            c.write(bottom, Global.format("{self:SUBJECT-ACTION:manage|manages} to unbalance {other:name-do} and push {other:direct-object} off {self:reflective}.", bottom, domSexCharacter));
+            c.write(bottom, Global.global.format("{self:SUBJECT-ACTION:manage|manages} to unbalance {other:name-do} and push {other:direct-object} off {self:reflective}.", bottom, domSexCharacter));
         }
         return new Neutral(bottom, top);
     }
@@ -127,7 +127,7 @@ public class FFMCowgirlThreesome extends FemdomSexStance {
     @Override
     public void checkOngoing(Combat c) {
         if (!c.getOtherCombatants().contains(domSexCharacter)) {
-            c.write(bottom, Global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
+            c.write(bottom, Global.global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
             c.setStance(new Neutral(top, bottom));
         }
     }

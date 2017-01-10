@@ -5,6 +5,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.Staleness;
 import nightgames.status.FiredUp;
@@ -208,8 +209,8 @@ public abstract class Skill {
         skill.user().spendMojo(c, skill.getMojoCost(c));
         if (success) {
             skill.user().buildMojo(c, generated);
-        } else if (target.has(Trait.tease) && Global.random(4) == 0) {
-            c.write(target, Global.format("Dancing just past {other:name-possessive} reach gives {self:name-do} a minor high.", target, skill.getSelf()));
+        } else if (target.hasTrait(Trait.tease) && Rng.rng.random(4) == 0) {
+            c.write(target, Global.global.format("Dancing just past {other:name-possessive} reach gives {self:name-do} a minor high.", target, skill.getSelf()));
             target.buildMojo(c, 20);
         }
         if (success && c.getCombatantData(skill.getSelf()) != null) {
@@ -225,6 +226,7 @@ public abstract class Skill {
         return cooldown;
     }
 
+    // TODO: figure out what this is for and why it needs Combat
     public Collection<String> subChoices(Combat c) {
         return Collections.emptySet();
     }

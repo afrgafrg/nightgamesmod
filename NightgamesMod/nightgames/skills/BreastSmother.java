@@ -6,7 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.BreastSmothering;
@@ -54,21 +54,21 @@ public class BreastSmother extends Skill {
         writeOutput(c, special ? Result.special : Result.normal, target);
 
 
-        double n = 10 + Global.random(5) + getSelf().body.getLargestBreasts().size;
+        double n = 10 + Rng.rng.random(5) + getSelf().body.getLargestBreasts().size;
 
-        if (target.has(Trait.temptingtits)) {
-            n += Global.random(5, 10);
+        if (target.hasTrait(Trait.temptingtits)) {
+            n += Rng.rng.random(5, 10);
         }
-        if (target.has(Trait.beguilingbreasts)) {
+        if (target.hasTrait(Trait.beguilingbreasts)) {
             n *= 1.5;
             target.add(c, new Charmed(target));
         }
-        if (target.has(Trait.imagination)) {
+        if (target.hasTrait(Trait.imagination)) {
             n *= 1.5;
         }
 
         target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("breasts"), (int) Math.round(n / 2), this);
-        target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Global.random(5, 15)));
+        target.weaken(c, (int) getSelf().modifyDamage(DamageType.physical, target, Rng.rng.random(5, 15)));
 
         target.loseWillpower(c, Math.min(5, target.getWillpower().max() * 10 / 100 ));     
         
@@ -78,7 +78,7 @@ public class BreastSmother extends Skill {
         } else {
             getSelf().emote(Emotion.dominant, 10);
         }
-        if (Global.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
+        if (Rng.rng.random(100) < 15 + 2 * getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "breasts", .25));
         }
         return true;
@@ -121,10 +121,10 @@ public class BreastSmother extends Skill {
                             + getSelf().body.getRandomBreasts().fullDescribe(getSelf()) + " trying to force them to gasp.");                           
         }
         
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
             b.append("They can't help but groan in pleasure from having their face stuck between your perfect tits");           
                           
-            if (getSelf().has(Trait.beguilingbreasts)) {
+            if (getSelf().hasTrait(Trait.beguilingbreasts)) {
                 b.append(", and you can't help but smile as they snuggle deeper into your cleavage");
             } 
             b.append(".");
@@ -146,12 +146,12 @@ public class BreastSmother extends Skill {
                             + getSelf().body.getRandomBreasts().fullDescribe(getSelf()) + " trying to force you to gasp for air. ");
         }
         
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
             b.append("You can't help but groan in pleasure from having your face stuck between ");
             b.append(getSelf().possessiveAdjective());
             b.append(" perfect tits as they take your breath away");           
                           
-            if (getSelf().has(Trait.beguilingbreasts)) {
+            if (getSelf().hasTrait(Trait.beguilingbreasts)) {
                 b.append(", and due to their beguiling nature you can't help but want to stay there as long as possible");
             }
             b.append(".");

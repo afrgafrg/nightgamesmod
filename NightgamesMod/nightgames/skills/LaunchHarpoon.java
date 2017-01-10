@@ -16,7 +16,7 @@ public class LaunchHarpoon extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.harpoon);
+        return user.hasTrait(Trait.harpoon);
     }
 
     @Override
@@ -40,13 +40,13 @@ public class LaunchHarpoon extends Skill {
     @Override
     public int getMojoCost(Combat c) {
         int cost = 20;
-        if (getSelf().has(Trait.yank)) {
+        if (getSelf().hasTrait(Trait.yank)) {
             cost += 10;
         }
-        if (getSelf().has(Trait.conducivetoy)) {
+        if (getSelf().hasTrait(Trait.conducivetoy)) {
             cost += 10;
         }
-        if (getSelf().has(Trait.intensesuction)) {
+        if (getSelf().hasTrait(Trait.intensesuction)) {
             cost += 10;
         }
         return cost;
@@ -72,7 +72,7 @@ public class LaunchHarpoon extends Skill {
                                 + " {other:pronoun-action:have|has} no chance to evade it. ";
             }
             if (target.hasDick()) {
-                c.write(getSelf(), Global.format("%sThe soft material of the toy shapes itself"
+                c.write(getSelf(), Global.global.format("%sThe soft material of the toy shapes itself"
                                 + " around {other:name-possessive} {other:body-part:cock}, creating"
                                 + " an airtight seal around the shaft. {self:SUBJECT-ACTION:press|presses}"
                                 + " a button on the device on {self:possessive} arm, and a strong suction"
@@ -80,7 +80,7 @@ public class LaunchHarpoon extends Skill {
                                 + " strangely pleasurable vibration.", getSelf(), target, aim));
                target.outfit.equip(Clothing.getByID("harpoononahole"));
             } else {
-                c.write(getSelf(), Global.format("%sThe pliable material crawls its way inside of"
+                c.write(getSelf(), Global.global.format("%sThe pliable material crawls its way inside of"
                                 + " {other:name-possessive} {other:body-part:pussy}, shaping itself"
                                 + " to fill it perfectly. The excess at the base forms a cup which"
                                 + " settles over {other:possessive} mons, which"
@@ -93,7 +93,7 @@ public class LaunchHarpoon extends Skill {
             }
             return true;
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:let|lets} {self:possessive} harpoon-like"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:let|lets} {self:possessive} harpoon-like"
                             + " toy fly from its slot on {self:possessive} arm device towards"
                             + " {other:name-do}, but {other:pronoun} easily {other:action:evade|evades} it,", 
                             getSelf(), target));
@@ -109,13 +109,13 @@ public class LaunchHarpoon extends Skill {
     @Override
     public int accuracy(Combat c, Character target) {
         int acc = 80;
-        if (getSelf().has(Trait.yank)) {
+        if (getSelf().hasTrait(Trait.yank)) {
             acc += 4;
         }
-        if (getSelf().has(Trait.conducivetoy)) {
+        if (getSelf().hasTrait(Trait.conducivetoy)) {
             acc += 4;
         }
-        if (getSelf().has(Trait.intensesuction)) {
+        if (getSelf().hasTrait(Trait.intensesuction)) {
             acc += 4;
         }
         return acc;

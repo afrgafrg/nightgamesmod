@@ -56,7 +56,7 @@ public class JewelTime extends BaseNPCTime {
             growCock.additionalRequirements = "";
             growCock.scene = "[Placeholder]<br/>Jewel chugs down the three priapus drafts one after the other, making her clit grow into a large enlightened cock.";
             growCock.effect = (c, self, other) -> {
-                other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.enlightened));
+                other.body.add(new CockPart(CockPart.Size.big, CockPart.Mod.enlightened));
                 return true;
             };
             options.add(growCock);
@@ -123,9 +123,9 @@ public class JewelTime extends BaseNPCTime {
                   .choose(this, "Sparring");
             Global.global.gui()
                   .choose(this, "Sex");
-            if (Global.getPlayer()
+            if (Global.global.getPlayer()
                       .checkAddiction(AddictionType.DOMINANCE, npc)) {
-                Global.gui()
+                Global.global.gui()
                       .choose(this, "Ask about Dominance");
             }
         } else if (npc.getAttraction(player) < 15) {
@@ -194,7 +194,7 @@ public class JewelTime extends BaseNPCTime {
                                   + "swept out from under you. You fall hard on your back, and Jewel less-than-gracefully"
                                   + " drops herself onto your chest, knocking the wind out of you. Before you can even"
                                   + " catch your breath, Jewel finishes pulling off your shirt and attaches two ropes to"
-                                  + " your wrists. <br/><br/>\"Right over here, " + Global.getPlayer().boyOrGirl() + ".\" She gets up and uses the ropes to"
+                                  + " your wrists. <br/><br/>\"Right over here, " + Global.global.getPlayer().boyOrGirl() + ".\" She gets up and uses the ropes to"
                                   + " drag you to the couch, attaching the ropes to its legs. While you test how much "
                                   + "movement you still have, Jewel finishes her work by tying your ankles to other "
                                   + "furniture. Now spread-eagled on your back, the near future is looking rather bleak. "
@@ -225,12 +225,12 @@ public class JewelTime extends BaseNPCTime {
                                   + " of licking me. That should be good enough.\" She shoves you towards and out of the door,"
                                   + " leaving you standing in the hallway holding your shirt in your hands, to the great amusement"
                                   + " of some of Jewel's neighbors. You hurriedly pull the shirt on and make your way out of the dorm.");
-            Global.getPlayer()
+            Global.global.getPlayer()
                   .addict(AddictionType.DOMINANCE, npc, Addiction.MED_INCREASE);
-            Global.getPlayer()
+            Global.global.getPlayer()
                   .getAddiction(AddictionType.DOMINANCE)
                   .ifPresent(Addiction::flagDaytime);
-            Global.gui()
+            Global.global.gui()
                   .choose(this, "Leave");
         }
         if (choice.equals("Sex")) {

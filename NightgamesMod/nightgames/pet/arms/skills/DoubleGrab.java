@@ -36,7 +36,7 @@ public class DoubleGrab extends MultiArmMove {
 
     @Override
     public void execute(Combat c, Character owner, Character target, List<RoboArm> arms) {
-        c.write(owner, Global.format("Two of {self:name-possessive} Grabbers fly out towards"
+        c.write(owner, Global.global.format("Two of {self:name-possessive} Grabbers fly out towards"
                         + " {other:name-possessive} prone body, seizing a wrist each. The two"
                         + " arms lock together behind {other:possessive} back, completely immobilizing"
                         + " {other:possessive} arms.", owner, target));

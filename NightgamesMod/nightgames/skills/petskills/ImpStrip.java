@@ -43,18 +43,18 @@ public class ImpStrip extends SimpleEnemySkill {
     }
     @Override
     public boolean resolve(Combat c, Character target) {        
-        Optional<ClothingSlot> targetSlot = Global.pickRandom(getStrippableSlots(c, target));
+        Optional<ClothingSlot> targetSlot = Rng.rng.pickRandom(getStrippableSlots(c, target));
         int difficulty = !targetSlot.isPresent() ? 999999 : target.getOutfit().getTopOfSlot(targetSlot.get()).dc() + target.getLevel()
                 + (target.getStamina().percent() / 5 - target.getArousal().percent()) / 4
                 - (!target.canAct() || c.getStance().sub(target) ? 20 : 0);
         if (getSelf().check(Attribute.Cunning, difficulty)) {
             // should never be null here, since otherwise we can't use the skill          
             Clothing stripped = target.strip(targetSlot.get(), c);
-            c.write(getSelf(), Global.format("{self:SUBJECT} steals {other:name-possessive} %s and runs off with it.", 
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} steals {other:name-possessive} %s and runs off with it.",
                             getSelf(), target, stripped.getName()));
             target.emote(Emotion.nervous, 10);
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT} yanks on {other:name-possessive} %s ineffectually.",
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} yanks on {other:name-possessive} %s ineffectually.",
                             getSelf(), target, target.outfit.getTopOfSlot(targetSlot.orElse(ClothingSlot.top))));
             return false;
         }

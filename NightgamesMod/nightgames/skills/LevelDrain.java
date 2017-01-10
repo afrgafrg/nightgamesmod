@@ -192,7 +192,7 @@ public class LevelDrain extends Drain {
                                 target.possessiveAdjective(), target.directObject(), target.possessiveAdjective(),
                                 getSelf().subject(), target.subjectAction("feel"), getSelf().subject(),
                                 getSelf().pronoun(), target.subjectAction("are", "is"),
-                                Global.capitalizeFirstLetter(target.possessiveAdjective()),
+                                Grammar.capitalizeFirstLetter(target.possessiveAdjective()),
                                 target.pronoun(), target.action("have", "has"));
             default:
                 // Should never happen

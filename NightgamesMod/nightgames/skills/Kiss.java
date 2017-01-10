@@ -48,7 +48,7 @@ public class Kiss extends Skill {
     @Override
     public int accuracy(Combat c, Character target) {
         int accuracy = c.getStance().en == Stance.neutral ? 70 : 100;
-        if (getSelf().has(Trait.romantic)) {
+        if (getSelf().hasTrait(Trait.romantic)) {
             accuracy += 20;
         }
         return accuracy;
@@ -204,11 +204,11 @@ public class Kiss extends Skill {
                             getSelf().subject(), target.nameDirectObject(), target.subject(),
                             target.action("try", "tries"), getSelf().possessiveAdjective(),
                             target.possessiveAdjective(), target.pronoun(), target.action("are", "is"),
-                            Global.capitalizeFirstLetter(target.subjectAction("start")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("start")),
                             target.pronoun(), target.action("realize"), getSelf().subject(),
                             target.directObject(), getSelf().possessiveAdjective(),
                             target.nameOrPossessivePronoun(), c.bothPossessive(target),
-                            Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("try", "tries")),
                             getSelf().nameOrPossessivePronoun(), target.directObject());
         }
         if (modifier == Result.special) {

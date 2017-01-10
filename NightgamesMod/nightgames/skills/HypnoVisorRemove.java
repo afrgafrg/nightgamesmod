@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Stsflag;
 
 public class HypnoVisorRemove extends Skill {
@@ -30,17 +31,17 @@ public class HypnoVisorRemove extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        boolean hit = Global.randomdouble() < Global.randomdouble() * .2
+        boolean hit = Rng.rng.randomdouble() < Rng.rng.randomdouble() * .2
                         + Math.min(0.8, (double) getSelf().get(Attribute.Power) / 50.0);
         if (hit) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:find|finds} a small button"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:find|finds} a small button"
                             + " on the side of the Hypno Visor, and pressing it unlocks whatever"
                             + " mechanisms held it in place. {self:PRONOUN-ACTION:make|makes} sure"
                             + " to throw it far away before refocussing on the fight.", getSelf(), target));
             getSelf().removeStatus(Stsflag.hypnovisor);
             return true;
         }
-        c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:claw|claws} at the insidious visor"
+        c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:claw|claws} at the insidious visor"
                         + " around {self:possessive} head, but to no avail.", getSelf(), target));
         return false;
     }

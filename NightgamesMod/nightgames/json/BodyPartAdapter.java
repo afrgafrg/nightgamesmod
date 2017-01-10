@@ -14,15 +14,12 @@ import com.google.gson.JsonSerializer;
 
 import nightgames.characters.body.AnalPussyPart;
 import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BasicCockPart;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.EarPart;
 import nightgames.characters.body.FacePart;
 import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.ModdedCockPart;
 import nightgames.characters.body.MouthPart;
 import nightgames.characters.body.MouthPussyPart;
 import nightgames.characters.body.PussyPart;
@@ -37,11 +34,9 @@ public class BodyPartAdapter implements JsonSerializer<BodyPart>, JsonDeserializ
         prototypes = new HashMap<>();
         prototypes.put(PussyPart.class.getCanonicalName(), PussyPart.normal);
         prototypes.put(BreastsPart.class.getCanonicalName(), BreastsPart.c);
-        prototypes.put(BasicCockPart.class.getCanonicalName(), BasicCockPart.average);
-        // for compatibility with < v1.8.1
-        prototypes.put(CockPart.class.getCanonicalName(), BasicCockPart.average);
-        prototypes.put(ModdedCockPart.class.getCanonicalName(),
-                        new ModdedCockPart(BasicCockPart.average, CockMod.bionic));
+        prototypes.put(CockPart.class.getCanonicalName(), new CockPart(CockPart.Size.average, CockPart.Mod.normal));
+        prototypes.put(CockPart.class.getCanonicalName(),
+                        new CockPart(CockPart.Size.average, CockPart.Mod.bionic));
         prototypes.put(WingsPart.class.getCanonicalName(), WingsPart.demonic);
         prototypes.put(TailPart.class.getCanonicalName(), TailPart.cat);
         prototypes.put(EarPart.class.getCanonicalName(), EarPart.normal);

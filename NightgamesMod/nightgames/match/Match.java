@@ -102,6 +102,7 @@ public class Match implements Clockable {
                 if (combatants.get(index).state != State.quit) {
                     combatants.get(index).upkeep();
                     manageConditions(combatants.get(index));
+                    // TODO: This should be chooseMove() or turn() or something
                     combatants.get(index).move();
                     if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE) && index < combatants.size()) {
                         System.out.println(combatants.get(index).name() + " is in "

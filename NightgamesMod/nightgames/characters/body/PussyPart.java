@@ -19,16 +19,16 @@ import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
 public enum PussyPart implements BodyPart,BodyPartMod {
-    normal("", 0, 1, 1, 6, 15, 0, CockMod.error),
-    arcane("arcane patterned ", .05, 1.1, 1, 9, 5, 3, CockMod.runic),
-    fiery("fiery ", 0, 1.3, 1.2, 8, 15, 3, CockMod.enlightened),
-    succubus("succubus ", .1, 1.5, 1.2, 999, 0, 4, CockMod.incubus),
-    feral("feral ", .2, 1.3, 1.2, 8, 7, 2, CockMod.primal),
-    cybernetic("cybernetic ", -.1, 1.8, .5, 200, 0, 4, CockMod.bionic),
-    gooey("gooey ", .2, 1.5, 1.2, 999, 0, 6, CockMod.slimy),
-    tentacled("tentacled ", 0, 2, 1.2, 999, 0, 8, CockMod.error),
-    plant("flower ", .3, 2, 1.2, 999, 0, 8, CockMod.error),
-    divine("divine ", 0, 2.0, 1.0, 999, 0, 8, CockMod.blessed);
+    normal("", 0, 1, 1, 6, 15, 0, CockPart.Mod.normal),
+    arcane("arcane patterned ", .05, 1.1, 1, 9, 5, 3, CockPart.Mod.runic),
+    fiery("fiery ", 0, 1.3, 1.2, 8, 15, 3, CockPart.Mod.enlightened),
+    succubus("succubus ", .1, 1.5, 1.2, 999, 0, 4, CockPart.Mod.incubus),
+    feral("feral ", .2, 1.3, 1.2, 8, 7, 2, CockPart.Mod.primal),
+    cybernetic("cybernetic ", -.1, 1.8, .5, 200, 0, 4, CockPart.Mod.bionic),
+    gooey("gooey ", .2, 1.5, 1.2, 999, 0, 6, CockPart.Mod.slimy),
+    tentacled("tentacled ", 0, 2, 1.2, 999, 0, 8, CockPart.Mod.normal),
+    plant("flower ", .3, 2, 1.2, 999, 0, 8, CockPart.Mod.normal),
+    divine("divine ", 0, 2.0, 1.0, 999, 0, 8, CockPart.Mod.blessed);
 
     public double priority;
     public String desc;
@@ -38,11 +38,11 @@ public enum PussyPart implements BodyPart,BodyPartMod {
     public double capacity;
     public double sensitivity;
     public int wetThreshold;
-    private CockMod equivalent;
+    private CockPart.Mod equivalent;
     public static String synonyms[] = {"pussy", "vagina", "slit",};
 
     PussyPart(String desc, double hotness, double pleasure, double sensitivity, double capacity, int wetThreshold,
-                    int priority, CockMod equivalent) {
+                    int priority, CockPart.Mod equivalent) {
         this.type = "pussy";
         this.desc = desc;
         this.hotness = hotness;
@@ -78,7 +78,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
             b.append("drenched ");
         }
         if (this == normal) {
-            b.append(Global.pickRandom(Arrays.asList("perfectly ordinary ", "normal ", "womanly ")).get());
+            b.append(Rng.rng.pickRandom(Arrays.asList("perfectly ordinary ", "normal ", "womanly ")).get());
         }
         b.append(describe(c));
         b.append(' ');
@@ -407,7 +407,7 @@ public enum PussyPart implements BodyPart,BodyPartMod {
                 self.buildMojo(c, strength);
                 if (self.isPet()) {
                     Character master = ((PetCharacter) self).getSelf().owner();
-                    c.write(self, Global.format("The energy seems to flow through {self:direct-object} and into {self:possessive} {other:master}.", self, master));
+                    c.write(self, Global.global.format("The energy seems to flow through {self:direct-object} and into {self:possessive} {other:master}.", self, master));
                     master.buildMojo(c, strength);
                 }
             } else {
@@ -649,14 +649,8 @@ public enum PussyPart implements BodyPart,BodyPartMod {
         }
     }
 
-    public CockMod getEquivalentCockMod() {
+    public CockPart.Mod getEquivalentCockMod() {
         return equivalent;
     }
 
-    public CockPart getEquivalentCock(BasicCockPart part) {
-        if (equivalent != CockMod.error) {
-            return new ModdedCockPart(part, equivalent);
-        }
-        return part;
-    }
 }

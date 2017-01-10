@@ -33,7 +33,7 @@ public class FondleBreasts extends Skill {
             if (target.breastsAvailable()) {
                 m += 4;
                 result = Result.strong;
-            } else if (target.outfit.getTopOfSlot(ClothingSlot.top).getLayer() <= 1 && getSelf().has(Trait.dexterous)) {
+            } else if (target.outfit.getTopOfSlot(ClothingSlot.top).getLayer() <= 1 && getSelf().hasTrait(Trait.dexterous)) {
                 m += 4;
                 result = Result.special;
             }
@@ -102,7 +102,7 @@ public class FondleBreasts extends Skill {
                             target.body.getRandomBreasts().describe(target),
                             target.possessiveAdjective(), target.directObject());
         } else if (modifier == Result.special) {
-            return Global.format("{self:SUBJECT-ACTION:slip|slips} {self:possessive} agile fingers into {other:name-possessive} bra, massaging and pinching at {other:possessive} nipples.",
+            return Global.global.format("{self:SUBJECT-ACTION:slip|slips} {self:possessive} agile fingers into {other:name-possessive} bra, massaging and pinching at {other:possessive} nipples.",
                             getSelf(), target);
         } else {
             return String.format("%s massages %s %s over %s %s.",

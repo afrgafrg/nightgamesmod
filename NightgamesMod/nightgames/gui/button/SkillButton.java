@@ -17,7 +17,7 @@ public class SkillButton extends ValueButton<Skill> {
 
     public SkillButton(final Skill skill, Combat c) {
         super(skill, skill.getLabel(c));
-        boolean hasSubSkills = skill.subChoices().size() > 0;
+        boolean hasSubSkills = skill.subChoices(c).size() > 0;
         setBorderPainted(false);
         setOpaque(true);
         setFont(fontForStage(skill.getStage()));

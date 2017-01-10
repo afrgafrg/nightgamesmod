@@ -371,7 +371,7 @@ public class Command extends Skill {
                                                 getSelf().subject(), target.subject(),
                                                 getSelf().possessiveAdjective(), removed.getName(),
                                                 getSelf().directObject(),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("comply", "complies"),
                                                 getSelf().nameOrPossessivePronoun()));
                 break;
@@ -388,7 +388,7 @@ public class Command extends Skill {
                                                 + " the offending garment.", getSelf().name(),
                                                 target.subject(), target.pronoun(),
                                                 target.possessiveAdjective(), removed.getName(),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("remove")));
                 break;
             case SUBMIT:
@@ -398,7 +398,7 @@ public class Command extends Skill {
                                                 + " without hesitation.", getSelf().name(),
                                                 target.nameOrPossessivePronoun(), target.directObject(),
                                                 target.pronoun(),
-                                                Global.capitalizeFirstLetter(target.subjectAction("obey"))));
+                                                Grammar.capitalizeFirstLetter(target.subjectAction("obey"))));
                 c.setStance(new StandingOver(getSelf(), target), target, false);
                 break;
             case WORSHIP_COCK:
@@ -409,11 +409,11 @@ public class Command extends Skill {
                                                 + " almost religious zeal. At the same time, %s cannot contain %s lust"
                                                 + " and simply must play with %s.", getSelf().name(),
                                                 target.subjectAction("NEED", "NEEDS"),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("beg"),
                                                 getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
                                                 target.directObject(),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(),
                                                 target.action("worship"),
                                                 getSelf().body.getRandomCock().describe(target),
@@ -436,11 +436,11 @@ public class Command extends Skill {
                                                 + " almost religious zeal. At the same time, %s cannot contain %s lust"
                                                 + " and simply must play with %s.", getSelf().name(),
                                                 target.subjectAction("NEED", "NEEDS"),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("beg"),
                                                 getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
                                                 target.directObject(),
-                                                Global.capitalizeFirstLetter(target.pronoun()),
+                                                Grammar.capitalizeFirstLetter(target.pronoun()),
                                                 target.action("throw"), target.reflectivePronoun(), getSelf().possessiveAdjective(),
                                                 target.action("worship"),
                                                 getSelf().body.getRandomPussy().describe(target),

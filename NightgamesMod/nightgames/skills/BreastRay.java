@@ -86,7 +86,7 @@ public class BreastRay extends Skill {
                         + "distracts %s in a delicious way.",
                         getSelf().subjectAction("point"), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                         target.body.getRandomBreasts().describe(target), plural ? "start" : "starts",
-                                        Global.capitalizeFirstLetter(target.pronoun()),
+                                        Grammar.capitalizeFirstLetter(target.pronoun()),
                                         target.action("flush", "flushes"),
                                         target.action("try", "tries"),
                                         target.reflectivePronoun(), target.directObject());;

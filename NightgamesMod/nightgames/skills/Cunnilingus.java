@@ -191,7 +191,7 @@ public class Cunnilingus extends Skill {
             return String.format("%s skilled tongue explores %s pussy, finding and pleasuring %s more sensitive areas. "
                             + "%s repeatedly attacks %s clitoris until %s can't suppress %s pleasured moans.%s",
                             getSelf().nameOrPossessivePronoun(), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(getSelf().pronoun()), target.nameOrPossessivePronoun(),
+                            Grammar.capitalizeFirstLetter(getSelf().pronoun()), target.nameOrPossessivePronoun(),
                             target.pronoun(), target.possessiveAdjective(), special);
         } else if (modifier == Result.reverse) {
             return String.format("%s obediently laps at %s pussy as %s %s on %s face.%s",

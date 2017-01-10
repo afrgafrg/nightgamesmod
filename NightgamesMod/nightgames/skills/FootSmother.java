@@ -101,7 +101,7 @@ public class FootSmother extends Skill {
                                 + target.body.getRandomPussy().getFluids(target) + " puddles underneath {other:direct-object}";
             }
         }
-        return Global.format(message + parts + ".", getSelf(), target);
+        return Global.global.format(message + parts + ".", getSelf(), target);
     }
 
     @Override

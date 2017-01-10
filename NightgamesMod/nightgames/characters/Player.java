@@ -2,26 +2,16 @@ package nightgames.characters;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import nightgames.actions.Action;
-import nightgames.actions.Leap;
-import nightgames.actions.Move;
-import nightgames.actions.Shortcut;
 import nightgames.areas.Area;
-import nightgames.areas.Deployable;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TentaclePart;
+import nightgames.characters.body.*;
 import nightgames.characters.resources.Meter;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.encounter.Encounter;
 import nightgames.encounter.IEncounter;
 import nightgames.global.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.match.ftc.FTCMatch;
 import nightgames.skills.Skill;
 import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
@@ -94,19 +84,8 @@ public class Player extends Character {
         outfitPlan.add(Clothing.getByID("jeans"));
         outfitPlan.add(Clothing.getByID("socks"));
         outfitPlan.add(Clothing.getByID("sneakers"));
-        config.ifPresent(this::applyConfigStats);
-        finishCharacter(pickedTraits, selectedAttributes);
 
         controller = new PlayerController(Global.global.gui());
-    }
-
-    private void applyBasicStats() {
-        willpower.setMax(willpower.max());
-        availableAttributePoints = 0;
-        setTrophy(Item.PlayerTrophy);
-        growth = new Growth();
-        setGrowth();
-        addictions = new ArrayList<>();
     }
 
     private void applyConfigStats(PlayerConfiguration config) {
@@ -130,8 +109,10 @@ public class Player extends Character {
 
     public String describeStatus() {
         StringBuilder b = new StringBuilder();
-        if (Global.global.gui().combat != null && (Global.global.gui().combat.p1.human() || Global.global.gui().combat.p2.human())) {
-            body.describeBodyText(b, Global.global.gui().combat.getOpponent(this), false);
+        // TODO: figure out whether this should be here, since it depends on combat so much
+        /*
+        if (controller.combat != null && (controller.combat.p1.human() || controller.combat.p2.human())) {
+            body.describeBodyText(b, controller.combat.getOpponent(this), false);
         } else {
             body.describeBodyText(b, Global.global.getCharacterByType("Angel"), false);
         }
@@ -152,9 +133,12 @@ public class Player extends Character {
                              .map(s -> s.name)
                              .collect(Collectors.joining(", ")));
         }
+        */
         return b.toString();
     }
 
+    /*
+    // TODO: Combat stuff goes with combat stuff
     @Override
     public String describe(int per, Combat c) {
         String description = "<i>";
@@ -188,7 +172,7 @@ public class Player extends Character {
     @Override
     public void defeat(Combat c, Result flag) {
         c.write("Bad thing");
-        if (has(Trait.slime)) {
+        if (hasTrait(Trait.slime)) {
             purge(c);
         }
     }
@@ -205,13 +189,8 @@ public class Player extends Character {
     }
 
     @Override
-    public boolean human() {
-        return true;
-    }
-
-    @Override
     public void draw(Combat c, Result flag) {
-        if (has(Trait.slime)) {
+        if (hasTrait(Trait.slime)) {
             purge(c);
         }
         if (c.p1.human()) {
@@ -222,333 +201,8 @@ public class Player extends Character {
     }
 
     @Override
-    public String bbLiner(Combat c, Character target) {
-        return null;
-    }
-
-    @Override
     public String nakedLiner(Combat c, Character target) {
         return null;
-    }
-
-    @Override
-    public String stunLiner(Combat c, Character target) {
-        return null;
-    }
-
-    @Override
-    public String taunt(Combat c, Character target) {
-        return null;
-    }
-
-    @Override
-    public void detect() {
-        for (Area adjacent : location.adjacent) {
-            if (adjacent.ping(get(Attribute.Perception))) {
-                Global.global.gui()
-                      .message("You hear something in the <b>" + adjacent.name + "</b>.");
-                adjacent.setPinged(true);
-            }
-        }
-    }
-
-    @Override
-    public void faceOff(Character opponent, IEncounter enc) {
-        Global.global.gui().message("You run into <b>" + opponent.name
-                        + "</b> and you both hesitate for a moment, deciding whether to attack or retreat.");
-        assessOpponent(opponent);
-        enc.promptFF(opponent, Global.global.gui());
-    }
-
-    private void assessOpponent(Character opponent) {
-        String arousal;
-        String stamina;
-        if (opponent.state == State.webbed) {
-            Global.global.gui().message("She is naked and helpless.<br/>");
-            return;
-        }
-        if (get(Attribute.Perception) >= 6) {
-            Global.global.gui().message("She is level " + opponent.getLevel());
-        }
-        if (get(Attribute.Perception) >= 8) {
-            Global.global.gui().message("Her Power is " + opponent.get(Attribute.Power) + ", her Cunning is "
-                            + opponent.get(Attribute.Cunning) + ", and her Seduction is "
-                            + opponent.get(Attribute.Seduction));
-        }
-        if (opponent.mostlyNude() || opponent.state == State.shower) {
-            Global.global.gui().message("She is completely naked.");
-        } else {
-            Global.global.gui().message("She is dressed and ready to fight.");
-        }
-        if (get(Attribute.Perception) >= 4) {
-            if (opponent.getArousal()
-                        .percent() > 70) {
-                arousal = "horny";
-            } else if (opponent.getArousal()
-                               .percent() > 30) {
-                arousal = "slightly aroused";
-            } else {
-                arousal = "composed";
-            }
-            if (opponent.getStamina()
-                        .percent() < 50) {
-                stamina = "tired";
-            } else {
-                stamina = "eager";
-            }
-            Global.global.gui().message("She looks " + stamina + " and " + arousal + ".");
-        }
-    }
-
-    @Override
-    public void spy(Character opponent, IEncounter enc) {
-        Global.global.gui().message("You spot <b>" + opponent.name
-                        + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
-        assessOpponent(opponent);
-        enc.promptAmbush(opponent, Global.global.gui());
-    }
-
-    @Override
-    public void move() {
-        Global.global.gui().clearCommand();
-
-        if (busy > 0) {
-            busy--;
-        } else if (this.is(Stsflag.enthralled)) {
-            Character master;
-            master = ((Enthralled) getStatus(Stsflag.enthralled)).master;
-            if (master != null) {
-                Move compelled = findPath(master.location());
-                Global.global.gui().message("You feel an irresistible compulsion to head to the <b>" + master.location().name + "</b>");
-                if (compelled != null) {
-                    Global.global.gui().addAction(compelled, this);
-                }
-            }
-        } else if (state == State.shower || state == State.lostclothes) {
-            bathe();
-        } else if (state == State.crafting) {
-            craft();
-        } else if (state == State.searching) {
-            search();
-        } else if (state == State.resupplying) {
-            resupply();
-        } else if (state == State.webbed) {
-            Global.global.gui().message("You eventually manage to get an arm free, which you then use to extract yourself from the trap.");
-            state = State.ready;
-        } else if (state == State.masturbating) {
-            masturbate();
-        } else {
-            if (Global.global.checkFlag(Flag.FTC)) {
-                Character holder = ((FTCMatch) Global.global.getMatch()).getFlagHolder();
-                if (holder != null && !holder.human()) {
-                    Global.global.gui().message("<b>" + holder.name + " currently holds the Flag.</b></br>");
-                }
-            }
-            Global.global.gui().message(location.description + "<br/><br/>");
-            for (Deployable trap : location.env) {
-                if (trap.owner() == this) {
-                    Global.global.gui().message("You've set a " + trap.toString() + " here.");
-                }
-            }
-            if (state == State.inTree)
-                Global.global.gui().message("You are hiding in a tree, waiting to drop down on an unwitting foe.");
-            else if (state == State.inBushes)
-                Global.global.gui().message("You are hiding in dense bushes, waiting for someone to pass by.");
-            else if (state == State.inPass)
-                Global.global.gui().message("You are hiding in an alcove in the pass.");
-            else if (state == State.hidden)
-                Global.global.gui().message("You have found a hiding spot and are waiting for someone to pounce upon.");
-            detect();
-            if (!location.encounter(this)) {
-                if (!allowedActions().isEmpty()) {
-                    allowedActions().forEach(a -> Global.global.gui().addAction(a, this));
-                } else {
-                    List<Action> possibleActions = new ArrayList<>();
-                    for (Area path : location.adjacent) {
-                        possibleActions.add(new Move(path));
-                    }
-                    if (getPure(Attribute.Cunning) >= 28) {
-                        for (Area path : location.shortcut) {
-                            possibleActions.add(new Shortcut(path));
-                        }
-                    }
-
-                    if(getPure(Attribute.Ninjutsu)>=5){
-                        for(Area path:location.jump){
-                            possibleActions.add(new Leap(path));
-                        }
-                    }
-                    possibleActions.addAll(Global.global.getActions());
-                    for (Action act : possibleActions) {
-                        if (act.usable(this)
-                                        && Global.global.getMatch().condition.allowAction(act, this, Global.global.getMatch())) {
-                            Global.global.gui().addAction(act, this);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void ding() {
-        levelsToGain += 1;
-        if (levelsToGain == 1) {
-            actuallyDing();
-            Global.global.gui().ding();
-        }
-    }
-
-    public void actuallyDing() {
-        level += 1;
-        getStamina().gain(getGrowth().stamina);
-        getArousal().gain(getGrowth().arousal);
-        availableAttributePoints += getGrowth().attributes[Math.min(rank, getGrowth().attributes.length-1)];
-        gui.message("You've gained a Level!<br/>Select which attributes to increase.");
-        if (getLevel() % 3 == 0 && level < 10 || (getLevel() + 1) % 2 == 0 && level > 10 /*|| (Global.checkFlag(Flag.SuperTraitMode) && ((level < 10 && getLevel()%2 == 0) || (getLevel() % 3 != 0 && level > 10)))*/) {
-            traitPoints += 1;
-        }
-    }
-
-    @Override
-    public int getMaxWillpowerPossible() {
-        return 50 + getLevel() * 5 - get(Attribute.Submissive) * 2;
-    }
-
-    @Override
-    public void flee(Area location2) {
-        Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
-        Area destination = adjacent[Rng.rng.random(adjacent.length)];
-        Global.global.gui().message("You dash away and escape into the <b>" + destination.name + ".</b>");
-        travel(destination);
-        location2.endEncounter();
-    }
-
-    @Override
-    public void bathe() {
-        status.removeIf(s -> !s.isAddiction());
-        stamina.fill();
-        if (location.name.equals("Showers")) {
-            Global.global.gui().message("You let the hot water wash away your exhaustion and soon you're back to peak condition.");
-        }
-        if (location.name.equals("Pool")) {
-            Global.global.gui().message("The hot water soothes and relaxes your muscles. You feel a bit exposed, skinny-dipping in such an open area. You decide it's time to get moving.");
-        }
-        if (state == State.lostclothes) {
-            Global.global.gui().message("Your clothes aren't where you left them. Someone must have come by and taken them.");
-        }
-        state = State.ready;
-    }
-
-    @Override
-    public void craft() {
-        int roll = Rng.rng.random(10);
-        Global.global.gui().message("You spend some time crafting some potions with the equipment.");
-        if (check(Attribute.Cunning, 25)) {
-            if (roll == 9) {
-                gain(Item.Aphrodisiac);
-                gain(Item.DisSol);
-            } else if (roll >= 5) {
-                gain(Item.Aphrodisiac);
-            } else {
-                gain(Item.Lubricant);
-                gain(Item.Sedative);
-            }
-        } else if (check(Attribute.Cunning, 20)) {
-            if (roll == 9) {
-                gain(Item.Aphrodisiac);
-            } else if (roll >= 7) {
-                gain(Item.DisSol);
-            } else if (roll >= 5) {
-                gain(Item.Lubricant);
-            } else if (roll >= 3) {
-                gain(Item.Sedative);
-            } else {
-                gain(Item.EnergyDrink);
-            }
-        } else if (check(Attribute.Cunning, 15)) {
-            if (roll == 9) {
-                gain(Item.Aphrodisiac);
-            } else if (roll >= 8) {
-                gain(Item.DisSol);
-            } else if (roll >= 7) {
-                gain(Item.Lubricant);
-            } else if (roll >= 6) {
-                gain(Item.EnergyDrink);
-            } else {
-                Global.global.gui().message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
-            }
-        } else {
-            if (roll >= 7) {
-                gain(Item.Lubricant);
-            } else if (roll >= 5) {
-                gain(Item.Sedative);
-            } else {
-                Global.global.gui().message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
-            }
-        }
-        state = State.ready;
-    }
-
-    @Override
-    public void search() {
-        int roll = Rng.rng.random(10);
-        switch (roll) {
-            case 9:
-                gain(Item.Tripwire);
-                gain(Item.Tripwire);
-                break;
-            case 8:
-                gain(Item.ZipTie);
-                gain(Item.ZipTie);
-                gain(Item.ZipTie);
-                break;
-            case 7:
-                gain(Item.Phone);
-                break;
-            case 6:
-                gain(Item.Rope);
-                break;
-            case 5:
-                gain(Item.Spring);
-                break;
-            default:
-                Global.global.gui().message("You don't find anything useful.");
-        }
-        state = State.ready;
-    }
-
-    @Override
-    public void masturbate() {
-        Global.global.gui().message("You hurriedly stroke yourself off, eager to finish before someone catches you. After what seems like an eternity, you ejaculate into a tissue and "
-                        + "throw it in the trash. Looks like you got away with it.");
-        arousal.empty();
-        state = State.ready;
-    }
-
-    @Override
-    public void showerScene(Character target, IEncounter encounter) {
-        if (target.location().name.equals("Showers")) {
-            Global.global.gui().message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
-                            + "of your opponents. You peek inside and sure enough, <b>" + target.name()
-                            + "</b> is taking a shower and looking quite vulnerable. Do you take advantage "
-                            + "of her carelessness?");
-        } else if (target.location().name.equals("Pool")) {
-            Global.global.gui().message("You stumble upon <b>" + target.name
-                            + "</b> skinny dipping in the pool. She hasn't noticed you yet. It would be pretty easy to catch her off-guard.");
-        }
-        assessOpponent(target);
-        encounter.promptShower(target, Global.global.gui());
-    }
-
-    @Override
-    public void intervene(IEncounter enc, Character p1, Character p2) {
-        Global.global.gui().message("You find <b>" + p1.name() + "</b> and <b>" + p2.name()
-                        + "</b> fighting too intensely to notice your arrival. If you intervene now, it'll essentially decide the winner.");
-        gui.message("Then again, you could just wait and see which one of them comes out on top. It'd be entertaining,"
-                        + " at the very least.");
-        gui.promptIntervene(enc, p1, p2);
-        enc.promptIntervene(p1, p2, Global.global.gui());
     }
 
     @Override
@@ -607,23 +261,372 @@ public class Player extends Character {
     }
 
     @Override
+    public boolean resist3p(Combat c, Character target, Character assist) {
+        return hasTrait(Trait.cursed);
+    }
+
+    @Override
+    public String bbLiner(Combat c, Character target) {
+        return null;
+    }
+
+    @Override
+    public String stunLiner(Combat c, Character target) {
+        return null;
+    }
+
+    @Override
+    public String taunt(Combat c, Character target) {
+        return null;
+    }
+
+    */
+
+    @Override
+    public boolean human() {
+        return true;
+    }
+
+    @Override
+    public void detect() {
+        for (Area adjacent : location.adjacent) {
+            if (adjacent.ping(get(Attribute.Perception))) {
+                controller
+                      .message("You hear something in the <b>" + adjacent.name + "</b>.");
+                adjacent.setPinged(true);
+            }
+        }
+    }
+
+    private void assessOpponent(Character opponent) {
+        String arousal;
+        String stamina;
+        if (opponent.state == State.webbed) {
+            controller.message("She is naked and helpless.<br/>");
+            return;
+        }
+        if (get(Attribute.Perception) >= 6) {
+            controller.message("She is level " + opponent.getLevel());
+        }
+        if (get(Attribute.Perception) >= 8) {
+            controller.message("Her Power is " + opponent.get(Attribute.Power) + ", her Cunning is "
+                            + opponent.get(Attribute.Cunning) + ", and her Seduction is "
+                            + opponent.get(Attribute.Seduction));
+        }
+        if (opponent.mostlyNude() || opponent.state == State.shower) {
+            controller.message("She is completely naked.");
+        } else {
+            controller.message("She is dressed and ready to fight.");
+        }
+        if (get(Attribute.Perception) >= 4) {
+            if (opponent.getArousal()
+                        .percent() > 70) {
+                arousal = "horny";
+            } else if (opponent.getArousal()
+                               .percent() > 30) {
+                arousal = "slightly aroused";
+            } else {
+                arousal = "composed";
+            }
+            if (opponent.getStamina()
+                        .percent() < 50) {
+                stamina = "tired";
+            } else {
+                stamina = "eager";
+            }
+            controller.message("She looks " + stamina + " and " + arousal + ".");
+        }
+    }
+
+    // TODO: Showing actions should be part of a chooseAction() method or something, and triggered by the match loop.
+    @Override
+    public void move(Area newLocation) {
+        location.exit(this);
+        location = newLocation;
+        location.enter(this);
+        // TODO: figure out where to put this stuff
+/*
+        if (busy > 0) {
+            busy--;
+        } else if (this.is(Stsflag.enthralled)) {
+            Character master;
+            master = ((Enthralled) getStatus(Stsflag.enthralled)).master;
+            if (master != null) {
+                Move compelled = findPath(master.location());
+                controller.message("You feel an irresistible compulsion to head to the <b>" + master.location().name + "</b>");
+                if (compelled != null) {
+                    controller.addAction(compelled, this);
+                }
+            }
+        } else if (state == State.shower || state == State.lostclothes) {
+            bathe();
+        } else if (state == State.crafting) {
+            craft();
+        } else if (state == State.searching) {
+            search();
+        } else if (state == State.resupplying) {
+            resupply();
+        } else if (state == State.webbed) {
+            controller.message("You eventually manage to get an arm free, which you then use to extract yourself from the trap.");
+            state = State.ready;
+        } else if (state == State.masturbating) {
+            masturbate();
+        } else {
+            if (Global.global.checkFlag(Flag.FTC)) {
+                Character holder = ((FTCMatch) Global.global.getMatch()).getFlagHolder();
+                if (holder != null && !holder.human()) {
+                    controller.message("<b>" + holder.name + " currently holds the Flag.</b></br>");
+                }
+            }
+            controller.message(location.description + "<br/><br/>");
+            for (Deployable trap : location.env) {
+                if (trap.owner() == this) {
+                    controller.message("You've set a " + trap.toString() + " here.");
+                }
+            }
+            if (state == State.inTree)
+                controller.message("You are hiding in a tree, waiting to drop down on an unwitting foe.");
+            else if (state == State.inBushes)
+                controller.message("You are hiding in dense bushes, waiting for someone to pass by.");
+            else if (state == State.inPass)
+                controller.message("You are hiding in an alcove in the pass.");
+            else if (state == State.hidden)
+                controller.message("You have found a hiding spot and are waiting for someone to pounce upon.");
+            detect();
+            if (!location.encounter(this)) {
+                if (!allowedActions().isEmpty()) {
+                    allowedActions().forEach(a -> controller.addAction(a, this));
+                } else {
+                    List<Action> possibleActions = new ArrayList<>();
+                    for (Area path : location.adjacent) {
+                        possibleActions.add(new Move(path));
+                    }
+                    if (getPure(Attribute.Cunning) >= 28) {
+                        for (Area path : location.shortcut) {
+                            possibleActions.add(new Shortcut(path));
+                        }
+                    }
+
+                    if(getPure(Attribute.Ninjutsu)>=5){
+                        for(Area path:location.jump){
+                            possibleActions.add(new Leap(path));
+                        }
+                    }
+                    possibleActions.addAll(Global.global.getActions());
+                    for (Action act : possibleActions) {
+                        if (act.usable(this)
+                                        && Global.global.getMatch().condition.allowAction(act, this, Global.global.getMatch())) {
+                            controller.addAction(act, this);
+                        }
+                    }
+                }
+            }
+        }
+        */
+    }
+
+    @Override
+    public void ding() {
+        levelsToGain += 1;
+        if (levelsToGain == 1) {
+            actuallyDing();
+            // TODO: figure out how to separate character leveling up from the GUI to handle InterruptedException
+            /*
+            controller.ding(this);
+            */
+        }
+    }
+
+    public void actuallyDing() {
+        level += 1;
+        getStamina().gain(getGrowth().stamina);
+        getArousal().gain(getGrowth().arousal);
+        availableAttributePoints += getGrowth().attributes[Math.min(rank, getGrowth().attributes.length-1)];
+        controller.message("You've gained a Level!<br/>Select which attributes to increase.");
+        if (getLevel() % 3 == 0 && level < 10 || (getLevel() + 1) % 2 == 0 && level > 10
+        /*|| (Global.global.checkFlag(Flag.SuperTraitMode) && ((level < 10 && getLevel()%2 == 0) || (getLevel() % 3 != 0 && level > 10)))*/
+        ) {
+            traitPoints += 1;
+        }
+    }
+
+    @Override
+    public int getMaxWillpowerPossible() {
+        return 50 + getLevel() * 5 - get(Attribute.Submissive) * 2;
+    }
+
+    @Override
+    public void flee(Area location2) {
+        Area[] adjacent = location2.adjacent.toArray(new Area[location2.adjacent.size()]);
+        Area destination = adjacent[Rng.rng.random(adjacent.length)];
+        controller.message("You dash away and escape into the <b>" + destination.name + ".</b>");
+        travel(destination);
+        location2.endEncounter();
+    }
+
+    // TODO: move to encounter package
+    @Override
+    public void bathe() {
+        status.removeIf(s -> !s.isAddiction());
+        stamina.fill();
+        if (location.name.equals("Showers")) {
+            controller.message("You let the hot water wash away your exhaustion and soon you're back to peak condition.");
+        }
+        if (location.name.equals("Pool")) {
+            controller.message("The hot water soothes and relaxes your muscles. You feel a bit exposed, skinny-dipping in such an open area. You decide it's time to get moving.");
+        }
+        if (state == State.lostclothes) {
+            controller.message("Your clothes aren't where you left them. Someone must have come by and taken them.");
+        }
+        state = State.ready;
+    }
+
+    @Override
+    public void craft() {
+        int roll = Rng.rng.random(10);
+        controller.message("You spend some time crafting some potions with the equipment.");
+        if (check(Attribute.Cunning, 25)) {
+            if (roll == 9) {
+                gain(Item.Aphrodisiac);
+                gain(Item.DisSol);
+            } else if (roll >= 5) {
+                gain(Item.Aphrodisiac);
+            } else {
+                gain(Item.Lubricant);
+                gain(Item.Sedative);
+            }
+        } else if (check(Attribute.Cunning, 20)) {
+            if (roll == 9) {
+                gain(Item.Aphrodisiac);
+            } else if (roll >= 7) {
+                gain(Item.DisSol);
+            } else if (roll >= 5) {
+                gain(Item.Lubricant);
+            } else if (roll >= 3) {
+                gain(Item.Sedative);
+            } else {
+                gain(Item.EnergyDrink);
+            }
+        } else if (check(Attribute.Cunning, 15)) {
+            if (roll == 9) {
+                gain(Item.Aphrodisiac);
+            } else if (roll >= 8) {
+                gain(Item.DisSol);
+            } else if (roll >= 7) {
+                gain(Item.Lubricant);
+            } else if (roll >= 6) {
+                gain(Item.EnergyDrink);
+            } else {
+                controller.message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
+            }
+        } else {
+            if (roll >= 7) {
+                gain(Item.Lubricant);
+            } else if (roll >= 5) {
+                gain(Item.Sedative);
+            } else {
+                controller.message("Your concoction turns a sickly color and releases a foul smelling smoke. You trash it before you do any more damage.");
+            }
+        }
+        state = State.ready;
+    }
+
+    @Override
+    public void search() {
+        int roll = Rng.rng.random(10);
+        switch (roll) {
+            case 9:
+                gain(Item.Tripwire);
+                gain(Item.Tripwire);
+                break;
+            case 8:
+                gain(Item.ZipTie);
+                gain(Item.ZipTie);
+                gain(Item.ZipTie);
+                break;
+            case 7:
+                gain(Item.Phone);
+                break;
+            case 6:
+                gain(Item.Rope);
+                break;
+            case 5:
+                gain(Item.Spring);
+                break;
+            default:
+                controller.message("You don't find anything useful.");
+        }
+        state = State.ready;
+    }
+
+    @Override
+    public void masturbate() {
+        controller.message("You hurriedly stroke yourself off, eager to finish before someone catches you. After what seems like an eternity, you ejaculate into a tissue and "
+                        + "throw it in the trash. Looks like you got away with it.");
+        arousal.empty();
+        state = State.ready;
+    }
+
+    // TODO: move these to encounter package classes
+    /*
+    @Override
+    public void showerScene(Character target, Encounter encounter) {
+        if (target.location().name.equals("Showers")) {
+            controller.message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
+                            + "of your opponents. You peek inside and sure enough, <b>" + target.name()
+                            + "</b> is taking a shower and looking quite vulnerable. Do you take advantage "
+                            + "of her carelessness?");
+        } else if (target.location().name.equals("Pool")) {
+            controller.message("You stumble upon <b>" + target.name
+                            + "</b> skinny dipping in the pool. She hasn't noticed you yet. It would be pretty easy to catch her off-guard.");
+        }
+        assessOpponent(target);
+        target.chooseEncounterChoice(encounter);
+    }
+
+    @Override
+    public void intervene(Encounter enc, Character p1, Character p2) {
+        controller.message("You find <b>" + p1.name() + "</b> and <b>" + p2.name()
+                        + "</b> fighting too intensely to notice your arrival. If you intervene now, it'll essentially decide the winner.");
+        controller.message("Then again, you could just wait and see which one of them comes out on top. It'd be entertaining,"
+                        + " at the very least.");
+        controller.promptIntervene(enc, p1, p2);
+        enc.promptIntervene(p1, p2, controller);
+    }
+
+    @Override
+    public void promptTrap(IEncounter enc, Character target, Trap trap) {
+        controller.message("Do you want to take the opportunity to ambush <b>" + target.name() + "</b>?");
+        assessOpponent(target);
+        enc.promptOpportunity(target, trap, controller);
+    }
+
+    @Override
+    public void spy(Character opponent, Encounter enc) {
+        controller.message("You spot <b>" + opponent.name
+                        + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
+        assessOpponent(opponent);
+        // TODO: Make Fight or Flight choice work
+    }
+
+    // TODO: This should be handled by the encounter
+    @Override
+    public void faceOff(Character opponent, Encounter enc) {
+        controller.message("You run into <b>" + opponent.name
+                        + "</b> and you both hesitate for a moment, deciding whether to attack or retreat.");
+        assessOpponent(opponent);
+    }
+    */
+
+    @Override
     public void gain(Item item) {
-        Global.global.gui()
-              .message("<b>You've gained " + item.pre() + item.getName() + ".</b>");
+        controller.message("<b>You've gained " + item.pre() + item.getName() + ".</b>");
         super.gain(item);
     }
 
     @Override
     public String challenge(Character other) {
         return null;
-    }
-
-    @Override
-    public void promptTrap(IEncounter enc, Character target, Trap trap) {
-        Global.global.gui()
-              .message("Do you want to take the opportunity to ambush <b>" + target.name() + "</b>?");
-        assessOpponent(target);
-        enc.promptOpportunity(target, trap, Global.global.gui());
     }
 
     @Override
@@ -729,8 +732,8 @@ public class Player extends Character {
                                 Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 this, opponent, body.getRandomPussy()));
             }
-            if (hasDick() && !body.getRandomCock().moddedPartCountsAs(this, CockMod.slimy)) {
-                body.temporaryAddOrReplacePartWithType(body.getRandomCock().applyMod(CockMod.slimy), 999);
+            if (hasDick() && !body.getRandomCock().moddedPartCountsAs(this, CockPart.Mod.slimy)) {
+                body.temporaryAddOrReplacePartWithType(body.getRandomCock().applyMod(CockPart.Mod.slimy), 999);
                 c.write(this,
                                 Global.global.format("{self:NAME-POSSESSIVE} %s turned back into a gooey pussy.",
                                                 this, opponent, body.getRandomPussy()));
@@ -811,11 +814,6 @@ public class Player extends Character {
     @Override
     public String getType() {
         return type;
-    }
-
-    @Override
-    public boolean resist3p(Combat c, Character target, Character assist) {
-        return hasTrait(Trait.cursed);
     }
 
     public boolean hasAddiction(AddictionType type) {
@@ -974,8 +972,8 @@ public class Player extends Character {
     protected void resolveOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart, int times,
                     int totalTimes) {
         super.resolveOrgasm(c, opponent, selfPart, opponentPart, times, totalTimes);
-        if (has(Trait.slimification) && times == totalTimes && getWillpower().percent() < 60 && !has(Trait.slime)) {
-            c.write(this, Global.format("A powerful shiver runs through your entire body. Oh boy, you know where this"
+        if (hasTrait(Trait.slimification) && times == totalTimes && getWillpower().percent() < 60 && !hasTrait(Trait.slime)) {
+            c.write(this, Global.global.format("A powerful shiver runs through your entire body. Oh boy, you know where this"
                             + " is headed... Sure enough, you look down to see your skin seemingly <i>melt</i>,"
                             + " turning a translucent blue. You legs fuse together and collapse into a puddle."
                             + " It only takes a few seconds for you to regain some semblance of control over"
@@ -989,8 +987,8 @@ public class Player extends Character {
                 body.temporaryAddOrReplacePartWithType(new TentaclePart("slime filaments", "pussy", "slime", 0.0, 1.0, 1.0), 999);
                 body.temporaryAddOrReplacePartWithType(PussyPart.gooey, 999);
             }
-            if (hasDick() && !body.getRandomCock().moddedPartCountsAs(this, CockMod.slimy)) {
-                body.temporaryAddOrReplacePartWithType(body.getRandomCock().applyMod(CockMod.slimy), 999);
+            if (hasDick() && !body.getRandomCock().moddedPartCountsAs(this, CockPart.Mod.slimy)) {
+                body.temporaryAddOrReplacePartWithType(body.getRandomCock().applyMod(CockPart.Mod.slimy), 999);
             }
             BreastsPart part = body.getBreastsBelow(BreastsPart.h.size);
             if (part != null && body.getRandomBreasts() != BreastsPart.flat) {

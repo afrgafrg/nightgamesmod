@@ -60,7 +60,7 @@ public class Turnover extends Skill {
         return String.format("%s rolls %s onto %s stomach. %s %s back "
                         + "up, but %s takes the opportunity to get behind %s.", getSelf().subject(),
                         target.nameDirectObject(), target.possessiveAdjective(),
-                        Global.capitalizeFirstLetter(target.subjectAction("push", "pushes")),
+                        Grammar.capitalizeFirstLetter(target.subjectAction("push", "pushes")),
                         target.reflectivePronoun(), getSelf().subject(), target.directObject());
     }
 

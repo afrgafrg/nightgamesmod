@@ -84,7 +84,7 @@ public class ImbueFetish extends Skill {
                         + "strong attraction towards %s.",
                         target.subjectAction("feel"), target.possessiveAdjective(), target.pronoun(),
                         target.action("look"), target.pronoun(), target.action("see"),
-                        Global.global.capitalizeFirstLetter(target.subjectAction("remove")),
+                        Grammar.capitalizeFirstLetter(target.subjectAction("remove")),
                         target.pronoun(), target.action("look"), getSelf().nameDirectObject(),
                         getSelf().possessiveAdjective(), target.pronoun(), target.action("feel"),
                         chosenFetish);

@@ -266,12 +266,12 @@ public enum BreastsPart implements BodyPart {
                      .setIntegerFlag("drank_magicmilk", timesDrank);
                 }
             }
-            if (self.has(Trait.sedativecream)) {
+            if (self.hasTrait(Trait.sedativecream)) {
                 c.write(opponent,
                                 Global.global.format("The power seems to leave {other:name-possessive} body as {other:pronoun-action:sip|sips} {self:possessive} cloying cream.",
                                                 self, opponent));
                 opponent.weaken(c, opponent.getStamina().max() / 10);
-                opponent.add(c, new Abuff(opponent, Attribute.Power, -Global.random(1, 3), 20));
+                opponent.add(c, new Abuff(opponent, Attribute.Power, -Rng.rng.random(1, 3), 20));
             }
         }
         return 0;

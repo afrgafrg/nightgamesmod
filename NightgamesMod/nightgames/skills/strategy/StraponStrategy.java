@@ -18,7 +18,7 @@ public class StraponStrategy extends FuckStrategy {
     @Override
     public double weight(Combat c, Character self) {
         double weight = .25;
-        if (!self.has(Item.Strapon) && !self.has(Item.Strapon2)) {
+        if (!self.hasTrait(Item.Strapon) && !self.hasTrait(Item.Strapon2)) {
             return 0;
         }
         if (self.getMood().equals(Emotion.dominant)) {
@@ -28,7 +28,7 @@ public class StraponStrategy extends FuckStrategy {
     }
     
     protected Set<Skill> filterSkills(Combat c, Character self, Set<Skill> allowedSkills) {
-        if (self.has(Trait.strapped) && allowedSkills.contains(STRAPON_SKILL)) {
+        if (self.hasTrait(Trait.strapped) && allowedSkills.contains(STRAPON_SKILL)) {
             return Collections.singleton(new Strapon(self));
         }
         return super.filterSkills(c, self, allowedSkills);

@@ -38,7 +38,7 @@ public class AssFuck extends Fuck {
                                         || (c.getStance().prone(target) && !c.getStance().mobile(target)))
                         && getSelf().canAct()
                         && c.getStance().reachBottom(getSelf())
-                        && (getTargetOrgan(target).isReady(target) || target.has(Trait.buttslut) || getSelf().hasItem(Item.Lubricant)
+                        && (getTargetOrgan(target).isReady(target) || target.hasTrait(Trait.buttslut) || getSelf().hasItem(Item.Lubricant)
                                         || getSelf().getArousal().percent() > 50 || getSelf().hasTrait(Trait.alwaysready)
                                         || getSelf().hasTrait(Trait.assmaster))
                         && (!target.hasPussy() || !PullOut.blockedByAddiction(getSelf()));
@@ -70,7 +70,7 @@ public class AssFuck extends Fuck {
         c.write(getSelf(), Global.global.format(premessage, getSelf(), target));
 
         int m = Rng.rng.random(10, 15);
-        if (getSelf().has(Trait.strapped) && getSelf().has(Item.Strapon2)) {
+        if (getSelf().hasTrait(Trait.strapped) && getSelf().hasTrait(Item.Strapon2)) {
             m += 3;
         }
         if (getSelf().human()) {
@@ -85,7 +85,7 @@ public class AssFuck extends Fuck {
                 c.write(getSelf(), receive(c, premessage.length(), Result.normal, target));
             }
         } else if (c.isBeingObserved()) {
-            if (!c.getStance().behind(getSelf()) && getSelf().has(Trait.strapped)) {
+            if (!c.getStance().behind(getSelf()) && getSelf().hasTrait(Trait.strapped)) {
                 c.write(getSelf(), receive(c, premessage.length(), Result.upgrade, target));
             } else {
                 c.write(getSelf(), receive(c, premessage.length(), Result.normal, target));
@@ -112,7 +112,7 @@ public class AssFuck extends Fuck {
             getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m / 2, c, this);
         }
         getSelf().emote(Emotion.dominant, 100);
-        if (!target.has(Trait.analTraining1) && !target.has(Trait.shameless)) {
+        if (!target.hasTrait(Trait.analTraining1) && !target.hasTrait(Trait.shameless)) {
             target.emote(Emotion.desperate, 50);
         } else {
             target.emote(Emotion.horny, 25);
@@ -135,7 +135,7 @@ public class AssFuck extends Fuck {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Seduction) >= 15 || target.has(Trait.buttslut);
+        return user.get(Attribute.Seduction) >= 15 || target.hasTrait(Trait.buttslut);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class AssFuck extends Fuck {
                             + " %s %s to struggle away, but %s %s %s hips closer and slowly pushes the dildo"
                             + " inside %s ass.", getSelf().subjectAction("spread"), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.pronoun()), target.action("try", "tries"),
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.action("try", "tries"),
                             getSelf().subject(), getSelf().action("pull"), target.possessiveAdjective(),
                             target.possessiveAdjective());
         }

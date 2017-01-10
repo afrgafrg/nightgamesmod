@@ -36,7 +36,7 @@ public class CassieTime extends BaseNPCTime {
                         + "she says without looking at you. <i>\"You're cute, funny, and we got along so well whenever we talked. I tried to think of ways to flirt with you so you'd see me as more than "
                         + "a friend, but I don't think I'd have ever worked up the courage to try. When I saw that we had both joined the games, I can't properly describe what I felt. Embarrassed"
                         + " of course - maybe more embarrassed than I've been in years - to be seen at a sexfighting competition by someone I knew. I was also really excited about the possibility "
-                        + "of being intimate with the " + Global.getPlayer().boyOrGirl() + " I liked. Most of all, I was scared that you might look down on me when you found out what a horny girl I am.\"</i> She grasps your hand and you "
+                        + "of being intimate with the " + Global.global.getPlayer().boyOrGirl() + " I liked. Most of all, I was scared that you might look down on me when you found out what a horny girl I am.\"</i> She grasps your hand and you "
                         + "squeeze it reassuringly. You pull her towards you and kiss her softly. <i>\"I guess it turned out better than I could have hoped.\"</i><br/><br/>She sits up and looks at you, blushing "
                         + "deeply. <i>\"We can't keep lying here with my embarrassing story in the air, let's do some training.\"</i>";
         advancedTrait = Trait.witch;
@@ -54,7 +54,7 @@ public class CassieTime extends BaseNPCTime {
             growCock.scene = "[Placeholder]<br/>Cassie hesistantly drinks the 3 priapus drafts and grows a large runic cock.";
             growCock.effect = (c, self, other) -> {
                 // TODO: Fix with CockPart.Mod
-                other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.runic));
+                other.body.add(new CockPart(CockPart.Size.big, CockPart.Mod.runic));
                 return true;
             };
             options.add(growCock);
@@ -203,14 +203,14 @@ public class CassieTime extends BaseNPCTime {
                                             + "out together or practicing for the night games, but it won't change who she is. There's surely enough overlap between her two worlds for you to fit. She's quiet "
                                             + "for another short while, then stands up on her toes and presses her mouth softly against yours. You've tasted her lips before, but this is something different. this "
                                             + "is hesitant and innocent, like a lover's first kiss.<br/><br/><i>\"If I can pretend to be anyone, can I pretend to be your girlfriend?\"</i> You answer by wrapping your arms "
-                                            + "around her and kissing her tenderly. <i>\"Hanging out with a cute " + Global.getPlayer().boyOrGirl() + " interspersed with wild sex games? Sounds like a great date,\"</i> she says, face flushed but "
+                                            + "around her and kissing her tenderly. <i>\"Hanging out with a cute " + Global.global.getPlayer().boyOrGirl() + " interspersed with wild sex games? Sounds like a great date,\"</i> she says, face flushed but "
                                             + "lit up in a genuine smile. <i>\"What exactly do you have in mind?\"</i>");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
             Global.global.gui().choose(this, "Games");
             Global.global.gui().choose(this, "Sparring");
             Global.global.gui().choose(this, "Sex");
-            if (npc.hasTrait(Trait.magicmilk) && Global.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
+            if (npc.hasTrait(Trait.magicmilk) && Global.global.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
                 Global.global.gui().choose(this, "Ask for milk");
             }
         }
@@ -413,7 +413,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "When she tongues you just under the glans and applies a little suction, it pushes you over the edge. You give a low groan and shoot your load into her mouth.<br/><br/>"
                                                 + "Cassie swallows your semen and giggles. <i>\"I think I found a sensitive spot. I'll have to remember that.\"</i> She doesn't move away from your groin, watching with a smile "
                                                 + "as your dick starts to soften. This isn't the first time she's seen a penis. Is it really that fascinating? Her cheeks grow slightly redder than they already were. "
-                                                + "<i>\"Girls are interested in sex too. I've spent a lot of nights thinking about " + Global.getPlayer().boyOrGirl() + "s since puberty. You're the closest I've ever had to an actual " + Global.getPlayer().boyOrGirl() + "friend.\"</i> So she was a virgin "
+                                                + "<i>\"Girls are interested in sex too. I've spent a lot of nights thinking about " + Global.global.getPlayer().boyOrGirl() + "s since puberty. You're the closest I've ever had to an actual " + Global.global.getPlayer().boyOrGirl() + "friend.\"</i> So she was a virgin "
                                                 + "when she first joined the night games? She fidgets a bit at the question, which you notice makes her hips wiggle in quite an attractive way. <i>\"Not quite a virgin. "
                                                 + "In high school, I had a close friend like that, but in the end we were just friends. One day as it's getting close to graduation, we end up talking about how we both want to lose "
                                                 + "our virginities before we get to college, so we decide to help each other out.\"</i> She's bright red with embarrassment, but continues. <i>\"It was kinda awkward, but a lot of fun, "

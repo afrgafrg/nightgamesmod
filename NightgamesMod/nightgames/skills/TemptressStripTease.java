@@ -118,7 +118,7 @@ public class TemptressStripTease extends StripTease {
                             + " %s can only gawk in amazement as her perfect body is revealed bit"
                             + " by bit, and the thought of doing anything to blemish such"
                             + " perfection seems very unpleasant indeed.", getSelf().subject(),
-                            Global.global.capitalizeFirstLetter(target.subject()));
+                            Grammar.capitalizeFirstLetter(target.subject()));
         }
     }
 

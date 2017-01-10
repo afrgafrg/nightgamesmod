@@ -26,9 +26,9 @@ public class StunBlast extends Skill {
     public boolean usable(Combat c, Character target) {
         return getSelf().canAct() && c.getStance().mobile(getSelf()) && c.getStance().front(getSelf())
                         && (getSelf().hasItem(Item.Battery, 4) ||
-                                        (target.has(Trait.conducivetoy) &&
-                                        target.has(ClothingTrait.harpoonDildo) ||
-                                        target.has(ClothingTrait.harpoonOnahole)));
+                                        (target.hasTrait(Trait.conducivetoy) &&
+                                        target.hasTrait(ClothingTrait.harpoonDildo) ||
+                                        target.hasTrait(ClothingTrait.harpoonOnahole)));
     }
 
     @Override
@@ -38,8 +38,8 @@ public class StunBlast extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.has(Trait.conducivetoy) && target.has(ClothingTrait.harpoonDildo) ||
-                                        target.has(ClothingTrait.harpoonOnahole)) {
+        if (target.hasTrait(Trait.conducivetoy) && target.hasTrait(ClothingTrait.harpoonDildo) ||
+                                        target.hasTrait(ClothingTrait.harpoonOnahole)) {
             writeOutput(c, Result.special, target);
             target.getStamina().empty();
             target.add(c, new Winded(target));
@@ -88,7 +88,7 @@ public class StunBlast extends Skill {
                             getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(),
                             target.pronoun(), target.action("cover"), target.possessiveAdjective());
         } else if (modifier == Result.special) {
-            return Global.format("{self:SUBJECT} presses a button on {self:possessive} arm device,"
+            return Global.global.format("{self:SUBJECT} presses a button on {self:possessive} arm device,"
                             + "and a bright flash suddenly travels along {self:possessive} connection to"
                             + " the toy which is still stuck to you. When it reaches you, a huge shock"
                             + " stuns your body, leaving you helpless on the ground while the toy"

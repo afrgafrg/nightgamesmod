@@ -59,7 +59,7 @@ public abstract class Position implements Cloneable {
             if (self.hasTrait(Trait.submissive) && sub(self)) {
                 return bonus;
             }
-            if ((!self.hasTrait(Trait.submissive) || self.has(Trait.flexibleRole)) && dom(self)) {
+            if ((!self.hasTrait(Trait.submissive) || self.hasTrait(Trait.flexibleRole)) && dom(self)) {
                 return bonus;
             }
         }
@@ -278,8 +278,8 @@ public abstract class Position implements Cloneable {
     }
 
     public boolean havingSexNoStrapped(Combat c) {
-        return penetratedBy(c, top, bottom) && !bottom.has(Trait.strapped)
-                        || penetratedBy(c, bottom, top) && !top.has(Trait.strapped);
+        return penetratedBy(c, top, bottom) && !bottom.hasTrait(Trait.strapped)
+                        || penetratedBy(c, bottom, top) && !top.hasTrait(Trait.strapped);
     }
 
     public boolean havingSex(Combat c) {
@@ -362,11 +362,11 @@ public abstract class Position implements Cloneable {
         }
         int stanceDominance = dominance();
         // It is unexpected, but not catastrophic if a character is at once a natural dom and submissive.
-        if (self.has(Trait.naturalTop)) {
+        if (self.hasTrait(Trait.naturalTop)) {
             // Rescales stance dominance values from 0-1-2-3-4-5 to 0-2-3-5-6-8
             stanceDominance = Double.valueOf(Math.ceil(stanceDominance * 1.5)).intValue();
         }
-        if (self.has(Trait.submissive)) {
+        if (self.hasTrait(Trait.submissive)) {
             // Rescales stance dominance values from 0-1-2-3-4-5 to 0-0-1-1-2-3
             stanceDominance = Double.valueOf(Math.floor(stanceDominance * 0.6)).intValue();
         }

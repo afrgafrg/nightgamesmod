@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static nightgames.requirements.RequirementShortcuts.bodypart;
+import static nightgames.requirements.RequirementShortcuts.item;
 import static nightgames.requirements.RequirementShortcuts.not;
 
 public class ReykaTime extends BaseNPCTime {
@@ -49,7 +50,7 @@ public class ReykaTime extends BaseNPCTime {
             growCock.scene = "[Placeholder]<br/>Reyka downs the bottle of the priapus draft after channeling her dark magic into the talisman and attaching it to her clitoris. "
                             + "The two of you wait, and soon enough, a large demonic cock sprouts out under the talisman, ripping it off from her body.";
             growCock.effect = (c, self, other) -> {
-                other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.incubus));
+                other.body.add(new CockPart(CockPart.Size.big, CockPart.Mod.incubus));
                 return true;
             };
             options.add(growCock);
@@ -128,8 +129,8 @@ public class ReykaTime extends BaseNPCTime {
         };
         transformations.add(demonWings);
         Transformation demonTail = new Transformation("Spade Tail");
-        demonTail.ingredients.put(Item.SuccubusDraft, 20);
-        demonTail.ingredients.put(Item.semen, 5);
+        demonTail.ingredients.add(item(Item.SuccubusDraft, 20));
+        demonTail.ingredients.add(item(Item.semen, 5));
         demonTail.requirements.add(not(bodypart("tail")));
         demonTail.requirements.add((c, self, other) -> {
             return self.body.get("tail")
@@ -137,7 +138,6 @@ public class ReykaTime extends BaseNPCTime {
                             .anyMatch(part -> part != TailPart.demonic) || !self.body.has("tail");
         });
         demonTail.scene =
-        demonTail.name = "Spade Tail";
                         "[Placeholder]<br/>Reyka marks the top of you ass with a magic symbol and fingers your ass until you grow a demonic tail.";
         demonTail.effect = (c, self, other) -> {
             self.body.addReplace(TailPart.demonic, 1);
@@ -154,7 +154,6 @@ public class ReykaTime extends BaseNPCTime {
                             .anyMatch(part -> part != EarPart.cat) || !self.body.has("ears");
         });
         pointedEars.scene =
-        pointedEars.name = "Pointed Ears";
                         "Reyka fetches the ingredients from your pockets with her tail and mixes them together with her palm. She mutters something unintelligible under her breath and suddenly a "
                                         + "comfortable-looking massage table appears in front of you. She motions for you to lie down, to which you promptly comply. She hovers above you and uses her mixture coated hands to "
                                         + "massage your ears. As her hands make contact with your sensitive ears, you feel a burning sensation in them as if they're are melting. "
@@ -557,7 +556,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "losing clothes left and right. At the six-minute mark, she starts sprinting circles around you "
                                           + "inhumanly fast before grabbing you from behind. She holds you in place with one arm across your chest, "
                                           + "while she uses her other hand to fondle your already rising dick. <i>\"Yum, playtime.\"</i> With that, she pulls "
-                                          + "down your boxers and lets you go. <i>\"Next time, " + Global.getPlayer().boyOrGirl() + ", you're mine!\"</i> As you start the final round, three "
+                                          + "down your boxers and lets you go. <i>\"Next time, " + Global.global.getPlayer().boyOrGirl() + ", you're mine!\"</i> As you start the final round, three "
                                           + "minutes remain on the clock. You aren't trying anymore fancy moves, instead opting to stay as far away "
                                           + "as possible. She gets close a couple times though, slapping your ass a few times. Your escapes are "
                                           + "hindered somewhat by the protrusion in your groin, but you make it to eight and a half minutes, "
@@ -622,7 +621,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "faculties in good condition if you are to study later. <i>\"Hey, you came to me! But alright, I guess we can "
                                           + "swap roles this time. I'll even level the playing field for you.\"</i> Unbidden images of wings sprouting "
                                           + "from your back come to mind, and you waste no time making clear to her you don't want them. <i>\"That's, "
-                                          + "not what I meant, you silly " + Global.getPlayer().boyOrGirl() + ". That would require at least five souls and I'm not allowed to harvest "
+                                          + "not what I meant, you silly " + Global.global.getPlayer().boyOrGirl() + ". That would require at least five souls and I'm not allowed to harvest "
                                           + "any here. No, I meant the hunting instincts, you know, so you can track my movements?\"</i> Come again? "
                                           + "That kind of defeats the point of the game, but it sure sounds interesting... You ask her to elaborate. "
                                           + "<i>\"Well, it's quite simple really: I weave a little spell, and you gain a seventh sense!\"</i> You are too "
@@ -638,7 +637,7 @@ public class ReykaTime extends BaseNPCTime {
                 }
                 Global.global.gui()
                       .message("Reyka pulls you out towards the dorms. A lot of people, men and women alike, look your way, "
-                                      + "jealous at the " + Global.getPlayer().guyOrGirl() + " who is getting tugged towards the dorms by a stunningly beautiful woman "
+                                      + "jealous at the " + Global.global.getPlayer().guyOrGirl() + " who is getting tugged towards the dorms by a stunningly beautiful woman "
                                       + "with a devilish grin on her face. You are not so sure if you are all that lucky, but hey, it "
                                       + "could be worse. You just hope she won't drag you to a family dinner some time, that brother of "
                                       + "hers doesn't sound like the type of guy you would get along with. That, and the cuisine would "

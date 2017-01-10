@@ -86,7 +86,7 @@ public class DarkTendrils extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             return String.format("%s makes a gesture and evil looking tentacles pop up around %s. %s %s out of the way as they try to grab %s.",
-                            getSelf().subject(), target.subject(), Global.capitalizeFirstLetter(target.pronoun()),
+                            getSelf().subject(), target.subject(), Grammar.capitalizeFirstLetter(target.pronoun()),
                             target.action("dive"), target.directObject());
         } else if (modifier == Result.weak) {
             return String.format("%s shadow seems to come to life as dark tendrils wrap around %s legs and bring %s to the floor.",

@@ -24,6 +24,7 @@ import nightgames.trap.Trap;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
@@ -48,7 +49,6 @@ public class GUI extends JFrame implements Observer {
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private TacticGroup currentTactics;
-    CommandPanel commandPanel;
     private JTextPane textPane;
     private JLabel lvl;
     private JLabel xp;
@@ -107,7 +107,7 @@ public class GUI extends JFrame implements Observer {
 
         // frame title
         setTitle("NightGames Mod");
-        setBackground(GUIColors.bgDark);
+        setBackground(GUIColors.bgDark.color);
         // closing operation
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -347,13 +347,13 @@ public class GUI extends JFrame implements Observer {
             } else {
                 rdfntnorm.setSelected(true);
             }
-            if (Global.checkFlag(Flag.FemalePronounsOnly)) {
+            if (Global.global.checkFlag(Flag.FemalePronounsOnly)) {
                 rdPronounFemale.setSelected(true);
             } else {
                 rdPronounBody.setSelected(true);
             }
             malePrefSlider.setValue(Math.round(Global.global.getValue(Flag.malePref)));
-            */
+
             int result = JOptionPane.showConfirmDialog(GUI.this, optionsPanel, "Options", JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
@@ -529,7 +529,7 @@ public class GUI extends JFrame implements Observer {
         // commandPanel - visible, contains the player's command buttons
         // TODO: reconcile the two CommandPanel implementations
         groupBox = Box.createHorizontalBox();
-        groupBox.setBackground(GUIColors.bgDark);
+        groupBox.setBackground(GUIColors.bgDark.color);
         groupBox.setBorder(new CompoundBorder());
         JPanel groupPanel = new JPanel();
         gamePanel.add(groupPanel);
@@ -985,14 +985,14 @@ public class GUI extends JFrame implements Observer {
 	    JPanel inventoryPane = new JPanel();
 	    inventoryPane.setLayout(new GridLayout(0, 5));
 	    inventoryPane.setSize(new Dimension(400, 800));
-	    inventoryPane.setBackground(GUIColors.bgDark);
+	    inventoryPane.setBackground(GUIColors.bgDark.color);
 
 	    Map<Item, Integer> items = player.getInventory();
 	    int count = 0;
 
 	    for (Item i : availItems) {
 	        JLabel label = new JLabel(i.getName() + ": " + items.get(i) + "\n");
-	        label.setForeground(GUIColors.textColorLight);
+	        label.setForeground(GUIColors.textColorLight.color);
 	        label.setToolTipText(i.getDesc());
 	        inventoryPane.add(label);
 	        count++;
@@ -1035,7 +1035,7 @@ public class GUI extends JFrame implements Observer {
         sep.setMaximumSize(new Dimension(statusPanel.getWidth(), 2));
         statusPanel.add(sep);
         int count = 0;
-        statsPanel.setBackground(GUIColors.bgLight);
+        statsPanel.setBackground(GUIColors.bgLight.color);
         ArrayList<JLabel> attlbls = new ArrayList<>();
         for (Attribute a : Attribute.values()) {
             int amt = player.get(a);
@@ -1071,7 +1071,7 @@ public class GUI extends JFrame implements Observer {
             e.printStackTrace();
         }
         JScrollPane scrollPane = new JScrollPane(statusText);
-        scrollPane.setBackground(GUIColors.bgLight);
+        scrollPane.setBackground(GUIColors.bgLight.color);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         JPanel currentStatusPanel = new JPanel(new GridLayout());
@@ -1082,10 +1082,10 @@ public class GUI extends JFrame implements Observer {
         currentStatusPanel.setMaximumSize(new Dimension(width/4, 2000));
         currentStatusPanel.setPreferredSize(new Dimension(width/4, 2000));
 
-        currentStatusPanel.setBackground(GUIColors.bgLight);
+        currentStatusPanel.setBackground(GUIColors.bgLight.color);
         statusPanel.add(currentStatusPanel);
         currentStatusPanel.add(scrollPane);
-        statusPanel.setBackground(GUIColors.bgLight);
+        statusPanel.setBackground(GUIColors.bgLight.color);
         if (width < 720) {
             currentStatusPanel.setSize(new Dimension(height, width / 6));
             System.out.println("Oh god so tiny");
@@ -1175,6 +1175,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
+    // TODO: move to CommandPanel or more suitable place
     public int nSkillsForGroup(TacticGroup group) {
         return skills.get(group).size();
     }
@@ -1182,6 +1183,6 @@ public class GUI extends JFrame implements Observer {
     public void switchTactics(TacticGroup group) {
         groupBox.removeAll();
         currentTactics = group;
-        Global.gui().showSkills();
+        Global.global.gui().showSkills();
     }
 }

@@ -58,7 +58,7 @@ public class Struggle extends Skill {
             return struggleMagLock(c, target);
         } else if (hasSingleGrabber(c, target)) {
             return struggleGrabber(c, target);
-        } elseif (getSelf().bound()) {
+        } else if (getSelf().bound()) {
             return struggleBound(c, target);
         } else if (c.getStance().havingSex(c)) {
             boolean knotted = getSelf().hasStatus(Stsflag.knotted);
@@ -79,10 +79,10 @@ public class Struggle extends Skill {
     private boolean blockedByCollar(Combat c, Character target) {
         Collared stat = (Collared) getSelf().getStatus(Stsflag.collared);
         if (stat != null) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to struggle, but"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:try|tries} to struggle, but"
                             + " the collar is having none of it and shocks {self:direct-object}"
                             + " into submission.", getSelf(), target));
-            getSelf().pain(c, null, Global.random(20, 50));
+            getSelf().pain(c, null, Rng.rng.random(20, 50));
             stat.spendCharges(c, 2);
             return true;
         }
@@ -127,7 +127,7 @@ public class Struggle extends Skill {
         }
            private boolean struggleAnal(Combat c, Character target, boolean knotted ) {
                 int diffMod = knotted ? 50 : 0;
-                if (target.has(Trait.grappler))
+                if (target.hasTrait(Trait.grappler))
             diffMod += 15;
         if (getSelf().check(Attribute.Power,
                                 target.getStamina().get() / 2 - getSelf().getStamina().get() / 2
@@ -197,7 +197,7 @@ public class Struggle extends Skill {
                 } else if (c.getStance().insertedPartFor(c,getSelf()).moddedPartCountsAs(getSelf(), CockPart.Mod.enlightened)) {
                     diffMod = -15;
                 }
-                if (target.has(Trait.grappler)) {
+                if (target.hasTrait(Trait.grappler)) {
             diffMod += 15;
         }
         if (getSelf().check(Attribute.Power,
@@ -282,7 +282,7 @@ public class Struggle extends Skill {
         private boolean struggleRegular(Combat c, Character target) {
             if ((getSelf().check(Attribute.Power, target.getStamina().get() / 2 - getSelf().getStamina().get() / 2
                             + target.get(Attribute.Power) - getSelf().get(Attribute.Power) - getSelf().escape(c, target)))
-                        && (!target.has(Trait.grappler) || Global.random(10) >= 2)) {
+                        && (!target.hasTrait(Trait.grappler) || Rng.rng.random(10) >= 2)) {
                 if (getSelf().human()) {
                     c.write(getSelf(), "You manage to scrabble out of " + target.name() + "'s grip.");
                 } else if (c.shouldPrintReceive(target, c)) {
@@ -348,18 +348,18 @@ public class Struggle extends Skill {
                            Math.max(getSelf().get(Attribute.Seduction),
                                            getSelf().get(Attribute.Cunning))) / 2;
         }
-        dc = attrLevel + Global.random(-10, 20);
+        dc = attrLevel + Rng.rng.random(-10, 20);
 
         // One MagLock, pretty easy to remove
         if (stat.getCount() == 1) {
             if (!target.check(Attribute.Science, dc * 2)) {
-                c.write(getSelf(), Global.format("Still having one hand completely free, it's not to"
+                c.write(getSelf(), Global.global.format("Still having one hand completely free, it's not to"
                             + " difficult for {self:subject} to remove the lone MagLock"
                             + " {other:subject} had placed around {self:possessive} wrist.", getSelf(), target));
                 getSelf().removeStatus(stat);
                 return true;
             } else {
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:pull|pulls} at the MagLock around"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:pull|pulls} at the MagLock around"
                                 + " {self:possessive} wrist, but it's not budging.", getSelf(), target));
             }
         } else {
@@ -391,11 +391,11 @@ public class Struggle extends Skill {
                 if (!target.human()) {
                     msg += " {other:SUBJECT} seems very surprised that {self:subject} was able to escape.";
                 }
-                c.write(getSelf(), Global.format(msg, getSelf(), target));
+                c.write(getSelf(), Global.global.format(msg, getSelf(), target));
                 getSelf().removeStatus(stat);
                 return true;
             } else {
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:struggle|struggles} against the"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:struggle|struggles} against the"
                                 + " MagLocks around {self:possessive} wrist, but {self:action:prove|proves}"
                                 + " no match for their insanely strong attraction.", getSelf(), target));
             }
@@ -409,14 +409,14 @@ public class Struggle extends Skill {
         int trueResist = Math.max(20, baseResist) - getSelf().get(Attribute.Science) / 2
                                                   - getSelf().get(Attribute.Power) / 3
                                                   - getSelf().get(Attribute.Cunning) / 3;
-        if (Global.random(100) > trueResist) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:wrench|wrenches}"
+        if (Rng.rng.random(100) > trueResist) {
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:wrench|wrenches}"
                             + " {other:name-possessive} Grabber off {self:possessive}"
                             + " wrist without too much trouble.", getSelf(), target));
             c.getCombatantData(target).setIntegerFlag(Grab.FLAG, 0);
             return true;
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:pull|pulls} mightily"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:pull|pulls} mightily"
                             + " on the Grabber around {self:possessive} wrist, but"
                             + " {self:action:fail|fails} to remove it.", getSelf(), target));
         }

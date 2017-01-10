@@ -105,7 +105,7 @@ public class CheapShot extends Skill {
                             "%s suddenly vanishes right in front of %s eyes. That wasn't just fast, %s completely disappeared! %s something "
                                             + "that sounds like 'Za Warudo' before %s suffer a painful groin hit from behind.",
                             getSelf().name(), target.nameOrPossessivePronoun(), getSelf().pronoun(),
-                            Global.capitalizeFirstLetter(target.subjectAction("hear")), target.pronoun());
+                            Grammar.capitalizeFirstLetter(target.subjectAction("hear")), target.pronoun());
         }
     }
 

@@ -140,7 +140,7 @@ public class TailSuck extends Skill {
                             getSelf().name(), getSelf().possessiveAdjective(),
                             target.nameOrPossessivePronoun(), target.directObject(),target.directObject(),
                             target.possessiveAdjective(), target.body.getRandomCock().describe(target),
-                            Global.global.capitalizeFirstLetter(target.subjectAction("feel")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("feel")),
                             target.pronoun(), target.action("are", "is"), target.directObject());
         } else if (modifier == Result.critical) {
             return String.format(
@@ -150,7 +150,7 @@ public class TailSuck extends Skill {
                                             + " think %s were fucking %s. Suddenly, the slick canal contracts around %s dick, and"
                                             + " %s %s some of %s strength flowing out of %s and into it. That is not good.",
                             target.possessiveAdjective(), getSelf().nameOrPossessivePronoun(), target.subjectAction("feel"),
-                            getSelf().possessiveAdjective(), Global.global.capitalizeFirstLetter(target.pronoun()),
+                            getSelf().possessiveAdjective(), Grammar.capitalizeFirstLetter(target.pronoun()),
                             target.action("are", "is"), target.pronoun(), target.action("feel"),
                             target.possessiveAdjective(), target.body.getRandomCock().describe(target),
                             getSelf().possessiveAdjective(), user().body.getRandomPussy().describe(getSelf()),

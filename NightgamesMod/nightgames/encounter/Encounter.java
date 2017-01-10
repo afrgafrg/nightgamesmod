@@ -9,6 +9,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.status.*;
@@ -72,6 +73,9 @@ public class Encounter implements Serializable, IEncounter {
     }
 
     public boolean spotCheck() {
+        // TODO: move these calculations to individual encounters
+        return false;
+        /*
         if (p1.eligible(p2) && p2.eligible(p1)) {
             if (p1.state == State.shower) {
                 p2.showerScene(p1, this);
@@ -154,6 +158,7 @@ public class Encounter implements Serializable, IEncounter {
             location.endEncounter();
             return false;
         }
+        */
     }
 
     protected void fightOrFlight(Character p, boolean fight, Optional<String> guaranteed) {
@@ -280,11 +285,9 @@ public class Encounter implements Serializable, IEncounter {
         startFightTimer();
         target.addNonCombat(new Flatfooted(target, 3));
         if (p1.human() || p2.human()) {
-            fight = Global.global.gui().beginCombat(attacker, target, 0);
-            Global.global.gui().message(Global.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
-        } else {
-            fight = new Combat(attacker, target, location, 0);
+            Global.global.gui().message(Global.global.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
         }
+        fight = new Combat(attacker, target, location, 0);
     }
 
     protected void showerambush(Character attacker, Character target) {
@@ -316,8 +319,7 @@ public class Encounter implements Serializable, IEncounter {
             }
         }
         if (p1.human() || p2.human()) {
-            fight = Global.global.gui()
-                          .beginCombat(p1, p2, 1);
+            fight = new Combat(p1, p2, location, 1);
         } else {
             // this.fight=new NullGUI().beginCombat(p1,p2);
             fight = new Combat(p1, p2, location, 0);
@@ -513,9 +515,6 @@ public class Encounter implements Serializable, IEncounter {
 
     public void engage(Combat fight) {
         this.fight = fight;
-        if (fight.p1.human() || fight.p2.human()) {
-            fight.watchCombat(Global.global.gui());
-        }
     }
 
     public void parse(Encs choice, Character self, Character target) {
@@ -523,8 +522,8 @@ public class Encounter implements Serializable, IEncounter {
     }
 
     public void parse(Encs choice, Character self, Character target, Trap trap) {
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
-            System.out.println(Global.format("{self:name} uses %s (%s) on {other:name-do}", self, target, choice, trap));
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+            System.out.println(Global.global.format("{self:name} uses %s (%s) on {other:name-do}", self, target, choice, trap));
         }
         switch (choice) {
             case ambush:
@@ -559,7 +558,7 @@ public class Encounter implements Serializable, IEncounter {
     
     private String smokeMessage(Character c) {
         return String.format("%s a smoke bomb and %s.",
-                        Global.global.capitalizeFirstLetter(c.subjectAction("drop", "drops"))
+                        Grammar.capitalizeFirstLetter(c.subjectAction("drop", "drops"))
                         , c.action("disappear", "disappears"));
     }
 
@@ -568,9 +567,9 @@ public class Encounter implements Serializable, IEncounter {
         return fight != null && !c.equals(p1) && !c.equals(p2);
     }
 
+    // TODO: might not need this
     @Override
     public void watch() {
-        Global.gui().watchCombat(fight);
         fight.go();
     }
 }

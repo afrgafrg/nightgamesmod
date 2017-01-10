@@ -7,6 +7,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.damage.DamageType;
 
@@ -38,10 +39,10 @@ public class FlyCatcher extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        Optional<PetCharacter> targetPet = Global.pickRandom(c.getPetsFor(target));
+        Optional<PetCharacter> targetPet = Rng.rng.pickRandom(c.getPetsFor(target));
         if (targetPet.isPresent()) {
             writeOutput(c, Result.normal, targetPet.get());
-            double m = Global.random(30, 50);
+            double m = Rng.rng.random(30, 50);
             targetPet.get().pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, targetPet.get(), m));
             getSelf().weaken(c, getSelf().getStamina().max() / 4);
         return true;
@@ -69,9 +70,9 @@ public class FlyCatcher extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return Global.format("{self:SUBJECT-ACTION:try|tries} to chase down {other:name-possessive} pet, but there are none!", getSelf(), target);
+            return Global.global.format("{self:SUBJECT-ACTION:try|tries} to chase down {other:name-possessive} pet, but there are none!", getSelf(), target);
         }
-        return Global.format("{self:SUBJECT-ACTION:take|takes} the time to focus on chasing down {other:name-do}, "
+        return Global.global.format("{self:SUBJECT-ACTION:take|takes} the time to focus on chasing down {other:name-do}, "
                         + "finally catching {other:direct-object} in a submission hold.", getSelf(), target);
     }
 

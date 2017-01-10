@@ -6,6 +6,8 @@ import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class Challenge implements Deployable {
         }
         available.add(GOAL.pendomwin);
         available.add(GOAL.subwin);
-        return available.get(Global.global.random(available.size()));
+        return available.get(Rng.rng.random(available.size()));
     }
 
     public String message() {
@@ -131,10 +133,10 @@ public class Challenge implements Deployable {
         if (active.state == State.ready) {
             owner = active;
             target = Global.global.getMatch().combatants
-                            .get(Global.global.random(Global.global.getMatch().combatants.size() - 1));
+                            .get(Rng.rng.random(Global.global.getMatch().combatants.size() - 1));
             for (int i = 0; i < 10 && target == active; i++) {
                 target = Global.global.getMatch().combatants
-                                .get(Global.global.random(Global.global.getMatch().combatants.size() - 1));
+                                .get(Rng.rng.random(Global.global.getMatch().combatants.size() - 1));
             }
             if (target == active) {
                 return false;

@@ -121,7 +121,7 @@ public class TentacleRape extends Skill {
             return String.format("%s shoots %s %s forward at %s. %s barely able to avoid them.",
                             getSelf().subject(), getSelf().possessiveAdjective(),
                             tentacles.describe(getSelf()), target.nameDirectObject(), 
-                            Global.capitalizeFirstLetter(target.subjectAction("are", "is")));
+                            Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")));
         } else if (modifier == Result.weak) {
             return String.format("%s shoots %s %s forward at %s, entangling %s arms and legs.",
                             getSelf().subject(), getSelf().possessiveAdjective(), tentacles.describe(getSelf()),

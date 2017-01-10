@@ -20,7 +20,7 @@ public class FFMFacesittingThreesome extends FFMCowgirlThreesome {
         if (top.human()) {
             return "";
         } else {
-            return Global.format("{self:SUBJECT-ACTION:are|is} pressing {self:POSSESSIVE} ass "
+            return Global.global.format("{self:SUBJECT-ACTION:are|is} pressing {self:POSSESSIVE} ass "
                             + "into {other:name-possessive} face while %s fucking {other:direct-object} in the Cowgirl position.", top, bottom, domSexCharacter.subjectAction("are", "is"));
         }
     }
@@ -28,7 +28,7 @@ public class FFMFacesittingThreesome extends FFMCowgirlThreesome {
     @Override
     public void checkOngoing(Combat c) {
         if (!c.getOtherCombatants().contains(domSexCharacter)) {
-            c.write(bottom, Global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
+            c.write(bottom, Global.global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
             c.setStance(new Neutral(top, bottom));
         }
     }

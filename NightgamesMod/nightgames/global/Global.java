@@ -35,6 +35,7 @@ import nightgames.modifier.standard.*;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.Ptype;
 import nightgames.skills.*;
+import nightgames.skills.Struggle;
 import nightgames.start.NpcConfiguration;
 import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
@@ -139,7 +140,6 @@ public class Global implements Runnable, Clockable {
         buildFeatPool();
         buildSkillPool(NPC.NONE_CHARACTER);
         buildModifierPool();
-        flag(Flag.AiriEnabled);
         human = new Player("Dummy");
         gui = GUI.gui;
     }
@@ -157,7 +157,7 @@ public class Global implements Runnable, Clockable {
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
         human = new Player(playerName, pickedGender, playerConfig, pickedTraits, selectedAttributes);
-        if(human.has(Trait.largereserves)) {
+        if(human.hasTrait(Trait.largereserves)) {
             human.getWillpower().gain(20);
         }
         players.add(human);
@@ -174,7 +174,7 @@ public class Global implements Runnable, Clockable {
             flags = cfgFlags.stream().collect(Collectors.toSet());
         }
         Map<String, Boolean> configurationFlags = JsonUtils.mapFromJson(JsonUtils.rootJson(new InputStreamReader(ResourceLoader.getFileResourceAsStream("data/globalflags.json"))).getAsJsonObject(), String.class, Boolean.class);
-        configurationFlags.forEach((flag, val) -> Global.setFlag(flag, val));
+        configurationFlags.forEach((flag, val) -> Global.global.setFlag(flag, val));
         time = Time.NIGHT;
         // TODO: Make sure system messages are on by default
         saveWithDialog();
@@ -595,6 +595,9 @@ public class Global implements Runnable, Clockable {
             }
         }
         return null;
+    }
+    public boolean characterTypeInGame(String type) {
+        return players.stream().anyMatch(c -> type.equals(c.getType()));
     }
 
     public Time getTime() {
@@ -1335,7 +1338,7 @@ public class Global implements Runnable, Clockable {
 
     public String format(String format, Character self, Character target, Object... strings) {
         // pattern to find stuff like {word:otherword:finalword} in strings
-        Pattern p = Pattern.compile("\\{((?:self)|(?:other)|(?:master))(?::([^:}]+))?(?::([^:}]+))?\\}");
+        Pattern p = Pattern.compile("\\{((?:self)|(?:other)|(?:master))(?::([^:}]+))?(?::([^:}]+))?}");
         format = String.format(format, strings);
 
         Matcher matcher = p.matcher(format);
@@ -1472,7 +1475,7 @@ public class Global implements Runnable, Clockable {
     }
 
     public void setTraitRequirements(TraitTree traitRequirements) {
-        Global.traitRequirements = traitRequirements;
+        Global.global.traitRequirements = traitRequirements;
     }
 
 	public void writeIfCombat(Combat c, Character self, String string) {

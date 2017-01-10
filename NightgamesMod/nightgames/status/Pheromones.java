@@ -7,12 +7,11 @@ import java.util.stream.Collectors;
 
 import com.google.gson.JsonObject;
 
-import nightgames.characters.Attribute;
+import nightgames.characters.*;
 import nightgames.characters.Character;
-import nightgames.characters.Emotion;
-import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.damage.DamageType;
 
 public class Pheromones extends Horny {
@@ -43,9 +42,9 @@ public class Pheromones extends Horny {
         flag(Stsflag.pheromones);
         flag(Stsflag.debuff);
         flag(Stsflag.purgable);
-        if (sourceCharacter.has(Trait.PiercingOdor)) {
+        if (sourceCharacter.hasTrait(Trait.PiercingOdor)) {
             flag(Stsflag.piercingOdor);
-            if (!affected.has(Trait.calm)) {
+            if (!affected.hasTrait(Trait.calm)) {
                 setMagnitude(getMagnitude() * 1.25f);
             }
         }
@@ -55,28 +54,28 @@ public class Pheromones extends Horny {
     public void tick(Combat c) {
         // only use secondary effects for normal pheromones
         if (source.endsWith(" pheromones")) {
-            if (sourceCharacter.has(Trait.BefuddlingFragrance)) {
+            if (sourceCharacter.hasTrait(Trait.BefuddlingFragrance)) {
                 List<Attribute> debuffable = Arrays.stream(Attribute.values())
                                   .filter(att -> !NON_DEBUFFABLE_ATTS.contains(att))
                                   .filter(att -> affected.get(att) > 0)
                                   .collect(Collectors.toList());
-                Optional<Attribute> att = Global.pickRandom(debuffable);
-                String message = Global.format("{other:NAME-POSSESSIVE} intoxicating aroma is messing with {self:name-possessive} head, "
+                Optional<Attribute> att = Rng.rng.pickRandom(debuffable);
+                String message = Global.global.format("{other:NAME-POSSESSIVE} intoxicating aroma is messing with {self:name-possessive} head, "
                                 + "{self:pronoun-action:feel|seems} %s than before.", affected, sourceCharacter, att.get().getLowerPhrase());
                 if (c != null && att.isPresent()) {
                     c.write(affected, message);
                 } else {
-                    Global.gui().message(message);                
+                    Global.global.gui().message(message);
                 }
                 affected.add(c, new Abuff(affected, att.get(), -1, 10));
             }
-            if (c != null && sourceCharacter.has(Trait.FrenzyScent)) {
-                if (Global.random(13 - stacks) == 0) {
+            if (c != null && sourceCharacter.hasTrait(Trait.FrenzyScent)) {
+                if (Rng.rng.random(13 - stacks) == 0) {
                     String message;
                     if (affected.human()) {
-                        message = Global.format("The heady obscene scent clinging to you is too much. You can't help it any more, you NEED to fuck something right this second!", affected, sourceCharacter);
+                        message = Global.global.format("The heady obscene scent clinging to you is too much. You can't help it any more, you NEED to fuck something right this second!", affected, sourceCharacter);
                     } else {
-                        message = Global.format("The heady obscene scent clinging to {self:name-do} is clearly overwhelming {self:direct-object}. "
+                        message = Global.global.format("The heady obscene scent clinging to {self:name-do} is clearly overwhelming {self:direct-object}. "
                                         + "Groaning with animal passion, {self:subject} is descends into a frenzy!", affected, sourceCharacter);
                     }
                     c.write(affected, message);
@@ -89,7 +88,7 @@ public class Pheromones extends Horny {
     }
 
     private int getMaxStacks() {
-        if (sourceCharacter.has(Trait.ComplexAroma)) {
+        if (sourceCharacter.hasTrait(Trait.ComplexAroma)) {
             return 10;
         }
         return 5;
@@ -128,7 +127,7 @@ public class Pheromones extends Horny {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        Pheromones status = new Pheromones(null, Global.noneCharacter(), obj.get("magnitude").getAsFloat(), obj.get("duration").getAsInt(), obj.get("source").getAsString());
+        Pheromones status = new Pheromones(null, NPC.NONE_CHARACTER, obj.get("magnitude").getAsFloat(), obj.get("duration").getAsInt(), obj.get("source").getAsString());
         status.stacks = obj.get("stacks").getAsInt();
         return status;
     }

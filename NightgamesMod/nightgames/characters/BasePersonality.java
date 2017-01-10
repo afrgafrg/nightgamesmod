@@ -53,7 +53,7 @@ public abstract class BasePersonality implements Personality {
         Optional<NpcConfiguration> mergedConfig = NpcConfiguration.mergeOptionalNpcConfigs(charConfig, commonConfig);
         mergedConfig.ifPresent(cfg -> cfg.apply(character));
 
-        if (Global.checkFlag("FutaTime") && character.initialGender == CharacterSex.female) {
+        if (Global.global.checkFlag("FutaTime") && character.initialGender == CharacterSex.female) {
             character.initialGender = CharacterSex.herm;
         }
         character.body.makeGenitalOrgans(character.initialGender);

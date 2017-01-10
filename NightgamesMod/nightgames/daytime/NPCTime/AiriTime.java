@@ -3,16 +3,16 @@ package nightgames.daytime.NPCTime;
 import nightgames.characters.Attribute;
 import nightgames.characters.Player;
 import nightgames.characters.Trait;
-import nightgames.daytime.Daytime;
 import nightgames.characters.body.CockPart;
+import nightgames.daytime.Daytime;
+import nightgames.daytime.Transformation;
 import nightgames.global.Global;
 import nightgames.global.Rng;
-import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.*;
 
 public class AiriTime extends BaseNPCTime {
     public AiriTime(Player player) {
@@ -21,7 +21,6 @@ public class AiriTime extends BaseNPCTime {
         giftedString = "\"Uhm... thank you!\"";
         giftString = "\"Oh wow... for me? th-thanks...!\"";
         transformationOptionString = "Transformation";
-        advancedTrait = null;
         transformationIntro = "[Placeholder]<br/>You ask Airi about bodily transformations. You figure if anyone knew, it would be someone who can freely manipulate their own body.";
         loveIntro = "[Placeholder]<br/>Airi greets you at the door and flies into your arms. She looks pretty happy to see you.";
         transformationFlag = "";
@@ -31,10 +30,9 @@ public class AiriTime extends BaseNPCTime {
     public void buildTransformationPool() {
         transformations = new ArrayList<>();
         {
-            TransformationOption growCock = new TransformationOption();
-            growCock.requirements.add(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))));
+            Transformation growCock = new Transformation("Airi: Grow a cock");
+            growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
-            growCock.option = "Airi: Grow a cock";
             growCock.scene = "<br/>You ask Airi if she would consider growing a cock. "
                             + "Surprisingly, she agrees fairly easily, considering her usual recalcitrant personality. "
                             + "When you move to ask her what she needs from you, she puts a finger on your lips. "
@@ -54,16 +52,16 @@ public class AiriTime extends BaseNPCTime {
                             + "but you know that she now packs a powerful new weapon!";
             growCock.additionalRequirements = "Free";
             growCock.effect = (c, self, other) -> {
-                other.body.add(BasicCockPart.big);
+                // TODO: Should this be slimy?
+                other.body.add(new CockPart(CockPart.Size.big, CockPart.Mod.normal));
                 return true;
             };
-            options.add(growCock);
+            transformations.add(growCock);
         }
         {
-            TransformationOption removeCock = new TransformationOption();
-            removeCock.requirements.add(RequirementShortcuts.rev(new BodyPartRequirement("cock")));
+            Transformation removeCock = new Transformation("Airi: Remove her cock");
+            removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
-            removeCock.option = "Airi: Remove her cock";
             removeCock.scene = "<br/>Airi frowns when you ask her if she can remove her new cock, \"<i>If you didn't like it, don't ask me for one in the first place. "
                             + "I guess you {other:guy}s are fickle. Fine, I'll do it but you're going to help me...</i>\""
                             + "<br/><br/>"
@@ -91,9 +89,11 @@ public class AiriTime extends BaseNPCTime {
                 other.body.removeAll("cock");
                 return true;
             };
-            options.add(removeCock);
+            transformations.add(removeCock);
         }
     }
+
+    // TODO: figure out how I was handling Daytime GUI stuff
 
     @Override
     public void subVisitIntro(String choice) {
@@ -236,7 +236,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.Clingy) || !npc.hasTrait(Trait.Clingy))) {
+            if (Rng.rng.random(5) == 0 && (!player.hasTrait(Trait.Clingy) || !npc.hasTrait(Trait.Clingy))) {
                 Global.global.gui()
                                 .message("You feel like you learned a lot about holding on to someone. Maybe you can apply this in the games?");
                 player.add(Trait.Clingy);
@@ -267,7 +267,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
+            if (Rng.rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
                 Global.global.gui()
                                 .message("You learn some real-world lessons on misleading people.");
                 player.add(Trait.fakeout);
@@ -282,7 +282,7 @@ public class AiriTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (Rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
+            if (Rng.rng.random(5) == 0 && (!player.hasTrait(Trait.fakeout) || !npc.hasTrait(Trait.fakeout))) {
                 Global.global.gui()
                                 .message("You feel like you learned a lot about holding on to someone. Maybe you can apply this in the games?");
                 player.add(Trait.fakeout);

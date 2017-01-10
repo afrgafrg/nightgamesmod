@@ -74,7 +74,7 @@ public class Dominate extends Skill {
                         + " %s brain and %s %s to %s knees in front of %s. %s smiles and "
                         + "pushes %s onto %s back. By the time %s free of %s suggestion, %s %s"
                         + " flat on the floor with %s foot planted on %s chest.", getSelf().subject(),
-                        target.subject(), Global.capitalizeFirstLetter(target.pronoun()),
+                        target.subject(), Grammar.capitalizeFirstLetter(target.pronoun()),
                         target.possessiveAdjective(), target.pronoun(), target.action("drop"),
                         target.possessiveAdjective(), getSelf().directObject(),
                         getSelf().name(), target.nameDirectObject(), target.possessiveAdjective(),

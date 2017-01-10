@@ -54,7 +54,7 @@ public class Spiderweb extends Trap {
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.hasTrait(Trait.spider) && !owner.has(Trait.roboweb);
+        return owner.hasTrait(Trait.spider) && !owner.hasTrait(Trait.roboweb);
     }
 
     @Override

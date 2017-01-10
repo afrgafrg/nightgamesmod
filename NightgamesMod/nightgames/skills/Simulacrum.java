@@ -109,20 +109,20 @@ public class Simulacrum extends Skill {
     private String formatMessage(Result modifier, CharacterSex initialSex, CharacterSex finalSex, Character target) {
         if (getSelf().human()) {
             if (modifier == Result.miss) {
-                return Global.format("Reaching into your divine spark, you command {other:name-possessive} very soul to serve you. "
+                return Global.global.format("Reaching into your divine spark, you command {other:name-possessive} very soul to serve you. "
                                 + "{other:PRONOUN} looks momentarily confused as nothing happened.", getSelf(), target);
             }
-            return Global.format("Reaching into your divine spark, you command {other:name-possessive} very soul to serve you. "
+            return Global.global.format("Reaching into your divine spark, you command {other:name-possessive} very soul to serve you. "
                             + "{other:PRONOUN} looks confused for a second before suddenly noticing a translucent figure shifting into existence between you and {other:direct-object}. "
                             + "The projection stabilizes into a split image of {other:name-do}!", getSelf(), target);
         } else {
             if (modifier == Result.miss) {
-                Global.format("{self:SUBJECT} closes {self:possessive} eyes momentarily before slowly rising into the air. "
+                Global.global.format("{self:SUBJECT} closes {self:possessive} eyes momentarily before slowly rising into the air. "
                                 + "{other:SUBJECT-ACTION:are|is} not sure what {self:pronoun} is up to, but it's definitely not good for {other:direct-object}. "
                                 + "Fortunately, {other:subject:were|was} close enough to leap at {self:direct-object} and interrupt whatever {self:pronoun} was trying to do.", 
                                 getSelf(), target);
             }
-            return Global.format("{self:SUBJECT} closes {self:possessive} eyes momentarily before slowly rising into the air. "
+            return Global.global.format("{self:SUBJECT} closes {self:possessive} eyes momentarily before slowly rising into the air. "
                             + "{other:SUBJECT-ACTION:are|is} not sure what {self:pronoun} is up to, but it's definitely not good for {other:direct-object}. "
                             + "{other:SUBJECT-ACTION:run|runs} towards {other:direct-object} in a mad dash to try interrupting whatever it is {self:pronoun} is doing. "
                             + "However it is too late, {self:subject} opens her now-glowing golden eyes and intonates <i>\"{other:NAME}... SERVE ME.\"</i> "

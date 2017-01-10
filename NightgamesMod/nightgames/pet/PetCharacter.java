@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import nightgames.areas.Area;
 import nightgames.characters.Character;
 import nightgames.characters.Decider;
 import nightgames.characters.Emotion;
@@ -16,10 +17,12 @@ import nightgames.characters.Trait;
 import nightgames.characters.WeightedSkill;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
+import nightgames.encounter.Encounter;
+import nightgames.encounter.IEncounter;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Skill;
 import nightgames.skills.Tactics;
@@ -115,9 +118,9 @@ public class PetCharacter extends Character {
             getGrowth().levelUp(this);
         }
         distributePoints(Arrays.asList());
-        if (self.owner().has(Trait.inspirational)) {
+        if (self.owner().hasTrait(Trait.inspirational)) {
             for (Trait t : INSPIRABLE_TRAITS) {
-                if (self.owner().has(t) && !has(t)) {
+                if (self.owner().hasTrait(t) && !hasTrait(t)) {
                     add(t);
                 }
             }
@@ -196,14 +199,14 @@ public class PetCharacter extends Character {
         possibleMasterSkills.addAll(Combat.WORSHIP_SKILLS);
         List<Skill> allowedMasterSkills = new ArrayList<>(getSkills()
                         .stream().filter(skill -> Skill.skillIsUsable(c, skill, getSelf().owner)
-                                        && (skill.getTags(c).contains(SkillTag.helping) || (getSelf().owner.has(Trait.showmanship) && skill.getTags(c).contains(SkillTag.worship)))
+                                        && (skill.getTags(c).contains(SkillTag.helping) || (getSelf().owner.hasTrait(Trait.showmanship) && skill.getTags(c).contains(SkillTag.worship)))
                                         && Collections.disjoint(skill.getTags(c), PET_UNUSABLE_TAG))
                         .collect(Collectors.toList()));
         Skill.filterAllowedSkills(c, allowedMasterSkills, this, getSelf().owner);
         WeightedSkill bestEnemySkill = Decider.prioritizePet(this, target, allowedEnemySkills, c);
         WeightedSkill bestMasterSkill = Decider.prioritizePet(this, getSelf().owner, allowedMasterSkills, c);
 
-        if (Global.isDebugOn(DebugFlags.DEBUG_PET)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_PET)) {
             System.out.println("Available Enemy Skills " + allowedEnemySkills);
             System.out.println("Available Master Skills " + allowedMasterSkills);
         }
@@ -212,17 +215,17 @@ public class PetCharacter extends Character {
         double masterSkillRating = Math.max(.001, bestMasterSkill.rating);
         double enemySkillRating = Math.max(.001, bestEnemySkill.rating);
 
-        double roll = Global.randomdouble(masterSkillRating + enemySkillRating) - masterSkillRating;
-        if (Global.isDebugOn(DebugFlags.DEBUG_PET)) {
+        double roll = Rng.rng.randomdouble(masterSkillRating + enemySkillRating) - masterSkillRating;
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_PET)) {
             System.out.printf("Rolled %s for master skill: %s [%.2f] and %s [%.2f]\n", roll, bestMasterSkill.skill.getLabel(c), -masterSkillRating, bestEnemySkill.skill.getLabel(c), enemySkillRating);
         }
         if (roll >= 0) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_PET)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_PET)) {
                 System.out.println("Using enemy skill " + bestEnemySkill.skill.getLabel(c));
             }
             Skill.resolve(bestEnemySkill.skill, c, target);
         } else {
-            if (Global.isDebugOn(DebugFlags.DEBUG_PET)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_PET)) {
                 System.out.println("Using master skill " + bestMasterSkill.skill.getLabel(c));
             }
             Skill.resolve(bestMasterSkill.skill, c, self.owner());
@@ -233,13 +236,15 @@ public class PetCharacter extends Character {
     public void add(Combat c, Status status) {
         super.add(c, status);
         if (stunned()) {
-            c.write(this, Global.format("With {self:name-possessive} link to the fight weakened, {self:subject-action:disappears|disappears}..", this, this));
+            c.write(this, Global.global.format("With {self:name-possessive} link to the fight weakened, {self:subject-action:disappears|disappears}..", this, this));
             c.removePet(this);
         }
     }
 
     @Override
-    public void move() {}
+    public void move(Area newArea) {
+        // Pets do not move between areas independently of their masters.
+    }
 
     @Override
     public void draw(Combat c, Result flag) {}
@@ -287,15 +292,15 @@ public class PetCharacter extends Character {
     @Override
     protected void resolveOrgasm(Combat c, Character opponent, BodyPart selfPart, BodyPart opponentPart, int times, int totalTimes) {
         super.resolveOrgasm(c, opponent, selfPart, opponentPart, times, totalTimes);
-        c.write(this, Global.format("The force of {self:name-possessive} orgasm destroys {self:possessive} anchor to the fight and {self:pronoun} disappears.", this, opponent));
+        c.write(this, Global.global.format("The force of {self:name-possessive} orgasm destroys {self:possessive} anchor to the fight and {self:pronoun} disappears.", this, opponent));
         c.removePet(this);
     }
 
     @Override
-    public void intervene(IEncounter fight, Character p1, Character p2) {}
+    public void intervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
-    public void showerScene(Character target, IEncounter encounter) {}
+    public void showerScene(Character target, Encounter encounter) {}
     @Override
     public void afterParty() {}
     

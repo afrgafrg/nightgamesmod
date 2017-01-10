@@ -47,7 +47,7 @@ public class ShakeOff extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Global.format("{self:SUBJECT-ACTION:take|takes} a moment to shake off the sticky slime all over {self:reflective}", getSelf(), target);
+        return Global.global.format("{self:SUBJECT-ACTION:take|takes} a moment to shake off the sticky slime all over {self:reflective}", getSelf(), target);
     }
 
     @Override

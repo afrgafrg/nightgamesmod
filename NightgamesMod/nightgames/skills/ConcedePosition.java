@@ -44,7 +44,7 @@ public class ConcedePosition extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-            return Global.format("{other:NAME-POSSESSIVE} divine majesty is too much for {self:name-do}. "
+            return Global.global.format("{other:NAME-POSSESSIVE} divine majesty is too much for {self:name-do}. "
                             + "With a docile smile, {self:pronoun-action:concede|concedes} {self:possessive} dominant position to {other:direct-object}.", getSelf(), target);
     }
 

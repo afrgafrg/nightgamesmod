@@ -1,5 +1,6 @@
 package nightgames.encounter;
 
+// TODO: create separate classes for each encounter type that know about possible actions and associated messages
 public enum Encs {
     ambush,
     capitalize,

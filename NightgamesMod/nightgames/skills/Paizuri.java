@@ -59,18 +59,18 @@ public class Paizuri extends Skill {
             m += Rng.rng.random(2, 5);
         }
 
-        if( getSelf().has(Trait.lactating)) {
+        if( getSelf().hasTrait(Trait.lactating)) {
             m += Rng.rng.random(3, 5);
             fetishChance += 5;
         }
 
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
 
             m += Rng.rng.random(4, 8);
             fetishChance += 10;
         }
 
-        if (getSelf().has(Trait.beguilingbreasts)) {
+        if (getSelf().hasTrait(Trait.beguilingbreasts)) {
             m *= 1.5;
             fetishChance *= 2;
         }
@@ -81,10 +81,10 @@ public class Paizuri extends Skill {
             c.write(getSelf(), deal(c, 0, Result.normal, target));
         }
         target.body.pleasure(getSelf(), getSelf().body.getRandom("breasts"), target.body.getRandom("cock"), m, c, this);
-        if (Global.global.random(100) < fetishChance) {
+        if (Rng.rng.random(100) < fetishChance) {
             target.add(c, new BodyFetish(target, getSelf(), BreastsPart.a.getType(), .05 + (0.01 * breasts.size) + getSelf().get(Attribute.Fetish) * .01));
         }
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
             target.temptWithSkill(c, getSelf(), getSelf().body.getRandom("breasts"), m/5, this);
         }
         return true;
@@ -115,7 +115,7 @@ public class Paizuri extends Skill {
         StringBuilder b = new StringBuilder();
         b.append("You squeeze their dick between your ");
         b.append(getSelf().body.getRandomBreasts().describe(getSelf()));
-        if( getSelf().has(Trait.lactating))
+        if( getSelf().hasTrait(Trait.lactating))
         {
             b.append(" and milk squirts from your lactating teats");
         }
@@ -132,12 +132,12 @@ public class Paizuri extends Skill {
                             + "'s shaft and teasingly lick the tip.");
         }
 
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
             b.append(" Upon seeing your perfect tits around their cock "
                              + b.append(target.name())
                             + "shudders with lust");
 
-            if (getSelf().has(Trait.beguilingbreasts)) {
+            if (getSelf().hasTrait(Trait.beguilingbreasts)) {
                 b.append(" and due to your beguiling nature, they can't help but drool at the show.");
             }
             else  {
@@ -152,7 +152,7 @@ public class Paizuri extends Skill {
         StringBuilder b = new StringBuilder();
         b.append(getSelf().name() + " squeezes your dick between her ");
         b.append(breasts.describe(getSelf()));
-        if( getSelf().has(Trait.lactating))
+        if( getSelf().hasTrait(Trait.lactating))
         {
             b.append(" and milk squirts from her lactating teats");
         }
@@ -165,10 +165,10 @@ public class Paizuri extends Skill {
             b.append("She rubs them up and down your shaft and teasingly licks your tip.");
         }
 
-        if (getSelf().has(Trait.temptingtits)) {
+        if (getSelf().hasTrait(Trait.temptingtits)) {
             b.append(" The sight of those perfect tits around your cock causes you to shudder with lust");
 
-            if (getSelf().has(Trait.beguilingbreasts)) {
+            if (getSelf().hasTrait(Trait.beguilingbreasts)) {
                 b.append(" and due to ");
                 b.append(getSelf().name()) ;
                 b.append("'s breasts beguiling nature, you can't help but enjoy the show.");

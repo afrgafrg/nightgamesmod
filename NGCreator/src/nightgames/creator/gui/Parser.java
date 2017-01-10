@@ -37,7 +37,7 @@ final class Parser {
 			sb.append("<<set characters to parse the scene>>\n\n");
 			sb.append(raw);
 		} else {
-			sb.append(escape(Global.format(raw, self, other)));
+			sb.append(escape(Global.global.format(raw, self, other)));
 		}
 		return sb.toString();
 	}

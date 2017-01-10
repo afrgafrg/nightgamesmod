@@ -13,7 +13,7 @@ public class Idle extends ArmSkill {
 
     @Override
     public boolean resolve(Combat c, RoboArm arm, Character owner, Character target) {
-        if (Global.isDebugOn(DebugFlags.DEBUG_PET)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_PET)) {
             System.out.println(arm.getName() + " idling");
         }
         return true;

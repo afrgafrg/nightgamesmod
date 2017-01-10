@@ -31,7 +31,7 @@ public class BreastSmothering extends AbstractFacingStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.format("{self:name} keeps {other:name-possessive} face between their tits, with {self:possessive} large breasts fully encompassing {other:possessive} view. {other:SUBJECT} cannot even breathe except for the short pauses when {self:subject-action:allow|allows} {other:direct-object} to by loosens {self:possessive} grip.", top, bottom);
+        return Global.global.format("{self:name} keeps {other:name-possessive} face between their tits, with {self:possessive} large breasts fully encompassing {other:possessive} view. {other:SUBJECT} cannot even breathe except for the short pauses when {self:subject-action:allow|allows} {other:direct-object} to by loosens {self:possessive} grip.", top, bottom);
     } 
 
     @Override

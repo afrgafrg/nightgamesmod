@@ -19,7 +19,7 @@ public class MagLock extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.maglocks);
+        return user.hasTrait(Trait.maglocks);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MagLock extends Skill {
         return !target.wary() && getSelf().canAct() && c.getStance().reachTop(getSelf())
                         && !c.getStance().reachTop(target)
                         && c.getStance().dom(getSelf())
-                        && getSelf().has(Item.Battery, 2) // consumed by MagLocked status
+                        && getSelf().hasTrait(Item.Battery, 2) // consumed by MagLocked status
                         && (!target.is(Stsflag.maglocked) 
                                         || ((MagLocked) target.getStatus(Stsflag.maglocked)).getCount() < 3);
     }
@@ -41,7 +41,7 @@ public class MagLock extends Skill {
     public boolean resolve(Combat c, Character target) {
         MagLocked stat = (MagLocked) target.getStatus(Stsflag.maglocked);
         if (stat == null) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:place|places} a metallic band"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:place|places} a metallic band"
                             + " around {other:name-possessive} arm. It doesn't do anything right now,"
                             + " but the powerful electromagnet inside will prove very hard to remove"
                             + " if it can lock on to another such band.", getSelf(), target));
@@ -49,7 +49,7 @@ public class MagLock extends Skill {
             return true;
         }
         if (stat.getCount() == 1) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:force|forces} {other:name-possessive}"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:force|forces} {other:name-possessive}"
                             + " wrists behind {other:possessive} back and {self:action:get|gets} a second MagLock around"
                             + " the wrist which was still free. {self:PRONOUN-ACTION:push|pushes} a little button"
                             + " on both bands, causing a loud <i>CLICK</i>."
@@ -64,7 +64,7 @@ public class MagLock extends Skill {
                                 + " incapable to struggle. {other:POSSESSIVE} only hope now is that"
                                 + " {self:name-possessive} batteries run out soon.</b>";
             if (c.getStance().en == Stance.behind) {
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:push|pushes} {other:subject}"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:push|pushes} {other:subject}"
                                 + " forward, causing {other:direct-object} to fall flat on the ground."
                                 + " Moving quickly, {self:subject-action:bend|bends} one of {other:possessive}"
                                 + " legs up, so {other:possessive} ankle is right next to {other:possessive}"
@@ -73,7 +73,7 @@ public class MagLock extends Skill {
                                 + " over onto {other:possessive} back. %s"
                                 + " ", getSelf(), target, end));
             } else {
-                c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:roll|rolls} {other:subject}"
+                c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:roll|rolls} {other:subject}"
                                 + " onto {other:possessive} back and, before {other:pronoun} can"
                                 + " respond, {self:action:pull|pulls} one of {other:possessive}"
                                 + " ankles up to {other:possessive} bound wrists."

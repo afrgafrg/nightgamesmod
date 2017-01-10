@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.arms.skills.Grab;
 import nightgames.stance.Neutral;
@@ -116,10 +117,10 @@ public class Escape extends Skill {
     private boolean blockedByCollar(Combat c, Character target) {
         Collared stat = (Collared) getSelf().getStatus(Stsflag.collared);
         if (stat != null) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:try|tries} to struggle, but"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:try|tries} to struggle, but"
                             + " the collar is having none of it and shocks {self:direct-object}"
                             + " into submission.", getSelf(), target));
-            getSelf().pain(c, null, Global.random(20, 50));
+            getSelf().pain(c, null, Rng.rng.random(20, 50));
             stat.spendCharges(c, 2);
             return true;
         }

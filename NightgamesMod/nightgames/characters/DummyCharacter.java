@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.encounter.Encounter;
 import nightgames.encounter.IEncounter;
 import nightgames.combat.Result;
 import nightgames.skills.Tactics;
@@ -88,10 +89,10 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void intervene(IEncounter fight, Character p1, Character p2) {}
+    public void intervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
-    public void showerScene(Character target, IEncounter encounter) {}
+    public void showerScene(Character target, Encounter encounter) {}
 
     @Override
     public String getType() {

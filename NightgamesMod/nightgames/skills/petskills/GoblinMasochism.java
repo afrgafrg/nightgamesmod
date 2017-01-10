@@ -27,7 +27,7 @@ public class GoblinMasochism extends SimpleEnemySkill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        c.write(getSelf(), Global.format("{self:SUBJECT} draws a riding crop and hits her own balls with it. She shivers with delight at the pain and both of you can "
+        c.write(getSelf(), Global.global.format("{self:SUBJECT} draws a riding crop and hits her own balls with it. She shivers with delight at the pain and both of you can "
                         + "feel an aura of masochism radiate off her.", getSelf(), target));
         getSelf().pain(c, getSelf(), 10);
         c.p1.add(c, new Masochistic(c.p1));

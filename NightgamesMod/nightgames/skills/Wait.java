@@ -35,18 +35,18 @@ public class Wait extends Skill {
         if (channel(c)) {
             writeOutput(c, Result.special, target);
             if (focused(c)) {
-                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(8, 16)));
+                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, NPC.NONE_CHARACTER, Rng.rng.random(8, 16)));
                 getSelf().calm(c, Rng.rng.random(8, 14));
             } else {
-                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(4, 8)));
+                getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, NPC.NONE_CHARACTER, Rng.rng.random(4, 8)));
             }
         } else if (focused(c)) {
             writeOutput(c, Result.strong, target);
-            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(8, 16)));
+            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, NPC.NONE_CHARACTER, Rng.rng.random(8, 16)));
             getSelf().calm(c, Rng.rng.random(8, 14));
         } else {
             writeOutput(c, Result.normal, target);
-            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, Global.noneCharacter(), Rng.rng.random(4, 8)));
+            getSelf().heal(c, (int) getSelf().modifyDamage(DamageType.physical, NPC.NONE_CHARACTER, Rng.rng.random(4, 8)));
         }
         return true;
     }
@@ -92,7 +92,7 @@ public class Wait extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return Global.format("{self:SUBJECT} closes {self:possessive} eyes and takes a deep breath. "
+            return Global.global.format("{self:SUBJECT} closes {self:possessive} eyes and takes a deep breath. "
                             + "You see a warm glow briefly surround {self:direct-object} before disappearing. "
                             + "When {self:pronoun} opens {self:possessive} eyes, {self:pronoun} looks reinvigorated.",
                             getSelf(), target);

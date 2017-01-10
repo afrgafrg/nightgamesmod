@@ -9,6 +9,7 @@ import nightgames.characters.body.StraponPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.global.Rng;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -134,10 +135,10 @@ public class Fuck extends Skill {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         if (selfO.isReady(getSelf()) && targetO.isReady(target)) {
-            if (targetO.isType("pussy") && target.has(Trait.temptingass) && new AssFuck(getSelf()).usable(c, target)
-                && Global.random(3) == 1) {
+            if (targetO.isType("pussy") && target.hasTrait(Trait.temptingass) && new AssFuck(getSelf()).usable(c, target)
+                && Rng.rng.random(3) == 1) {
 
-                c.write(getSelf(), Global.format("%s{self:subject-action:line|lines}"
+                c.write(getSelf(), Global.global.format("%s{self:subject-action:line|lines}"
                                 + " {self:possessive} {self:body-part:cock} up with {other:name-possessive}"
                                 + " {other:body-part:pussy}. At the last moment before thrusting in, however,"
                                 + " {self:pronoun-action:shift|shifts} to the tantalizing hole next door,"
@@ -234,7 +235,7 @@ public class Fuck extends Skill {
                                  "%s slowly but steadily pushes in, forcing %s length into %s hot, wet pussy.",
                             getSelf().name(), getSelf().possessiveAdjective(), selfO.describe(getSelf()),
                             target.nameOrPossessivePronoun(),
-                            Global.capitalizeFirstLetter(getSelf().pronoun()), getSelf().possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(getSelf().pronoun()), getSelf().possessiveAdjective(),
                             target.possessiveAdjective());
         } else if (modifier == Result.miss) {
             String subject = (damage == 0 ? getSelf().name() + " " : "");
@@ -250,7 +251,7 @@ public class Fuck extends Skill {
                                 subject, getSelf().possessiveAdjective(), selfO.describe(getSelf()),
                                 target.nameOrPossessivePronoun(), target.pronoun(),
                                 target.action("are", "is"),
-                                Global.capitalizeFirstLetter(target.subjectAction("are", "is")));
+                                Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")));
             } else {
                 return String.format("%stries to push %s %s into %s ready pussy, but %s is still limp.",
                                 subject, getSelf().possessiveAdjective(), selfO.describe(getSelf()),

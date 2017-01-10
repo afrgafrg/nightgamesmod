@@ -13,6 +13,6 @@ public class SaveButton extends GameButton {
 
     public SaveButton() {
         super("Save");  // does not unblock
-        addActionListener(() -> Global.global.saveWithDialog());
+        addActionListener(event -> Global.global.saveWithDialog());
     }
 }

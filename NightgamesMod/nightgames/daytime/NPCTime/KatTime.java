@@ -2,6 +2,7 @@ package nightgames.daytime.NPCTime;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.characters.body.*;
 import nightgames.daytime.Daytime;
@@ -9,7 +10,6 @@ import nightgames.daytime.Transformation;
 import nightgames.global.Flag;
 import nightgames.global.Global;
 import nightgames.items.Item;
-import nightgames.requirements.BodyPartRequirement;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 import static nightgames.requirements.RequirementShortcuts.*;
 
 public class KatTime extends BaseNPCTime {
-    public KatTime(Character player) {
+    public KatTime(Player player) {
         super(player, Global.global.getNPC("Kat"));
         knownFlag = "Kat";
         giftedString = "\"Awww thanks!\"";
@@ -27,7 +27,6 @@ public class KatTime extends BaseNPCTime {
         transformationOptionString = "Transformations";
         loveIntro = "[Placeholder]<br/>You text Kat and she excitedly meets up with you.";
         transformationIntro = "[Placeholder]<br/>Kat shares how her totemic magic works.";
-        advancedTrait = null;
         transformationFlag = "";
     }
 
@@ -36,7 +35,7 @@ public class KatTime extends BaseNPCTime {
         transformations = new ArrayList<>();
         {
             Transformation growCock = new Transformation("Kat: Grow a cock");
-            growCock.ingredients.put(Item.PriapusDraft, 3);
+            growCock.ingredients.add(item(Item.PriapusDraft, 3));
             growCock.requirements.add(rev(not(bodypart("cock"))));
             growCock.additionalRequirements = "";
             growCock.scene = "<br/><i>\"Mrrr... Y-you want me to w-what!?\"</i> Kat doesn't seem to be too amused at your suggestion for a little switch-up. "
@@ -77,14 +76,14 @@ public class KatTime extends BaseNPCTime {
                            + "Fortunately for you, the poor kitty seems exhausted by her new transformation and falls into a soft slumber after the exertion. "
                            + "You pick her up, depositing her onto her bed and covering her with a blanket before turning to leave. Hopefully the next time you meet in the games, she'll be a bit gentler than that.";
             growCock.effect = (c, self, other) -> {
-                other.body.add(new ModdedCockPart(BasicCockPart.big, CockMod.primal));
+                other.body.add(new CockPart(CockPart.Size.big, CockPart.Mod.primal));
                 return true;
             };
-            options.add(growCock);
+            transformations.add(growCock);
         }
         {
             Transformation removeCock = new Transformation("Kat: Remove her cock");
-            removeCock.ingredients.put(Item.FemDraft, 3);
+            removeCock.ingredients.add(item(Item.FemDraft, 3));
             removeCock.requirements.add(rev(bodypart("cock")));
             removeCock.additionalRequirements = "";
             removeCock.scene = "<br/>Kat gladly drinks the three femdrafts one after another and her penis shrinks back into her normal clitoris. "
@@ -93,12 +92,12 @@ public class KatTime extends BaseNPCTime {
                 other.body.removeAll("cock");
                 return true;
             };
-            options.add(removeCock);
+            transformations.add(removeCock);
         }
         Transformation primalCock = new Transformation("Primal Cock");
-        primalCock.ingredients.put(Item.PriapusDraft, 10);
-        primalCock.ingredients.put(Item.Rope, 10);
-        primalCock.ingredients.put(Item.Aphrodisiac, 25);
+        primalCock.ingredients.add(item(Item.PriapusDraft, 10));
+        primalCock.ingredients.add(item(Item.Rope, 10));
+        primalCock.ingredients.add(item(Item.Aphrodisiac, 25));
         primalCock.requirements.add((c, self, other) -> self.body.hasGenericCock());
         primalCock.additionalRequirements = "A normal cock";
         primalCock.scene = "[Placeholder]<br/>Kat uses her totemic magic to convert your penis into a primal cock.";
@@ -112,9 +111,9 @@ public class KatTime extends BaseNPCTime {
 
         transformations.add(primalCock);
         Transformation feralPussy = new Transformation("Feral Pussy");
-        feralPussy.ingredients.put(Item.Rope, 10);
-        feralPussy.ingredients.put(Item.Aphrodisiac, 25);
-        feralPussy.ingredients.put(Item.FemDraft, 10);
+        feralPussy.ingredients.add(item(Item.Rope, 10));
+        feralPussy.ingredients.add(item(Item.Aphrodisiac, 25));
+        feralPussy.ingredients.add(item(Item.FemDraft, 10));
         feralPussy.requirements.add(bodypart("pussy"));
         feralPussy.requirements.add((c, self, other) -> {
             return self.body.get("pussy").stream().anyMatch(pussy -> pussy == PussyPart.normal);
@@ -127,8 +126,8 @@ public class KatTime extends BaseNPCTime {
         feralPussy.additionalRequirements = "A normal pussy";
         transformations.add(feralPussy);
         Transformation catTail = new Transformation("Cat Tail");
-        catTail.ingredients.put(Item.Rope, 10);
-        catTail.ingredients.put(Item.Aphrodisiac, 25);
+        catTail.ingredients.add(item(Item.Rope, 10));
+        catTail.ingredients.add(item(Item.Aphrodisiac, 25));
         catTail.requirements.add(not(bodypart("tail")));
         catTail.requirements.add((c, self, other) -> {
             return self.body.get("tail").stream().anyMatch(part -> part != TailPart.cat) || !self.body.has("tail");
@@ -140,8 +139,8 @@ public class KatTime extends BaseNPCTime {
         };
         transformations.add(catTail);
         Transformation catEars = new Transformation("Cat Ears");
-        catEars.ingredients.put(Item.Rope, 10);
-        catEars.ingredients.put(Item.Aphrodisiac, 25);
+        catEars.ingredients.add(item(Item.Rope, 10));
+        catEars.ingredients.add(item(Item.Aphrodisiac, 25));
         catEars.requirements.add(bodypart("ears"));
         catEars.requirements.add((c, self, other) -> {
             return self.body.get("ears").stream().anyMatch(part -> part != EarPart.cat) || !self.body.has("ears");
@@ -220,7 +219,7 @@ public class KatTime extends BaseNPCTime {
                                             + "also stands between you and Kat. This is bad. You quickly explain that you weren't trying to scare Kat, you just wanted to talk to her. <br/><br/><i>\"Our Kat is pretty delicate. "
                                             + "Maybe you should learn how to approach a girl without scaring her before you try to pick her up.\"</i> The brunette speaks in a reasonable tone, but there's a definite "
                                             + "edge to her voice. The redhead snorts and starts to lead Kat away. <br/><i>\"I don't want this creep talking to Kat at all.\"</i> Kat tugs on the girl's sleeve to stop her and "
-                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + Global.getPlayer().guyOrGirl() + "? Are you kidding me?\"</i> The brunette joins the two of them and they enter a brief huddle. "
+                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + Global.global.getPlayer().guyOrGirl() + "? Are you kidding me?\"</i> The brunette joins the two of them and they enter a brief huddle. "
                                             + "You stand there awkwardly, unable to hear their conversation. There are more than a few glances in your direction, and Kat's face is gradually turning red. <br/>Eventually, "
                                             + "Kat leaves the huddle to stand behind you, as if hiding from her friends. The calmer of the two girls gives you an awkward smile. <i>\"We'll give you two some space.\"</i> "
                                             + "She has to practically drag away the other girl, who is glaring daggers at you."
@@ -235,7 +234,7 @@ public class KatTime extends BaseNPCTime {
                                             + "leave her horny and unsatisfied? She squirms noticeably as she sits up on the bed. <i>\"It's really frustrating to stop nyow, but I need to be patient. I'm counting on "
                                             + "you to reward me when we're done.\"</i> She settles into a comfortable seated position on the bed, apparently not bothered that her naked lower half is visible. <i>\"We've "
                                             + "fought together a bunch, but since you're myaking an effort to get to know me, I wanted to explain how my animal spirit works. The Girl was too flustered about being "
-                                            + "alone with a " + Global.getPlayer().boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
+                                            + "alone with a " + Global.global.getPlayer().boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
                                             + "By arousing Kat, you brought out her animal side. So that's who "
                                             + "you're talking to now? <i>\"The urge to mate is a very primal thing. The more I feel it, the stronger the cat spirit gets, which improves my instinct and my reflexes. It's "
                                             + "nyat like a Jekyll and Hyde thing though. The Girl and the Cat have the same memories, same intelligence, same personality, and same interests. I'm still Kat, just "
@@ -334,7 +333,7 @@ public class KatTime extends BaseNPCTime {
                                             + "an eagerness to her voice. You both want the same thing. You give her a quick kiss on the lips and help her remove her shirt. She shyly crosses her arms over her bra "
                                             + "and smiles weakly. <i>\"It's embarrassing if I'm the only one who is naked. Take off your shirt too.\"</i> You obligingly strip of your own top and she helps you remove "
                                             + "her bra. Her breasts are quite big and soft looking, considering her petite build. If she didn't cover up her body with baggy clothing during the day, her friends would "
-                                            + "surely need to beat " + Global.getPlayer().guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
+                                            + "surely need to beat " + Global.global.getPlayer().guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
                                             + "your turn to undress.\"</i> Of course, she deserves a little eye candy too. You kick off your pants, leaving only your boxers. Kat hesitantly takes her hands off her chest "
                                             + "so she can remove her pants. <br/><br/>"
                                             + "You're both down to your underwear and Kat stares at your boxers in anticipation. She's obviously ready for some passionate sex, but you "
@@ -353,7 +352,7 @@ public class KatTime extends BaseNPCTime {
                                             + "to sit behind her. She's a bit startled when you pull her into your lap to lean against your chest. From this new position, you slip your hand between her legs and resume "
                                             + "fingering her. She lets out breathy moans and shivers in your arms. Within a handful of seconds, you feel her tail twitching against you leg and her moans have a clear mewing "
                                             + "quality. <br/><br/>"
-                                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + Global.getPlayer().boyOrGirl() + "... and the "
+                                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + Global.global.getPlayer().boyOrGirl() + "... and the "
                                             + "warmth... and the breath on my neck! How is a girl suppose to handle that?\"</i> She squirms out of your arms and turns to face you. <i>\"I know this 'training' was just an "
                                             + "excuse to tease me. I didn't complain because I liked what you were doing, but it's your turn nyow. Either get those boxers off, or they're gonnya be shredded.\"</i> You "
                                             + "quickly strip off your underwear. These are your good boxers, not like the cheap throwaway pairs that you wear during a match. Kat gives an approving purr as she looks over"
@@ -366,8 +365,8 @@ public class KatTime extends BaseNPCTime {
                                             + "limp into your arms, eyes closed. You hold her and gently stroke her head. You pet her for a little while before she opens her eyes with a sleepy smile. <i>\"You're still inside "
                                             + "me.... It's a nice feeling.\"</i> You lay her gently onto the bed and she hugs you tightly to make you aren't going anywhere. She quickly falls asleep, cuddling up against you. "
                                             + "You pull a blanket over your naked bodies and close your eyes. You were supposed to be training, but a quick nap suddenly seems very inviting.");
-            if (!player.has(Trait.affectionate)) {
-                Global.gui().message("<br/><br/><b>You've gotten so much better at slow sex and cuddling that you start to score extra affection with your partners.</b>");
+            if (!player.hasTrait(Trait.affectionate)) {
+                Global.global.gui().message("<br/><br/><b>You've gotten so much better at slow sex and cuddling that you start to score extra affection with your partners.</b>");
                 player.add(Trait.affectionate);
                 npc.getGrowth().addTrait(0, Trait.affectionate);
             }
@@ -429,7 +428,7 @@ public class KatTime extends BaseNPCTime {
                                             + "already mid-orgasm. A wave of pleasure washes over you as you shoot your load into her womb.<br/><br/>"
                                             + "As you recover from your orgasm, you notice that Kat is fast asleep, or possibly pretending to be asleep to avoid an embarrassing conversation. You're exhausted, but neither of "
                                             + "you are going to be comfortable napping on the floor. You pick up Kat's petite body and carry her over to the bed.");
-            if (!player.has(Trait.tease)) {
+            if (!player.hasTrait(Trait.tease)) {
                 Global.global.gui().message("<br/><br/><b>You've learned to take pride in your teasing.</b>");
                 player.add(Trait.tease);
                 npc.getGrowth().addTrait(0, Trait.tease);
@@ -474,7 +473,7 @@ public class KatTime extends BaseNPCTime {
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            if (!player.has(Trait.aikidoNovice)) {
+            if (!player.hasTrait(Trait.aikidoNovice)) {
                 Global.global.gui().message("<br/><br/><b>You're now more familiar with the art of counter attacking.</b>");
                 player.add(Trait.aikidoNovice);
                 npc.getGrowth().addTrait(0, Trait.aikidoNovice);

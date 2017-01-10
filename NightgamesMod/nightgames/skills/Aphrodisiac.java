@@ -9,7 +9,6 @@ import nightgames.characters.body.PussyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Grammar;
-import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
@@ -46,7 +45,7 @@ public class Aphrodisiac extends Skill {
 
     @Override
     public int accuracy(Combat c, Character target) {
-        return getSelf().has(Item.Aersolizer) ? 200 : (c.getStance().mobile(target) ? 65 : 100);
+        return getSelf().hasTrait(Item.Aersolizer) ? 200 : (c.getStance().mobile(target) ? 65 : 100);
     }
 
     @Override
@@ -92,7 +91,7 @@ public class Aphrodisiac extends Skill {
             return String.format(
                             "You pop an Aphrodisiac into your Aerosolizer and spray %s"
                                             + " with a cloud of mist. %s flushes and %s eyes fill with lust as it takes hold.",
-                            target.name(), Global.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective());
+                            target.name(), Grammar.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective());
         } else if (modifier == Result.miss) {
             return "You throw an Aphrodisiac at " + target.name() + ", but " + target.pronoun()
                             + " ducks out of the way and it splashes harmlessly on the ground. What a waste.";
@@ -131,8 +130,8 @@ public class Aphrodisiac extends Skill {
                             "%s inserts a bottle into the attachment on %s arm. %s suddenly surrounded by a sweet smelling cloud of mist. %s %s %s blood boil "
                                             + "with desire as the unnatural gas takes effect.",
                             getSelf().name(), getSelf().possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
-                            Global.capitalizeFirstLetter(target.pronoun()), target.action("feel"),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.action("feel"),
                             target.possessiveAdjective());
         } else if (modifier == Result.strong) {
             return getSelf().subjectAction("dip") + " a finger " + (getSelf().crotchAvailable() ? ""

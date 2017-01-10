@@ -65,13 +65,12 @@ import nightgames.characters.Character;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.NPC;
 import nightgames.characters.Trait;
-import nightgames.characters.body.BasicCockPart;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.EarPart;
-import nightgames.characters.body.ModdedCockPart;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.body.MouthPart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TailPart;
@@ -86,6 +85,7 @@ import nightgames.creator.model.MouthType;
 import nightgames.creator.model.TraitBean;
 import nightgames.creator.req.CreatorRequirement;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.requirements.JsonRequirementLoader;
@@ -149,9 +149,9 @@ public class CreatorGui extends Application {
 	@FXML
 	private ChoiceBox<BreastsPart> breasts;
 	@FXML
-	private ChoiceBox<BasicCockPart> cockSize;
+	private ChoiceBox<CockPart> cockSize;
 	@FXML
-	private ChoiceBox<CockMod> cockType;
+	private ChoiceBox<CockPart.Mod> cockType;
 	@FXML
 	private ChoiceBox<PussyPart> pussy;
 	@FXML
@@ -288,11 +288,11 @@ public class CreatorGui extends Application {
 		breasts.getItems().addAll(BreastsPart.values());
 		breasts.getSelectionModel().select(BreastsPart.c);
 
-		cockType.getItems().addAll(CockMod.values());
+		cockType.getItems().addAll(CockPart.Mod.values());
 		cockType.getItems().add(null);
 		cockType.getSelectionModel().select(null);
 
-		cockSize.getItems().addAll(BasicCockPart.values());
+		cockSize.getItems().addAll(CockPart.values());
 		cockSize.getItems().add(null);
 		cockSize.getSelectionModel().select(null);
 		cockSize.getSelectionModel().selectedItemProperty().addListener((obs, old, nw) -> {
@@ -651,21 +651,21 @@ public class CreatorGui extends Application {
 		willpowerStart.setText(ch.getWillpower().max() + "");
 
 		attrMap.entrySet().forEach(e -> e.getValue()
-				.setText("" + ch.getPure(Attribute.valueOf(Global.capitalizeFirstLetter(e.getKey())))));
+				.setText("" + ch.getPure(Attribute.valueOf(Grammar.capitalizeFirstLetter(e.getKey())))));
 		breasts.getSelectionModel().select(ch.body.getRandomBreasts());
 
 		CockPart cock = ch.body.getRandomCock();
-		BasicCockPart size;
-		CockMod mod;
+		CockPart size;
+		CockPart.Mod mod;
 		if (cock == null) {
 			size = null;
 			mod = null;
-		} else if (cock instanceof BasicCockPart) {
-			size = (BasicCockPart) cock;
+		} else if (cock instanceof CockPart) {
+			size = (CockPart) cock;
 			mod = null;
 		} else {
-			size = ((ModdedCockPart) cock).getBase();
-			mod = (CockMod) ((ModdedCockPart) cock).getMod(ch);
+			size = ((CockPart) cock).getBase();
+			mod = (CockPart.Mod) ((CockPart) cock).getMod(ch);
 		}
 		cockSize.getSelectionModel().select(ch.hasDick() ? size : null);
 		cockType.getSelectionModel().select(ch.hasDick() ? mod : null);
@@ -767,7 +767,7 @@ public class CreatorGui extends Application {
 		base.addProperty("level", Integer.parseInt(level.getText()));
 
 		JsonObject attrs = new JsonObject();
-		attrMap.entrySet().forEach(e -> attrs.addProperty(Global.capitalizeFirstLetter(e.getKey()),
+		attrMap.entrySet().forEach(e -> attrs.addProperty(Grammar.capitalizeFirstLetter(e.getKey()),
 				Integer.parseInt(e.getValue().getText())));
 		base.add("attributes", attrs);
 
@@ -843,15 +843,15 @@ public class CreatorGui extends Application {
 		ass.addProperty("sensitivity", 1);
 		parts.add(ass);
 
-		BasicCockPart cockSize = this.cockSize.getValue();
+		CockPart cockSize = this.cockSize.getValue();
 		if (cockSize != null) {
 			JsonObject cock = new JsonObject();
-			CockMod mod = this.cockType.getValue();
+			CockPart.Mod mod = this.cockType.getValue();
 			if (mod == null) {
-				cock.addProperty("class", "nightgames.characters.body.BasicCockPart");
+				cock.addProperty("class", "nightgames.characters.body.CockPart");
 				cock.addProperty("enum", cockSize.name());
 			} else {
-				cock.addProperty("class", "nightgames.characters.body.ModdedCockPart");
+				cock.addProperty("class", "nightgames.characters.body.CockPart");
 				JsonObject cockBase = new JsonObject();
 				cockBase.addProperty("enum", cockSize.name());
 				JsonObject cockMod = new JsonObject();

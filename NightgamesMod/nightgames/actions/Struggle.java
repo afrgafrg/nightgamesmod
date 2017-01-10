@@ -22,24 +22,24 @@ public class Struggle extends Action {
     public Movement execute(Character user) {
         Bound status = (Bound) user.getStatus(Stsflag.bound);
         int difficulty = 20 - user.getEscape(null, null);
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println(user.getName() + " struggles with difficulty " + difficulty);
         }
         if (user.check(Attribute.Power, difficulty)) {
             if (user.human()) {
                 if (status != null) {
-                    Global.gui().message("You manage to break free from the " + status.getVariant() + ".");
+                    Global.global.gui().message("You manage to break free from the " + status.getVariant() + ".");
                 } else {
-                    Global.gui().message("You manage to snap the restraints that are binding your hands.");
+                    Global.global.gui().message("You manage to snap the restraints that are binding your hands.");
                 }
             }
             user.free();
         } else {
             if (user.human()) {
                 if (status != null) {
-                    Global.gui().message("You struggle against the " + status.getVariant() + ", but can't get free.");
+                    Global.global.gui().message("You struggle against the " + status.getVariant() + ", but can't get free.");
                 } else {
-                    Global.gui().message("You struggle against your restraints, but can't get free.");
+                    Global.global.gui().message("You struggle against your restraints, but can't get free.");
                 }
             }
             user.struggle();

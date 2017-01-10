@@ -8,6 +8,7 @@ import nightgames.characters.NPC;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.Global;
 import nightgames.skills.*;
 
 import java.util.Collection;
@@ -48,7 +49,7 @@ public class Frenzied extends DurationStatus {
     public Frenzied(Character affected, int duration, boolean selfInflicted) {
         super("Frenzied", affected, duration);
         flag(Stsflag.frenzied);
-        if (!selfInflicted && !affected.has(Trait.Rut)) {
+        if (!selfInflicted && !affected.hasTrait(Trait.Rut)) {
             flag(Stsflag.debuff);
         }
         flag(Stsflag.purgable);
@@ -57,8 +58,8 @@ public class Frenzied extends DurationStatus {
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        if (affected.has(Trait.Rut)) {
-            return Global.format("There's a frenzied look in {self:name-possessive} eyes as {self:pronoun-action:eye|eyes} zeroes in on {other:name-possessive} crotch. "
+        if (affected.hasTrait(Trait.Rut)) {
+            return Global.global.format("There's a frenzied look in {self:name-possessive} eyes as {self:pronoun-action:eye|eyes} zeroes in on {other:name-possessive} crotch. "
                             + "This could be bad.", affected, c.getOpponent(affected));
         }
         return String.format("%s mind blanks, leaving only the bestial need to breed.",
@@ -74,8 +75,8 @@ public class Frenzied extends DurationStatus {
             msg = String.format("%s has a frenzied look in %s eyes, interested in nothing but raw, hard sex.",
                             affected.name(), affected.possessiveAdjective());
         }
-        if (affected.has(Trait.PrimalHeat)) {
-            msg += Global.format(" Somehow {self:possessive} crazed animal desperation makes {self:direct-object} seem more attractive than ever.", affected, c.getOpponent(affected));
+        if (affected.hasTrait(Trait.PrimalHeat)) {
+            msg += Global.global.format(" Somehow {self:possessive} crazed animal desperation makes {self:direct-object} seem more attractive than ever.", affected, c.getOpponent(affected));
         }
         return msg;
     }

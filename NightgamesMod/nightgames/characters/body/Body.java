@@ -27,6 +27,7 @@ import nightgames.status.Stsflag;
 import nightgames.status.addiction.AddictionType;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Body implements Cloneable {
@@ -417,10 +418,10 @@ public class Body implements Cloneable {
         if (character.is(Stsflag.alluring)) {
             totalHotness *= 1.5;
         }
-        if (character.has(Trait.attractive)) {
+        if (character.hasTrait(Trait.attractive)) {
             totalHotness *= 1.25;
         }
-        if (character.has(Trait.unpleasant)) {
+        if (character.hasTrait(Trait.unpleasant)) {
             totalHotness *= .75;
         }
         return totalHotness;
@@ -575,12 +576,12 @@ public class Body implements Cloneable {
             // submissive stance
             if (c.getStance().sub(opponent) && opponent.hasTrait(Trait.submissive) && target.isErogenous()) {
                 baseBonusDamage += baseBonusDamage + magnitude;
-            } else if (c.getStance().dom(opponent) && opponent.hasTrait(Trait.submissive) && !opponent.has(Trait.flexibleRole) && target.isErogenous()) {
+            } else if (c.getStance().dom(opponent) && opponent.hasTrait(Trait.submissive) && !opponent.hasTrait(Trait.flexibleRole) && target.isErogenous()) {
                 baseBonusDamage -= (baseBonusDamage + magnitude) * 1. / 3.;
             }
         }
 
-        if (character.has(Trait.Rut) && character.is(Stsflag.frenzied)) {
+        if (character.hasTrait(Trait.Rut) && character.is(Stsflag.frenzied)) {
             baseBonusDamage -= (baseBonusDamage + magnitude) / 2;
         }
 
@@ -603,7 +604,7 @@ public class Body implements Cloneable {
         }
 
         boolean unsatisfied = false;
-        if (character.has(Trait.Unsatisfied)
+        if (character.hasTrait(Trait.Unsatisfied)
                         && (character.getArousal().percent() >= 50)
                         && (skill == null || !skill.getTags(c).contains(SkillTag.fucking))
                         && !(with.isGenital() && target.isGenital() && c.getStance().havingSex(c))) {
@@ -693,21 +694,21 @@ public class Body implements Cloneable {
             }
         }
         if (unsatisfied) {
-            c.write(character, Global.format("Foreplay doesn't seem to do it for {self:name-do} anymore. {self:PRONOUN-ACTION:clearly need|clearly needs} to fuck!", character, opponent));
+            c.write(character, Global.global.format("Foreplay doesn't seem to do it for {self:name-do} anymore. {self:PRONOUN-ACTION:clearly need|clearly needs} to fuck!", character, opponent));
         }
         if (staleMove && skill.user().human()) {
-            c.write(opponent, Global.format("This seems to be a getting bit boring for {other:direct-object}... Maybe it's time to switch it up?", opponent, character));
+            c.write(opponent, Global.global.format("This seems to be a getting bit boring for {other:direct-object}... Maybe it's time to switch it up?", opponent, character));
         }
         double percentPleasure = 100.0 * result / character.getArousal().max();
-        if (character.has(Trait.sexualDynamo) && percentPleasure >= 5 && Global.random(4) == 0) {
-            c.write(character, Global.format("Sexual pleasure seems only to feed {self:name-possessive} ", character, opponent));
+        if (character.hasTrait(Trait.sexualDynamo) && percentPleasure >= 5 && Rng.rng.random(4) == 0) {
+            c.write(character, Global.global.format("Sexual pleasure seems only to feed {self:name-possessive} ", character, opponent));
             character.buildMojo(c, (int)Math.floor(percentPleasure));
         }
-        if (character.has(Trait.showmanship) && percentPleasure >= 5 && opponent.isPet() && ((PetCharacter)opponent).getSelf().owner().equals(character)) {
+        if (character.hasTrait(Trait.showmanship) && percentPleasure >= 5 && opponent.isPet() && ((PetCharacter)opponent).getSelf().owner().equals(character)) {
             Character voyeur = c.getOpponent(character);
-            c.write(character, Global.format("{self:NAME-POSSESSIVE} moans as {other:subject-action:make|makes} a show of pleasing {other:possessive} {self:master} "
+            c.write(character, Global.global.format("{self:NAME-POSSESSIVE} moans as {other:subject-action:make|makes} a show of pleasing {other:possessive} {self:master} "
                             + "turns %s on immensely.", character, opponent, voyeur.nameDirectObject()));
-            voyeur.temptWithSkill(c, character, null, Math.max(Global.random(14, 20), result / 3), skill);
+            voyeur.temptWithSkill(c, character, null, Math.max(Rng.rng.random(14, 20), result / 3), skill);
         }
 
         character.resolvePleasure(result, c, opponent, target, with);
@@ -744,15 +745,15 @@ public class Body implements Cloneable {
             return 1.0;
         } else {
             double effectiveSeduction = character.get(Attribute.Seduction);
-            if (c.getStance().dom(character) && character.has(Trait.brutesCharisma)) {
+            if (c.getStance().dom(character) && character.hasTrait(Trait.brutesCharisma)) {
                 effectiveSeduction += c.getStance().getDominanceOfStance(character) * (character.get(Attribute.Power) / 5.0 + character.get(Attribute.Ki) / 5.0);
             }
 
-            if (character.has(Trait.PrimalHeat) && character.is(Stsflag.frenzied)) {
+            if (character.hasTrait(Trait.PrimalHeat) && character.is(Stsflag.frenzied)) {
                 effectiveSeduction += character.get(Attribute.Animism) / 2;
             }
 
-            if (opponent.has(Trait.MindlessDesire) && character.is(Stsflag.frenzied)) {
+            if (opponent.hasTrait(Trait.MindlessDesire) && character.is(Stsflag.frenzied)) {
                 effectiveSeduction /= 2;
             }
 
@@ -763,7 +764,7 @@ public class Body implements Cloneable {
             }
             double hotness = (getHotness(opponent) - 1) / 2 + 1;
             double perception = (1.0 + (opponent.get(Attribute.Perception) - 5) / 10.0);
-            if (Global.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
                 System.out.println(String.format("Seduction Bonus: %.1f, hotness: %.1f, perception: %.1f", seductionBonus, hotness, perception));
             }
             double perceptionBonus = (hotness + seductionBonus) * perception;
@@ -771,7 +772,7 @@ public class Body implements Cloneable {
             if (opponent.is(Stsflag.lovestruck)) {
                 perceptionBonus += 1;
             }
-            if (character.has(Trait.romantic)) {
+            if (character.hasTrait(Trait.romantic)) {
                 perceptionBonus += Math.max(0, opponent.getArousal().percent() - 70) / 100.0;
             }
             return perceptionBonus;
@@ -851,10 +852,11 @@ public class Body implements Cloneable {
         }
     }
 
-    private void replacePussyWithCock(BasicCockPart basicCock) {
+    private void replacePussyWithCock(CockPart.Size cockSize) {
         PussyPart pussy = getRandomPussy();
         removeAll("pussy");
-        add(pussy == null ? basicCock : basicCock.applyMod(pussy.getEquivalentCockMod()));
+        CockPart.Mod mod = pussy == null ? CockPart.Mod.normal : pussy.getEquivalentCockMod();
+        add(new CockPart(cockSize, mod));
     }
 
     private void replaceCockWithPussy() {
@@ -863,16 +865,15 @@ public class Body implements Cloneable {
         add(cock == null ? PussyPart.normal : cock.getEquivalentPussy());
     }
 
-    private void addEquivalentCockAndPussy(BasicCockPart basicCock) {
-        boolean hasPussy = getRandomPussy() != null;
-        boolean hasCock = getRandomCock() != null;
-        if (!hasPussy) {
-            CockPart cock = getRandomCock();
+    private void addEquivalentCockAndPussy(CockPart.Size desiredCockSize) {
+        PussyPart pussy = getRandomPussy();
+        CockPart cock = getRandomCock();
+        if (pussy == null) {
             add(cock == null ? PussyPart.normal : cock.getEquivalentPussy());
         }
-        if (!hasCock) {
-            PussyPart pussy = getRandomPussy();
-            add(pussy == null ? basicCock : basicCock.applyMod(pussy.getEquivalentCockMod()));
+        if (cock == null) {
+            add(new CockPart(desiredCockSize,
+                            pussy == null ? CockPart.Mod.normal : pussy.getEquivalentCockMod()));
         }
     }
 
@@ -915,7 +916,7 @@ public class Body implements Cloneable {
             // no TG for herms or asexuals
             return;
         }
-        if (character.useFemalePronouns() && Global.checkFlag(Flag.femaleTGIntoHerm)) {
+        if (character.useFemalePronouns() && Global.global.checkFlag(Flag.femaleTGIntoHerm)) {
             changeSex(CharacterSex.herm);
             return;
         }
@@ -935,7 +936,7 @@ public class Body implements Cloneable {
         switch (newSex) {
             case male:
                 femininity = Math.min(0, femininity);
-                replacePussyWithCock(BasicCockPart.average);
+                replacePussyWithCock(CockPart.Size.average);
                 addBallsIfNeeded();
                 addReplace(BreastsPart.flat, 1);
                 break;
@@ -946,18 +947,18 @@ public class Body implements Cloneable {
                 break;
             case herm:
                 femininity = Math.max(1, femininity);
-                addEquivalentCockAndPussy(BasicCockPart.big);
+                addEquivalentCockAndPussy(CockPart.Size.big);
                 growBreastsUpTo(BreastsPart.b);
                 break;
             case shemale:
                 femininity = Math.max(1, femininity);
-                replacePussyWithCock(BasicCockPart.big);
+                replacePussyWithCock(CockPart.Size.big);
                 growBreastsUpTo(BreastsPart.d);
                 addBallsIfNeeded();
                 break;
             case trap:
                 femininity = Math.max(2, femininity);
-                replacePussyWithCock(BasicCockPart.small);
+                replacePussyWithCock(CockPart.Size.small);
                 addReplace(BreastsPart.flat, 1);
                 addBallsIfNeeded();
                 break;

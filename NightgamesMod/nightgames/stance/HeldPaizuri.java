@@ -11,7 +11,7 @@ public class HeldPaizuri extends AbstractFacingStance {
 
     @Override
     public String describe(Combat c) {
-        return Global.format(
+        return Global.global.format(
                         "{self:SUBJECT-ACTION:are|is} holding {other:name-do} down with {self:possessive} breasts nested around {other:possessive} cock.",
                         top, bottom);
     }

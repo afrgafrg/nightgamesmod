@@ -90,7 +90,7 @@ public class StripMinor extends Skill {
                 return false;
             }
         } else {
-            slot = Global.pickRandom(target.outfit.getAllStrippable()
+            slot = Rng.rng.pickRandom(target.outfit.getAllStrippable()
                                 .stream()
                                 .flatMap(a -> a.getSlots()
                                                .stream())
@@ -112,14 +112,14 @@ public class StripMinor extends Skill {
         difficulty -= 15;
         if (getSelf().check(Attribute.Cunning, difficulty) || !target.canAct()) {
             c.write(getSelf(),
-                            Global.format("{self:SUBJECT-ACTION:reach|reaches} for"
+                            Global.global.format("{self:SUBJECT-ACTION:reach|reaches} for"
                                             + " {other:name-possessive} %s and {self:action:pull|pulls} "
                                             + "it away from {other:direct-object}.", getSelf(), target,
                                             clothing.getName()));
             target.strip(clothing, c);
         } else {
             c.write(getSelf(),
-                            Global.format("{self:SUBJECT-ACTION:try|tries} to remove"
+                            Global.global.format("{self:SUBJECT-ACTION:try|tries} to remove"
                                             + " {other:name-possessive} %s, but {other:pronoun-action:keep|keeps}"
                                             + " it in place.", getSelf(), target, clothing.getName()));
             return false;

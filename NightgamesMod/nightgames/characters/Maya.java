@@ -57,7 +57,7 @@ public class Maya extends BasePersonality {
         self.getMojo().setMax(150);
         self.getWillpower().setMax(100);
 
-        Global.gainSkills(self);
+        Global.global.gainSkills(self);
         self.setTrophy(Item.MayaTrophy);
 
         self.body.add(BreastsPart.d);

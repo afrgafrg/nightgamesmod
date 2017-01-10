@@ -124,7 +124,7 @@ public class Nurse extends Skill {
                             + " swaying titflesh. Giggling a bit, %s pokes %s sides and slides %s nipples in"
                             + " %s mouth when %s %s out a yelp.", getSelf().subject(),
                             getSelf().possessiveAdjective(), getSelf().body.getRandomBreasts().fullDescribe(getSelf()),
-                            target.nameOrPossessivePronoun(), Global.capitalizeFirstLetter(target.possessiveAdjective()),
+                            target.nameOrPossessivePronoun(), Grammar.capitalizeFirstLetter(target.possessiveAdjective()),
                             getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
                             target.possessiveAdjective(), target.pronoun(), target.action("let"));
         } else {

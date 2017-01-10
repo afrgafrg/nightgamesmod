@@ -48,7 +48,7 @@ public class Taunt extends Skill {
             int willpowerLoss = Math.max(target.getWillpower().max() / 50, 3) + Rng.rng.random(3);
             target.loseWillpower(c, willpowerLoss, 0, false, " (Biting Words)");
         }
-        if (getSelf().has(Trait.commandingvoice) && Global.global.random(3) == 0) {
+        if (getSelf().hasTrait(Trait.commandingvoice) && Rng.rng.random(3) == 0) {
             c.write(getSelf(), Global.global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
                             + " authority that {self:subject-action:don't|doesn't} even consider not obeying."
                             , getSelf(), target));

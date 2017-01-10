@@ -6,6 +6,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.BodyFetish;
@@ -31,7 +32,7 @@ public class OrgasmicTighten extends Thrust {
     public int[] getDamage(Combat c, Character target) {
         int[] result = new int[2];
 
-        int m = Global.random(25, 40) + Math.min(getSelf().get(Attribute.Power) / 3, 20);
+        int m = Rng.rng.random(25, 40) + Math.min(getSelf().get(Attribute.Power) / 3, 20);
         result[0] = m;
         result[1] = 0;
 
@@ -58,7 +59,7 @@ public class OrgasmicTighten extends Thrust {
             target.body.pleasure(getSelf(), selfO, targetO, m[0], c, this);
         if (m[1] != 0)
             getSelf().body.pleasure(target, targetO, selfO, m[1], -10000, c, false, this);
-        if (selfO.isType("ass") && Global.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
+        if (selfO.isType("ass") && Rng.rng.random(100) < 2 + getSelf().get(Attribute.Fetish)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;
@@ -77,10 +78,10 @@ public class OrgasmicTighten extends Thrust {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (c.getStance().en == Stance.anal) {
-            return Global.format("While cumming {self:name-possessive} spasming backdoor seems to urge {other:name-do} to do the same.",
+            return Global.global.format("While cumming {self:name-possessive} spasming backdoor seems to urge {other:name-do} to do the same.",
                             getSelf(), target);
         } else {
-            return Global.format("While cumming {self:name-possessive} spasming honeypot seems to urge {other:name-do} to do the same.",
+            return Global.global.format("While cumming {self:name-possessive} spasming honeypot seems to urge {other:name-do} to do the same.",
                             getSelf(), target);
         }
     }

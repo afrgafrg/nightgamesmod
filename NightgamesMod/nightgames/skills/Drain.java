@@ -24,7 +24,7 @@ public class Drain extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.get(Attribute.Dark) >= 15 || user.hasTrait(Trait.energydrain) || (user.has(Trait.leveldrainer) && user.getLevel() >= 10);
+        return user.get(Attribute.Dark) >= 15 || user.hasTrait(Trait.energydrain) || (user.hasTrait(Trait.leveldrainer) && user.getLevel() >= 10);
     }
 
     @Override
@@ -256,7 +256,7 @@ public class Drain extends Skill {
                                     + " far more valuable than a simple sex fight...",
                                     target.directObject(), target.possessiveAdjective(), getSelf().nameDirectObject(),
                                     target.subjectAction("feel"), getSelf().subject(), getSelf().pronoun(),
-                                    target.subjectAction("are", "is"), Global.capitalizeFirstLetter(target.possessiveAdjective()),
+                                    target.subjectAction("are", "is"), Grammar.capitalizeFirstLetter(target.possessiveAdjective()),
                                     target.pronoun(), target.action("have", "has"));
                 default:
                     // Should never happen
@@ -312,7 +312,7 @@ public class Drain extends Skill {
                                     + " far more valuable than a simple sex fight...",
                                     target.directObject(), target.possessiveAdjective(), getSelf().nameDirectObject(),
                                     target.subjectAction("feel"), getSelf().subject(), getSelf().pronoun(),
-                                    target.subjectAction("are", "is"), Global.capitalizeFirstLetter(target.possessiveAdjective()),
+                                    target.subjectAction("are", "is"), Grammar.capitalizeFirstLetter(target.possessiveAdjective()),
                                     target.pronoun(), target.action("have", "has"));
                 default:
                     // Should never happen

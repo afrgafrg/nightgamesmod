@@ -20,6 +20,8 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.Energized;
 import nightgames.status.Stsflag;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -96,7 +98,7 @@ public class Cassie extends BasePersonality {
                 case 2:
                     return "<i>\"Oh god oh god, I don't think I can take much more!\"<i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }
         });
 
@@ -114,12 +116,12 @@ public class Cassie extends BasePersonality {
                 case 2:
                     return "<i>\"Wow I didn't know " + other.guyOrGirl()+ "s could cum that much! That just proves that you're having a good time right?\"</i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }
         });
 
         character.addLine(CharacterLine.LEVEL_DRAIN_LINER, (c, self, other) -> {
-            String part = Global.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
+            String part = Rng.rng.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
             if (other.getLevel() < self.getLevel() - 5) {
                 return "Cassie grins at you as your strength is once again sucked into her devilish " + part
                                 + ", <i>\"{other:NAME}, I truly love you, you know that? But this... this is no longer a competition. "
@@ -172,7 +174,7 @@ public class Cassie extends BasePersonality {
     }
 
     private void useBreastsFocus() {
-        Global.flag(CASSIE_BREAST_FOCUS);
+        Global.global.flag(CASSIE_BREAST_FOCUS);
         character.body.addReplace(BreastsPart.f, 1);
         character.getGrowth().addTrait(11, Trait.lactating);
         character.getGrowth().addTrait(25, Trait.magicmilk);
@@ -180,34 +182,34 @@ public class Cassie extends BasePersonality {
         character.getGrowth().addTrait(57, Trait.sedativecream);
     }
     private void useMouthFocus() {
-        Global.flag(CASSIE_MOUTH_FOCUS);
+        Global.global.flag(CASSIE_MOUTH_FOCUS);
         character.getGrowth().addTrait(11, Trait.experttongue);
         character.getGrowth().addTrait(25, Trait.tongueTraining2);
         character.getGrowth().addTrait(38, Trait.tongueTraining3);
         character.getGrowth().addBodyPart(57, new MouthPussyPart());
     }
     private void useEnchantressBonus() {
-        Global.flag(CASSIE_ENCHANTRESS_FOCUS);
+        Global.global.flag(CASSIE_ENCHANTRESS_FOCUS);
         character.getGrowth().addTrait(21, Trait.magicEyeArousal);
         character.getGrowth().addTrait(28, Trait.magicEyeFrenzy);
         character.getGrowth().addTrait(32, Trait.magicEyeTrance);
         character.getGrowth().addTrait(43, Trait.magicEyeEnthrall);
-        if (Global.checkFlag(CASSIE_BREAST_FOCUS)) {
+        if (Global.global.checkFlag(CASSIE_BREAST_FOCUS)) {
             character.getGrowth().addTrait(47, Trait.beguilingbreasts);
         }
-        if (Global.checkFlag(CASSIE_MOUTH_FOCUS)) {
+        if (Global.global.checkFlag(CASSIE_MOUTH_FOCUS)) {
             character.getGrowth().addTrait(47, Trait.soulsucker);
         }
         character.getGrowth().addTrait(60, Trait.enchantingVoice);
     }
 
     private void useSubmissiveBonus() {
-        Global.flag(CASSIE_SUBMISSIVE_FOCUS);
+        Global.global.flag(CASSIE_SUBMISSIVE_FOCUS);
         character.getGrowth().addTrait(21, Trait.submissive);
-        if (Global.checkFlag(CASSIE_BREAST_FOCUS)) {
+        if (Global.global.checkFlag(CASSIE_BREAST_FOCUS)) {
             character.getGrowth().addTrait(28, Trait.augmentedPheromones);
         }
-        if (Global.checkFlag(CASSIE_MOUTH_FOCUS)) {
+        if (Global.global.checkFlag(CASSIE_MOUTH_FOCUS)) {
             character.getGrowth().addTrait(28, Trait.sweetlips);
         }
         character.getGrowth().addTrait(32, Trait.addictivefluids);
@@ -226,7 +228,7 @@ public class Cassie extends BasePersonality {
         character.getGrowth().bonusArousal = 3;
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 10 && !Global.checkFlag(CASSIE_BREAST_FOCUS) && !Global.checkFlag(CASSIE_MOUTH_FOCUS);
+            return self.getLevel() >= 10 && !Global.global.checkFlag(CASSIE_BREAST_FOCUS) && !Global.global.checkFlag(CASSIE_MOUTH_FOCUS);
         }, (c, self, player) -> "Before leaving, " + character.getName() + " turns and asks you \"Hey " + player.getName() + ", what turns you on more? Just for the sakes of... science let's say. I noticed you spending a lot of time on my boobs... are you a tits " + player.guyOrGirl()+ "? Or do you prefer something more romantic? Maybe a kiss would do?\"",
                 Arrays.asList(
                         new CombatSceneChoice("Stare at her breasts", (c, self, other) -> {
@@ -249,14 +251,14 @@ public class Cassie extends BasePersonality {
                             useBreastsFocus();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 4 traits and 3 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{1,57},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{1,57},Global.global.getPlayer());
                             return true;
                         })
                     )
                 ));
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 20 && !Global.checkFlag(CASSIE_SUBMISSIVE_FOCUS) && !Global.checkFlag(CASSIE_ENCHANTRESS_FOCUS)
-                            && (Global.checkFlag(CASSIE_BREAST_FOCUS) || Global.checkFlag(CASSIE_MOUTH_FOCUS));
+            return self.getLevel() >= 20 && !Global.global.checkFlag(CASSIE_SUBMISSIVE_FOCUS) && !Global.global.checkFlag(CASSIE_ENCHANTRESS_FOCUS)
+                            && (Global.global.checkFlag(CASSIE_BREAST_FOCUS) || Global.global.checkFlag(CASSIE_MOUTH_FOCUS));
         }, (c, self, player) -> "After you two recover from your afterglow, Cassie turns towards you. \"You know, we've been competing in the games for a while now. I can't believe how much I've changed! "
                         + "When we just started, I've only gone all the way with a " + c.getOpponent(character).boyOrGirl() + " once. I barely knew what to do even! Now though...\" Cassie gigles and starts tickling your spent "
                         + "cock with an conjured arcane feather. \"Hey " + player.getName()+", what do you think? are you disappointed I turned out this way?\"",
@@ -266,13 +268,13 @@ public class Cassie extends BasePersonality {
                                             + "<br/>"
                                             + "Cassie smiles wryly, \"I thought so. I think I've been trying so hard that I've lost a bit of my true self. "
                                             + "But you know, it doesn't have to be this way. I think I can try applying some of that in a better way.\" She stands up and gives you a quick kiss on the cheek. "
-                                            + "\"Thank you " +Global.getPlayer().getName() + ", you've really help me make up my mind. But the next time we fight, I definitely wont lose!\"");
+                                            + "\"Thank you " +Global.global.getPlayer().getName() + ", you've really help me make up my mind. But the next time we fight, I definitely wont lose!\"");
                             useSubmissiveBonus();
                             return true;
                         }),
                         new CombatSceneChoice("Like her new assertive self more", (c, self, other) -> {
                             c.write("You reply that you love her magic and new her confident self. Falling into her eyes is a real turn on for you. "
-                                            + "Cassie's eyes widen briefly before cracking into a wide smile, \""+ Global.getPlayer().getName() + ", I didn't realize you were a sub! "
+                                            + "Cassie's eyes widen briefly before cracking into a wide smile, \""+ Global.global.getPlayer().getName() + ", I didn't realize you were a sub! "
                                                             + "Do you like being helpless? "
                                                             + "Does it excite you when you are under my control, doing my bidding? I think I can work with that...\"");
                             useEnchantressBonus();
@@ -332,7 +334,7 @@ public class Cassie extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.hasTrait(Trait.witch) && (Global.checkFlag(CASSIE_BREAST_FOCUS) || Global.checkFlag(CASSIE_MOUTH_FOCUS))) {
+            if (!character.hasTrait(Trait.witch) && (Global.global.checkFlag(CASSIE_BREAST_FOCUS) || Global.global.checkFlag(CASSIE_MOUTH_FOCUS))) {
                 advance();
             }
         }
@@ -681,7 +683,7 @@ public class Cassie extends BasePersonality {
         character.getGrowth().addTrait(10, Trait.witch);
         character.body.addReplace(PussyPart.arcane, 1);
         if (character.hasDick()) {
-            character.body.addReplace(character.body.getRandomCock().applyMod(CockMod.runic), 1);
+            character.body.addReplace(character.body.getRandomCock().applyMod(CockPart.Mod.runic), 1);
         }
         character.unequipAllClothing();
         character.outfitPlan.add(Clothing.getByID("bra"));

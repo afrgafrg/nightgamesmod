@@ -130,8 +130,8 @@ public class Jewel extends BasePersonality {
         growth.willpower = 1.7f;
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return character.getLevel() >= 10 && !Global.checkFlag(JEWEL_ANAL_FOCUS)
-                            && !Global.checkFlag(JEWEL_MARTIAL_FOCUS);
+            return character.getLevel() >= 10 && !Global.global.checkFlag(JEWEL_ANAL_FOCUS)
+                            && !Global.global.checkFlag(JEWEL_MARTIAL_FOCUS);
         }, (c, self, player) -> character.name + " leans back a bit as she watches you recover from your fight."
                         + " <i>\"Hey, " + player.name + ". Pop quiz. If I were to knock you on your ass and then"
                         + " ride your cock with </i>my<i> ass, which part would you enjoy more?\"</i>", Arrays.asList(
@@ -161,14 +161,14 @@ public class Jewel extends BasePersonality {
                             useMartial();
                             growth.extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 4 traits and 3 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{25,47},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{25,47},Global.global.getPlayer());
                             return true;
                         })
         )));
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return character.getLevel() >= 20 && !Global.checkFlag(JEWEL_MENTAL_FOCUS)
-                            && !Global.checkFlag(JEWEL_PHYSICAL_FOCUS) && (Global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.checkFlag(JEWEL_ANAL_FOCUS));
+            return character.getLevel() >= 20 && !Global.global.checkFlag(JEWEL_MENTAL_FOCUS)
+                            && !Global.global.checkFlag(JEWEL_PHYSICAL_FOCUS) && (Global.global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.global.checkFlag(JEWEL_ANAL_FOCUS));
         }, (c, self, player) -> "Jewel stands over you after the fight while looking at you rather coldly, <i>\"So, " + player.name + ". You're going to be doing what I tell"
                         + " you. No, don't interrupt. You are. My question is, are you just going"
                         + " to listen to me, or am I going to have to physically force you?\"</i>", Arrays.asList(
@@ -194,7 +194,7 @@ public class Jewel extends BasePersonality {
                             usePhysical();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 4 traits and 3 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{1,57},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{1,57},Global.global.getPlayer());
                             return true;
                         })
         )));
@@ -241,7 +241,7 @@ public class Jewel extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.hasTrait(Trait.fighter) && (Global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.checkFlag(JEWEL_ANAL_FOCUS))) {
+            if (!character.hasTrait(Trait.fighter) && (Global.global.checkFlag(JEWEL_MARTIAL_FOCUS) || Global.global.checkFlag(JEWEL_ANAL_FOCUS))) {
                 advance();
             }
         }
@@ -367,7 +367,7 @@ public class Jewel extends BasePersonality {
                 case 2:
                     return "<i>\"Shit shit, I won't let you win!\"</i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }
         });
 
@@ -387,12 +387,12 @@ public class Jewel extends BasePersonality {
                 case 2:
                     return "<i>\"Mmmm not done yet are we? Let's try for a fourth!\"</i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }
         });
 
         character.addLine(CharacterLine.LEVEL_DRAIN_LINER, (c, self, other) -> {
-            String part = Global.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
+            String part = Rng.rng.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.getType()).orElse("pussy");
             if (other.getLevel() < self.getLevel() - 5) {
                 return "Jewel smirks at you with a sadistic grin on her face as her " + self.body.getRandom(part).describe(self)
                                 + " plunders your strength once again. <i>\"Poor {other:guy}, being dominated by someone who used to be so much weaker than you.\"</i> "
@@ -744,7 +744,7 @@ public class Jewel extends BasePersonality {
         character.getGrowth().addTrait(10, Trait.fighter);
         character.body.addReplace(PussyPart.fiery, 100);
         if (character.hasDick()) {
-            character.body.addReplace(character.body.getRandomCock().applyMod(CockMod.enlightened), 1);
+            character.body.addReplace(character.body.getRandomCock().applyMod(CockPart.Mod.enlightened), 1);
         }
         character.unequipAllClothing();
         character.outfitPlan.add(Clothing.getByID("gi"));

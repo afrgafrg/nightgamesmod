@@ -8,7 +8,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Blowjob;
 import nightgames.skills.Cunnilingus;
@@ -21,13 +21,13 @@ public class OralStrategy extends KnockdownThenActionStrategy {
         if (!(new Cunnilingus(self)).requirements(c, self, c.getOpponent(self)) && !(new Blowjob(self).requirements(c, c.getOpponent(self)))) {
             return 0;
         }
-        if (self.has(Trait.silvertongue)) {
+        if (self.hasTrait(Trait.silvertongue)) {
             weight += .25;
         }
-        if (self.has(Trait.soulsucker)) {
+        if (self.hasTrait(Trait.soulsucker)) {
             weight += .25;
         }
-        if (self.has(Trait.experttongue)) {
+        if (self.hasTrait(Trait.experttongue)) {
             weight += .25;
         }
         if (self.getMood().equals(Emotion.confident)) {
@@ -53,6 +53,6 @@ public class OralStrategy extends KnockdownThenActionStrategy {
 
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(2, 6);
+        return Rng.rng.random(2, 6);
     }
 }

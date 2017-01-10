@@ -30,7 +30,7 @@ public class Prematch implements Scene {
     public Prematch(Player player) {
         Global.global.currentScene = this;
         Global.global.unflag(Flag.victory);
-        player.getAddictions().forEach(addiction -> addiction.startNight().ifPresent(player::add));
+        player.getAddictions().forEach(addiction -> addiction.startNight().ifPresent(player::addNonCombat));
         List<GameButton> choice = new ArrayList<>();
         String message = "";
         if (player.getLevel() < 5) {

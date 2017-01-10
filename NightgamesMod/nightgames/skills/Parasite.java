@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Parasited;
 import nightgames.status.Slimed;
 import nightgames.status.Stsflag;
@@ -40,8 +41,8 @@ public class Parasite extends Skill {
         }
 
         target.add(c, new Parasited(target, getSelf()));
-        if (getSelf().has(Trait.VolatileSubstrate)) {
-            target.add(c, new Slimed(target, getSelf(), Global.random(2, 4)));
+        if (getSelf().hasTrait(Trait.VolatileSubstrate)) {
+            target.add(c, new Slimed(target, getSelf(), Rng.rng.random(2, 4)));
         }
 
         return true;

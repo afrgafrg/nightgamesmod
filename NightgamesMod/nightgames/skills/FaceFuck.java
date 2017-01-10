@@ -135,14 +135,14 @@ public class FaceFuck extends Skill {
             m = String.format("%s forces her strapon cock into %s mouth and fucks %s face with it. "
                             + "It's only rubber, but the position is still humiliating. %s not "
                             + "to gag on the artificial member while %s revels in her dominance.",
-                            Global.capitalizeFirstLetter(getSelf().subject()), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(getSelf().subject()), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                             target.subjectAction("try", "tries"), getSelf().subject());
         } else if (modifier == Result.upgrade) {
             m = String.format("%s moves slightly towards %s, pushing her strapon against %s lips. %s to keep %s"
                             + " mouth closed but %s pinches %s nose shut, "
                             + "and pushes in the rubbery invader as %s for air. After a few sucks, %s"
                             + " %s to break free, although %s %s still shivering "
-                            + "with a mix of arousal and humiliation.", Global.capitalizeFirstLetter(getSelf().subject()), target.nameDirectObject(),
+                            + "with a mix of arousal and humiliation.", Grammar.capitalizeFirstLetter(getSelf().subject()), target.nameDirectObject(),
                             target.possessiveAdjective(), target.subjectAction("try", "tries"), target.possessiveAdjective(),
                             getSelf().subject(), target.possessiveAdjective(), target.subjectAction("gasp"),
                             target.pronoun(), target.action("manage"), target.pronoun(), target.action("are", "is"));
@@ -167,9 +167,9 @@ public class FaceFuck extends Skill {
                             getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
                             getSelf().body.getRandomCock().describe(getSelf()), target.subjectAction("are", "is"),
                             getSelf().subject(), getSelf().possessiveAdjective(), target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("feel")), target.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("feel")), target.possessiveAdjective(),
                             target.pronoun(), target.action("do", "does"), getSelf().nameDirectObject(),
-                            Global.capitalizeFirstLetter(getSelf().subject()), target.subjectAction("are", "is"),
+                            Grammar.capitalizeFirstLetter(getSelf().subject()), target.subjectAction("are", "is"),
                             target.pronoun());
         }
         return m;

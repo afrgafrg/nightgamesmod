@@ -9,6 +9,7 @@ import nightgames.characters.custom.RecruitmentData;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.Result;
+import nightgames.encounter.Encounter;
 import nightgames.encounter.Encs;
 import nightgames.encounter.IEncounter;
 import nightgames.global.*;
@@ -31,8 +32,12 @@ import nightgames.status.*;
 import nightgames.trap.Trap;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NPC extends Character {
+    // TODO: This might be better as its own class.
+    public static final Character NONE_CHARACTER = new NPC("none", 1, null);
+
     public Personality ai;
     public HashMap<Emotion, Integer> emotes;
     public Emotion mood;
@@ -79,7 +84,7 @@ public class NPC extends Character {
         description = description + "<br/><br/>";
         description = description + outfit.describe(this);
         description = description + observe(per);
-        if (has(Trait.octo)) {
+        if (hasTrait(Trait.octo)) {
             description += "<p>You can see " + RoboArmManager.getManagerFor(this).describeArms() + " strapped behind "
                                 + possessiveAdjective() + " back.<br/>";
         }
@@ -190,9 +195,9 @@ public class NPC extends Character {
         } else {
             target = c.p1;
         }
-        if (!has(Trait.leveldrainer))
+        if (!hasTrait(Trait.leveldrainer))
             gainXP(getDefeatXP(target));
-        if (!target.has(Trait.leveldrainer))
+        if (!target.hasTrait(Trait.leveldrainer))
             target.gainXP(getVictoryXP(this));
         arousal.empty();
         if (!target.human() || !Global.global.getMatch().condition.name().equals("norecovery")) {
@@ -297,8 +302,8 @@ public class NPC extends Character {
     }
 
     private CombatStrategy pickStrategy(Combat c) {
-        if (Global.random(100) < 60 ) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+        if (Rng.rng.random(100) < 60 ) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
                 System.out.println("Using default strategy");
             }
             // most of the time don't bother using a strategy.
@@ -318,10 +323,10 @@ public class NPC extends Character {
             lastWeight += strat.weight(c, this);
             stratsWithCumulativeWeights.put(lastWeight, strat);
         }
-        if (Global.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
             System.out.println("Available strategies: "+ stratsWithCumulativeWeights);
         }
-        double random = Global.randomdouble() * lastWeight;
+        double random = Rng.rng.randomdouble() * lastWeight;
         for (Map.Entry<Double, CombatStrategy> entry: stratsWithCumulativeWeights.entrySet()) {
             if (random < entry.getKey()) {
                 return entry.getValue();
@@ -368,9 +373,9 @@ public class NPC extends Character {
         } else {
             target = c.p1;
         }
-        if (!has(Trait.leveldrainer))
+        if (!hasTrait(Trait.leveldrainer))
             gainXP(getVictoryXP(target));
-        if (!target.has(Trait.leveldrainer))
+        if (!target.hasTrait(Trait.leveldrainer))
             target.gainXP(getVictoryXP(this));
         arousal.empty();
         target.arousal.empty();
@@ -396,7 +401,7 @@ public class NPC extends Character {
     }
 
     public String getRandomLineFor(String lineType, Combat c, Character other) {
-        return Global.format(Global.pickRandom(lines.get(lineType)).orElse((cb, sf, ot) -> "").getLine(c, this, other), this, other);
+        return Global.global.format(Rng.rng.pickRandom(lines.get(lineType)).orElse((cb, sf, ot) -> "").getLine(c, this, other), this, other);
     }
 
     public String getRandomLineFor(String lineType, Combat c) {
@@ -449,18 +454,22 @@ public class NPC extends Character {
     }
 
     @Override
-    public void move() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+    public void move(Area newLocation) {
+        location.exit(this);
+        location = newLocation;
+        location.enter(this);
+        /*
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println(getName() + " is moving with state " + state);
         }
         if (state == State.combat) {
             if (location != null && location.fight != null) {
-                if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                     System.out.println(getName() + " is battling in the " + location.name);
                 }
                 location.fight.battle();
             } else {
-                if (Global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                if (Global.global.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                     System.out.println(getName() + " is done battling in the " + location.name);
                 }
             }
@@ -531,16 +540,17 @@ public class NPC extends Character {
                 pickAndDoAction(allowedActions(), moves, radar);
             }
         }
+        */
     }
 
     private void pickAndDoAction(Collection<Action> available, Collection<Action> moves, Collection<Movement> radar) {
         if (available.isEmpty()) {
-            available.addAll(Global.getActions());
+            available.addAll(Global.global.getActions());
             available.addAll(moves);
         }
         available.removeIf(a -> a == null || !a.usable(this));
         if (location.humanPresent()) {
-            Global.gui().message("You notice " + name() + ai.move(available, radar).execute(this).describe());
+            Global.global.gui().message("You notice " + name() + ai.move(available, radar).execute(this).describe());
         } else {
             ai.move(available, radar).execute(this);
         }
@@ -581,7 +591,7 @@ public class NPC extends Character {
     }
 
     @Override
-    public void showerScene(Character target, IEncounter encounter) {
+    public void showerScene(Character target, Encounter encounter) {
         Encs response;
         if (this.hasItem(Item.Aphrodisiac)) {
             // encounter.aphrodisiactrick(this, target);
@@ -597,7 +607,7 @@ public class NPC extends Character {
     }
 
     @Override
-    public void intervene(IEncounter enc, Character p1, Character p2) {
+    public void intervene(Encounter enc, Character p1, Character p2) {
         if (Rng.rng.random(20) + getAffection(p1) + (p1.hasTrait(Trait.sympathetic) ? 10 : 0)
                         >= Rng.rng.random(20)
                         + getAffection(p2) + (p2.hasTrait(Trait.sympathetic) ? 10 : 0)) {
@@ -609,7 +619,7 @@ public class NPC extends Character {
 
     @Override
     public void promptTrap(IEncounter enc, Character target, Trap trap) {
-        if (ai.attack(target) && (!target.human() || !Global.isDebugOn(DebugFlags.DEBUG_SPECTATE))) {
+        if (ai.attack(target) && (!target.human() || !Global.global.isDebugOn(DebugFlags.DEBUG_SPECTATE))) {
             enc.trap(this, target, trap);
         } else {
             location.endEncounter();
@@ -623,7 +633,7 @@ public class NPC extends Character {
 
     @Override
     public void afterParty() {
-        Global.global.gui().message(getRandomLineFor(CharacterLine.NIGHT_LINER, null, Global.getPlayer()));
+        Global.global.gui().message(getRandomLineFor(CharacterLine.NIGHT_LINER, null, Global.global.getPlayer()));
     }
 
     public void daytime(int time) {

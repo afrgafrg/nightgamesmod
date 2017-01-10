@@ -3,6 +3,7 @@ package nightgames.characters.body;
 import com.google.gson.JsonObject;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
@@ -212,9 +213,9 @@ public class CockPart implements BodyPart {
 
     @Override public double getPleasure(Character self, BodyPart target) {
         double pleasureMod = getPleasureBase();
-        pleasureMod += self.hasTrait(Trait.cockTraining1) ? .5 : 0;
-        pleasureMod += self.hasTrait(Trait.cockTraining2) ? .7 : 0;
-        pleasureMod += self.hasTrait(Trait.cockTraining3) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining1) ? .5 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining2) ? .7 : 0;
+        pleasureMod += self.hasTrait(Trait.sexTraining3) ? .7 : 0;
         DivineCharge charge = (DivineCharge) self.getStatus(Stsflag.divinecharge);
         if (charge != null) {
             pleasureMod += charge.magnitude;
@@ -368,7 +369,7 @@ public class CockPart implements BodyPart {
                                                 opponent.nameOrPossessivePronoun(), target.describe(opponent),
                                                 self.nameOrPossessivePronoun(), describe(self),
                                                 self.possessivePronoun());
-                self.pain(c, Rng.rng.random(9) + 4);
+                self.pain(c, opponent, Rng.rng.random(9) + 4);
                 amtDrained = 0;
             } else {
                 message += String.format(" Despite %s best efforts, some of the elusive energy passes into %s.",
@@ -496,8 +497,12 @@ public class CockPart implements BodyPart {
         } else {
             description = modType.name() + (c.hasPussy() ? " girl-" : " ");
         }
-        String synonym = Rng.rng.pickRandom(synonyms);
+        String synonym = Rng.rng.pickRandom(synonyms).get();
         return size.desc + " " + description + synonym;
+    }
+
+    @Override public String canonicalDescription() {
+        return size.desc + " " + modType.name() + " cock";
     }
 
     @Override public String describe(Character c) {
@@ -509,7 +514,7 @@ public class CockPart implements BodyPart {
         } else {
             description = modType.name() + (c.hasPussy() ? " girl-" : " ");
         }
-        String syn = Rng.rng.pickRandom(synonyms);
+        String syn = Rng.rng.pickRandom(synonyms).get();
         return Rng.rng.maybeString(size.desc + " ") + description + syn;
     }
 
@@ -592,10 +597,10 @@ public class CockPart implements BodyPart {
 
 
 
-    default PussyPart getEquivalentPussy() {
+    public PussyPart getEquivalentPussy() {
         for (PussyPart pussy : PussyPart.values()) {
-            CockMod equivalentMod = pussy.getEquivalentCockMod();
-            if (equivalentMod != CockMod.error && equivalentMod.equals(getMod(Global.noneCharacter()))) {
+            CockPart.Mod equivalentMod = pussy.getEquivalentCockMod();
+            if (equivalentMod != CockPart.Mod.normal && equivalentMod.equals(getMod(NPC.NONE_CHARACTER))) {
                 return pussy;
             }
         }

@@ -38,7 +38,7 @@ public class MouthPart extends GenericBodyPart {
                             + " when licked by " + self.directObject() + ".");
             bonus += Rng.rng.random(2, 4) + opponent.getLevel() / 20;
             if (target.isGenital()) {
-                bonus += Global.random(2, 4) + Math.max(0, opponent.getLevel() / 20 - 2);
+                bonus += Rng.rng.random(2, 4) + Math.max(0, opponent.getLevel() / 20 - 2);
             }
         }
         String fluid = target.getFluids(opponent);
@@ -98,8 +98,8 @@ public class MouthPart extends GenericBodyPart {
             bonus += Rng.rng.random(3) + Global.global.clamp(self.get(Attribute.Seduction) / 3, 10, 30)
                             * self.getArousal().percent() / 100.0;
         }
-        if (self.has(Trait.sweetlips) && c.getStance().sub(self)) {
-            c.write(opponent, Global.format("<br/>{self:name-possessive} enticing lips turns {other:direct-object} on as {other:subject-action:force|forces} {other:reflective} into them.",
+        if (self.hasTrait(Trait.sweetlips) && c.getStance().sub(self)) {
+            c.write(opponent, Global.global.format("<br/>{self:name-possessive} enticing lips turns {other:direct-object} on as {other:subject-action:force|forces} {other:reflective} into them.",
                             self, opponent));
             opponent.temptNoSkill(c, self, this, (int) self.modifyDamage(DamageType.temptation, opponent, damage));
         }

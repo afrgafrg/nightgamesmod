@@ -35,13 +35,13 @@ public class ReverseXHFDaisyChainThreesome extends FemdomSexStance {
 
     @Override
     public boolean canthrust(Combat c, Character self) {
-        return domSexCharacter(c) == self || top == self || self.has(Trait.powerfulhips);
+        return domSexCharacter(c) == self || top == self || self.hasTrait(Trait.powerfulhips);
     }
 
     @Override
     public void checkOngoing(Combat c) {
         if (!c.getOtherCombatants().contains(domSexCharacter)) {
-            c.write(bottom, Global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
+            c.write(bottom, Global.global.format("With the disappearance of {self:name-do}, {other:subject-action:manage|manages} to escape.", domSexCharacter, bottom));
             c.setStance(new Neutral(top, bottom));
         }
     }
@@ -100,7 +100,7 @@ public class ReverseXHFDaisyChainThreesome extends FemdomSexStance {
         if (top.human()) {
             return "";
         } else {
-            return Global.format("{master:subject-action:are|is} fucking {other:name-do} from behind while {self:subject} is riding {other:possessive} dick, creating a {other:name}-sandwich.", domSexCharacter, bottom);
+            return Global.global.format("{master:subject-action:are|is} fucking {other:name-do} from behind while {self:subject} is riding {other:possessive} dick, creating a {other:name}-sandwich.", domSexCharacter, bottom);
         }
     }
 
@@ -157,7 +157,7 @@ public class ReverseXHFDaisyChainThreesome extends FemdomSexStance {
     @Override
     public Position reverse(Combat c, boolean writeMessage) {
         if (writeMessage) {
-            c.write(bottom, Global.format("{self:SUBJECT-ACTION:manage|manages} to unbalance {other:name-do} and push {other:direct-object} off {self:reflective}.", bottom, top));
+            c.write(bottom, Global.global.format("{self:SUBJECT-ACTION:manage|manages} to unbalance {other:name-do} and push {other:direct-object} off {self:reflective}.", bottom, top));
         }
         return new Neutral(bottom, top);
     }

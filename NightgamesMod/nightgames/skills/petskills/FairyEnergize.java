@@ -3,6 +3,7 @@ package nightgames.skills.petskills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Skill;
 
@@ -25,11 +26,11 @@ public class FairyEnergize extends SimpleMasterSkill {
     @Override
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
-            int m = Global.random(17, 24) + getSelf().getLevel() / 2;
-            c.write(getSelf(), Global.format("{self:SUBJECT} flies around {other:name-do}, channeling energy into {other:direct-object}.", getSelf(), target));
+            int m = Rng.rng.random(17, 24) + getSelf().getLevel() / 2;
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} flies around {other:name-do}, channeling energy into {other:direct-object}.", getSelf(), target));
             target.buildMojo(c, m, getSelf().getName());
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT} flies around the edge of the fight looking for an opening.", getSelf(), target));
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} flies around the edge of the fight looking for an opening.", getSelf(), target));
             return false;
         }
         return true;

@@ -370,7 +370,7 @@ public enum Trait {
     // Speed Focus
     NimbleRecovery("Nimble Recovery", "Recovers from knockdowns faster"),
     FeralAgility("Feral Agility", "Extra cunning, evade and counter chance", (b, c, t) -> {
-        b.append(Global.format("It's hard to follow {self:name-possessive} erratic movement with the eyes.", c, c));
+        b.append(Global.global.format("It's hard to follow {self:name-possessive} erratic movement with the eyes.", c, c));
     }),
     CrossCounter("Cross Counter", "Chance to counter your opponent's counters"),
     Catwalk("Catwalk", "Sexy walk, alluring when moving"),
@@ -385,7 +385,7 @@ public enum Trait {
     FastDiffusion("Fast Diffusion", "Bonus to pheromone power when far away."),
     PiercingOdor("Piercing Odor", "Pheromones are strong enough to overcome the calm."),
     ComplexAroma("Complex Aroma", "Pheromones can stack more times.", (b, c, t) ->
-        b.append(Global.format("A complex aroma lingers in the air.", c, c))),
+        b.append(Global.global.format("A complex aroma lingers in the air.", c, c))),
 
     // Frenzy Focus
     Rut("Rut", "Half arousal damage during frenzy, chance to go into a frenzy when over half arousal."),
@@ -611,7 +611,7 @@ public enum Trait {
            return "";
         });
         resistances.put(Trait.mentalfortress, (combat, c, s) -> {
-           if (s.mindgames() && (c.getStamina().percent()*3 / 4) > Global.global.random(100)) {
+           if (s.mindgames() && (c.getStamina().percent()*3 / 4) > Rng.rng.random(100)) {
                return "Mental Fortress";
            }
            return "";

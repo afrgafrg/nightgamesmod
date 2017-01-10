@@ -43,16 +43,16 @@ public class SlimeMelt extends SimpleEnemySkill {
         if (!target.breastsAvailable() && !target.outfit.slotUnshreddable(ClothingSlot.top)) {
             strippable.add(ClothingSlot.top);
         }
-        ClothingSlot targetSlot = Global.pickRandom(strippable).get();
+        ClothingSlot targetSlot = Rng.rng.pickRandom(strippable).get();
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             // should never be null here, since otherwise we can't use the skill          
             Clothing stripped = target.strip(targetSlot, c);
-            c.write(getSelf(), Global.format("{self:SUBJECT} pounces on {other:name-do} playfully, "
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} pounces on {other:name-do} playfully, "
                             + "and its corrosive body melts {other:possessive} %s as a fortunate accident.", 
                             getSelf(), target, stripped.getName()));
             target.emote(Emotion.nervous, 10);
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT} launches itself towards {other:name-do}, but {other:SUBJECT-ACTION:sidestep|sidesteps} it handily.",
+            c.write(getSelf(), Global.global.format("{self:SUBJECT} launches itself towards {other:name-do}, but {other:SUBJECT-ACTION:sidestep|sidesteps} it handily.",
                             getSelf(), target));
             return false;
         }

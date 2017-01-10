@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.pet.arms.RoboArm;
 
 public abstract class MultiArmMove {
@@ -22,6 +22,6 @@ public abstract class MultiArmMove {
     public abstract void execute(Combat c, Character owner, Character target, List<RoboArm> arms);
     
     public boolean shouldExecute() {
-        return Global.random(100) < 20;
+        return Rng.rng.random(100) < 20;
     }
 }

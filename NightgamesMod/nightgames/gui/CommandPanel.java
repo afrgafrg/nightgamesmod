@@ -1,6 +1,6 @@
 package nightgames.gui;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class CommandPanel {
     private JPanel rows[];
     public CommandPanel(int width) {
         panel = new JPanel();
-        panel.setBackground(GUIColors.bgDark);
+        panel.setBackground(GUIColors.bgDark.color);
         panel.setPreferredSize(new Dimension(width, 160));
         panel.setMinimumSize(new Dimension(width, 160));
         panel.setBorder(new CompoundBorder());
@@ -130,9 +130,7 @@ public class CommandPanel {
     public void register(Character hotkey, KeyableButton button) {
         button.setHotkeyTextTo(hotkey.toString().toUpperCase());
         hotkeyMapping.put(hotkey, button);
-=======
-import nightgames.gui.button.ButtonList;
-import nightgames.gui.button.FutureButton;
+/*=======
 import nightgames.gui.button.GameButton;
 import nightgames.gui.button.PageButton;
 
@@ -196,6 +194,7 @@ public class CommandPanel extends JPanel implements Serializable {
 
     private boolean isLastPage(int page) {
         return startIndex(page + 1) > buttons.size();
->>>>>>> e1fc2a8... Redefined Prompts around the notion of CompleteableFutures set by value-holding buttons. Adjusted Button definitions to accommodate. Moved Button definitions to their own subpackage.
+//>>>>>>> e1fc2a8... Redefined Prompts around the notion of CompleteableFutures set by value-holding buttons. Adjusted Button definitions to accommodate. Moved Button definitions to their own subpackage.
+*/
     }
 }

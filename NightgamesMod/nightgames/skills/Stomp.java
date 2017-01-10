@@ -171,7 +171,7 @@ public class Stomp extends Skill {
                             + "erupt from %s delicates as %s feet crash down on them.",
                             getSelf().subject(), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective(), getSelf().possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("are", "is")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("are", "is")),
                             getSelf().nameOrPossessivePronoun(), getSelf().pronoun(),
                             target.directObject(), getSelf().pronoun(), target.possessiveAdjective(),
                             target.subjectAction("realize"), getSelf().pronoun(),
@@ -187,9 +187,9 @@ public class Stomp extends Skill {
                             getSelf().name(), target.nameOrPossessivePronoun(),
                             getSelf().possessiveAdjective(), target.possessiveAdjective(),
                             target.body.getRandomCock().describe(target),
-                            Global.capitalizeFirstLetter(target.subjectAction("were", "was")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("were", "was")),
                             getSelf().pronoun(),
-                            Global.capitalizeFirstLetter(target.subjectAction("were", "was")),
+                            Grammar.capitalizeFirstLetter(target.subjectAction("were", "was")),
                             target.possessiveAdjective());
         } else if (modifier == Result.weak2) {
             return String.format("%s forces %s legs open and brutally stomps %s "
@@ -204,7 +204,7 @@ public class Stomp extends Skill {
                             + "jewels. %s up in the fetal position, groaning in agony.",
                             getSelf().subject(), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective(),
-                            Global.capitalizeFirstLetter(target.subjectAction("curl")));
+                            Grammar.capitalizeFirstLetter(target.subjectAction("curl")));
         }
     }
 

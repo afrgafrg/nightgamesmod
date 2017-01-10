@@ -21,13 +21,13 @@ public class Alluring extends DurationStatus {
 
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return Global.format("{self:SUBJECT-ACTION:are|is} now alluring.\n", affected, null);
+        return Global.global.format("{self:SUBJECT-ACTION:are|is} now alluring.\n", affected, null);
     }
 
     @Override
     public String describe(Combat c) {
         if (!affected.human()) {
-            return Global.format("{self:SUBJECT-ACTION:look|looks} impossibly beautiful to {other:name-possessive} eyes, {other:pronoun} can't bear to hurt {self:direct-object}.", affected, c.getOpponent(affected));
+            return Global.global.format("{self:SUBJECT-ACTION:look|looks} impossibly beautiful to {other:name-possessive} eyes, {other:pronoun} can't bear to hurt {self:direct-object}.", affected, c.getOpponent(affected));
         }
         return "";
     }

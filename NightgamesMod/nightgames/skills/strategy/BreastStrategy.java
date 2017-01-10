@@ -8,7 +8,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Skill;
 
@@ -17,13 +17,13 @@ public class BreastStrategy extends KnockdownThenActionStrategy {
     public double weight(Combat c, Character self) {
         double weight = .55;
        
-        if (self.has(Trait.lactating)) {
+        if (self.hasTrait(Trait.lactating)) {
             weight += .25;
         }
-        if (self.has(Trait.temptingtits)) {
+        if (self.hasTrait(Trait.temptingtits)) {
             weight += .25;
         }
-        if (self.has(Trait.beguilingbreasts)) {
+        if (self.hasTrait(Trait.beguilingbreasts)) {
             weight += .25;
         }
         if (self.getMood().equals(Emotion.confident)) {
@@ -48,6 +48,6 @@ public class BreastStrategy extends KnockdownThenActionStrategy {
 
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(2, 6);
+        return Rng.rng.random(2, 6);
     }
 }

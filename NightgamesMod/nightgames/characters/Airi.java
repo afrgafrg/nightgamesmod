@@ -1,6 +1,7 @@
 package nightgames.characters;
 
 import nightgames.characters.body.*;
+import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
@@ -14,6 +15,7 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Airi extends BasePersonality {
@@ -45,7 +47,7 @@ public class Airi extends BasePersonality {
     public void applyBasicStats(Character self) {
         self.change();
         self.setTrophy(Item.AiriTrophy);
-        preferredCockMod = CockPart.Mod.error;
+        preferredCockMod = CockPart.Mod.normal;
 
         self.outfitPlan.add(Clothing.getByID("shirt"));
         self.outfitPlan.add(Clothing.getByID("bra"));
@@ -68,13 +70,13 @@ public class Airi extends BasePersonality {
     }
 
     private void constructLines() {
-        character.addLine(CharacterLine.BB_LINER, (c, self, other) -> self.has(Trait.slime) ? "Airi grimaces as you fall. <i>\"Apologies... but necessary.... Please understand...\"</i>" : "<i>\"Sorry... I hope it didn't hurt too badly...\"</i>");
-        character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> self.has(Trait.slime) ? "" : "<i>Nooo! Don't look at me!</i>");
-        character.addLine(CharacterLine.STUNNED_LINER, (c, self, other) -> self.has(Trait.slime) ? "Airi glares at you from the puddle she formed on the floor. <i>\"Unforgivable...\"</i>" : "<i>\"Unforgivable...\"</i>");
-        character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> self.has(Trait.slime) ? "Airi coos at you <i>\"About to cum..? ...even trying..?\"</i>" : "<i><b>Airi giggles, </b> \"Try a bit harder okay?\"</i>");
-        character.addLine(CharacterLine.TEMPT_LINER, (c, self, other) -> self.has(Trait.slime) ? "<i>\"Fill me with yourself... forget everything...\"</i>" : "<i>\"Uhm, it's okay, you can come inside...\"</i>");
+        character.addLine(CharacterLine.BB_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "Airi grimaces as you fall. <i>\"Apologies... but necessary.... Please understand...\"</i>" : "<i>\"Sorry... I hope it didn't hurt too badly...\"</i>");
+        character.addLine(CharacterLine.NAKED_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "" : "<i>Nooo! Don't look at me!</i>");
+        character.addLine(CharacterLine.STUNNED_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "Airi glares at you from the puddle she formed on the floor. <i>\"Unforgivable...\"</i>" : "<i>\"Unforgivable...\"</i>");
+        character.addLine(CharacterLine.TAUNT_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "Airi coos at you <i>\"About to cum..? ...even trying..?\"</i>" : "<i><b>Airi giggles, </b> \"Try a bit harder okay?\"</i>");
+        character.addLine(CharacterLine.TEMPT_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "<i>\"Fill me with yourself... forget everything...\"</i>" : "<i>\"Uhm, it's okay, you can come inside...\"</i>");
         character.addLine(CharacterLine.ORGASM_LINER, (c, self, other) -> {
-            if (self.has(Trait.slime)) {
+            if (self.hasTrait(Trait.slime)) {
                 return "<i>\"Ahhnn... forgot how good... feels... Will return favor...\"</i>.";
             } else if (self.getWillpower().percent() > 90) {
                 return "<i>\"Aah that was a bit too much! Slow down a bit...\"</i>";
@@ -84,12 +86,12 @@ public class Airi extends BasePersonality {
                 return "<i>\"I need more... Give me more...\"</i>";
             }
         });
-        character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> self.has(Trait.slime) ? "<i>\"...Feels good..? I'll suck more out... I'll drain you dry...\"</i>" : "<i>\"Feels good? Let me have some more...\"</i>");
+        character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> self.hasTrait(Trait.slime) ? "<i>\"...Feels good..? I'll suck more out... I'll drain you dry...\"</i>" : "<i>\"Feels good? Let me have some more...\"</i>");
         character.addLine(CharacterLine.NIGHT_LINER, (c, self, other) -> "You walk back to your dorm after the match, and decide to take a shower after all that exertion. Who knew sex fighting a bunch of girls would be so exhausting? You strip off your shirt and boxers and head straight into the bathroom. As you flip on the lights, you notice that the tub seems already filled with water. Just as you wonder if you forgot to drain the tub from last night, the liquid in the tub quivers and… stands up. "
                         + "<br/><br/>It’s Airi. What’s she doing here? You ask her how did get in, since you were sure the door was locked. <i>Followed you… flowed under door… No problem…</i> Well, that explains it. Noticing the time, you let her know that you really need to take your shower now and head to bed or you won’t make it tomorrow for your morning classes. Airi looks at you for a second and nods. <i>Un… will help you clean…</i> Wait what? Oh n-! Airi pulls you into the tub with her gooey appendages and submerges you inside her body. <i>Relax… I’ll clean you up… Inside and out…</i>");
         character.addLine(CharacterLine.CHALLENGE, (c, self, other) -> {
             if (other.human()) {
-                return character.has(Trait.slime)
+                return character.hasTrait(Trait.slime)
                                 ? "Airi's main body rises up from her slime blob and forms the demure beauty you're used to seeing. <i>\"Delicious... Quickly... Give me your seed...\"</i>"
                                 : "You're fighting Airi, a reticent asian girl. She looks pretty normal for now, but you know she's holding a secret.";
             } else {
@@ -97,7 +99,7 @@ public class Airi extends BasePersonality {
             }
         });
         character.addLine(CharacterLine.LEVEL_DRAIN_LINER, (c, self, other) -> {
-            String part = Global.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.describe(self)).orElse("pussy");
+            String part = Rng.rng.pickRandom(c.getStance().partsFor(c, self)).map(bp -> bp.describe(self)).orElse("pussy");
             if (other.getLevel() < self.getLevel() - 5) {
                 return "{self:SUBJECT} tousles {other:possessive} hair fondly as {other:subject} cum, \"<i>How does it feel... reduced to mere prey...? You're just food... for me now...</i>\"";
             } else if (other.getLevel() >= self.getLevel()) {
@@ -110,15 +112,14 @@ public class Airi extends BasePersonality {
 
     @Override
     public void setGrowth() {
-        growth.stamina = 1;
         character.getGrowth().stamina = 1;
         character.getGrowth().arousal = 1;
         character.getGrowth().willpower = 2.5f;
         character.getGrowth().bonusStamina = 1;
         character.getGrowth().bonusArousal = 1;
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 10 && !Global.checkFlag(AIRI_PARASITISM_FOCUS) && !Global.checkFlag(AIRI_TRANSFORMATION_FOCUS);
-        }, (c, self, player) -> Global.format("[Placeholder ]Airi pick parasite or transformation"
+            return self.getLevel() >= 10 && !Global.global.checkFlag(AIRI_PARASITISM_FOCUS) && !Global.global.checkFlag(AIRI_TRANSFORMATION_FOCUS);
+        }, (c, self, player) -> Global.global.format("[Placeholder ]Airi pick parasite or transformation"
                         + "", self, player),
                 Arrays.asList(
                         new CombatSceneChoice("[Placeholder] Parasite.", (c, self, other) -> {
@@ -137,14 +138,14 @@ public class Airi extends BasePersonality {
                             useTransformation();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.global.getPlayer());
                             return true;
                         })
                     )
                 ));
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 20 && !Global.checkFlag(AIRI_QUEEN_SLIME_FOCUS) && !Global.checkFlag(AIRI_SLIME_CARRIER_FOCUS)
-                            && (Global.checkFlag(AIRI_PARASITISM_FOCUS) || Global.checkFlag(AIRI_TRANSFORMATION_FOCUS));
+            return self.getLevel() >= 20 && !Global.global.checkFlag(AIRI_QUEEN_SLIME_FOCUS) && !Global.global.checkFlag(AIRI_SLIME_CARRIER_FOCUS)
+                            && (Global.global.checkFlag(AIRI_PARASITISM_FOCUS) || Global.global.checkFlag(AIRI_TRANSFORMATION_FOCUS));
         }, (c, self, player) -> "",
                 Arrays.asList(
                         new CombatSceneChoice("Queen Slime", (c, self, other) -> {
@@ -153,7 +154,7 @@ public class Airi extends BasePersonality {
                             return true;
                         }),
                         new CombatSceneChoice("Slime Carrier", (c, self, other) -> {
-                            c.write(Global.format("", self, other));
+                            c.write(Global.global.format("", self, other));
                             useSlimeCarrier();
                             return true;
                         })
@@ -180,22 +181,22 @@ public class Airi extends BasePersonality {
     }
     
     private void useTransformation() {
-        Global.setFlag(AIRI_TRANSFORMATION_FOCUS, true);
+        Global.global.setFlag(AIRI_TRANSFORMATION_FOCUS, true);
 
     }
 
     private void useParasitism() {
-        Global.setFlag(AIRI_PARASITISM_FOCUS, true);
+        Global.global.setFlag(AIRI_PARASITISM_FOCUS, true);
 
     }
 
     private void useSlimeQueen() {
-        Global.setFlag(AIRI_QUEEN_SLIME_FOCUS, true);
+        Global.global.setFlag(AIRI_QUEEN_SLIME_FOCUS, true);
 
     }
 
     private void useSlimeCarrier() {
-        Global.setFlag(AIRI_SLIME_CARRIER_FOCUS, true);
+        Global.global.setFlag(AIRI_SLIME_CARRIER_FOCUS, true);
 
     }
 
@@ -287,9 +288,9 @@ public class Airi extends BasePersonality {
         for (int i = 0; i < time; i++) {
             r = Rng.rng.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
     }

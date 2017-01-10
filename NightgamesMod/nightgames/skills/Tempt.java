@@ -44,7 +44,7 @@ public class Tempt extends Skill {
                             "{self:NAME-POSSESSIVE} words fall on fertile grounds. {other:NAME-POSSESSIVE} will to resist crumbles in light of {self:possessive} temptation.",
                                             getSelf(), target));
             target.add(c, new Enthralled(target, getSelf(), 3));
-        } else if (getSelf().has(Trait.commandingvoice) && Global.global.random(3) == 0) {
+        } else if (getSelf().hasTrait(Trait.commandingvoice) && Rng.rng.random(3) == 0) {
             c.write(getSelf(), Global.global.format("{other:SUBJECT-ACTION:speak|speaks} with such unquestionable"
                             + " authority that {self:subject-action:don't|doesn't} even consider not obeying."
                             , getSelf(), target));

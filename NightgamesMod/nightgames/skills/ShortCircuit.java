@@ -61,7 +61,7 @@ public class ShortCircuit extends Skill {
                         + "done something to %s sense of touch.", getSelf().subject(),
                         target.nameDirectObject(), target.pronoun(), target.action("feel"),
                         target.possessiveAdjective(),
-                        Global.capitalizeFirstLetter(target.subjectAction("feel")),
+                        Grammar.capitalizeFirstLetter(target.subjectAction("feel")),
                         getSelf().subject(), target.possessiveAdjective());
     }
 

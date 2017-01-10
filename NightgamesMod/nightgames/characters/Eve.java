@@ -131,9 +131,9 @@ public class Eve extends BasePersonality {
         for (int i = 0; i < time; i++) {
             r = Rng.rng.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
     }

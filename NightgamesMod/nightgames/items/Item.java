@@ -161,11 +161,11 @@ public enum Item implements Loot {
     Totem("Fetish Totem", 150, "A small penis shaped totem that can summon tentacles", "a "),
     Capacitor("Capacitor", 30, "", "a "),
     TinyDraft("Tiny Draft", 100, "Temporarily shrink a penis", "a ",
-                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", CockPart.Size.average,
+                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", new CockPart(),
                                     BodyModEffect.Effect.downgrade)),
                     15),
     PriapusDraft("Priapus Draft", 150, "Temporarily grow a penis", "a ",
-                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", CockPart.Size.average,
+                    Collections.singleton((ItemEffect) new BodyModEffect("drink", "throw", new CockPart(),
                                     BodyModEffect.Effect.growplus)),
                     15),
     BustDraft("Bust Draft", 80, "Temporarily grow breasts", "a ", Collections.singleton(
@@ -289,7 +289,7 @@ public enum Item implements Loot {
     
     public boolean usable(Character by) {
         switch (this) {
-            case SuccubusDraft: return !by.has(Trait.succubus);
+            case SuccubusDraft: return !by.hasTrait(Trait.succubus);
             default: return true;
         }
     }

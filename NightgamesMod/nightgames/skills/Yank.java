@@ -5,6 +5,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.items.clothing.ClothingTrait;
 import nightgames.stance.Stance;
@@ -18,13 +19,13 @@ public class Yank extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.yank);
+        return user.hasTrait(Trait.yank);
     }
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return c.getStance().en  == Stance.neutral && target.has(ClothingTrait.harpoonDildo)
-                        || target.has(ClothingTrait.harpoonOnahole);
+        return c.getStance().en  == Stance.neutral && target.hasTrait(ClothingTrait.harpoonDildo)
+                        || target.hasTrait(ClothingTrait.harpoonOnahole);
     }
 
     @Override
@@ -36,22 +37,22 @@ public class Yank extends Skill {
     public boolean resolve(Combat c, Character target) {
         int acc = 70;
         int removeChance = 50;
-        if (getSelf().has(Trait.intensesuction)) {
+        if (getSelf().hasTrait(Trait.intensesuction)) {
             acc += 20;
             removeChance /= 2;
         }
         if (target.roll(getSelf(), c, acc)) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:yank|yanks} {other:name-do}"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:yank|yanks} {other:name-do}"
                             + " forward by the toy still connecting them, and "
                             + " {other:pronoun-action} falls stumbles and falls.", getSelf(), target));
             target.add(c, new Falling(target));
-            if (Global.random(100) < removeChance) {
+            if (Rng.rng.random(100) < removeChance) {
                 c.write("The powerful tug dislodges the toy, causing it to retract back where it was launched from.");
                 target.outfit.unequip(target.outfit.getBottomOfSlot(ClothingSlot.bottom));
             }
             return true;
         } else {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:pull|pulls} {other:name-do}"
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:pull|pulls} {other:name-do}"
                             + " forward by the toy still connecting them, but "
                             + " {other:pronoun-action:keep|keeps} {other:possessive}"
                             + " balance.", getSelf(), target));

@@ -7,6 +7,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.pet.PetCharacter;
 
 public class Honeypot extends Skill {
@@ -37,10 +38,10 @@ public class Honeypot extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        Optional<PetCharacter> targetPet = Global.pickRandom(c.getPetsFor(target));
+        Optional<PetCharacter> targetPet = Rng.rng.pickRandom(c.getPetsFor(target));
         if (targetPet.isPresent()) {
             writeOutput(c, Result.normal, targetPet.get());
-            double m = Global.random(10, 25);
+            double m = Rng.rng.random(10, 25);
             targetPet.get().body.pleasure(getSelf(), getSelf().body.getRandom("hands"), 
                             targetPet.get().body.getRandomGenital(), m, c);
             getSelf().arouse(getSelf().getArousal().max() / 4, c);
@@ -69,9 +70,9 @@ public class Honeypot extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return Global.format("{self:SUBJECT-ACTION:try|tries} to entice {other:name-possessive} pet, but there are none!", getSelf(), target);
+            return Global.global.format("{self:SUBJECT-ACTION:try|tries} to entice {other:name-possessive} pet, but there are none!", getSelf(), target);
         }
-        return Global.format("{self:SUBJECT-ACTION:take|takes} the time to entice {other:name-do}, "
+        return Global.global.format("{self:SUBJECT-ACTION:take|takes} the time to entice {other:name-do}, "
                         + "rubbing {self:reflective} and putting on a show. "
                         + "{other:SUBJECT} takes the bait and approaches {self:direct-object}. With a sudden motion, {self:pronoun-action:capture|captures} "
                         + "{other:direct-object} with {self:possessive} legs and {self:action:have|haves} {self:possessive} way with the poor follower.", getSelf(), target);

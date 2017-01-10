@@ -19,7 +19,7 @@ public class Cowgirl extends FemdomSexStance {
         } else {
             return String.format("%s is riding %s in Cowgirl position. %s breasts bounce in front of %s"
                             + " face each time %s moves %s hips.", top.subject(), bottom.nameDirectObject(),
-                            Global.capitalizeFirstLetter(top.possessiveAdjective()), bottom.possessiveAdjective(),
+                            Grammar.capitalizeFirstLetter(top.possessiveAdjective()), bottom.possessiveAdjective(),
                             top.pronoun(), top.possessiveAdjective());
         }
     }

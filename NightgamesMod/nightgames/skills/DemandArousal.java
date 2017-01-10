@@ -18,7 +18,7 @@ public class DemandArousal extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return user.has(Trait.ControlledRelease);
+        return user.hasTrait(Trait.ControlledRelease);
     }
 
     @Override
@@ -37,15 +37,15 @@ public class DemandArousal extends Skill {
         Player p = (Player) target;
         Addiction addict = p.getAddiction(AddictionType.MIND_CONTROL)
                             .get();
-        int dmg = (int) ((20 + Global.randomdouble() * 20) * addict.getMagnitude());
+        int dmg = (int) ((20 + Rng.rng.randomdouble() * 20) * addict.getMagnitude());
         float alleviation;
 
-        String msg = Global.format("\"<i><b>{other:name}. Listen to me.</b></i>\" {self:NAME-POSSESSIVE}"
+        String msg = Global.global.format("\"<i><b>{other:name}. Listen to me.</b></i>\" {self:NAME-POSSESSIVE}"
                                 + " looks deeply into {other:possessive} eyes, and {self:possessive}"
                                 + " words ", getSelf(), target);
         switch (addict.getSeverity()) {
             case HIGH:
-                msg = Global.format("pound {other:name-possessive} psyche like a hammer, each blow echoing throughout"
+                msg = Global.global.format("pound {other:name-possessive} psyche like a hammer, each blow echoing throughout"
                                 + " your body. {self:PRONOUN-ACTION:speak|speaks}, but "
                                 + "{other:pronoun} can't even hear {self:direct-object}. {other:POSSESSIVE}"
                                 + " body does, though. It grows hot, and all of {other:possessive}"
@@ -56,7 +56,7 @@ public class DemandArousal extends Skill {
                 target.add(c, new Hypersensitive(target, 2));
                 break;
             case LOW:
-                msg += Global.format("seem to have more weight behind them than usual. \"<i>"
+                msg += Global.global.format("seem to have more weight behind them than usual. \"<i>"
                                 + "{other:name}, can you feel your %s?</i> Strangely, yes,"
                                 + " {other:pronoun-action:do|does}. {other:PRONOUN-ACTION:feel|feels}"
                                 + " a heat pour into {other:possessive} {other:main-genitals} as"
@@ -66,7 +66,7 @@ public class DemandArousal extends Skill {
                 alleviation = Addiction.LOW_INCREASE;
                 break;
             case MED:
-                msg = Global.format("resonate powerfully in your mind. \"<i>You are getting"
+                msg = Global.global.format("resonate powerfully in your mind. \"<i>You are getting"
                                 + " very excited, {other:name}. Your {other:main-genitals} obey me."
                                 + " You </i>will<i> cum for me, {other:name}.</i>\"", getSelf(), target);
                 alleviation = Addiction.MED_INCREASE * .67f;
@@ -74,11 +74,11 @@ public class DemandArousal extends Skill {
             case NONE:
             default:
                 alleviation = 0.f;
-                msg = Global.format("<b>[[[DemandArousal executed even though the player isn't noticably addicted...]]]</b>",
+                msg = Global.global.format("<b>[[[DemandArousal executed even though the player isn't noticably addicted...]]]</b>",
                                 getSelf(), target);
                 break;
         }
-        c.write(getSelf(), Global.format(msg, getSelf(), target));
+        c.write(getSelf(), Global.global.format(msg, getSelf(), target));
         p.temptWithSkill(c, getSelf(), null, dmg, this);
         addict.alleviate(alleviation);
 

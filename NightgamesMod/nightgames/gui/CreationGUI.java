@@ -414,16 +414,16 @@ public class CreationGUI extends JPanel {
             String rate = (String) ExpBox.getSelectedItem();
             ExpDescription.setText(rate);
             if ("Slow".equals(rate)) {
-                Global.xpRate = .5;
+                Global.global.xpRate = .5;
             }
             if ("Normal".equals(rate)) {
-                Global.xpRate = 1;
+                Global.global.xpRate = 1;
             }
             if ("Fast".equals(rate)) {
-                Global.xpRate = 1.5;
+                Global.global.xpRate = 1.5;
             }
             if ("Very Fast".equals(rate)) {
-                Global.xpRate = 3;
+                Global.global.xpRate = 3;
             }
         });
         verticalBox.add(ExpDescription);

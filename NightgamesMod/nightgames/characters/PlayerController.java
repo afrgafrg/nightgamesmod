@@ -1,10 +1,12 @@
 package nightgames.characters;
 
+import nightgames.areas.Area;
 import nightgames.global.Global;
 import nightgames.gui.GUI;
 import nightgames.gui.NgsController;
 import nightgames.gui.Prompt;
 import nightgames.gui.button.*;
+import nightgames.match.Match;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,9 @@ public class PlayerController implements NgsController{
         this.gui = gui;
     }
 
+    @Override public GUI gui() {
+        return gui;
+    }
 
     public void ding(Player player) throws InterruptedException {
         spendAttributePoints(player);
@@ -42,7 +47,7 @@ public class PlayerController implements NgsController{
         gui.message(player.availableAttributePoints + " Attribute Points remain.\n");
         List<FutureButton<Attribute>> buttons = new ArrayList<>();
         for (Attribute att : player.att.keySet()) {
-            if (Attribute.isTrainable(att, player) && player.getPure(att) > 0) {
+            if (Attribute.isTrainable(player, att) && player.getPure(att) > 0) {
                 buttons.add(new AttributeButton(att));
             }
         }
@@ -76,5 +81,9 @@ public class PlayerController implements NgsController{
         Prompt<Trait> prompt = new Prompt<>(buttons);
         gui.setChoices(new ArrayList<>(buttons));
         return prompt.response();
+    }
+
+    public void showActions(Match match, Area location, State state) {
+        // TODO: Figure out what buttons to show. Maybe should be in MatchController or something
     }
 }

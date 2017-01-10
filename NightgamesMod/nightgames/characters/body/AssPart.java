@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Abuff;
 import nightgames.status.Stsflag;
 import nightgames.status.Trance;
@@ -76,16 +77,16 @@ public class AssPart extends GenericBodyPart {
                 opponent.pain(c, self, Math.min(30, self.get(Attribute.Power)));
             }
         }
-        if (self.has(Trait.drainingass) && !opponent.has(Trait.strapped) && c.getStance().anallyPenetratedBy(c, self, opponent)) {
-            if (Global.random(3) == 0) {
-                c.write(self, Global.format("{self:name-possessive} ass seems to <i>inhale</i>, drawing"
+        if (self.hasTrait(Trait.drainingass) && !opponent.hasTrait(Trait.strapped) && c.getStance().anallyPenetratedBy(c, self, opponent)) {
+            if (Rng.rng.random(3) == 0) {
+                c.write(self, Global.global.format("{self:name-possessive} ass seems to <i>inhale</i>, drawing"
                                 + " great gouts of {other:name-possessive} strength from {other:possessive}"
                                 + " body.", self, opponent));
                 opponent.drain(c, self, self.getLevel());
                 opponent.add(c, new Abuff(opponent, Attribute.Power, -3, 10));
                 self.add(c, new Abuff(self, Attribute.Power, 3, 10));
             } else {
-                c.write(self, Global.format("The feel of {self:name-possessive} ass around"
+                c.write(self, Global.global.format("The feel of {self:name-possessive} ass around"
                                 + " {other:name-possessive} {other:body-part:cock} drains"
                                 + " {other:direct-object} of {other:possessive} energy.", self, opponent));
                 opponent.drain(c, self, self.getLevel()/2);
@@ -120,15 +121,15 @@ public class AssPart extends GenericBodyPart {
                 bonus += 5;
             }
         }
-        if (self.has(Trait.buttslut)) {
+        if (self.hasTrait(Trait.buttslut)) {
             bonus += 10;
-            if (Global.random(4) == 0 && self.is(Stsflag.trance)) {
-                c.write(opponent, Global.format(
+            if (Rng.rng.random(4) == 0 && self.is(Stsflag.trance)) {
+                c.write(opponent, Global.global.format(
                                 "The foreign object rummaging around inside {self:name-possessive} ass <i><b>just feels so right</b></i>. {self:SUBJECT-ACTION:feel|feels} {self:reflective} slipping into a trance!",
                                                 self, opponent));
                 self.add(c, new Trance(self, 3, false));
             }
-            c.write(opponent, Global.format(
+            c.write(opponent, Global.global.format(
                             "The foreign object rummaging around inside {self:name-possessive} ass feels so <i>right</i>. {self:SUBJECT} can't help moaning in time with the swelling pleasure.",
                                             self, opponent));
         }

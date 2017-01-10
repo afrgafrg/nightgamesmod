@@ -80,7 +80,7 @@ public class Tear extends Skill {
                                     + "nails are not that sharp, and if they were, %s surely wouldn't have gotten away unscathed.",
                                     getSelf().subject(), target.nameDirectObject(), getSelf().possessiveAdjective(),
                                     target.possessiveAdjective(), article.getName(),
-                                    Global.capitalizeFirstLetter(getSelf().pronoun()),
+                                    Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                                     target.nameDirectObject()));
                 }
                 target.shred(ClothingSlot.top);
@@ -155,7 +155,7 @@ public class Tear extends Skill {
                                     + "nails are not that sharp, and if they were, %s surely wouldn't have gotten away unscathed.",
                                     getSelf().subject(), target.nameDirectObject(), getSelf().possessiveAdjective(),
                                     target.possessiveAdjective(), article.getName(),
-                                    Global.global.capitalizeFirstLetter(getSelf().pronoun()),
+                                    Grammar.capitalizeFirstLetter(getSelf().pronoun()),
                                     target.nameDirectObject()));
                 }
                 target.shred(ClothingSlot.bottom);

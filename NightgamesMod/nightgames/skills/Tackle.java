@@ -30,8 +30,8 @@ public class Tackle extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().has(Trait.takedown) && target.getStamina().percent() <= 25) {
-            c.write(getSelf(), Global.format("While {other:subject-action:take|takes} a breath,"
+        if (getSelf().hasTrait(Trait.takedown) && target.getStamina().percent() <= 25) {
+            c.write(getSelf(), Global.global.format("While {other:subject-action:take|takes} a breath,"
                             + " {self:subject-action:take|takes} careful aim at {other:possessive}"
                             + " waist and {self:action:charge|charges} in at full speed. It's a perfect"
                             + " hit, knocking the wind out of {other:subject} and allowing {self:subject}"
@@ -84,7 +84,7 @@ public class Tackle extends Skill {
 
     @Override
     public int accuracy(Combat c, Character target) {
-        if (getSelf().has(Trait.takedown) && target.getStamina().percent() <= 25) {
+        if (getSelf().hasTrait(Trait.takedown) && target.getStamina().percent() <= 25) {
             return 200;
         }
 

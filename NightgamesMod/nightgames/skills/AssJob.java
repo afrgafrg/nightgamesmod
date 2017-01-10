@@ -58,7 +58,7 @@ public class AssJob extends Skill {
                     m += 3;
                     fetishChance += 15;
                 }
-                if (getSelf().has(Trait.bewitchingbottom)) {
+                if (getSelf().hasTrait(Trait.bewitchingbottom)) {
                     fetishChance *= 2;
                 }
             }
@@ -80,7 +80,7 @@ public class AssJob extends Skill {
                         m += 3;
                         fetishChance += 15;
                     }
-                    if (getSelf().has(Trait.bewitchingbottom)) {
+                    if (getSelf().hasTrait(Trait.bewitchingbottom)) {
                         fetishChance *= 2;
                     }
                 }
@@ -208,7 +208,7 @@ public class AssJob extends Skill {
                                     getSelf().name(), target.subject(), target.possessiveAdjective(),
                                     target.body.getRandomCock().describe(getSelf()),
                                     getSelf().possessiveAdjective(),
-                                    Global.capitalizeFirstLetter(target.pronoun()),
+                                    Grammar.capitalizeFirstLetter(target.pronoun()),
                                     target.action("try", "tries"),
                                     getSelf().pronoun(), getSelf()
                                                     .possessiveAdjective(),
@@ -226,7 +226,7 @@ public class AssJob extends Skill {
                                                     + "you see?\"</i> - %s taunts %s, shaking %s hips invitingly.",
                                                     target.subjectAction("try", "tries"),
                                     getSelf().name(), getSelf().pronoun(),
-                                    target.possessiveAdjective(), Global.capitalizeFirstLetter(target.pronoun()),
+                                    target.possessiveAdjective(), Grammar.capitalizeFirstLetter(target.pronoun()),
                                     getSelf().possessiveAdjective(), target.possessiveAdjective(),
                                     getSelf().pronoun(), target.directObject(),
                                     getSelf().pronoun(), target.directObject(), getSelf().possessiveAdjective());

@@ -4,6 +4,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.status.Collared;
 import nightgames.status.Stsflag;
 
@@ -30,28 +31,28 @@ public class RemoveBomb extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().is(Stsflag.collared) && Global.random(100) < 40) {
+        if (getSelf().is(Stsflag.collared) && Rng.rng.random(100) < 40) {
             Collared stat = (Collared) getSelf().getStatus(Stsflag.collared);
             stat.spendCharges(c, 1);
             writeOutput(c, Result.special, target);
-            getSelf().pain(c, null, 20 + Global.random(40));
+            getSelf().pain(c, null, 20 + Rng.rng.random(40));
             return false;
         }
         if (c.getStance().dom(target)) {
-            if (Global.random(100) < 75) {
+            if (Rng.rng.random(100) < 75) {
                 writeOutput(c, Result.miss, target);
                 return false;
             } else {
                 writeOutput(c, Result.normal, target);
                 getSelf().removeStatus(Stsflag.bombed);
             }
-        } else if (Global.random(100) < getSelf().getStamina().percent()) {
+        } else if (Rng.rng.random(100) < getSelf().getStamina().percent()) {
             writeOutput(c, Result.normal, target);
             getSelf().removeStatus(Stsflag.bombed);
         } else {
             writeOutput(c, Result.miss, target);
         }
-        getSelf().pain(c, null, 10 + Global.random(40));
+        getSelf().pain(c, null, 10 + Rng.rng.random(40));
         return true;
     }
 
@@ -83,17 +84,17 @@ public class RemoveBomb extends Skill {
         switch (c.getStance().en) {
             case behind:
             case pin:
-                return Global.format("You reach towards your chest, aiming to get the beeping sphere off and away,"
+                return Global.global.format("You reach towards your chest, aiming to get the beeping sphere off and away,"
                             + " but {other:subject} catches your wrists and pulls your hands back down."
                                 , getSelf(), target);    
             case missionary:
             case cowgirl:
             case mount:
-                return Global.format("You try to get the metallic sphere off your chest, but {other:subject} catches"
+                return Global.global.format("You try to get the metallic sphere off your chest, but {other:subject} catches"
                                 + " your hands and pulls them up over your head, well away from the"
                                 + " intimidating device.", getSelf(), target);
             default:
-                return Global.format("You try to remove the metallic sphere from your chest, but {other:subject}"
+                return Global.global.format("You try to remove the metallic sphere from your chest, but {other:subject}"
                                 + " keeps your hands away from it.", getSelf(), target);
         }
     }

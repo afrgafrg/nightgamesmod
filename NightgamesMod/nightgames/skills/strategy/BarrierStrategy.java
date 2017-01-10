@@ -6,6 +6,7 @@ import java.util.Set;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.Barrier;
 import nightgames.skills.Skill;
 import nightgames.status.Stsflag;
@@ -40,6 +41,6 @@ public class BarrierStrategy extends AbstractStrategy {
 
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(3, 5);
+        return Rng.rng.random(3, 5);
     }
 }

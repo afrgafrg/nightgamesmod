@@ -8,7 +8,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.Finger;
 import nightgames.skills.Handjob;
@@ -21,7 +21,7 @@ public class UseHandsStrategy extends KnockdownThenActionStrategy {
         if (!(new Handjob(self)).requirements(c, self, c.getOpponent(self)) && !(new Finger(self).requirements(c, c.getOpponent(self)))) {
             return 0;
         }
-        if (self.has(Trait.defthands)) {
+        if (self.hasTrait(Trait.defthands)) {
             weight += 1;
         }
         if (self.getMood().equals(Emotion.confident)) {
@@ -47,6 +47,6 @@ public class UseHandsStrategy extends KnockdownThenActionStrategy {
 
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(2, 6);
+        return Rng.rng.random(2, 6);
     }
 }

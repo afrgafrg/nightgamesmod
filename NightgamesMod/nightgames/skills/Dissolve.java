@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -32,7 +33,7 @@ public class Dissolve extends Skill {
     }
 
     public int accuracy(Combat c, Character target) {
-        return getSelf().get(Attribute.Slime) > 0 || getSelf().has(Item.Aersolizer) ? 200 : 80;
+        return getSelf().get(Attribute.Slime) > 0 || getSelf().hasTrait(Item.Aersolizer) ? 200 : 80;
     }
 
     @Override
@@ -49,8 +50,8 @@ public class Dissolve extends Skill {
                             + " {self:action:caress|caresses} {other:possessive} " + destroyed.getName()
                             + ". Slowly, it dissolves away beneath {self:possessive} touch.";
             c.write(getSelf(), Global.global.format(msg, getSelf(), target));
-            if (getSelf().has(Trait.VolatileSubstrate)) {
-                target.add(c, new Slimed(target, getSelf(), Global.random(2, 4)));
+            if (getSelf().hasTrait(Trait.VolatileSubstrate)) {
+                target.add(c, new Slimed(target, getSelf(), Rng.rng.random(2, 4)));
             }
         } else {
             getSelf().consume(Item.DisSol, 1);
@@ -104,14 +105,14 @@ public class Dissolve extends Skill {
             return String.format("%s inserts a bottle into the attachment on her arm. "
                             + "%s suddenly surrounded by a cloud of mist."
                             + " %s clothes begin to disintegrate immediately.",
-                            getSelf().subject(), Global.capitalizeFirstLetter(attacker.subjectAction("are", "is")),
-                            Global.capitalizeFirstLetter(attacker.nameOrPossessivePronoun()));
+                            getSelf().subject(), Grammar.capitalizeFirstLetter(attacker.subjectAction("are", "is")),
+                            Grammar.capitalizeFirstLetter(attacker.nameOrPossessivePronoun()));
         } else if (modifier == Result.miss) {
             return String.format("%s splashes a bottle of liquid in %s direction, but none of it hits %s.",
                             getSelf().subject(), attacker.nameOrPossessivePronoun(), attacker.directObject());
         } else {
             return String.format("%s covers you with a clear liquid. %s clothes dissolve away, but it doesn't do anything to %s skin.",
-                            getSelf().subject(), Global.capitalizeFirstLetter(attacker.subject()), attacker.possessiveAdjective());
+                            getSelf().subject(), Grammar.capitalizeFirstLetter(attacker.subject()), attacker.possessiveAdjective());
         }
     }
 

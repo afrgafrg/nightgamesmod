@@ -140,7 +140,7 @@ public class Charm extends Skill {
                                 + "face and ragged breathing makes the act a lot more erotic than "
                                 + "you would expect. %s to contain %s need to fuck the little kitty in heat.",
                                 getSelf().nameOrPossessivePronoun(),
-                                Global.capitalizeFirstLetter(target.subjectAction("try", "tries")),
+                                Grammar.capitalizeFirstLetter(target.subjectAction("try", "tries")),
                                 target.possessiveAdjective());
             }
             return message;

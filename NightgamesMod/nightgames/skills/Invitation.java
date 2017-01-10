@@ -48,7 +48,7 @@ public class Invitation extends Skill {
         //Free if user is Kat and player has Breeder
         Character opp = c.getOpponent(getSelf());
         boolean humanIsBreeder = opp.human() && (opp instanceof Player) && ((Player)opp).checkAddiction(AddictionType.BREEDER, getSelf());
-        if (getSelf().has(Trait.breeder) && humanIsBreeder)
+        if (getSelf().hasTrait(Trait.breeder) && humanIsBreeder)
             return 50;
         return 0;
     }

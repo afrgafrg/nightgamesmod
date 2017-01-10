@@ -37,9 +37,9 @@ public class Exercise extends Activity {
 
     private int gainStamina(Character self) {
         int maximumStaminaForLevel = Configuration.getMaximumStaminaPossible(self);
-        int gain = 1 + Global.global.random(2);
-        if (player.has(Trait.fitnessNut)) {
-            gain = gain + Global.global.random(2);
+        int gain = 1 + Rng.rng.random(2);
+        if (player.hasTrait(Trait.fitnessNut)) {
+            gain = gain + Rng.rng.random(2);
         }
         gain = Math.max(0, (int) (Math.min(maximumStaminaForLevel, self.getStamina().trueMax() + gain) - self.getStamina().trueMax()));
         self.getStamina().gain(gain);

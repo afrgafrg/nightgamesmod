@@ -8,6 +8,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.skills.Collar;
 import nightgames.skills.LaunchHarpoon;
 import nightgames.skills.MagLock;
@@ -20,22 +21,22 @@ public class TechStrategy extends AbstractStrategy {
     @Override
     public double weight(Combat c, Character self) {
         double score = 0;
-        if (self.has(Trait.harpoon)) {
+        if (self.hasTrait(Trait.harpoon)) {
             score += .8;
         }
-        if (self.has(Trait.bomber)) {
+        if (self.hasTrait(Trait.bomber)) {
             score += .5;
         }
-        if (self.has(Trait.maglocks)) {
+        if (self.hasTrait(Trait.maglocks)) {
             score += .5;
         }
-        if (self.has(Trait.trainingcollar)) {
+        if (self.hasTrait(Trait.trainingcollar)) {
             score += .5;
         }
-        if (self.has(Trait.yank)) {
+        if (self.hasTrait(Trait.yank)) {
             score += .2;
         }
-        if (self.has(Trait.conducivetoy)) {
+        if (self.hasTrait(Trait.conducivetoy)) {
             score += .2;
         }
         return score > 0 ? score : -9999;
@@ -43,7 +44,7 @@ public class TechStrategy extends AbstractStrategy {
 
     @Override
     public int initialDuration(Combat c, Character self) {
-        return Global.random(5, 10);
+        return Rng.rng.random(5, 10);
     }
 
     @Override
@@ -55,20 +56,20 @@ public class TechStrategy extends AbstractStrategy {
     protected Set<Skill> filterSkills(Combat c, Character self, Set<Skill> allowedSkills) {
         Set<Skill> preferred = new HashSet<>();
         Set<Skill> secondary = new HashSet<>();
-        if (self.has(Trait.harpoon)) {
+        if (self.hasTrait(Trait.harpoon)) {
             preferred.add(new LaunchHarpoon(self));
             preferred.add(new Yank(self));
             secondary.addAll(new UseToyStrategy().getPreferredSkills(c, self, allowedSkills)
                                                  .orElse(Collections.emptySet()));
         }
-        if (self.has(Trait.bomber)) {
+        if (self.hasTrait(Trait.bomber)) {
             preferred.add(new ThrowBomb(self));
         }
-        if (self.has(Trait.maglocks)) {
+        if (self.hasTrait(Trait.maglocks)) {
             preferred.add(new MagLock(self));
             secondary.addAll(new KnockdownStrategy().filterSkills(c, self, allowedSkills));
         }
-        if (self.has(Trait.trainingcollar)) {
+        if (self.hasTrait(Trait.trainingcollar)) {
             preferred.add(new Collar(self));
             secondary.addAll(new KnockdownStrategy().filterSkills(c, self, allowedSkills));
         }

@@ -131,7 +131,7 @@ public class Growth implements Cloneable {
         character.getStamina().gain(-stamina);
         character.getArousal().gain(-arousal);
         character.getWillpower().gain(-willpower);
-        if (Global.checkFlag(Flag.hardmode)) {
+        if (Global.global.checkFlag(Flag.hardmode)) {
             character.getStamina().gain(-bonusStamina);
             character.getArousal().gain(-bonusArousal);
             character.getWillpower().gain(-bonusWillpower);

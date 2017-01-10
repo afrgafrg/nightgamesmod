@@ -11,6 +11,7 @@ import nightgames.trap.Trap;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Area implements Serializable {
     /**
@@ -134,7 +135,7 @@ public class Area implements Serializable {
     }
 
     private boolean canFight(Character c) {
-        return !c.human() || !Global.isDebugOn(DebugFlags.DEBUG_SPECTATE);
+        return !c.human() || !Global.global.isDebugOn(DebugFlags.DEBUG_SPECTATE);
     }
 
     public boolean opportunity(Character target, Trap trap) {

@@ -58,6 +58,8 @@ public abstract class BaseNPCTime extends Activity {
         requirementMap.put(VisitChoice.GIFT, rev(affection(30)));
         requirementMap.put(VisitChoice.OUTFIT, rev(affection(35)));
         requirementMap.put(VisitChoice.ADDICTION, (c, s, o) -> getAddictionOption().isPresent());
+        // You can leave at any time
+        requirementMap.put(VisitChoice.LEAVE, none());
         return requirementMap;
     }
 
@@ -99,28 +101,11 @@ public abstract class BaseNPCTime extends Activity {
 
     protected boolean choiceAvailable(VisitChoice choice) {
         return choiceRequirements.get(choice).meets(null, player, npc);
-        if (npc.getAffection(player) > 25 && (advancedTrait == null || npc.hasTrait(advancedTrait))) {
-            Global.global.gui().message(Global.global.format(loveIntro, npc, player));
-            Global.global.gui().choose(this, "Games");
-            Global.global.gui().choose(this, "Sparring");
-            Global.global.gui().choose(this, "Sex");
-            if (!transformations.isEmpty()) {
-                Global.global.gui().choose(this, transformationOptionString);
-            }
-            if (npc.getAffection(player) > 30) {
-                Global.global.gui().choose(this, "Gift");
-            }
-            if (npc.getAffection(player) > 35) {
-                Global.global.gui().choose(this, "Change Outfit");
-            }
-            Optional<String> addictionOpt = getAddictionOption();
-            if (addictionOpt.isPresent()) {
-                Global.global.gui().choose(this, addictionOpt.get());
-            }
-            Global.global.gui().choose(this, "Leave");
-        } else {
-            subVisitIntro(choice);
-        }
+    }
+
+    protected Map<String, String> availableChoices() {
+        return Stream.of(VisitChoice.values()).filter(this::choiceAvailable)
+                        .collect(Collectors.toMap(VisitChoice::name, VisitChoice::getLabel));
     }
 
     @Override public void start() throws InterruptedException {
@@ -128,15 +113,15 @@ public abstract class BaseNPCTime extends Activity {
         Map<Item, Integer> playerInventory = this.player.getInventory();
 
         // TODO: implement choiceAvailable() or availableChoices()
-        Map<String, String> choiceLabelMap = Stream.of(VisitChoice.values()).filter(this::choiceAvailable)
-                        .collect(Collectors.toMap(VisitChoice::name, VisitChoice::getLabel));
+        Map<String, String> choiceLabelMap = availableChoices();
 
+        // TODO: figure out what this was for
         Optional<Loot> optionalGiftOption =
                         giftables.stream().filter(gift -> choice.equals(Grammar.capitalizeFirstLetter(gift.getName())))
                                         .findFirst();
 
-        if (optionalOption.isPresent()) {
-            Transformation option = optionalOption.get();
+        if (op.isPresent()) {
+            Transformation option = op.get();
             boolean hasAll = option.ingredients.entrySet().stream()
                             .allMatch(entry -> player.hasItem(entry.getKey(), entry.getValue()));
             if (hasAll) {

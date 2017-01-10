@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.skills.ArmSkill;
 import nightgames.pet.arms.skills.DoubleGrab;
@@ -38,7 +39,7 @@ public class RoboArmManager {
     public void selectArms() {
         arms.clear();
         if (owner.level < 30) {
-            if (Global.randomdouble() < .5) {
+            if (Rng.rng.randomdouble() < .5) {
                 arms.add(new Grabber(this, owner));
                 arms.add(new Grabber(this, owner));
             } else {
@@ -46,7 +47,7 @@ public class RoboArmManager {
                 arms.add(new Stripper(this, owner));
             }
         } else {
-            double r = Global.randomdouble();
+            double r = Rng.rng.randomdouble();
             if (r > .75) {
                 arms.add(new Grabber(this, owner));
                 arms.add(new Grabber(this, owner));
@@ -117,8 +118,8 @@ public class RoboArmManager {
     }
 
     private void doArmAction(RoboArm arm, Combat c, Character target) {
-        if (arm.attackOdds(c, owner, target) > Global.random(100)) {
-            ArmSkill skill = Global.pickRandom(arm.getSkills(c, owner, target)
+        if (arm.attackOdds(c, owner, target) > Rng.rng.random(100)) {
+            ArmSkill skill = Rng.rng.pickRandom(arm.getSkills(c, owner, target)
                                                   .stream()
                                                   .filter(s -> s.usable(c, arm, owner, target))
                                                   .toArray(ArmSkill[]::new)).get();

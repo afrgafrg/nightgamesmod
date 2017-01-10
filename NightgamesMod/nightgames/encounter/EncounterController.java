@@ -24,6 +24,10 @@ public class EncounterController implements NgsController {
         this.gui = gui;
     }
 
+    @Override public GUI gui() {
+        return gui;
+    }
+
     public List<FutureButton<Encs>> fightOrFlightButtons() {
         List<FutureButton<Encs>> buttons = new ArrayList<>();
         buttons.add(new EncounterButton(Encs.fight, "Fight"));
@@ -67,5 +71,4 @@ public class EncounterController implements NgsController {
         buttons.add(new EncounterButton(Encs.intervenep2, p2.name()));
         return buttons;
     }
-
 }

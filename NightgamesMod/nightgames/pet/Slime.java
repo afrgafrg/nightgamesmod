@@ -2,13 +2,12 @@ package nightgames.pet;
 
 import nightgames.characters.Character;
 import nightgames.characters.Growth;
-import nightgames.characters.body.BasicCockPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart;
 import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.ModdedCockPart;
 import nightgames.characters.body.PussyPart;
 import nightgames.characters.body.TentaclePart;
 import nightgames.combat.Combat;
+import nightgames.global.Global;
 import nightgames.global.Rng;
 import nightgames.skills.Grind;
 import nightgames.skills.Piston;
@@ -57,11 +56,11 @@ public class Slime extends Pet {
             (new SlimeJob(getSelf())).resolve(c, opponent.getSelf());
         } else {
             if (!opponent.hasDick()) {
-                c.write(getSelf(), Global.format("{self:SUBJECT} gathers around {other:name-possessive} ankles. With unexpected speed, it surges up {other:possessive} legs and simultaneously penetrates {other:possessive} pussy and "
+                c.write(getSelf(), Global.global.format("{self:SUBJECT} gathers around {other:name-possessive} ankles. With unexpected speed, it surges up {other:possessive} legs and simultaneously penetrates {other:possessive} pussy and "
                                 + "ass. {other:PRONOUN} screams in pleasure and falls to {other:possessive} knees as the amorphous blob fucks both {other:possessive} holes. By the time {other:subject} climaxes and disappears, {other:pronoun} is completely "
                                 + "fucked senseless.", getSelf(), opponent.getSelf()));
             } else {
-                c.write(getSelf(), Global.format("{other:SUBJECT} grabs for {self:name-do}, but it leaps past {other:possessive} guard and covers {other:possessive} cock. The slime forms perfectly to {other:possessive} dick and balls, milking "
+                c.write(getSelf(), Global.global.format("{other:SUBJECT} grabs for {self:name-do}, but it leaps past {other:possessive} guard and covers {other:possessive} cock. The slime forms perfectly to {other:possessive} dick and balls, milking "
                                 + "as much pre-cum as it can get. {other:SUBJECT} tries to pull off the slime, but it acts as lubricant and {other:possessive} attempts to remove it devolve into masturbation. "
                                 + "{other:PRONOUN} ejaculates into the slime and disappears.", getSelf(), opponent.getSelf()));
             }
@@ -94,7 +93,7 @@ public class Slime extends Pet {
         self.body.setHeight(80);
         self.body.add(new GenericBodyPart("skin", 0, 1, 1, "skin", ""));
         self.body.add(new GenericBodyPart("hands", 0, 1, 1, "hands", ""));
-        self.body.add(new ModdedCockPart(BasicCockPart.average, CockMod.slimy));
+        self.body.add(new CockPart(CockPart.Size.average, CockPart.Mod.slimy));
         self.body.add(PussyPart.gooey);
         self.body.add(new TentaclePart("tentacles", "body", "slime", 0, 1, 1));
         // don't finish the body as a slime, it wont have normal body parts.

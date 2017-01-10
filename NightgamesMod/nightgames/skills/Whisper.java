@@ -91,7 +91,7 @@ public class Whisper extends Skill {
                             + " %s words echo through %s head and %s %s a"
                             + " strong compulsion to do what %s tells %s.", getSelf().subject(),
                             target.nameOrPossessivePronoun(),
-                            Global.capitalizeFirstLetter(getSelf().possessiveAdjective()),
+                            Grammar.capitalizeFirstLetter(getSelf().possessiveAdjective()),
                                             target.possessiveAdjective(), target.pronoun(),
                                             target.action("feel"), getSelf().subject(),
                                             target.directObject());

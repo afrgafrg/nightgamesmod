@@ -15,7 +15,7 @@ public class Slimed extends DurationStatus {
     private int stacks;
 
     public Slimed(Character affected, Character other, int stacks) {
-        super("parasited", affected, other.has(Trait.EnduringAdhesive) ? 4 : 6);
+        super("parasited", affected, other.hasTrait(Trait.EnduringAdhesive) ? 4 : 6);
         this.origin = other;
         this.stacks = stacks;
         // don't auto-remove when cleared.
@@ -31,24 +31,24 @@ public class Slimed extends DurationStatus {
     	    if (stacks < 0) {
     	        return "";
     	    } else {
-    	        return Global.format("More pieces of {other:name-possessive} slime are getting stuck to {self:name-possessive} body.\n", affected, origin);
+    	        return Global.global.format("More pieces of {other:name-possessive} slime are getting stuck to {self:name-possessive} body.\n", affected, origin);
     	    }
     	}
-        return Global.format("Pieces of {other:name-possessive} slime are stuck to {self:name-possessive} body!\n", affected, origin);
+        return Global.global.format("Pieces of {other:name-possessive} slime are stuck to {self:name-possessive} body!\n", affected, origin);
     }
 
     @Override
     public String describe(Combat c) {
     	if (stacks < 10) {
-    		return Global.format("A few chunks of {other:name-possessive} slimey body is stuck on {self:direct-object}.", affected, origin);
+    		return Global.global.format("A few chunks of {other:name-possessive} slimey body is stuck on {self:direct-object}.", affected, origin);
     	} else if (stacks < 33) {
-    		return Global.format("Bits and pieces of {other:name-possessive} slime are stuck on {self:name-do}.", affected, origin);
+    		return Global.global.format("Bits and pieces of {other:name-possessive} slime are stuck on {self:name-do}.", affected, origin);
     	} else if (stacks < 66) {
-    		return Global.format("It's becoming difficult to move with so much of {other:name-possessive} slime on {self:name-possessive} body.", affected, origin);
+    		return Global.global.format("It's becoming difficult to move with so much of {other:name-possessive} slime on {self:name-possessive} body.", affected, origin);
     	} else if (stacks < 100) {
-    		return Global.format("It's very difficult to move with so much of {other:name-possessive} slime on {self:name-possessive} body.", affected, origin);
+    		return Global.global.format("It's very difficult to move with so much of {other:name-possessive} slime on {self:name-possessive} body.", affected, origin);
     	} else {
-    		return Global.format("{self:SUBJECT-ACTION:are|is} covered head to toe with {other:name-possessive} slime, making it impossible to move!", affected, origin);
+    		return Global.global.format("{self:SUBJECT-ACTION:are|is} covered head to toe with {other:name-possessive} slime, making it impossible to move!", affected, origin);
     	}
     }
 
@@ -80,13 +80,13 @@ public class Slimed extends DurationStatus {
 	        	setDuration((new Slimed(affected, origin, 1)).getDuration());
         	}
         }
-        if (stacks >= MAX_STACKS && origin.has(Trait.PetrifyingPolymers)) {
+        if (stacks >= MAX_STACKS && origin.hasTrait(Trait.PetrifyingPolymers)) {
         	Global.writeFormattedIfCombat(c, "There's so much slime on {self:name-do} that it solidifies into a sheet of hard plastic!.", affected, origin);
         	stacks = 0;
         	affected.removeStatus(this);
         	affected.add(c, new Plasticized(affected));
         }
-        if (stacks >= 0 && origin.has(Trait.ParasiticBond)) {
+        if (stacks >= 0 && origin.hasTrait(Trait.ParasiticBond)) {
             Global.writeFormattedIfCombat(c, "While not connected directly to {other:direct-object}, {other:name-possessive} slime seems to be eroding {self:name-possessive} stamina while energizing {other:direct-object}", affected, origin);
             affected.drainStaminaAsMojo(c, origin, 2 + stacks / 4, 1.0f);
         }

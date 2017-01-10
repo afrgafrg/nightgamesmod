@@ -6,12 +6,13 @@ import java.util.Optional;
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
+import nightgames.characters.body.CockPart.Mod;
 import nightgames.characters.body.FacePart;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.start.NpcConfiguration;
@@ -41,7 +42,7 @@ public class Yui extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        preferredCockMod = CockMod.error;
+        preferredCockMod = CockPart.Mod.normal;
         character.outfitPlan.add(Clothing.getByID("sarashi"));
         character.outfitPlan.add(Clothing.getByID("shinobigarb"));
         character.outfitPlan.add(Clothing.getByID("loincloth"));
@@ -57,7 +58,7 @@ public class Yui extends BasePersonality {
         character.getStamina().setMax(100);
         character.getArousal().setMax(90);
         character.rank = 1;
-        Global.gainSkills(character);
+        Global.global.gainSkills(character);
 
         character.getMojo().setMax(130);
 
@@ -119,45 +120,45 @@ public class Yui extends BasePersonality {
     @Override
     public void rest(int time) {
         super.rest(time);
-        if (!(character.has(Item.Tickler) || character.has(Item.Tickler2)) && character.money >= 300) {
+        if (!(character.hasTrait(Item.Tickler) || character.hasTrait(Item.Tickler2)) && character.money >= 300) {
             character.gain(Item.Tickler);
             character.money -= 300;
         }
-        if (!(character.has(Item.Onahole) || character.has(Item.Onahole2)) && character.money >= 300) {
+        if (!(character.hasTrait(Item.Onahole) || character.hasTrait(Item.Onahole2)) && character.money >= 300) {
             character.gain(Item.Onahole);
             character.money -= 300;
         }
-        if (!character.has(Item.Onahole2) && character.has(Item.Onahole) && character.money >= 300) {
+        if (!character.hasTrait(Item.Onahole2) && character.hasTrait(Item.Onahole) && character.money >= 300) {
             character.remove(Item.Onahole);
             character.gain(Item.Onahole2);
             character.money -= 300;
         }
         if (character.rank >= 1) {
             if (character.money > 0) {
-                Global.getDay().visit("Body Shop", character, Global.random(character.money));
+                Global.global.getDay().visit("Body Shop", character, Rng.rng.random(character.money));
             }
         }
 
         if (character.money > 0) {
-            Global.getDay().visit("XXX Store", character, Global.random(character.money));
+            Global.global.getDay().visit("XXX Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Bookstore", character, Global.random(character.money));
+            Global.global.getDay().visit("Bookstore", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Hardware Store", character, Global.random(character.money));
+            Global.global.getDay().visit("Hardware Store", character, Rng.rng.random(character.money));
         }
         if (character.money > 0) {
-            Global.getDay().visit("Black Market", character, Global.random(character.money));
+            Global.global.getDay().visit("Black Market", character, Rng.rng.random(character.money));
         }
         int r;
 
         for (int i = 0; i < time; i++) {
-            r = Global.random(8);
+            r = Rng.rng.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
         Decider.visit(character);

@@ -140,6 +140,6 @@ public class Stunned extends DurationStatus {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Stunned(Global.noneCharacter(), obj.get("duration").getAsInt(), obj.get("makesBraced").getAsBoolean());
+        return new Stunned(NPC.NONE_CHARACTER, obj.get("duration").getAsInt(), obj.get("makesBraced").getAsBoolean());
     }
 }

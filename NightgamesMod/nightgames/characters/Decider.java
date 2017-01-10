@@ -210,7 +210,7 @@ public class Decider {
     }
 
     public static void visit(Character self) {
-        if (Global.checkCharacterDisabledFlag(self)) {
+        if (Global.global.checkCharacterDisabledFlag(self)) {
             return;
         }
         int max = 0;
@@ -265,7 +265,7 @@ public class Decider {
         for (WeightedSkill wskill : plist) {
             // Run it a couple of times
             double rating, raw_rating = 0;
-            if (wskill.skill.type(c) == Tactics.damage && self.has(Trait.sadist)) {
+            if (wskill.skill.type(c) == Tactics.damage && self.hasTrait(Trait.sadist)) {
                 wskill.weight += 1.0;
             }
             for (int j = 0; j < RUN_COUNT; j++) {
@@ -274,7 +274,7 @@ public class Decider {
 
             // Sum up rating, add to map
             rating = (double) Math.pow(2, RATING_FACTOR * raw_rating + wskill.weight + wskill.skill.priorityMod(c)
-                            + Global.getMatch().condition.getSkillModifier().encouragement(wskill.skill, c, self));
+                            + Global.global.getMatch().condition.getSkillModifier().encouragement(wskill.skill, c, self));
             sum += rating;
             moveList.add(new WeightedSkill(sum, raw_rating, rating, wskill.skill));
         }
@@ -282,7 +282,7 @@ public class Decider {
             return null;
         }
         // Debug
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
             String s = "Pet choices: ";
             for (WeightedSkill entry : moveList) {
                 s += String.format("\n(%.1f\t\t%.1f\t\tculm: %.1f\t\t/ %.1f)\t\t-> %s", entry.raw_rating, entry.rating,
@@ -291,9 +291,9 @@ public class Decider {
             System.out.println(s);
         }
         // Select
-        double s = Global.randomdouble() * sum;
+        double s = Rng.rng.randomdouble() * sum;
         for (WeightedSkill entry : moveList) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
                 System.out.printf("%.1f/%.1f %s\n", entry.weight, s, entry.skill.toString());
             }
             if (entry.weight > s) {
@@ -323,10 +323,10 @@ public class Decider {
         for (WeightedSkill wskill : plist) {
             // Run it a couple of times
             double rating, raw_rating = 0;
-            if (wskill.skill.type(c) == Tactics.fucking && self.has(Trait.experienced)) {
+            if (wskill.skill.type(c) == Tactics.fucking && self.hasTrait(Trait.experienced)) {
                 wskill.weight += 1.0;
             }
-            if (wskill.skill.type(c) == Tactics.damage && self.has(Trait.sadist)) {
+            if (wskill.skill.type(c) == Tactics.damage && self.hasTrait(Trait.sadist)) {
                 wskill.weight += 1.0;
             }
             for (int j = 0; j < RUN_COUNT; j++) {
@@ -338,7 +338,7 @@ public class Decider {
             }
             // Sum up rating, add to map
             rating = (double) Math.pow(2, RATING_FACTOR * raw_rating + wskill.weight + wskill.skill.priorityMod(c)
-                            + Global.getMatch().condition.getSkillModifier().encouragement(wskill.skill, c, self));
+                            + Global.global.getMatch().condition.getSkillModifier().encouragement(wskill.skill, c, self));
             sum += rating;
             moveList.add(new WeightedSkill(sum, raw_rating, rating, wskill.skill));
         }
@@ -346,7 +346,7 @@ public class Decider {
             return null;
         }
         // Debug
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
             String s = "AI choices: ";
             for (WeightedSkill entry : moveList) {
                 s += String.format("\n(%.1f\t\t%.1f\t\tculm: %.1f\t\t/ %.1f)\t\t-> %s", entry.raw_rating, entry.rating,
@@ -355,9 +355,9 @@ public class Decider {
             System.out.println(s);
         }
         // Select
-        double s = Global.randomdouble() * sum;
+        double s = Rng.rng.randomdouble() * sum;
         for (WeightedSkill entry : moveList) {
-            if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
+            if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS)) {
                 System.out.printf("%.1f/%.1f %s\n", entry.weight, s, entry.skill.toString());
             }
             if (entry.weight > s) {
@@ -369,7 +369,7 @@ public class Decider {
 
     private static double ratePetMove(PetCharacter self, Skill skill, Character target, Combat c, double masterFit, double otherFit) {
         // Clone ourselves a new combat... This should clone our characters, too
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c.p1.human() || c.p2.human())) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c.p1.human() || c.p2.human())) {
             System.out.println("===> Rating " + skill);
             System.out.println("Before:\n" + c.debugMessage());
         }
@@ -383,7 +383,7 @@ public class Decider {
 
     private static double rateMove(Character self, Skill skill, Combat c, double selfFit, double otherFit) {
         // Clone ourselves a new combat... This should clone our characters, too
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c.p1.human() || c.p2.human())) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c.p1.human() || c.p2.human())) {
             System.out.println("===> Rating " + skill);
             System.out.println("Before:\n" + c.debugMessage());
         }
@@ -421,17 +421,17 @@ public class Decider {
             return 0;
         }
 
-        Global.debugSimulation += 1;
+        Global.global.debugSimulation += 1;
         Character newSkillUser = getCopyFromCombat(c, c2, skillUser);
         Character newObserver = getCopyFromCombat(c, c2, fitnessObserver);
         Character newOpponent = c2.getOpponent(newSkillUser);
         Character newTarget = getCopyFromCombat(c, c2, target);
 
         effect.execute(c2, newSkillUser, newTarget);
-        Global.debugSimulation -= 1;
+        Global.global.debugSimulation -= 1;
         double selfFitnessDelta = newObserver.getFitness(c) - selfFit;
         double otherFitnessDelta = newObserver.getOtherFitness(c, newOpponent) - otherFit;
-        if (Global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c2.p1.human() || c2.p2.human())) {
+        if (Global.global.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c2.p1.human() || c2.p2.human())) {
             System.out.println("After:\n" + c2.debugMessage());
         }
         return selfFitnessDelta - otherFitnessDelta;

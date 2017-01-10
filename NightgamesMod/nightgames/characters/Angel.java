@@ -1,6 +1,7 @@
 package nightgames.characters;
 
 import nightgames.characters.body.*;
+import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
 import nightgames.combat.CombatSceneChoice;
@@ -11,6 +12,7 @@ import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.start.NpcConfiguration;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Angel extends BasePersonality {
@@ -66,8 +68,8 @@ public class Angel extends BasePersonality {
         character.getGrowth().bonusArousal = 4;
 
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 10 && !Global.checkFlag(ANGEL_SEX_FOCUS) && !Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS);
-        }, (c, self, player) -> Global.format("After another exhausting fight with her where you've been pretty much been driven insane with her sexual prowess, "
+            return self.getLevel() >= 10 && !Global.global.checkFlag(ANGEL_SEX_FOCUS) && !Global.global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS);
+        }, (c, self, player) -> Global.global.format("After another exhausting fight with her where you've been pretty much been driven insane with her sexual prowess, "
                         + "Angel shows a rare moment of vulnerability and slides into your arms. <i>\"Hey {other:name}, I've been thinking, do you think this is wrong?\"</i> "
                         + "Puzzled, you ask her what she means. <i>\"Well... you know, fucking like rabbits every day. "
                         + "I love feeling good and I know I'm good at making other people feel good. Sometimes though, I wonder if I'm being too overbearing. "
@@ -110,14 +112,14 @@ public class Angel extends BasePersonality {
                             useSex();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{12,39},Global.global.getPlayer());
                             return true;
                         })
                     )
                 ));
         character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 20 && !Global.checkFlag(ANGEL_FOLLOWERS_FOCUS) && !Global.checkFlag(ANGEL_WORSHIP_FOCUS)
-                            && (Global.checkFlag(ANGEL_SEX_FOCUS) || Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS));
+            return self.getLevel() >= 20 && !Global.global.checkFlag(ANGEL_FOLLOWERS_FOCUS) && !Global.global.checkFlag(ANGEL_WORSHIP_FOCUS)
+                            && (Global.global.checkFlag(ANGEL_SEX_FOCUS) || Global.global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS));
         }, (c, self, player) -> "After another session of fantastic sex with your favorite sex goddess, Angel looks a bit reluctant to leave. "
                         + "You do want to try to get some more matches in, but her broody look invites some discussion. "
                         + "Patting your own lap, you motion for Angel to sit down. Luckily for you, she doesn't leave you hanging and does just that. "
@@ -145,7 +147,7 @@ public class Angel extends BasePersonality {
                             return true;
                         }),
                         new CombatSceneChoice("Answer: Focus on gathering a following", (c, self, other) -> {
-                            c.write(Global.format("You reply that you would her first follower if she was looking for them. "
+                            c.write(Global.global.format("You reply that you would her first follower if she was looking for them. "
                                             + "You jokingly kneel in front of her and kiss her feet. "
                                             + "Angel seems surprised for a moment before a familiar lascivious smile creeps into her expression. "
                                             + "<i>\"{other:name}, {other:name}, {other:name}, what do we have here? A willing supplicant? "
@@ -166,7 +168,7 @@ public class Angel extends BasePersonality {
                             return true;
                         }),
                         new CombatSceneChoice("Answer: Why not both? [Hard Mode]", (c, self, other) -> {
-                            c.write(Global.format("You tell her that the Angel you know wouldn't even think of choosing between either of them. "
+                            c.write(Global.global.format("You tell her that the Angel you know wouldn't even think of choosing between either of them. "
                                             + "The Angel you know could gather a following within a day even while maintaining her close friendships. She's just amazing like that. "
                                             + "<br/>For the first time since you've gotten to know her, Angel seems to blush. \"<i>Enough flattery " + other.getName() + ", it wont make me go any easier on you. "
                                                             + "But you know, you're right. Why should I choose? They should be happy to grovel for me. I <b>am</b> a Goddess after all.</i>\"", self, other));
@@ -174,7 +176,7 @@ public class Angel extends BasePersonality {
                             useFollowers();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            Global.getPlayer().getGrowth().addTraitPoints(new int[]{21,48},Global.getPlayer());
+                            Global.global.getPlayer().getGrowth().addTraitPoints(new int[]{21,48},Global.global.getPlayer());
                             return true;
                         })
                     )
@@ -204,11 +206,11 @@ public class Angel extends BasePersonality {
         preferredAttributes
                         .add(c -> c.get(Attribute.Divinity) < 50 ? Optional.of(Attribute.Divinity) : Optional.empty());
         preferredAttributes.add(c -> Optional.of(Attribute.Seduction));
-        preferredAttributes.add(c -> (c.has(Trait.nymphomania) && c.get(Attribute.Nymphomania) < (c.getLevel() - 10) / 2) ? Optional.of(Attribute.Nymphomania) : Optional.empty());
+        preferredAttributes.add(c -> (c.hasTrait(Trait.nymphomania) && c.get(Attribute.Nymphomania) < (c.getLevel() - 10) / 2) ? Optional.of(Attribute.Nymphomania) : Optional.empty());
     }
 
     private void useSex() {
-        Global.flag(ANGEL_SEX_FOCUS);
+        Global.global.flag(ANGEL_SEX_FOCUS);
         character.getGrowth().addTrait(12, Trait.holecontrol);
         character.getGrowth().addTrait(20, Trait.zealinspiring);
         character.getGrowth().addTrait(25, Trait.powerfulhips);
@@ -217,7 +219,7 @@ public class Angel extends BasePersonality {
     }
 
     private void useNymphomania() {
-        Global.flag(ANGEL_NYMPHOMANIA_FOCUS);
+        Global.global.flag(ANGEL_NYMPHOMANIA_FOCUS);
         character.mod(Attribute.Nymphomania, 1);
         character.getGrowth().addTrait(12, Trait.lastStand);
         character.getGrowth().addTrait(20, Trait.nymphomania);
@@ -227,13 +229,13 @@ public class Angel extends BasePersonality {
     }
 
     private void useFollowers() {
-        Global.flag(ANGEL_FOLLOWERS_FOCUS);
+        Global.global.flag(ANGEL_FOLLOWERS_FOCUS);
         character.getGrowth().addTrait(21, Trait.apostles);
         character.getGrowth().addTrait(30, Trait.leadership);
-        if (Global.checkFlag(ANGEL_SEX_FOCUS)) {
+        if (Global.global.checkFlag(ANGEL_SEX_FOCUS)) {
             character.getGrowth().addTrait(42, Trait.inspirational);
         }
-        if (Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS)) {
+        if (Global.global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS)) {
             character.getGrowth().addTrait(42, Trait.showmanship);
         }
         character.getGrowth().addTrait(45, Trait.tactician);
@@ -242,15 +244,15 @@ public class Angel extends BasePersonality {
     }
 
     private void useWorship() {
-        Global.flag(ANGEL_WORSHIP_FOCUS);
+        Global.global.flag(ANGEL_WORSHIP_FOCUS);
         character.getGrowth().addTrait(21, Trait.objectOfWorship);
         character.getGrowth().addTrait(30, Trait.magicEyeArousal);
         character.getGrowth().addTrait(42, Trait.sacrosanct);
         character.getGrowth().addTrait(45, Trait.genuflection);
-        if (Global.checkFlag(ANGEL_SEX_FOCUS)) {
+        if (Global.global.checkFlag(ANGEL_SEX_FOCUS)) {
             character.getGrowth().addTrait(48, Trait.piety);
         }
-        if (Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS)) {
+        if (Global.global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS)) {
             character.getGrowth().addTrait(48, Trait.mandateOfHeaven);
         }
         character.getGrowth().addTrait(60, Trait.revered);
@@ -259,7 +261,7 @@ public class Angel extends BasePersonality {
     @Override
     public void rest(int time) {
         if (character.rank >= 1) {
-            if (!character.hasTrait(Trait.demigoddess) && (Global.checkFlag(ANGEL_SEX_FOCUS) || Global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS))) {
+            if (!character.hasTrait(Trait.demigoddess) && (Global.global.checkFlag(ANGEL_SEX_FOCUS) || Global.global.checkFlag(ANGEL_NYMPHOMANIA_FOCUS))) {
                 advance();
             }
         }
@@ -319,9 +321,9 @@ public class Angel extends BasePersonality {
         for (int i = 0; i < time; i++) {
             r = Rng.rng.random(8);
             if (r == 1) {
-                Global.getDay().visit("Exercise", this.character, 0);
+                Global.global.getDay().visit("Exercise", this.character, 0);
             } else if (r == 0) {
-                Global.getDay().visit("Browse Porn Sites", this.character, 0);
+                Global.global.getDay().visit("Browse Porn Sites", this.character, 0);
             }
         }
     }
@@ -353,7 +355,7 @@ public class Angel extends BasePersonality {
                 case 2:
                     return "Angel massages her own cunt as she cums, <i>\"Not enough... Not nearly enough!\"<i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }
         });
         character.addLine(CharacterLine.MAKE_ORGASM_LINER, (c, self, other) -> {
@@ -370,7 +372,7 @@ public class Angel extends BasePersonality {
                 case 2:
                     return "<i>\"Enough? This is no where near enough. Stop panting and keep going.\"</i>";
                 default:
-                    return Global.pickRandom(Arrays.asList(finalLines)).get();
+                    return Rng.rng.pickRandom(Arrays.asList(finalLines)).get();
             }});
         character.addLine(CharacterLine.NIGHT_LINER, (c, self, other) -> "As you start to head back after the match, Angel grabs your hand and drags you in the other direction. <i>\"You're officially kidnapped, because I haven't had "
                         + "enough sex yet tonight.\"</i> That makes sense... kinda? You did just finish three hours of intense sex-fighting. If she wants too much more than that, you're "
@@ -622,7 +624,7 @@ public class Angel extends BasePersonality {
         character.getGrowth().addTrait(10, Trait.proheels);
         character.body.addReplace(PussyPart.divine, 1);
         if (character.hasDick()) {
-            character.body.addReplace(character.body.getRandomCock().applyMod(CockMod.blessed), 1);
+            character.body.addReplace(character.body.getRandomCock().applyMod(CockPart.Mod.blessed), 1);
         }
         character.body.addReplace(WingsPart.angelic, 5);
         character.unequipAllClothing();

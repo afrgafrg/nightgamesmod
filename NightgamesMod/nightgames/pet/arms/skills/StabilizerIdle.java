@@ -16,7 +16,7 @@ public class StabilizerIdle extends ArmSkill {
     @Override
     public boolean resolve(Combat c, RoboArm arm, Character owner, Character target) {
         if (c.getStance().en == Stance.neutral) {
-            c.write(PetCharacter.DUMMY, Global.format("The stabilizer is idling behind {self:subject},"
+            c.write(PetCharacter.DUMMY, Global.global.format("The stabilizer is idling behind {self:subject},"
                             + " low to the ground and ready to break {self:possessive} fall should"
                             + " {other:subject} get any ideas.", owner, target));
         }

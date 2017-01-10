@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
 import nightgames.status.Bound;
@@ -53,8 +54,8 @@ public class ThrowSlime extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (target.has(Trait.slime)) {
-            c.write(getSelf(), Global.format("{self:SUBJECT-ACTION:throw|throws} a glob of slime at"
+        if (target.hasTrait(Trait.slime)) {
+            c.write(getSelf(), Global.global.format("{self:SUBJECT-ACTION:throw|throws} a glob of slime at"
                             + " {other:name-do}, but it is simply absorbed into {other:possessive}"
                             + " equally slimy body. That was rather underwhelming.", getSelf(), target));
             return false;
@@ -63,8 +64,8 @@ public class ThrowSlime extends Skill {
             type.message(c, getSelf(), target);
             if (type != HitType.NONE) {
                 target.add(c, type.build(getSelf(), target));
-                if (getSelf().has(Trait.VolatileSubstrate)) {
-                    target.add(c, new Slimed(target, getSelf(), Global.random(1, 11)));
+                if (getSelf().hasTrait(Trait.VolatileSubstrate)) {
+                    target.add(c, new Slimed(target, getSelf(), Rng.rng.random(1, 11)));
                 }
                 return true;
             } else {
@@ -136,7 +137,7 @@ public class ThrowSlime extends Skill {
                 case TRANCE:
                     return new Trance(target, 3);
                 default: // NONE or a stupid mistake
-                    Global.gui()
+                    Global.global.gui()
                           .message("ERROR: Half-implemented HitType for ThrowSlime; "
                                           + "applying 1-turn Wary instead. Please report this."
                                           + " And be sure to laugh at my stupidity. (DNDW)");
@@ -145,42 +146,42 @@ public class ThrowSlime extends Skill {
         }
 
         void message(Combat c, Character self, Character target) {
-            String msg = Global.format("With a large movement of {self:possessive} arms, {self:subject-action:throw|throws}"
+            String msg = Global.global.format("With a large movement of {self:possessive} arms, {self:subject-action:throw|throws}"
                             + " a big glob of viscous slime at {other:name-do}. ", self, target);
             switch (this) {
                 case BOUND_S:
-                    msg += Global.format("While in the air, the mass of slime splits in two, and the remaining projectiles"
+                    msg += Global.global.format("While in the air, the mass of slime splits in two, and the remaining projectiles"
                                     + " impact both of {other:possessive} hands, binding them solidly to "
                                     + (c.getStance().en == Stance.neutral ? "one another." : "the ground.")
                                     , self, target);
                     break;
                 case BOUND_W:
-                    msg += Global.format("The slime impacts one of {other:possessive} hands, encasing it in a slimy"
+                    msg += Global.global.format("The slime impacts one of {other:possessive} hands, encasing it in a slimy"
                                     + " mitten. {other:PRONOUN-ACTION:are|is} going to have to get that off before"
                                     + " continuing.", self, target);
                     break;
                 case FALL:
-                    msg += Global.format("The glob impacts with a powerful <i>thud</i>, and it knocks"
+                    msg += Global.global.format("The glob impacts with a powerful <i>thud</i>, and it knocks"
                                     + " {other:subject} off {other:possessive} feet.", self, target);
                     break;
                 case FLAT_1:
-                    msg += Global.format("The slimy ball connects soundly with {other:possessive} head,"
+                    msg += Global.global.format("The slimy ball connects soundly with {other:possessive} head,"
                                     + " dazing {other:direct-object}.", self, target);
                     break;
                 case FLAT_3:
-                    msg += Global.format("The slime hits {other:possessive} already prone body with"
+                    msg += Global.global.format("The slime hits {other:possessive} already prone body with"
                                     + " substantial force, knocking the wind solidly out of {other:direct-object}."
                                     , self, target);
                     break;
                 case TRANCE:
-                    msg += Global.format("The glob catches on {other:possessive} arm, seemingly harmless. Then,"
+                    msg += Global.global.format("The glob catches on {other:possessive} arm, seemingly harmless. Then,"
                                     + " however, a flush spreads across {other:possessive} skin, radiating outward"
                                     + " from the slime. When the flush reaches {other:name-possessive} head,"
                                     + " {other:pronoun-action:fall|falls} straight into a deep trance."
                                     , self, target);
                     break;
                 case NONE:
-                    msg += Global.format("{other:PRONOUN}, however, "
+                    msg += Global.global.format("{other:PRONOUN}, however, "
                                     + "{other:action:manage|manages} to evade the onrushing slime.", self, target);
                     break;
                 case PARASITED:
@@ -195,7 +196,7 @@ public class ThrowSlime extends Skill {
                                 + " harmless, however, is the sensation of some left-over slime still "
                                 + " working its magic inside your skull...";
                     } else {
-                        msg += Global.format("You can't help but feel a little giddy as your risky move succeeds,"
+                        msg += Global.global.format("You can't help but feel a little giddy as your risky move succeeds,"
                                         + " and the slime wraps around {other:name-possessive} head."
                                         + " You know it won't be long now. {other:PRONOUN} tries to throw and"
                                         + " claw the slime off, but you can already feel the connection forming."
@@ -204,7 +205,7 @@ public class ThrowSlime extends Skill {
                     }
                     break;
                 case FRENZIED:
-                    msg += Global.format("The glob catches on {other:possessive} arm, seemingly harmless. Then,"
+                    msg += Global.global.format("The glob catches on {other:possessive} arm, seemingly harmless. Then,"
                                     + " however, a flush spreads across {other:possessive} skin, radiating outward"
                                     + " from the slime. "
                                     + (target.human() ? "It feels warm, and when it reaches your head it fills your"
@@ -226,7 +227,7 @@ public class ThrowSlime extends Skill {
     }
 
     private int random(Combat c, Character target, int skill, int diff) {
-        int r = Global.random(150);
+        int r = Rng.rng.random(150);
         if (!c.getStance()
               .mobile(target) || !target.canRespond()) {
             r -= 50;
@@ -251,7 +252,7 @@ public class ThrowSlime extends Skill {
             return HitType.PARASITED;
         }
         if (slime >= 20 && random(c, target, slime, 20) <= 15 + bonus) {
-            return Global.random(2) == 0 ? HitType.TRANCE : HitType.FRENZIED;
+            return Rng.rng.random(2) == 0 ? HitType.TRANCE : HitType.FRENZIED;
         }
         if (slime >= 16 && random(c, target, slime, 16) <= 20 + bonus) {
             return HitType.BOUND_S;

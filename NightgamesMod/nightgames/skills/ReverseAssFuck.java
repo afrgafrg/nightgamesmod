@@ -27,9 +27,9 @@ public class ReverseAssFuck extends Fuck {
         return ((getSelf().getMood() == Emotion.dominant ? 1.0f : 0)
                         + (getSelf().hasTrait(Trait.autonomousAss) ? 4.0f : 0)
                         + (getSelf().hasTrait(Trait.oiledass) ? 2.0f : 0)
-                        + (getSelf().has(Trait.drainingass) ? 3.f : 0)
-                        + (getSelf().has(Trait.bewitchingbottom) ? 3.f : 0))
-                        * (getSelf().has(Trait.powerfulcheeks) ? 2.f : 1.f);
+                        + (getSelf().hasTrait(Trait.drainingass) ? 3.f : 0)
+                        + (getSelf().hasTrait(Trait.bewitchingbottom) ? 3.f : 0))
+                        * (getSelf().hasTrait(Trait.powerfulcheeks) ? 2.f : 1.f);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ReverseAssFuck extends Fuck {
         getSelf().body.pleasure(target, getTargetOrgan(target), getSelfOrgan(), m, c, this);
         c.setStance(new AnalCowgirl(getSelf(), target), getSelf(), getSelf().canMakeOwnDecision());
         getSelf().emote(Emotion.dominant, 30);
-        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().has(Trait.bewitchingbottom)) {
+        if (Rng.rng.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish) || getSelf().hasTrait(Trait.bewitchingbottom)) {
             target.add(c, new BodyFetish(target, getSelf(), "ass", .25));
         }
         return true;

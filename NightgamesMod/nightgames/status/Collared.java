@@ -36,13 +36,13 @@ public class Collared extends Status {
     
     @Override
     public String initialMessage(Combat c, boolean replaced) {
-        return Global.format("{self:SUBJECT} now {self:action:have|has} a metallic collar around"
+        return Global.global.format("{self:SUBJECT} now {self:action:have|has} a metallic collar around"
                         + " {self:possessive} neck!", affected, c.getOpponent(affected));
     }
 
     @Override
     public String describe(Combat c) {
-        return Global.format("{self:SUBJECT-ACTION:are|is} wearing a training collar, which"
+        return Global.global.format("{self:SUBJECT-ACTION:are|is} wearing a training collar, which"
                         + " is hampering {self:possessive} ability to fight.", affected, c.getOpponent(affected));
     }
 

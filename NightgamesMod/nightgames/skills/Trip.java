@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Global;
+import nightgames.global.Rng;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Falling;
 import nightgames.status.Slimed;
@@ -37,8 +38,8 @@ public class Trip extends Skill {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             if (isSlime()) {
                 writeOutput(c, Result.special, target);
-                if (getSelf().has(Trait.VolatileSubstrate)) {
-                    target.add(c, new Slimed(target, getSelf(), Global.random(2, 4)));
+                if (getSelf().hasTrait(Trait.VolatileSubstrate)) {
+                    target.add(c, new Slimed(target, getSelf(), Rng.rng.random(2, 4)));
                 }
             } else {
                 writeOutput(c, Result.normal, target);
@@ -128,7 +129,7 @@ public class Trip extends Skill {
                             "%s forms some of %s slime into a sheet and slides it towards %s feet."
                                             + " %s %s away from it, and %s harmlessly retracts the slime.",
                             getSelf().name(), getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(),
-                            Global.capitalizeFirstLetter(target.pronoun()), target.action("jump"), getSelf().pronoun());
+                            Grammar.capitalizeFirstLetter(target.pronoun()), target.action("jump"), getSelf().pronoun());
         } else {
             return String.format("%s takes %s feet out from under %s and sends %s sprawling to the floor.",
                             getSelf().subject(), target.nameOrPossessivePronoun(), target.directObject(),

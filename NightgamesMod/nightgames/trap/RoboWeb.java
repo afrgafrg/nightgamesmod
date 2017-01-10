@@ -3,8 +3,9 @@ package nightgames.trap;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.encounter.Encounter;
 import nightgames.global.Global;
+import nightgames.global.Grammar;
 import nightgames.items.Item;
 import nightgames.status.RoboWebbed;
 
@@ -44,9 +45,9 @@ public class RoboWeb extends Trap {
                 msg += "sensitive nipples";
             }
             msg += " are especially distracting, as they drive you right to the edge of orgasm.";
-            Global.gui().message(msg);
+            Global.global.gui().message(msg);
         } else {
-            Global.gui().message(String.format("You hear a loud <i>SNAP</i> coming from nearby. Looking around, you"
+            Global.global.gui().message(String.format("You hear a loud <i>SNAP</i> coming from nearby. Looking around, you"
                             + " see a mess of rope-like cords flying towards you. You duck out of the way,"
                             + " but it seems the cords were not meant to hit you in the first place."
                             + " Instead, they and many others like them have ensnared %s, hoisting"
@@ -55,7 +56,7 @@ public class RoboWeb extends Trap {
                             + " thrashes around wildly, moaning loudly. %s is not getting"
                             + " out of there anytime soon. Oh, the possibilities...", target.name(), target.directObject(),
                             target.directObject(), target.pronoun(), target.pronoun(),
-                            Global.capitalizeFirstLetter(target.pronoun())));
+                            Grammar.capitalizeFirstLetter(target.pronoun())));
         }
         target.outfit.undress();
         target.addNonCombat(new RoboWebbed(target, 100 + getStrength(), this));
@@ -65,12 +66,12 @@ public class RoboWeb extends Trap {
 
     @Override
     public boolean recipe(Character owner) {
-        return owner.has(Item.Rope, 4) && owner.has(Item.Spring, 2) && owner.has(Item.Tripwire);
+        return owner.hasItem(Item.Rope, 4) && owner.hasItem(Item.Spring, 2) && owner.hasItem(Item.Tripwire);
     }
 
     @Override
     public boolean requirements(Character owner) {
-        return owner.has(Trait.roboweb);
+        return owner.hasTrait(Trait.roboweb);
     }
 
     @Override
@@ -83,7 +84,7 @@ public class RoboWeb extends Trap {
     }
     
     @Override
-    public void capitalize(Character attacker, Character victim, IEncounter enc) {
+    public void capitalize(Character attacker, Character victim, Encounter enc) {
         enc.engage(new Combat(attacker, victim, attacker.location()));
         attacker.location().remove(this);
     }

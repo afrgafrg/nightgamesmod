@@ -4,23 +4,18 @@ import nightgames.Resources.ResourceLoader;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Player;
-import nightgames.characters.Trait;
-import nightgames.characters.TraitTree;
 import nightgames.combat.Combat;
-import nightgames.combat.CombatSceneChoice;
 import nightgames.daytime.Activity;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
 import nightgames.global.time.Time;
 import nightgames.gui.button.*;
+import nightgames.gui.keybinds.Keybinds;
+import nightgames.gui.keybinds.KeymapLoader;
 import nightgames.gui.resources.ResourcesPanel;
+import nightgames.gui.useraction.UserAction;
 import nightgames.items.Item;
-import nightgames.items.Loot;
-import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.skills.TacticGroup;
-import nightgames.skills.Tactics;
-import nightgames.trap.Trap;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,6 +32,8 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +43,7 @@ public class GUI extends JFrame implements Observer {
 
     private static final long serialVersionUID = 451431916952047183L;
     public CommandPanel commandPanel;
+    public Keybinds keybinds;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private TacticGroup currentTactics;
@@ -537,23 +535,21 @@ public class GUI extends JFrame implements Observer {
         commandPanel = new CommandPanel(120, width);
         gamePanel.add(commandPanel);
 
-        skills = new HashMap<>();
-        clearCommand();
-        currentTactics = TacticGroup.all;
-        createCharacter();
-        setVisible(true);
-        pack();
-        JPanel panel = (JPanel) getContentPane();
-        panel.setFocusable(true);
-        panel.addKeyListener(new KeyListener() {
+        Path keymapData = Paths.get("data/Keybinds.json");
+        keybinds = new Keybinds(keymapData);
+        KeymapLoader.saveKeybinds(keymapData, keybinds);
+
+        // TODO: wire up UserActions to this KeyListener
+        this.addKeyListener(new KeyListener() {
             /**
              * Space bar will select the first option, unless they are in the default actions list.
              */
             @Override
             public void keyReleased(KeyEvent e) {
-                Optional<KeyableButton> buttonOptional = commandPanel.getButtonForHotkey(e.getKeyChar());
+                Optional<UserAction> actionOptional = keybinds.actionFromHotkey(String.valueOf(e.getKeyChar()));
+                actionOptional.ifPresent();
                 if (buttonOptional.isPresent()) {
-                    buttonOptional.get().call();
+                    buttonOptional.get().keyActivated();
                 }
             }
 
@@ -563,6 +559,15 @@ public class GUI extends JFrame implements Observer {
             @Override
             public void keyPressed(KeyEvent e) {}
         });
+
+        skills = new HashMap<>();
+        clearCommand();
+        currentTactics = TacticGroup.all;
+        createCharacter();
+        setVisible(true);
+        pack();
+        JPanel panel = (JPanel) getContentPane();
+        panel.setFocusable(false);
 
         // Use this for making save dialogs
         saveFileChooser = new NgsChooser(this);

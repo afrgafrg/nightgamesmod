@@ -7,13 +7,19 @@ import java.util.Map;
 /**
  * Provides a Type for maps that lets Gson.fromJson() get around type erasure.
  */
-class ParameterizedMapType<K, V> implements ParameterizedType {
+public class ParameterizedMapType<K, V> implements ParameterizedType {
     private Class<K> keyType;
     private Class<V> valueType;
+    private Class<? extends Map> mapType;
 
     public ParameterizedMapType(Class<K> keyClazz, Class<V> valueClazz) {
+        this(keyClazz, valueClazz, Map.class);
+    }
+
+    public ParameterizedMapType(Class<K> keyClazz, Class<V> valueClazz, Class<? extends Map> mapClazz) {
         keyType = keyClazz;
         valueType = valueClazz;
+        mapType = Map.class;
     }
 
     @Override public Type[] getActualTypeArguments() {
@@ -21,7 +27,7 @@ class ParameterizedMapType<K, V> implements ParameterizedType {
     }
 
     @Override public Type getRawType() {
-        return Map.class;
+        return mapType;
     }
 
     @Override public Type getOwnerType() {

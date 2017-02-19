@@ -33,6 +33,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Combat extends Observable implements Cloneable {
+    private static final int NPC_TURN_LIMIT = 75;
+    private static final double NPC_DRAW_ERROR_MARGIN = .15;
     private enum CombatPhase {
         START,
         PRETURN,
@@ -194,6 +196,10 @@ public class Combat extends Observable implements Cloneable {
         if (doExtendedLog()) {
             log.logHeader("\n");
         }
+        // if (shouldAutoresolve()) {
+        //     autoresolve();
+        //     return;
+        // }
         this.promptNext(GUI.gui);
         //        if (
         //                        (wroteMessageSinceLastClear || phase != CombatPhase.START)
@@ -1240,6 +1246,26 @@ public class Combat extends Observable implements Cloneable {
             return;
         }
         this.promptNext(GUI.gui);
+    }
+
+    private void autoresolve() {
+        assert !p1.human() && !p2.human() && !beingObserved;
+        assert timer == 0;
+        while (timer < NPC_TURN_LIMIT && !winner.isPresent()) {
+            // TODO: make this work with explicit combat loop
+            // turn();
+        }
+        if (timer < NPC_TURN_LIMIT) {
+            double fitness1 = p1.getFitness(this);
+            double fitness2 = p2.getFitness(this);
+            double diff = Math.abs(fitness1 / fitness2 - 1.0);
+            if (diff > NPC_DRAW_ERROR_MARGIN) {
+                winner = Optional.of(fitness1 > fitness2 ? p1 : p2);
+            } else {
+                winner = Optional.of(NPC.noneCharacter());
+            }
+        }
+        end();
     }
 
     public void intervene(Character intruder, Character assist) {

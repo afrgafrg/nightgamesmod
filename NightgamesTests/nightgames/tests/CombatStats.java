@@ -14,10 +14,11 @@ import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
 import nightgames.global.DebugFlags;
 import nightgames.global.Global;
+import nightgames.modifier.standard.NoModifier;
 
 public class CombatStats {
     private static final Area NULL_AREA = new Area("", "", null);
-    private static final int MATCH_COUNT = 1000;
+    private static final int MATCH_COUNT = 10;
 
     private List<Character> combatants;
     private Map<String, Record> records;
@@ -83,6 +84,7 @@ public class CombatStats {
         ((BasePersonality) ((NPC) c1).ai).character = (NPC) c1;
         ((BasePersonality) ((NPC) c2).ai).character = (NPC) c2;
         Combat cbt = new Combat(c1, c2, NULL_AREA);
+        cbt.go();
         counter.incrementAndGet();
         synchronized (recordLock) {
             if (!cbt.winner.isPresent()) {
@@ -106,9 +108,11 @@ public class CombatStats {
         return records.get(c.getTrueName());
     }
 
-    public static void main(String[] args) {
-        new Global(true);
+    public static void main(String[] args) throws InterruptedException {
+        Global.init(true);
         Global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
+        Global.setUpMatch(new NoModifier());
+        Thread.sleep(10000);
         for (int i = 5; i < 75; i += 5) {
             Setup s3 = new Setup(i, new Reyka(), new Kat(), new Eve());
             new CombatStats(s3).test();

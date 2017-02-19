@@ -3835,7 +3835,8 @@ public abstract class Character extends Observable implements Cloneable {
             return true;
         if (o == null || !getClass().equals(o.getClass()))
             return false;
-
+        if (o == NPC.noneCharacter() || this == NPC.noneCharacter())
+            return false;
         Character character = (Character) o;
         return getType().equals(character.getType()) && name.equals(character.name);
     }

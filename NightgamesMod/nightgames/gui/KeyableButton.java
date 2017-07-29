@@ -1,12 +1,14 @@
 package nightgames.gui;
 
+import nightgames.gui.useraction.Actionable;
+
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public abstract class KeyableButton extends JPanel {
+public abstract class KeyableButton extends JPanel implements Actionable {
     private static final long serialVersionUID = -2379908542190189603L;
     private final JButton button;
 
@@ -18,17 +20,15 @@ public abstract class KeyableButton extends JPanel {
         this.setBorder(BorderFactory.createEmptyBorder());
     }
 
-    public void call() {
+    @Override public void keyActivated() {
         button.doClick();
     }
 
-    public abstract String getText();
-
-    public void setHotkeyTextTo(String string) {
+    @Override public void setUserAction(String string) {
         button.setText(String.format("%s [%s]", getText(), string));
     }
 
-    public void clearHotkeyText() {
+    @Override public void clearUserAction() {
         button.setText(getText());
     }
 

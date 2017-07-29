@@ -44,6 +44,7 @@ public class GUI extends JFrame implements Observer {
     private static final long serialVersionUID = 451431916952047183L;
     public CommandPanel commandPanel;
     public Keybinds keybinds;
+    public Map<UserAction, Runnable> actionMap;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private TacticGroup currentTactics;
@@ -540,6 +541,7 @@ public class GUI extends JFrame implements Observer {
         KeymapLoader.saveKeybinds(keymapData, keybinds);
 
         // TODO: wire up UserActions to this KeyListener
+        actionMap = Collections.synchronizedMap(new EnumMap<UserAction, Runnable>(UserAction.class));
         this.addKeyListener(new KeyListener() {
             /**
              * Space bar will select the first option, unless they are in the default actions list.
@@ -547,7 +549,7 @@ public class GUI extends JFrame implements Observer {
             @Override
             public void keyReleased(KeyEvent e) {
                 Optional<UserAction> actionOptional = keybinds.actionFromHotkey(String.valueOf(e.getKeyChar()));
-                actionOptional.ifPresent();
+                actionOptional.ifPresent(action -> actionMap.);
                 if (buttonOptional.isPresent()) {
                     buttonOptional.get().keyActivated();
                 }

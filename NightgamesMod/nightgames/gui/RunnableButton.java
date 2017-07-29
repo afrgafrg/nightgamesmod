@@ -2,10 +2,11 @@ package nightgames.gui;
 
 import java.awt.Font;
 
+import nightgames.gui.button.GameButton;
 import org.apache.commons.lang3.text.WordUtils;
 
 // TODO: figure out how to unify this with my button implementations
-class RunnableButton extends KeyableButton {
+class RunnableButton extends GameButton {
     private static final long serialVersionUID = 5435929681634872672L;
     private String text;
     public RunnableButton(String text, Runnable runnable) {
@@ -35,7 +36,7 @@ class RunnableButton extends KeyableButton {
         return text;
     }
 
-    public void setHotkeyTextTo(String string) {
+    public void setUserAction(String string) {
         getButton().setText(formatHTMLMultiline(text, String.format(" [%s]", string)));
         resetFontSize();
     }

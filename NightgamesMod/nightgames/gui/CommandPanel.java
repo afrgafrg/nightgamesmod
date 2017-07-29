@@ -1,6 +1,8 @@
 package nightgames.gui;
 
 //<<<<<<< HEAD
+import nightgames.gui.useraction.Actionable;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
@@ -29,8 +31,8 @@ public class CommandPanel {
     private JPanel panel;
     private int index;
     private int page;
-    private Map<Character, KeyableButton> hotkeyMapping;
-    private List<KeyableButton> buttons;
+    private Map<Character, Actionable> hotkeyMapping;
+    private List<Actionable> buttons;
     private JPanel rows[];
     public CommandPanel(int width) {
         panel = new JPanel();
@@ -123,12 +125,12 @@ public class CommandPanel {
         refresh();
     }
 
-    public Optional<KeyableButton> getButtonForHotkey(char keyChar) {
+    public Optional<Actionable> getButtonForHotkey(char keyChar) {
         return Optional.ofNullable(hotkeyMapping.get(keyChar));
     }
 
-    public void register(Character hotkey, KeyableButton button) {
-        button.setHotkeyTextTo(hotkey.toString().toUpperCase());
+    public void register(Character hotkey, Actionable button) {
+        button.setUserAction(hotkey.toString().toUpperCase());
         hotkeyMapping.put(hotkey, button);
 /*=======
 import nightgames.gui.button.GameButton;

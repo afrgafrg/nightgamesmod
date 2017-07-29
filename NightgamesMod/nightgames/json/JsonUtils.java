@@ -23,8 +23,8 @@ import nightgames.items.clothing.Clothing;
 public class JsonUtils {
     public static Gson gson =
                     new GsonBuilder().setPrettyPrinting()
-                                    .registerTypeAdapter(Clothing.class, new ClothingAdaptor())
-                                    .registerTypeAdapter(BodyPart.class, new BodyPartAdapter())
+//                                    .registerTypeAdapter(Clothing.class, new ClothingAdaptor())
+//                                    .registerTypeAdapter(BodyPart.class, new BodyPartAdapter())
                                     .create();
 
 

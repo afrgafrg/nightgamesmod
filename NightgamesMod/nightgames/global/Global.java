@@ -735,7 +735,7 @@ public class Global {
         if (Global.checkFlag(Flag.autosave)) {
             Global.autoSave();
         }
-        Global.gui().endMatch();
+        Match.endMatch(Global.gui());
     }
     
     private static Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
@@ -858,7 +858,7 @@ public class Global {
             Optional<Status> withEffect = a.startNight();
             withEffect.ifPresent(s -> Global.getPlayer().addNonCombat(s));
         });
-        Global.gui().startMatch();
+        Match.startMatch(Global.gui());
         match.round();
     }
 

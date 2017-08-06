@@ -14,6 +14,9 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.gui.GUI;
+import nightgames.gui.RunnableButton;
+import nightgames.gui.SaveButton;
 import nightgames.modifier.Modifier;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
@@ -76,6 +79,28 @@ public class Match {
             }
             manageConditions(player);
         }
+    }
+
+    public static void endMatch(GUI gui) {
+        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
+            System.out.println("Match end");
+        }
+        gui.combat = null;
+        gui.clearCommand();
+        gui.showNone();
+        gui.mntmQuitMatch.setEnabled(false);
+        Global.endNightForSave();
+        RunnableButton button = new RunnableButton("Go to sleep", () -> {
+            Global.startDay();
+        });
+        gui.commandPanel.add(button);
+        gui.commandPanel.add(new SaveButton());
+        gui.commandPanel.refresh();
+    }
+
+    public static void startMatch(GUI gui) {
+        gui.mntmQuitMatch.setEnabled(true);
+        gui.showMap();
     }
 
     public MatchType getType() {

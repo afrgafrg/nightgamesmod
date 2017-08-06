@@ -1074,26 +1074,8 @@ public class GUI extends JFrame implements Observer {
 
     public void prompt(String message, List<KeyableButton> choices) {
         clearText();
-
-    // Night match initializer
-
-    public void startMatch() {
-        mntmQuitMatch.setEnabled(true);
-        showMap();
-    }
-
-    public void endMatch() {
-        if (Global.isDebugOn(DebugFlags.DEBUG_GUI)) {
-            System.out.println("Match end");
-        }
-        combat = null;
-        clearCommand();
-        showNone();
-        mntmQuitMatch.setEnabled(false);
-        Global.endNightForSave();
-        commandPanel.add(sleepButton());
-        commandPanel.add(new SaveButton());
-        commandPanel.refresh();
+        message(message);
+        prompt(choices);
     }
 
     public void refresh() {
@@ -1291,20 +1273,6 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-
-    private KeyableButton sleepButton() {
-        RunnableButton button = new RunnableButton("Go to sleep", () -> {
-            Global.startDay();
-        });
-        return button;
-    }
-
-    private KeyableButton matchButton() {
-        RunnableButton button = new RunnableButton("Start the match", () -> {
-            Global.setUpMatch(new NoModifier());
-        });
-        return button;
-    }
     public void changeClothes(Character player, Activity event, String backOption) {
         clothesPanel.removeAll();
         clothesPanel.add(new ClothesChangeGUI(player, event, backOption));

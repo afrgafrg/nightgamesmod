@@ -212,14 +212,11 @@ public class ReykaTime extends BaseNPCTime {
                                   + "soul with her menacing eyes: <i>\"You didn't touch anything, did you?\"</i> "
                                   + "Quickly shaking your head, you emphatically declare your innocence. You're only here to spend some time "
                                   + "with your favorite demoness. <i>\"Is that so, and what might you be planning then?\"</i>");
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if (Global.getPlayer().checkAddiction(AddictionType.CORRUPTION)) {
-                Global.gui().choose(this, "Strengthen Corruption");
+                choose("Strengthen Corruption", Global.gui());
             }
         } else if (Global.getPlayer()
                          .checkAddiction(AddictionType.CORRUPTION)) {
@@ -231,15 +228,11 @@ public class ReykaTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui()
-                      .choose(this, "Games");
-                Global.gui()
-                      .choose(this, "Sparring");
-                Global.gui()
-                      .choose(this, "Sex");
+                choose("Games", Global.gui());
+                choose("Sparring", Global.gui());
+                choose("Sex", Global.gui());
             }
-            Global.gui()
-                  .choose(this, "Strengthen Corruption");
+            choose("Strengthen Corruption", Global.gui());
         } else if (npc.getAttraction(player) < 10) {
             Global.gui()
                   .message("You were going to ask Aesop where to find Reyka, but while on your way "
@@ -288,15 +281,11 @@ public class ReykaTime extends BaseNPCTime {
                                   + "<i>\"Excellent. Now you never really had a choice of course, but as a reward for coming willingly, "
                                   + "I'll let you choose what we are going to do! Who knows, I might even let you into my home.\"</i> "
                                   + "You are not sure whether to be relieved or worried about this, but you have a choice to make.");
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
         }
-        Global.gui()
-              .choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override
@@ -372,8 +361,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + " concern? Pondering the theological implications of a demon showing affection,"
                                       + " you head home. ");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Global.getPlayer()
                   .addict(null, AddictionType.CORRUPTION, npc, Addiction.MED_INCREASE);
             Global.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
@@ -484,8 +472,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "lest she changes her mind about your value to her.<br/>"
                                       + "Then again, you realize you didn't have any choice from the start. ");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -615,8 +602,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "they're bite marks. You don't remember anything since falling to the ground in the gym, but between "
                                       + "the marks and your unerringly sore ass, it's probably better that way.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -735,8 +721,7 @@ public class ReykaTime extends BaseNPCTime {
                                       + "her again. She didn't do so just now. Still, after a quick meal and a hot shower, you are ready to go back "
                                       + "out.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);

@@ -121,14 +121,14 @@ public class BlackMarket extends Store {
                 }
                 if (!trained) {
                     if (!Global.checkFlag(Flag.darkness)) {
-                        Global.gui().choose(this, "Cursed Artifacts");
+                        choose("Cursed Artifacts", Global.gui());
                     } else {
-                        Global.gui().choose(this, "Dark Power: $" + 1000 * (player.getPure(Attribute.Dark) + 1));
+                        choose("Dark Power: $" + 1000 * (player.getPure(Attribute.Dark) + 1), Global.gui());
                     }
                     if (!Global.checkFlag(Flag.fetishism)) {
-                        Global.gui().choose(this, "S&M Gear");
+                        choose("S&M Gear", Global.gui());
                     } else {
-                        Global.gui().choose(this, "Fetishism: $" + 1000 * (player.getPure(Attribute.Fetish) + 1));
+                        choose("Fetishism: $" + 1000 * (player.getPure(Attribute.Fetish) + 1), Global.gui());
                     }
                 }
             } else {
@@ -149,7 +149,7 @@ public class BlackMarket extends Store {
             }
             Global.gui().message("You have : $" + player.money + " to spend.");
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

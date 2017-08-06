@@ -41,18 +41,18 @@ public class Meditation extends Activity {
                                                 + "session.\"</i> Her expression darkens as she bites her lip. <i>\"My father is not in good health and he can't take students. I need money to keep the dojo open, and "
                                                 + "I know you're making plenty in the games.\"</i>");
                 Global.flag(Flag.metSuzume);
-                Global.gui().choose(this, "Train: $" + 1000 * (player.get(Attribute.Ki) + 1));
-                Global.gui().choose(this, "Sharpen Senses");
-                Global.gui().choose(this, "Shut Out Sensation");
-                Global.gui().choose(this, "Leave");
+                choose("Train: $" + 1000 * (player.get(Attribute.Ki) + 1), Global.gui());
+                choose("Sharpen Senses", Global.gui());
+                choose("Shut Out Sensation", Global.gui());
+                choose("Leave", Global.gui());
             } else {
                 Global.gui().message(
                                 "You go to the Suzuki dojo and remove your shoes out of respect. Suzume (or Suzuki-shisho as she's instructed you to call her) give you a friendly "
                                                 + "smile as you bow. <i>\"Welcome apprentice. Are you ready to continue your training or are you here to meditate?\"</i>");
-                Global.gui().choose(this, "Train: $" + 1000 * (player.get(Attribute.Ki) + 1));
-                Global.gui().choose(this, "Sharpen Senses");
-                Global.gui().choose(this, "Shut Out Sensation");
-                Global.gui().choose(this, "Leave");
+                choose("Train: $" + 1000 * (player.get(Attribute.Ki) + 1), Global.gui());
+                choose("Sharpen Senses", Global.gui());
+                choose("Shut Out Sensation", Global.gui());
+                choose("Leave", Global.gui());
             }
         } else if (choice.equals("Start")) {
             Global.gui().message(
@@ -63,9 +63,9 @@ public class Meditation extends Activity {
                                             + "<i>\"Now I need to be clear that hypnotic suggestion is not an exact science and there's no guarantee there will be any noticeable change in your sensitivity. If we are "
                                             + "successful, there will still be a drawback. Making yourself less sensitive can also cause you to miss fine details, and making yourself more perceptive can turn you into "
                                             + "a quick shot in bed. So knowing all that, do you still want to go through with this?\"</i>");
-            Global.gui().choose(this, "Sharpen Senses");
-            Global.gui().choose(this, "Shut Out Sensation");
-            Global.gui().choose(this, "Leave");
+            choose("Sharpen Senses", Global.gui());
+            choose("Shut Out Sensation", Global.gui());
+            choose("Leave", Global.gui());
         } else if (choice.equals("Leave")) {
             done(acted);
         } else if (choice.startsWith("Train")) {
@@ -81,12 +81,12 @@ public class Meditation extends Activity {
                 if (!player.has(Clothing.getByID("gi"))) {
                     player.gain(Clothing.getByID("gi"));
                 }
-                Global.gui().choose(this, "Leave");
+                choose("Leave", Global.gui());
             } else {
                 Global.gui().message("You don't have enough money for training.");
-                Global.gui().choose(this, "Sharpen Senses");
-                Global.gui().choose(this, "Shut Out Sensation");
-                Global.gui().choose(this, "Leave");
+                choose("Sharpen Senses", Global.gui());
+                choose("Shut Out Sensation", Global.gui());
+                choose("Leave", Global.gui());
             }
         } else if (choice.equals("Sharpen Senses")) {
             if (Global.random(100) >= 50) {
@@ -127,7 +127,7 @@ public class Meditation extends Activity {
                                                 + "If you want, we can try again another time, but for now you need some time to recover.\"</i>");
             }
             acted = true;
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.equals("Shut Out Sensation")) {
             if (Global.random(100) >= 50) {
                 Global.gui().message(
@@ -155,7 +155,7 @@ public class Meditation extends Activity {
                                                 + "don't think we can salvage this session. Give me a call if you want to try again.\"</i>");
             }
             acted = true;
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

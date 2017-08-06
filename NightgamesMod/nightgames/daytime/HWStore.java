@@ -50,7 +50,7 @@ public class HWStore extends Store {
             }
             Global.gui().message("You have : $" + player.money + " to spend.");
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 
@@ -58,7 +58,7 @@ public class HWStore extends Store {
     protected void displayItems() {
         for (Item i : stock.keySet()) {
             if (i != Item.EmptyBottle || player.getRank() > 0) {
-                Global.gui().sale(this, i);
+                sale(i, Global.gui());
             }
         }
     }

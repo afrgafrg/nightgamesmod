@@ -50,8 +50,8 @@ public class MagicTraining extends Activity {
                                             + "we go. I've tasted some of your essence and you've tasted some of mine.\"</i> What was that about? <i>\"Oh this wasn't just a demonstration. I also took the liberty of creating a magic "
                                             + "link between us. It'll make your training easier.\"</i>");
             Global.flag(Flag.metAisha);
-            Global.gui().choose(this, "Lesson: $" + 1000 * (player.getPure(Attribute.Arcane) + 1));
-            Global.gui().choose(this, "Leave");
+            choose("Lesson: $" + 1000 * (player.getPure(Attribute.Arcane) + 1), Global.gui());
+            choose("Leave", Global.gui());
             acted = true;
         } else if (choice.equals("Start")) {
             presentOptions();
@@ -227,7 +227,7 @@ public class MagicTraining extends Activity {
             } else {
                 Global.gui().message("You don't have enough money for training.");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.startsWith("Animism")) {
             if (player.money >= 500 + 500 * (player.getPure(Attribute.Animism) + 1)) {
                 player.money -= 500 + 500 * (player.getPure(Attribute.Animism) + 1);
@@ -242,7 +242,7 @@ public class MagicTraining extends Activity {
             } else {
                 Global.gui().message("You don't have enough money for training.");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.startsWith("Ask about Animal Spirit")) {
             Global.flag(Flag.furry);
             Global.gui().message("You bring up the topic of Kat's animal spirit and "
@@ -275,9 +275,9 @@ public class MagicTraining extends Activity {
                             + " even ask such a thing?!\"</i> She doesn't appear likely to budge"
                             + " to you alone. If you really want this power, you'll probably "
                             + "need to rely on Kat's help.");
-            Global.gui().choose(this, "Get Animal Spirit");
-            Global.gui().choose(this, "Lesson: $" + (500 + 500 * (player.getPure(Attribute.Arcane) + 1)));
-            Global.gui().choose(this, "Leave");
+            choose("Get Animal Spirit", Global.gui());
+            choose("Lesson: $" + (500 + 500 * (player.getPure(Attribute.Arcane) + 1)), Global.gui());
+            choose("Leave", Global.gui());
         } else if (choice.startsWith("Get Animal Spirit")) {
             Global.gui().message("Kat agrees to come to the creative writing reference"
                             + " room to try to convince Aisha. Aisha is delighted to see her and "
@@ -348,7 +348,7 @@ public class MagicTraining extends Activity {
             player.modAttributeDontSaveData(Attribute.Animism, 1);
             Global.flag("Trained" + Attribute.Animism.name());
             acted = true;
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.startsWith("Buy a minor scroll: $200")) {
             Global.gui().message("You purchase a minor scroll. With the correct spell, "
                             + "you can use it to summon a team of fairies.");
@@ -375,20 +375,20 @@ public class MagicTraining extends Activity {
     }
 
     private void presentOptions() {
-        Global.gui().choose(this, "Lesson: $" + 1000 * (player.getPure(Attribute.Arcane) + 1));
+        choose("Lesson: $" + 1000 * (player.getPure(Attribute.Arcane) + 1), Global.gui());
         if (player.getPure(Attribute.Animism) >= 1) {
-            Global.gui().choose(this, "Animism training: $" + (500 + 500 * (player.getPure(Attribute.Animism) + 1)));
+            choose("Animism training: $" + (500 + 500 * (player.getPure(Attribute.Animism) + 1)), Global.gui());
         }
         if (Global.checkFlag(Flag.catspirit) && !Global.checkFlag(Flag.furry)) {
-            Global.gui().choose(this, "Ask about Animal Spirit");
+            choose("Ask about Animal Spirit", Global.gui());
         }
         if (Global.checkFlag(Flag.furry) && player.getPure(Attribute.Animism) == 0) {
-            Global.gui().choose(this, "Get Animal Spirit");
+            choose("Get Animal Spirit", Global.gui());
         }
         if (player.getPure(Attribute.Arcane) >= 2 && player.money >= 200) {
-            Global.gui().choose(this, "Buy a minor scroll: $200");
+            choose("Buy a minor scroll: $200", Global.gui());
         }
-        Global.gui().choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
 }

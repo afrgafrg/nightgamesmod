@@ -103,12 +103,12 @@ public class XxxStore extends Store {
                 }
             }
             Global.gui().message("You have :$" + player.money + " to spend.");
-            Global.gui().sale(this, Item.Lubricant);
+            sale(Item.Lubricant, Global.gui());
 
             if (player.has(Item.Dildo)) {
                 Global.gui().message("You already have a perfectly serviceable dildo. You don't need another.");
             } else {
-                Global.gui().sale(this, Item.Dildo);
+                sale(Item.Dildo, Global.gui());
             }
 
             if (player.has(Item.Onahole)) {
@@ -116,7 +116,7 @@ public class XxxStore extends Store {
             } else if (player.has(Item.Onahole2)) {
                 Global.gui().message("You already have the best onahole you can dream of.");
             } else {
-                Global.gui().sale(this, Item.Onahole);
+                sale(Item.Onahole, Global.gui());
             }
 
             if (player.has(Item.Crop)) {
@@ -124,7 +124,7 @@ public class XxxStore extends Store {
             } else if (player.has(Item.Crop2)) {
                 Global.gui().message("Your current riding crop is already overkill.");
             } else {
-                Global.gui().sale(this, Item.Crop);
+                sale(Item.Crop, Global.gui());
             }
 
             if (player.has(Item.Tickler)) {
@@ -132,7 +132,7 @@ public class XxxStore extends Store {
             } else if (player.has(Item.Tickler2)) {
                 Global.gui().message("Nothing on sale is half as good as your current tickler.");
             } else {
-                Global.gui().sale(this, Item.Tickler);
+                sale(Item.Tickler, Global.gui());
             }
 
             if (player.hasDick()) {
@@ -143,19 +143,19 @@ public class XxxStore extends Store {
             } else if (player.has(Item.Strapon2)) {
                 Global.gui().message("Your strapon is even better than the real thing already.");
             } else {
-                Global.gui().sale(this, Item.Strapon);
+                sale(Item.Strapon, Global.gui());
             }
-            Global.gui().sale(this, Item.Blindfold);
+            sale(Item.Blindfold, Global.gui());
             displayClothes();
             if (Global.checkFlag(Flag.AliceAvailable)) {
                 Global.gui().message(
                                 "You see Alice hanging around near the bondage gear. You aren't sure whether she's waiting for you or not.");
-                Global.gui().choose(this, "Talk to Alice");
+                choose("Talk to Alice", Global.gui());
             }
             if (player.getLevel() >= 5 && !Global.checkFlag(Flag.metAlice) && !Global.checkFlag(Flag.victory)) {
-                Global.gui().choose(this, "Learn to be Submissive");
+                choose("Learn to be Submissive", Global.gui());
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

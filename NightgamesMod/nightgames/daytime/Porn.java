@@ -24,7 +24,7 @@ public class Porn extends Activity {
         if (page == 0) {
             int gain = gainArousal(player);
             showScene(pickScene(gain));
-            Global.gui().next(this);
+            next(Global.gui());
             Global.gui().message("<b>Your maximum arousal has increased by " + gain + ".</b>");
         } else {
             done(true);

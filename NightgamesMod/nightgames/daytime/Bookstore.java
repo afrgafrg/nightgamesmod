@@ -47,7 +47,7 @@ public class Bookstore extends Store {
             Global.gui().message("You have : $" + player.money + " to spend.");
 
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

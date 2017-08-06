@@ -8,13 +8,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Panel;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -25,14 +22,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
@@ -53,11 +48,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToggleButton;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -74,17 +66,11 @@ import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.daytime.Activity;
-import nightgames.daytime.Store;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
 import nightgames.items.Item;
-import nightgames.items.Loot;
-import nightgames.items.clothing.Clothing;
-import nightgames.modifier.standard.NoModifier;
 import nightgames.skills.Skill;
 import nightgames.skills.TacticGroup;
-import nightgames.skills.Tactics;
-import nightgames.trap.Trap;
 import nightgames.utilities.DebugHelper;
 
 @SuppressWarnings("unused")
@@ -1068,11 +1054,6 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void addActivity(Activity act) {
-        commandPanel.add(activityButton(act));
-        commandPanel.refresh();
-    }
-
     public void addButtonWithoutPause(KeyableButton button) {
         commandPanel.add(button);
         commandPanel.refresh();
@@ -1083,20 +1064,6 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void choose(Activity event, String choice) {
-        commandPanel.add(eventButton(event, choice, null));
-        commandPanel.refresh();
-    }
-
-    public void choose(Activity event, String choice, String tooltip) {
-        commandPanel.add(eventButton(event, choice, tooltip));
-        commandPanel.refresh();
-    }
-
-    public void sale(Store shop, Loot i) {
-        commandPanel.add(itemButton(shop, i));
-        commandPanel.refresh();
-    }
     public void prompt(List<KeyableButton> choices) {
         clearCommand();
         for (KeyableButton button : choices) {
@@ -1324,31 +1291,6 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    private KeyableButton eventButton(Activity event, String choice, String tooltip) {
-        RunnableButton button = new RunnableButton(choice, () -> {
-            event.visit(choice);
-        });
-        if (tooltip != null) {
-        	button.getButton().setToolTipText(tooltip);
-        }
-        return button;
-    }
-
-    private KeyableButton itemButton(Activity event, Loot i) {
-        RunnableButton button = new RunnableButton(Global.capitalizeFirstLetter(i.getName()), () -> {
-            event.visit(i.getName());
-        });
-        button.getButton().setToolTipText(i.getDesc());
-        return button;
-    }
-
-
-    private KeyableButton activityButton(Activity act) {
-        RunnableButton button = new RunnableButton(act.toString(), () -> {
-            act.visit("Start");
-        });
-        return button;
-    }
 
     private KeyableButton sleepButton() {
         RunnableButton button = new RunnableButton("Go to sleep", () -> {
@@ -1363,14 +1305,6 @@ public class GUI extends JFrame implements Observer {
         });
         return button;
     }
-
-    private KeyableButton locatorButton(final Action event, final String choice, final Character self) {
-        RunnableButton button = new RunnableButton(choice, () -> {
-            ((Locate) event).handleEvent(self, choice);
-        });
-        return button;
-    }
-
     public void changeClothes(Character player, Activity event, String backOption) {
         clothesPanel.removeAll();
         clothesPanel.add(new ClothesChangeGUI(player, event, backOption));

@@ -7,7 +7,6 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.mods.FieryMod;
 import nightgames.characters.body.mods.SizeMod;
@@ -133,16 +132,12 @@ public class JewelTime extends BaseNPCTime {
                                   + "when she sees you and stands up to meet you. Apparently she was waiting for you, but you hadn't made plans to meet. How long was she waiting here?<br/><i>\"I just got here a "
                                   + "few minutes ago. I had a feeling you were going to come here to see me. I've learned to always trust my intuition.\"</i> Her instincts are impressive and apparently convenient. "
                                   + "When you're within reach, she plants a light kiss on your lips. <i>\"If you came looking for me, I assume you're eager for some training. Tell me what you have in mind.\"</i>");
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if (Global.getPlayer()
                       .checkAddiction(AddictionType.DOMINANCE, npc)) {
-                Global.gui()
-                      .choose(this, "Ask about Dominance");
+                choose("Ask about Dominance", Global.gui());
             }
         } else if (npc.getAttraction(player) < 15) {
             Global.gui()
@@ -171,15 +166,11 @@ public class JewelTime extends BaseNPCTime {
                                   + "more one-on-one competition. She shivers at your touch and kisses you firmly. <i>\"You know exactly how to make me wet. I'll accept your challenge anytime.\"</i>");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
         }
-        Global.gui()
-              .choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override
@@ -246,8 +237,7 @@ public class JewelTime extends BaseNPCTime {
             Global.getPlayer()
                   .getAddiction(AddictionType.DOMINANCE)
                   .ifPresent(Addiction::flagDaytime);
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
         if (choice.equals("Sex")) {
             if (npc.getAffection(player) >= 16 && (!player.has(Trait.spiral) || Global.random(2) == 1)) {
@@ -310,8 +300,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "Jewel's vagina, but she looks no worse for wear. <i>\"Well worth a bit of a hike, don't you think?\"</i> she asks, smiling. <i>\"We should probably both wash up a bit before we "
                                       + "head back.\"</i>");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -347,8 +336,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "problem is that Jewel's fetish for competition prevents you from finishing long games. Whenever a tense game's climax starts to drag on, she inevitably attacks you and tears "
                                       + "off your clothes. Honestly, as far as problems go, you could do much worse.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -391,8 +379,7 @@ public class JewelTime extends BaseNPCTime {
                                       + "penalty applies to them too. They've long since stopped making fun of you when their clothes start coming off. By the time training is over, you still don't know either girl's name "
                                       + "but you feel a faint sense of solidarity with them, even though Jewel let them keep their panties on.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);

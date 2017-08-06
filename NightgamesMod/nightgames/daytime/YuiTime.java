@@ -50,7 +50,7 @@ public class YuiTime extends BaseNPCTime {
                                           + "any sexual request you could think of. However, knowing Yui's sincerity and "
                                           + "innocence, your conscience won't let you take advantage of her loyalty.");
                 }
-                Global.gui().choose(this, "Train with Yui");
+                choose("Train with Yui", Global.gui());
                 npc.gainAffection(player, Math.min(Math.max(0, 20 - npc.getAffection(player)), 5));
                 player.gainAffection(npc, Math.min(Math.max(0, 20 - player.getAffection(npc)), 5));
                 Global.unflag(Flag.YuiAvailable);
@@ -68,8 +68,7 @@ public class YuiTime extends BaseNPCTime {
                       .message("You head to Yui's hideout, but find it empty. She must be out doing something. It would be a lot easier to track her down if she "
                                       + "had a phone.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.equals("Leave")) {
             done(acted);
         } else if (choice.startsWith("Train")) {
@@ -78,8 +77,7 @@ public class YuiTime extends BaseNPCTime {
                                   + "younger sister, so she's used to it. Nothing she teaches you is overtly sexual, but you can see some useful applications for the Games.");
             player.modAttributeDontSaveData(Attribute.Ninjutsu, 1);
             Global.flag("Trained" + Attribute.Ninjutsu.name());
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

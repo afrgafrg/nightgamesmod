@@ -38,12 +38,12 @@ public class Workshop extends Activity {
                                             + "and I'm not helping you for free. No offence, but I'm rooting for your opponents. Male solidarity is fine and well, but they're a lot more attractive than you.\"</i>");
             Global.flag(Flag.metJett);
             acted = true;
-            Global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
+            choose("Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1), Global.gui());
         } else if (choice.equals("Start")) {
             Global.gui().message(
                             "You head to Jett's workshop. He sets down the parts he was working on and turns to face you. <i>\"You need something? I hope you brought your "
                                             + "wallet.\"</i>");
-            Global.gui().choose(this, "Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1));
+            choose("Lecture: $" + 1000 * (player.getPure(Attribute.Science) + 1), Global.gui());
             acted = false;
         } else if (choice.equals("Upgrade Dildo: $2000")) {
             if (player.money >= Item.Dildo2.getPrice()) {
@@ -147,21 +147,21 @@ public class Workshop extends Activity {
             acted = true;
         }
         if (player.has(Item.Dildo)) {
-            Global.gui().choose(this, "Upgrade Dildo: $2000");
+            choose("Upgrade Dildo: $2000", Global.gui());
         }
         if (player.has(Item.Tickler)) {
-            Global.gui().choose(this, "Upgrade Tickler: $3000");
+            choose("Upgrade Tickler: $3000", Global.gui());
         }
         if (player.has(Item.Crop)) {
-            Global.gui().choose(this, "Upgrade Riding Crop: $1500");
+            choose("Upgrade Riding Crop: $1500", Global.gui());
         }
         if (player.has(Item.Onahole)) {
-            Global.gui().choose(this, "Upgrade Onahole: $3000");
+            choose("Upgrade Onahole: $3000", Global.gui());
         }
         if (player.has(Item.Strapon)) {
-            Global.gui().choose(this, "Upgrade Strapon: $2500");
+            choose("Upgrade Strapon: $2500", Global.gui());
         }
-        Global.gui().choose(this, "Leave");
+        choose("Leave", Global.gui());
 
     }
 

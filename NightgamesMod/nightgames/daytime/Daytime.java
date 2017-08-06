@@ -124,8 +124,8 @@ public class Daytime {
                 return;
             for (Activity act : activities) {
                 if (act.known() && act.time() + time <= 22) {
-                    Global.gui()
-                          .addActivity(act);
+
+                    act.addActivity(Global.gui());
                 }
             }
         } else {

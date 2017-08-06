@@ -2,6 +2,9 @@ package nightgames.daytime;
 
 import nightgames.characters.Character;
 import nightgames.global.Global;
+import nightgames.gui.GUI;
+import nightgames.gui.KeyableButton;
+import nightgames.gui.RunnableButton;
 
 public abstract class Activity {
     protected String name;
@@ -44,4 +47,27 @@ public abstract class Activity {
     }
 
     public abstract void shop(Character npc, int budget);
+
+    public void choose(String choice, String tooltip, GUI gui) {
+        gui.commandPanel.add(EventButton.eventButton(this, choice, tooltip));
+        gui.commandPanel.refresh();
+    }
+
+    public void choose(String choice, GUI gui) {
+        gui.commandPanel.add(EventButton.eventButton(this, choice, null));
+        gui.commandPanel.refresh();
+    }
+
+    public void next(GUI gui) {
+        next();
+        gui.clearCommand();
+        gui.addButtonWithoutPause(EventButton.eventButton(this,"Next", null));
+    }
+
+    public void addActivity(GUI gui) {
+        RunnableButton button = new RunnableButton(toString(), () -> {
+            visit("Start");
+        });
+        gui.addButtonWithoutPause(button);
+    }
 }

@@ -80,10 +80,10 @@ public abstract class BaseNPCTime extends Activity {
             int moneyCost = option.moneyCost.apply(this.player);
             if (!hasAll) {
                 Global.gui().message(Global.format(noRequestedItems, npc, player));
-                Global.gui().choose(this, "Back");
+                choose("Back", Global.gui());
             } else if (player.money < moneyCost) {
                 Global.gui().message(Global.format(notEnoughMoney, npc, player));
-                Global.gui().choose(this, "Back");
+                choose("Back", Global.gui());
             } else {
                 Global.gui().message(Global.format(option.scene, npc, player));
                 option.ingredients.entrySet().stream().forEach(entry -> player.consume(entry.getKey(), entry.getValue(), false));
@@ -91,7 +91,7 @@ public abstract class BaseNPCTime extends Activity {
                 if (moneyCost > 0) {
                     player.modMoney(- moneyCost);
                 }
-                Global.gui().choose(this, "Leave");
+                choose("Leave", Global.gui());
             }
         } else if (optionalGiftOption.isPresent()) {
             Global.gui().message(Global.format(giftedString, npc, player));
@@ -103,11 +103,11 @@ public abstract class BaseNPCTime extends Activity {
             }
             player.gainAffection(npc, 2);
             npc.gainAffection(player, 2);
-            Global.gui().choose(this, "Back");
+            choose("Back", Global.gui());
         } else if (choice.equals("Gift")) {
             Global.gui().message(Global.format(giftString, npc, player));
-            giftables.stream().forEach(loot -> Global.gui().choose(this, Global.capitalizeFirstLetter(loot.getName())));
-            Global.gui().choose(this, "Back");
+            giftables.stream().forEach(loot -> choose(Global.capitalizeFirstLetter(loot.getName()), Global.gui()));
+            choose("Back", Global.gui());
         } else if (choice.equals("Change Outfit")) {
             Global.gui().changeClothes(npc, this, "Back");
         } else if (choice.equals(transformationOptionString)) {
@@ -137,31 +137,31 @@ public abstract class BaseNPCTime extends Activity {
                     allowed &= meets;
                 }
                 if (allowed) {
-                    Global.gui().choose(this, opt.option);
+                    choose(opt.option, Global.gui());
                 }
                 Global.gui().message("<br/>");
             });
-            Global.gui().choose(this, "Back");
+            choose("Back", Global.gui());
         } else if (choice.equals("Start") || choice.equals("Back")) {
             if (npc.getAffection(player) > 25 && (advTrait == null || npc.has(advTrait))) {
                 Global.gui().message(Global.format(loveIntro, npc, player));
-                Global.gui().choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                choose("Games", Global.gui());
+                choose("Sparring", Global.gui());
+                choose("Sex", Global.gui());
                 if (!options.isEmpty()) {
-                    Global.gui().choose(this, transformationOptionString);
+                    choose(transformationOptionString, Global.gui());
                 }
                 if (npc.getAffection(player) > 30) {
-                    Global.gui().choose(this, "Gift");
+                    choose("Gift", Global.gui());
                 }
                 if (npc.getAffection(player) > 35) {
-                    Global.gui().choose(this, "Change Outfit");
+                    choose("Change Outfit", Global.gui());
                 }
                 Optional<String> addictionOpt = getAddictionOption();
                 if (addictionOpt.isPresent()) {
-                    Global.gui().choose(this, addictionOpt.get());
+                    choose(addictionOpt.get(), Global.gui());
                 }
-                Global.gui().choose(this, "Leave");
+                choose("Leave", Global.gui());
             } else {
                 subVisitIntro(choice);
             }

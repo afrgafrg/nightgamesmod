@@ -158,11 +158,11 @@ public class CassieTime extends BaseNPCTime {
                                             + "embarrassed about her public display of affection, but it hasn't drawn too many stares from nearby students. Recently Cassie has been acting very affectionate to you "
                                             + "during the day. From an outsider's perspective you probably look like an overenthusiastic couple of newlyweds, but you have to admit her behavior is really cute. <i>\"I wouldn't "
                                             + "mind spending all day like this,\"</i> she murmurs contently. <i>\"But it sounded like you had something specific planned.\"</i>");
-            Global.gui().choose(this, "Games");
-            Global.gui().choose(this, "Sparring");
-            Global.gui().choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if (npc.has(Trait.magicmilk) && Global.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
-                Global.gui().choose(this, "Ask for milk");
+                choose("Ask for milk", Global.gui());
             }
         } else if (Global.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
             Global.gui().message(
@@ -181,11 +181,11 @@ public class CassieTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui().choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                choose("Games", Global.gui());
+                choose("Sparring", Global.gui());
+                choose("Sex", Global.gui());
             }
-            Global.gui().choose(this, "Ask for milk");
+            choose("Ask for milk", Global.gui());
         } else if (npc.getAttraction(player) < 15) {
             Global.gui().message(
                             "You find Cassie studying in the library, a ways out of earshot of the other students. You give her a friendly greeting and sit down next to her. "
@@ -209,14 +209,14 @@ public class CassieTime extends BaseNPCTime {
                                             + "lit up in a genuine smile. <i>\"What exactly do you have in mind?\"</i>");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            Global.gui().choose(this, "Games");
-            Global.gui().choose(this, "Sparring");
-            Global.gui().choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if (npc.has(Trait.magicmilk) && Global.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
-                Global.gui().choose(this, "Ask for milk");
+                choose("Ask for milk", Global.gui());
             }
         }
-        Global.gui().choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override
@@ -396,7 +396,7 @@ public class CassieTime extends BaseNPCTime {
                                       + " won't suffer withdrawal effects tonight.");
             }
 
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
             Global.getPlayer().addict(null, AddictionType.MAGIC_MILK, npc, Addiction.MED_INCREASE);
@@ -454,7 +454,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "stifle her voice with another kiss. She clings to you desperately and rides you to another climax. When she cums again, her hot pussy clenches down, milking  your rod. "
                                                 + "You shoot your load into her hot depths, feeding the intensity of her orgasm. The two of you collapse on the bed, still joined below the waist and completely spent.");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -502,7 +502,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "As you take your hand out of her pants, she cuddles up against you sleepily. <i>\"Thanks,\"</i> she whispers. <i>\"Oh, I don't want to be selfish. If you're interested, I'd be happy to return "
                                                 + "the favor.\"</i> You are a bit horny, but more than that, you're comfortable. For now you decide to just relax and enjoy Cassie's warmth.");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -548,7 +548,7 @@ public class CassieTime extends BaseNPCTime {
                                                 + "giving up so easily. She opens her mouth to reply, but can't form any words. Her pussy clamps down on your fingers as she orgasms. You continue to hold her as her climax dies "
                                                 + "down and she goes limp from exhaustion. Looks like you're done sparring for now.");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);

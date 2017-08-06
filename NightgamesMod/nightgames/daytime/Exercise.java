@@ -23,7 +23,7 @@ public class Exercise extends Activity {
     public void visit(String choice) {
         Global.gui().clearText();
         if (page == 0) {
-            Global.gui().next(this);
+            next(Global.gui());
             int gain = gainStamina(player);
             showScene(pickScene(gain));
             if (gain > 0) {

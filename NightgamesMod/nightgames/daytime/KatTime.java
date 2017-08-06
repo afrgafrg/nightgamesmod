@@ -155,15 +155,15 @@ public class KatTime extends BaseNPCTime {
                                             + "fair, she does inspire inspire that sort of protective attitude, even from her opponents. For Kat's sake, you'll do your best to get along with them, but "
                                             + "they may not be as agreeable, especially if they find out you're having sex with their protegée.<br/><br/>On your way to Kat's room, you get another text. "
                                             + "'i think i'm too excited waiting for you to get here. what are you planning?'");
-            Global.gui().choose(this, "Games");
-            Global.gui().choose(this, "Sparring");
-            Global.gui().choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if (Global.checkFlag(Flag.metAisha) && !Global.checkFlag(Flag.catspirit)
                             && Global.getNPC("Kat").getAffection(player) >= 5) {
-                Global.gui().choose(this, "Ask about Animal Spirit");
+                choose("Ask about Animal Spirit", Global.gui());
             }
             if (Global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
-                Global.gui().choose(this, "Must... Fuck...");
+                choose("Must... Fuck...", Global.gui());
             }
         } else if (Global.getPlayer().checkAddiction(AddictionType.BREEDER)) {
             Global.gui()
@@ -174,11 +174,11 @@ public class KatTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui() .choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                choose("Games", Global.gui());
+                choose("Sparring", Global.gui());
+                choose("Sex", Global.gui());
             }
-            Global.gui().choose(this, "Must... Fuck...");
+            choose("Must... Fuck...", Global.gui());
         } else if (npc.getAttraction(player) < 10) {
             Global.gui().message(
                             "You decide to look for Kat and see if she's interested in spending some time together. You don't have any way to contact her directly, "
@@ -246,7 +246,7 @@ public class KatTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         }
-        Global.gui().choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override
@@ -312,7 +312,7 @@ public class KatTime extends BaseNPCTime {
                                 + "If you're not really careful, you're going to get addicted to this for sure. But with sex like"
                                 + " that, is that a bad thing?");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Global.getPlayer().addict(null, AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
             Global.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
         }
@@ -359,7 +359,7 @@ public class KatTime extends BaseNPCTime {
                 player.add(Trait.affectionate);
                 npc.getGrowth().addTrait(0, Trait.affectionate);
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -422,7 +422,7 @@ public class KatTime extends BaseNPCTime {
                 player.add(Trait.tease);
                 npc.getGrowth().addTrait(0, Trait.tease);
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -458,7 +458,7 @@ public class KatTime extends BaseNPCTime {
                                             + "convincingly to escape. You quickly locate her clitoris and start rapidly rubbing it with your fingertips. Her back arches and she yowls in ecstasy as she orgasms. "
                                             + "You lightly caress her body as she's recovering from her climax. She giggles softly at the ticklish sensation and looks up at you with a flushed smile. <i>\"You're "
                                             + "good at this kind of sparring. Can I put my clothes on before we continue? This feels nice, but it's really embarrassing.\"</i>");
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -489,7 +489,7 @@ public class KatTime extends BaseNPCTime {
                             + "<i>\"I think Aisha may feel bad about how the ritual turned out, "
                             + "even though I keep telling her I don't regret it. If she refuses"
                             + " to give you a spirit, I'll try to  help you talk her into it.\"</i>");
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         } else if (choice.equals("Leave")) {
             done(true);
         }

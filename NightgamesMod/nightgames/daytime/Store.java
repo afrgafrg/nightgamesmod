@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import nightgames.characters.Character;
 import nightgames.global.Global;
+import nightgames.gui.GUI;
+import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
+import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
 
 public abstract class Store extends Activity {
@@ -44,14 +47,14 @@ public abstract class Store extends Activity {
     protected void displayClothes() {
         for (Clothing i : clothingstock.keySet()) {
             if (!player.has(i)) {
-                Global.gui().sale(this, i);
+                sale(i, Global.gui());
             }
         }
     }
 
     protected void displayItems() {
         for (Item i : stock.keySet()) {
-            Global.gui().sale(this, i);
+            sale(i, Global.gui());
         }
     }
 
@@ -99,5 +102,14 @@ public abstract class Store extends Activity {
             Global.gui().message("You don't have enough money to purchase that.");
         }
 
+    }
+
+    public void sale(Loot i, GUI gui) {
+        RunnableButton button = new RunnableButton(Global.capitalizeFirstLetter(i.getName()), () -> {
+            visit(i.getName());
+        });
+        button.getButton().setToolTipText(i.getDesc());
+        gui.commandPanel.add(button);
+        gui.commandPanel.refresh();
     }
 }

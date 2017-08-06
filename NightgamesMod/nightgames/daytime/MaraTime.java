@@ -129,17 +129,14 @@ public class MaraTime extends BaseNPCTime {
                                   + "concurrent projects I'm working on,\"</i> she explains when she notices you looking around. <i>\"I've always had the habit of finding stuff to do in addition to "
                                   + "my classwork, but I guess I may have gotten a little over my head there.\"</i> She walks over to you and smiles up playfully. <i>\"I'm taking care of myself just "
                                   + "like you asked, now it's your turn to keep up your part of the deal. How are you going to entertain me today?\"</i>");
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
             if(player.getPure(Attribute.Arcane)>=3){
-                Global.gui().choose(this,"Faerie play");
+                choose("Faerie play", Global.gui());
             }
             if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
-                Global.gui().choose(this, "Confront about control");
+                choose("Confront about control", Global.gui());
             }
         } else if (Global.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
             Global.gui()
@@ -150,11 +147,11 @@ public class MaraTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                Global.gui() .choose(this, "Games");
-                Global.gui().choose(this, "Sparring");
-                Global.gui().choose(this, "Sex");
+                choose("Games", Global.gui());
+                choose("Sparring", Global.gui());
+                choose("Sex", Global.gui());
             }
-            Global.gui().choose(this, "Confront about control");
+            choose("Confront about control", Global.gui());
         } else if (npc.getAttraction(player) < 15) {
             Global.gui()
                   .message("You eventually find Mara in one of the computer labs, or at least a room labeled Computer Lab D. You typically think of a computer "
@@ -188,15 +185,11 @@ public class MaraTime extends BaseNPCTime {
                                   + "we're having fun, I won't think about anything but you.\"</i> Basically she'll only take a break while you're hanging out together. It's better than nothing.");
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            Global.gui()
-                  .choose(this, "Games");
-            Global.gui()
-                  .choose(this, "Sparring");
-            Global.gui()
-                  .choose(this, "Sex");
+            choose("Games", Global.gui());
+            choose("Sparring", Global.gui());
+            choose("Sex", Global.gui());
         }
-        Global.gui()
-              .choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override
@@ -267,7 +260,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "muscles feel a little sluggish, and it's only going to get worse with time and distance, but maybe"
                                       + " it's worth it?");
             }
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
             Global.getPlayer().addict(null, AddictionType.MIND_CONTROL, npc, Addiction.MED_INCREASE);
             Global.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
         }
@@ -336,8 +329,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "said I'd get some rest if you kept me company. I thought we could take a nap together.\"</i> That sounds like a very good idea.");
 
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -402,8 +394,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "it's far from completely destroying you. You managed to give her a pretty good run for her money for the second half. By the time the game is over, she's mostly forgotten why she's "
                                       + "pretending to be mad at you, but she does demand to be on top during your 'follow-up game' to address your combined sexual frustration.");
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -462,8 +453,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "down next to her. She rests her head on your arm, and in a few minutes she's asleep.");
 
             }
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -504,7 +494,7 @@ public class MaraTime extends BaseNPCTime {
                         Global.gui().message("<br/><br/><b>You're finding it easier to call faeries. They seem to be more eager to respond to your summons.</b>");
                         player.add(Trait.faefriend);
                     }
-                    Global.gui().choose(this,"Leave");
+                    choose("Leave", Global.gui());
                     npc.gainAffection(player,1);
                     player.gainAffection(npc,1);
             } else if (choice.equals("Leave")) {

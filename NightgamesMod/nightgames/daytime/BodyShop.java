@@ -551,11 +551,11 @@ public class BodyShop extends Activity {
         Global.gui().message("You have :$" + player.money + " to spend.");
         for (ShopSelection s : selection) {
             if (s.available(player) && player.money >= s.price) {
-                Global.gui().choose(this, s.choice, "Price: $" + s.price);
+                choose(s.choice, "Price: $" + s.price, Global.gui());
                 Global.gui().message(s.choice + ": $" + s.price);
             }
         }
-        Global.gui().choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override

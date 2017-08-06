@@ -58,8 +58,7 @@ public class Informant extends Activity {
                                   + "underestimate the effect of confidence in a fight. If you can consistently dish out a good fucking, you may find things going your way more often.\"</i><br/>"
                                   + "Aesop suddenly looks at his phone and stands up. <i>\"Sorry, I need to run for now. Shoot me a text when you're interested in some more advice. I'll meet you here again.\"</i>");
             Global.flag(Flag.metBroker);
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             acted = true;
             return;
         } else if (player.getRank() >= 1 && !Global.checkFlag(Flag.rank1)) {
@@ -102,8 +101,7 @@ public class Informant extends Activity {
                                   + "random crap disappears from there during the night.\"</i><br/>This is all kinda mundane advice. You were half expecting the address of an abandoned building and a password.<br/><i>\"Oh there's "
                                   + "that too, but it'll cost you. If you ever need some more illicit goods, I can sell you a location later.\"</i>");
             Global.flag(Flag.basicStores);
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             acted = true;
             return;
         }
@@ -119,8 +117,7 @@ public class Informant extends Activity {
                                   + "seem interested in you at first, you can try again after a few matches. In my experience, after you have sex with a girl a few times, she starts to remember your name. Who "
                                   + "knows, you might get a girlfriend out of this. It's not entirely unprecedented.\"</i>");
             Global.flag(Flag.girlAdvice);
-            Global.gui()
-                  .choose(this, "Leave");
+            choose("Leave", Global.gui());
             acted = true;
             return;
         }
@@ -135,8 +132,7 @@ public class Informant extends Activity {
                                       + "<i>\"If you're still interested, there's a girl named Suzume who leads guided meditation on campus. If you ask nicely, she may give you a private lesson to push you in either direction.\"</i>");
                 Global.flag(Flag.meditation);
                 player.money -= 200;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -153,8 +149,7 @@ public class Informant extends Activity {
                                       + "for and you shouldn't volunteer the information. He mostly sells pot to normal students. He's not in the loop, so to speak.\"</i>");
                 Global.flag(Flag.blackMarket);
                 player.money -= 400;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -176,8 +171,7 @@ public class Informant extends Activity {
                                       + "place to talk to her privately.\"</i>");
                 Global.flag(Flag.CassieKnown);
                 player.money -= 300;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -198,8 +192,7 @@ public class Informant extends Activity {
                                       + "hell of a time catching her alone.\"</i>");
                 Global.flag(Flag.AngelKnown);
                 player.money -= 300;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -219,8 +212,7 @@ public class Informant extends Activity {
                                       + "or the electrical engineering workshop.\"</i>");
                 Global.flag(Flag.MaraKnown);
                 player.money -= 300;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -241,8 +233,7 @@ public class Informant extends Activity {
                                       + "personality, I suspect you're going to need to prove yourself a worthy rival before she'll show any interest in you.\"</i>");
                 Global.flag(Flag.JewelKnown);
                 player.money -= 300;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -260,8 +251,7 @@ public class Informant extends Activity {
                                       + "I don't mean your life is at risk, nothing that serious, but be careful not to lose your humanity. Sometimes power really can change a person.\"</i>");
                 Global.flag(Flag.blackMarketPlus);
                 player.money -= 2500;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -275,8 +265,7 @@ public class Informant extends Activity {
                       .message("Aesop looks at you strangely then slips you a piece of paper.");
                 Global.flag(Flag.bodyShop);
                 player.money -= 2500;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -297,8 +286,7 @@ public class Informant extends Activity {
                                       + "Fucking hell. If nothing else, at least Aesop is giving you a lesson in economics 101.");
                 Global.flag(Flag.dojo);
                 player.money -= 2500;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -318,8 +306,7 @@ public class Informant extends Activity {
                                       + "friend, and I have a lot of respect for her, so don't make judgments before you've met her.\"</i>");
                 Global.flag(Flag.magicstore);
                 player.money -= 2500;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -338,8 +325,7 @@ public class Informant extends Activity {
                                       + "some of his secrets.\"</i>");
                 Global.flag(Flag.workshop);
                 player.money -= 2500;
-                Global.gui()
-                      .choose(this, "Leave");
+                choose("Leave", Global.gui());
                 acted = true;
                 return;
             } else {
@@ -355,12 +341,14 @@ public class Informant extends Activity {
             Global.everyone().stream()
                   .filter(c -> !c.human())
                   .filter(c -> !Global.checkCharacterDisabledFlag(c))
-                  .forEach(character -> Global.gui().choose(this, String.format(REMOVE_PREFIX + "%s", character.getTrueName())));
+                  .forEach(character -> choose(String.format(REMOVE_PREFIX + "%s", character.getTrueName()),
+                                  Global.gui()));
             Global.everyone().stream()
                   .filter(c -> !c.human())
                   .filter(c -> Global.checkCharacterDisabledFlag(c) && !c.getType().equals("Yui"))
-                  .forEach(character -> Global.gui().choose(this, String.format(RETURN_PREFIX + "%s", character.getTrueName())));
-            Global.gui().choose(this, "Back");
+                  .forEach(character -> choose(String.format(RETURN_PREFIX + "%s", character.getTrueName()),
+                                  Global.gui()));
+            choose("Back", Global.gui());
             return;
         }
         if (choice.startsWith(REMOVE_PREFIX)) {
@@ -368,8 +356,7 @@ public class Informant extends Activity {
             Global.gui()
                   .message("Got it, I'll see about sending " + name+ " to another session.");
             Global.setCharacterDisabledFlag(Global.getParticipantsByName(name));
-            Global.gui()
-                  .choose(this, "Select Competitors");
+            choose("Select Competitors", Global.gui());
             return;
         }
         if (choice.startsWith(RETURN_PREFIX)) {
@@ -377,8 +364,7 @@ public class Informant extends Activity {
             Global.gui()
                   .message("Missing " + name+ " already? I'll see what I can do.");
             Global.unsetCharacterDisabledFlag(Global.getParticipantsByName(name));
-            Global.gui()
-                  .choose(this, "Select Competitors");
+            choose("Select Competitors", Global.gui());
             return;
         }
         if (choice.equals("More Competitors")) {
@@ -390,8 +376,7 @@ public class Informant extends Activity {
                                       + "enough to sever the link between her and the summoner. No one was seriously hurt, but it did cause a major fuss. Rin isn't allowed to sell such strong items anymore without "
                                       + "special permission. The summoner was suspended from matches for a couple weeks. Someone with some pull must have taken a liking to Reyka though, since no one has tried to "
                                       + "banish her and someone's paying her living expenses. She's pretty aggressive, but probably not actually dangerous... probably.\"</i><br/><br/>");
-                Global.gui()
-                      .choose(this, "Reyka: $1000");
+                choose("Reyka: $1000", Global.gui());
             }
             if (!Global.checkFlag(Flag.Airi) && Global.checkFlag(Flag.workshop)) {
                 Global.gui()
@@ -401,8 +386,7 @@ public class Informant extends Activity {
                              + "but she's definitely came out a bit... stranger than before. I think she was worried about her lack of presence, but I'd say she's even more... formless than before. "
                              + "\"</i> Aesop guffaws at his own joke that you don't understand. <i>\""
                              + "She's definitely still a cutie though. So whaddaya say, want me to try and talk to her for you?\"</i><br/><br/>");
-                Global.gui()
-                      .choose(this, "Airi: $1000");
+                choose("Airi: $1000", Global.gui());
             }
             if (!Global.checkFlag(Flag.Kat) && Global.checkFlag(Flag.magicstore)) {
                 Global.gui()
@@ -414,8 +398,7 @@ public class Informant extends Activity {
                                       + "by channelling an animal spirit. She's got cat ears, a tail, a kinda cute verbal tic, the whole deal. The cat instincts have made her a lot more capable of holding her own "
                                       + "in a match. She never became the strongest in her year, but she'd be a good match for yours. Just don't dismiss her because she looks young. She is actually a year older "
                                       + "than you.\"</i><br/><br/>");
-                Global.gui()
-                      .choose(this, "Kat: $1000");
+                choose("Kat: $1000", Global.gui());
             }
             for (Character c : Global.allNPCs()) {
                 if (c.isCustomNPC() && !Global.everyone()
@@ -427,8 +410,7 @@ public class Informant extends Activity {
                         Global.gui()
                               .message("<i>\"" + data.introduction + "\"</i><br/><br/>");
                         customNPCChoices.put(data.action, npc);
-                        Global.gui()
-                              .choose(this, data.action);
+                        choose(data.action, Global.gui());
                     }
                 }
             }
@@ -450,11 +432,9 @@ public class Informant extends Activity {
                                       + "To be honest though, I'd be perfectly happy to never deal with her "
                                       + "again.\"</i><br/><br/>");
 
-                Global.gui()
-                      .choose(this, "Eve: $1000");
+                choose("Eve: $1000", Global.gui());
             }
-            Global.gui()
-                  .choose(this, "Back");
+            choose("Back", Global.gui());
             return;
         }
         if (customNPCChoices.containsKey(choice)) {
@@ -564,76 +544,58 @@ public class Informant extends Activity {
             Global.gui().message(message);
         }
         if (!Global.checkFlag(Flag.basicStores)) {
-            Global.gui()
-                  .choose(this, "Purchasing supplies");
+            choose("Purchasing supplies", Global.gui());
         }
         if (!Global.checkFlag(Flag.girlAdvice)) {
-            Global.gui()
-                  .choose(this, "The Competition");
+            choose("The Competition", Global.gui());
         }
         if (!Global.checkFlag(Flag.meditation)) {
-            Global.gui()
-                  .choose(this, "Meditation: $200");
+            choose("Meditation: $200", Global.gui());
         }
         if (Global.checkFlag(Flag.basicStores) && !Global.checkFlag(Flag.blackMarket)) {
-            Global.gui()
-                  .choose(this, "Black Market: $400");
+            choose("Black Market: $400", Global.gui());
         }
         if (Global.checkFlag(Flag.girlAdvice) && !Global.checkFlag(Flag.CassieKnown)) {
-            Global.gui()
-                  .choose(this, "Cassie: $300");
+            choose("Cassie: $300", Global.gui());
         }
         if (Global.checkFlag(Flag.girlAdvice) && !Global.checkFlag(Flag.AngelKnown)) {
-            Global.gui()
-                  .choose(this, "Angel: $300");
+            choose("Angel: $300", Global.gui());
         }
         if (Global.checkFlag(Flag.girlAdvice) && !Global.checkFlag(Flag.MaraKnown)) {
-            Global.gui()
-                  .choose(this, "Mara: $300");
+            choose("Mara: $300", Global.gui());
         }
         if (Global.checkFlag(Flag.girlAdvice) && !Global.checkFlag(Flag.JewelKnown)) {
-            Global.gui()
-                  .choose(this, "Jewel: $300");
+            choose("Jewel: $300", Global.gui());
         }
         if (Global.checkFlag(Flag.rank1)) {
             if (Global.checkFlag(Flag.blackMarket) && !Global.checkFlag(Flag.blackMarketPlus)) {
-                Global.gui()
-                      .choose(this, "Exotic Artifacts: $2500");
+                choose("Exotic Artifacts: $2500", Global.gui());
             }
             if (!Global.checkFlag(Flag.bodyShop)) {
-                Global.gui()
-                      .choose(this, "Body Shop: $2500");
+                choose("Body Shop: $2500", Global.gui());
             }
             if (Global.checkFlag(Flag.meditation) && !Global.checkFlag(Flag.dojo)) {
-                Global.gui()
-                      .choose(this, "Martial Arts: $2500");
+                choose("Martial Arts: $2500", Global.gui());
             }
             if (!Global.checkFlag(Flag.workshop)) {
-                Global.gui()
-                      .choose(this, "Tech: $2500");
+                choose("Tech: $2500", Global.gui());
             }
             if (!Global.checkFlag(Flag.magicstore)) {
-                Global.gui()
-                      .choose(this, "Magic?: $2500");
+                choose("Magic?: $2500", Global.gui());
             }
             if (newCharacters()) {
-                Global.gui()
-                      .choose(this, "More Competitors");
+                choose("More Competitors", Global.gui());
             }
         }
         if (Global.checkFlag(Flag.girlAdvice)) {
-            Global.gui()
-                  .choose(this, "Competition Info");
-            Global.gui()
-            .choose(this, "Select Competitors");
+            choose("Competition Info", Global.gui());
+            choose("Select Competitors", Global.gui());
         }
         if (Global.getPlayer()
                   .checkAddiction()) {
-            Global.gui()
-                  .choose(this, "Help with Addiction");
+            choose("Help with Addiction", Global.gui());
         }
-        Global.gui()
-              .choose(this, "Leave");
+        choose("Leave", Global.gui());
     }
 
     @Override

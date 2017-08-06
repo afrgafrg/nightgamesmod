@@ -37,7 +37,7 @@ public class ClothingStore extends Store {
             }
             Global.gui().message("You have: $" + player.money + " available to spend.");
             displayGoods();
-            Global.gui().choose(this, "Leave");
+            choose("Leave", Global.gui());
         }
     }
 

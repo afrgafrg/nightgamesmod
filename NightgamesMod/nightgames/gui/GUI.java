@@ -1001,7 +1001,7 @@ public class GUI extends JFrame implements Observer {
         }
         List<SkillButton> flatList = new ArrayList<>();
         for (TacticGroup group : TacticGroup.values()) {
-            skills.get(group).forEach(flatList::add);
+            flatList.addAll(skills.get(group));
         }
         if (currentTactics == TacticGroup.all || flatList.size() <= 6 || skills.get(currentTactics).size() == 0) {
             flatList.forEach(commandPanel::add);

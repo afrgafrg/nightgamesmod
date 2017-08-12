@@ -1,5 +1,7 @@
 package nightgames.gui;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,6 +19,13 @@ public abstract class KeyableButton extends JPanel {
 
     public void call() {
         button.doClick();
+    }
+
+    protected static String formatHTMLMultiline(String original, String hotkeyExtra) {
+        String out = WordUtils
+                        .wrap(original.replace("<", "&lt").replace(">", "&gt"), Math.max(30, original.length() * 2 / 3), "<br/>", false);
+        // do not word wrap the hotkey extras, since it looks pretty bad.
+        return String.format("<html><center>%s%s</center></html>", out, hotkeyExtra);
     }
 
     public abstract String getText();

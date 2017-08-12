@@ -59,13 +59,13 @@ public abstract class Activity {
     public void next(GUI gui) {
         next();
         gui.clearCommand();
-        gui.addButtonWithoutPause(EventButton.eventButton(this,"Next", null));
+        gui.addButton(EventButton.eventButton(this,"Next", null));
     }
 
     public void addActivity(GUI gui) {
         RunnableButton button = new RunnableButton(toString(), () -> {
             visit("Start");
         });
-        gui.addButtonWithoutPause(button);
+        gui.addButton(button);
     }
 }

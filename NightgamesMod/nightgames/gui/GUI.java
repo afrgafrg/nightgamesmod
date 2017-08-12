@@ -1015,12 +1015,11 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void addButtonWithPause(KeyableButton button) {
-        commandPanel.add(button);
+        addButton(button);
         Match.getMatch().pause();
-        commandPanel.refresh();
     }
 
-    public void addButtonWithoutPause(KeyableButton button) {
+    public void addButton(KeyableButton button) {
         commandPanel.add(button);
         commandPanel.refresh();
     }

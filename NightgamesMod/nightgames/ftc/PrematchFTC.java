@@ -3,15 +3,13 @@ package nightgames.ftc;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import nightgames.characters.Character;
 import nightgames.characters.CharacterPool;
 import nightgames.characters.Player;
 import nightgames.global.*;
-import nightgames.gui.GUI;
-import nightgames.gui.KeyableButton;
-import nightgames.gui.SaveButton;
-import nightgames.gui.SceneButton;
+import nightgames.gui.*;
 import nightgames.modifier.standard.FTCModifier;
 
 /**
@@ -20,11 +18,27 @@ import nightgames.modifier.standard.FTCModifier;
 public class PrematchFTC extends Prematch {
     private Character prey;
 
+    private enum Response {
+        volunteer("Volunteer"),
+        silent("Keep Silent");
+
+        String label;
+
+        Response(String label) {
+            this.label = label;
+        }
+
+        LabeledValue<Response> value() {
+            return new LabeledValue<>(this, label);
+        }
+    }
+
     PrematchFTC(CompletableFuture<Match> match) {
         super(match);
     }
-    public void prompt(Player player) {
-        List<KeyableButton> choice = new ArrayList<>();
+
+    public void prompt(Player player) throws InterruptedException {
+        List<LabeledValue<Response>> choices = new ArrayList<>();
         String message = "";
         if (!Flag.checkFlag(Flag.didFTC)) {
             message += "When you get to the student union, you find it deserted save for"
@@ -55,24 +69,17 @@ public class PrematchFTC extends Prematch {
                             + " take place in the forest again. When you get to the van, Lilly asks the"
                             + " assembled competitors who wants to be the Prey tonight.\"";
         }
-        choice.add(new SceneButton("Volunteer"));
-        choice.add(new SceneButton("Keep Silent"));
-        choice.add(new SaveButton());
-        GUI.gui.prompt(message, choice);
-    }
-
-    @Override
-    public void respond(String response) {
-        if (response.equals("Start the Match")) {
-            FTCModifier mod = new FTCModifier(prey);
-            Flag.flag(Flag.didFTC);
-            setUpMatch(mod);
-        } else {
-            String message = "";
-            if (response.equals("Volunteer")) {
+        choices.add(Response.volunteer.value());
+        choices.add(Response.silent.value());
+        GUI.gui.addButton(new SaveButton());
+        GUI.gui.clearText();
+        GUI.gui.message(message);
+        try {
+            Response response = GUI.gui.promptFuture(choices).get();
+            if (response == Response.volunteer) {
                 prey = CharacterPool.getPlayer();
                 if (!Flag.checkFlag(Flag.didFTC)) {
-                    message += "\"That's the spirit! Oh, did I mention the Prey has to be naked"
+                    message = "\"That's the spirit! Oh, did I mention the Prey has to be naked"
                                     + " for the duration of the match and can't use any items?\" Lilly grins mischievously as she"
                                     + " reveals this small detail, but it's too late to back down now. Everyone"
                                     + " climbs in the van, Lilly at the wheel, and you set off. While Lilly"
@@ -86,16 +93,17 @@ public class PrematchFTC extends Prematch {
                                     + " and bind it around your left arm. The sharp sound of a whistle signals"
                                     + " the start of the match, so you had best get going quickly.";
                 } else {
-                    message += "You volunteer for the position of Prey, and strip down accordingly."
+                    message = "You volunteer for the position of Prey, and strip down accordingly."
                                     + " After a brief ride, you arrive at the forest and make your way to"
                                     + " the center. You take a Flag from the box and await the starting" + " signal.";
                 }
             } else {
                 do {
-                    prey = (Character) Random.pickRandom(Match.getParticipants().toArray()).get();
+                    prey = (Character) Random.pickRandom(Match.getParticipants().toArray()).orElseThrow(() -> new Error(
+                                    "Could not find participant to be prey. Participants: " + Match.getParticipants()));
                 } while (prey.human());
                 if (!Flag.checkFlag(Flag.didFTC)) {
-                    message += "\"No one? Really? Fine, then I'll pick someone. Let's see... " + prey.getTrueName()
+                    message = "\"No one? Really? Fine, then I'll pick someone. Let's see... " + prey.getTrueName()
                                     + "! You have the honors tonight. Oh and just so"
                                     + " you know, the Prey competes naked and without items. Get to it!\" "
                                     + prey.getTrueName() + " briefly seems nervous, but then shrugs and ditches all of "
@@ -105,16 +113,22 @@ public class PrematchFTC extends Prematch {
                                     + " Lilly gives everyone their starting positions, and you make"
                                     + " your way to yours, ready for the match to begin.";
                 } else {
-                    message += "\"No one? Really? Fine, then I'll pick someone. Let's see..." + prey.getTrueName()
+                    message = "\"No one? Really? Fine, then I'll pick someone. Let's see..." + prey.getTrueName()
                                     + "! You have the honors tonight.\" Everyone gets into the van, and " + prey.getTrueName()
                                     + " quickly strips naked. Once at the forest, you all "
                                     + "get to your bases and await Lilly's signal.";
                 }
             }
-            List<KeyableButton> choices = new ArrayList<>();
-            choices.add(new SceneButton("Start the Match"));
-            GUI.gui.prompt(message, choices);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+        GUI.gui.clearText();
+        GUI.gui.message(message);
+        GUI.gui.next("Start the Match").await();
+        FTCModifier mod = new FTCModifier(prey);
+        Flag.flag(Flag.didFTC);
+        setUpMatch(mod);
     }
 
 }
+

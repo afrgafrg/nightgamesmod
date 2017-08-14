@@ -5,12 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import nightgames.characters.Character;
-import nightgames.global.GameState;
 import nightgames.global.Random;
-import nightgames.global.Scene;
 import nightgames.gui.GUI;
 
-abstract class DaytimeEvent implements Scene {
+abstract class DaytimeEvent {
 
     protected Character player;
     private List<EventVariation> scenes;
@@ -28,7 +26,7 @@ abstract class DaytimeEvent implements Scene {
     // DaytimeEventManager.EVENT_TYPES already did.
     
     public boolean playMorning() {
-        return playIfPresent(getMorningReason());        
+        return playIfPresent(getMorningReason());
     }
     
     public boolean playMandatory() {
@@ -37,7 +35,12 @@ abstract class DaytimeEvent implements Scene {
     
     private boolean playIfPresent(Optional<String> reason) {
         if (reason.isPresent()) {
-            runScene(reason.get());
+            try {
+                runScene(reason.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
             return true;
         }
         return false;
@@ -46,23 +49,21 @@ abstract class DaytimeEvent implements Scene {
     public boolean playAny() {
         for (EventVariation scene : scenes) {
             if (Random.random(100) < scene.priority) {
-                runScene(scene.getName());
+                try {
+                    runScene(scene.getName());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return false;
+                }
                 return true;
             }
         }
         return false;
     }
-    
-    @Override
-    public final void respond(String response) {
-        Daytime.getDay().advance(1);
-        Daytime.getDay().plan();
-    }
-    
-    private void runScene(String scene) {
+
+    private void runScene(String scene) throws InterruptedException {
         play(scene);
-        GameState.current = this;
-        GUI.gui.choose("Next");
+        GUI.gui.next("Next").await();
     }
     
     abstract boolean available();

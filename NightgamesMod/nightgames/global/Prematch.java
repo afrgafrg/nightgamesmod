@@ -11,16 +11,16 @@ import nightgames.modifier.standard.NoModifier;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Base class for match setup.
  */
-public abstract class Prematch implements Scene {
+public abstract class Prematch {
     public CompletableFuture<Match> preparedMatch;  // Completes when match is ready to play
 
     protected Prematch(CompletableFuture<Match> preparedMatch) {
         this.preparedMatch = preparedMatch;
-        GameState.current = this;
         Flag.unflag(Flag.victory);
     }
 
@@ -139,7 +139,6 @@ public abstract class Prematch implements Scene {
         }
     }
 
-    public abstract void prompt(Player player);
+    public abstract void prompt(Player player) throws InterruptedException, ExecutionException;
 
-    @Override public abstract void respond(String response);
 }

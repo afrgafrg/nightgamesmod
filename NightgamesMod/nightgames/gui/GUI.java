@@ -1024,12 +1024,7 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void choose(String choice) {
-        commandPanel.add(new SceneButton(choice));
-        commandPanel.refresh();
-    }
-
-    public void prompt(List<KeyableButton> choices) {
+    public void prompt(KeyableButton... choices) {
         clearCommand();
         for (KeyableButton button : choices) {
             commandPanel.add(button);
@@ -1037,10 +1032,26 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void prompt(String message, List<KeyableButton> choices) {
-        clearText();
-        message(message);
-        prompt(choices);
+    public void prompt(List<KeyableButton> choices) {
+        prompt(choices.toArray(new KeyableButton[] {}));
+    }
+
+    public <T> void prompt(List<LabeledValue<T>> choices, CompletableFuture<T> future) {
+        List<KeyableButton> buttons = choices.stream().map(choice -> new ValueButton<T>(choice, future)).collect(
+                        Collectors.toList());
+        prompt(buttons);
+    }
+
+    public <T> CompletableFuture<T> promptFuture(List<LabeledValue<T>> choices) {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        prompt(choices, future);
+        return future;
+    }
+
+    public ContinueButton next(String label) {
+        ContinueButton button = new ContinueButton(label);
+        addButton(button);
+        return button;
     }
 
     public void refresh() {

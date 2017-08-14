@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -22,14 +23,12 @@ import java.util.stream.Collectors;
  */
 public class GameState {
     private volatile static GameState gameState;
-    public static Scene current;
     public static double moneyRate = 1.0;
     public static double xpRate = 1.0;
     private static boolean ingame = false;
     private volatile boolean run;
 
     public GameState() {
-        current = null;
         gameState = this;
     }
 
@@ -156,9 +155,9 @@ public class GameState {
         while (run) {
             try {
                 if (Time.getTime() == Time.NIGHT) {
-                    CompletableFuture<Match> preparedMatch = new CompletableFuture<>();
                     // do nighttime stuff
                     // choose match
+                    CompletableFuture<Match> preparedMatch = new CompletableFuture<>();
                     Prematch prematch = Prematch.decideMatchType(preparedMatch);
                     // set up match
                     prematch.prompt(CharacterPool.human);

@@ -1,17 +1,11 @@
 package nightgames.modifier;
 
 import com.google.gson.JsonObject;
-import nightgames.actions.Action;
 import nightgames.actions.Locate;
 import nightgames.characters.Player;
-import nightgames.global.Formatter;
 import nightgames.json.JsonUtils;
-import nightgames.items.clothing.Clothing;
 import nightgames.modifier.status.StatusModifier;
-import nightgames.skills.Blowjob;
-import nightgames.skills.Kick;
-import nightgames.skills.Skill;
-import nightgames.skills.Tactics;
+import nightgames.skills.*;
 import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.IsCollectionContaining;
@@ -36,7 +30,7 @@ public class CustomModifierLoaderTest {
 
     @BeforeClass public static void setUpClass() throws Exception {
         player = new Player("player");
-        Skill.buildSkillPool(player);
+        SkillPool.buildSkillPool(player);
     }
 
     @Before public void setUp() throws Exception {

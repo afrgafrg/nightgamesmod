@@ -6,7 +6,7 @@ import nightgames.daytime.Daytime;
 import nightgames.gui.GUI;
 import nightgames.items.clothing.Clothing;
 import nightgames.json.JsonUtils;
-import nightgames.skills.Skill;
+import nightgames.skills.SkillPool;
 import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
 
@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +31,7 @@ public class GameState {
         gameState = this;
     }
 
-    public void newGame(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
+    public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                     CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
@@ -44,9 +43,9 @@ public class GameState {
         if (GUI.gui != null) {
             GUI.gui.populatePlayer(CharacterPool.human);
         }
-        Skill.buildSkillPool(CharacterPool.human);
+        SkillPool.buildSkillPool(CharacterPool.human);
         Clothing.buildClothingTable();
-        Skill.learnSkills(CharacterPool.human);
+        SkillPool.learnSkills(CharacterPool.human);
         CharacterPool.rebuildCharacterPool(config);
         // Add starting characters to players
         CharacterPool.players.addAll(CharacterPool.characterPool.values().stream().filter(npc -> npc.isStartCharacter).collect(Collectors.toList()));
@@ -100,7 +99,7 @@ public class GameState {
         GUI.gui.clearText();
         CharacterPool.human = new Player("Dummy");
         GUI.gui.purgePlayer();
-        Skill.buildSkillPool(CharacterPool.human);
+        SkillPool.buildSkillPool(CharacterPool.human);
         Clothing.buildClothingTable();
         CharacterPool.rebuildCharacterPool(Optional.empty());
         Daytime.day = null;

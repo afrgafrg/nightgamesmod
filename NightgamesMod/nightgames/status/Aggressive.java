@@ -13,11 +13,12 @@ import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.skills.Skill;
+import nightgames.skills.SkillPool;
 
 public class Aggressive extends DurationStatus {
 
     private static final Collection<Skill> CONTACT_SKILLS = Collections.unmodifiableSet(
-                    Skill.getSkillPool().stream().filter(Skill::makesContact).collect(Collectors.toSet()));
+                    SkillPool.skillPool.stream().filter(Skill::makesContact).collect(Collectors.toSet()));
 
     private String cause;
 

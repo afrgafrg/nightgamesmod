@@ -15,7 +15,6 @@ import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 
 public class Eve extends BasePersonality {
@@ -53,7 +52,7 @@ public class Eve extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 1);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
-        Skill.gainSkills(self);
+        self.gainSkills();
         self.setTrophy(Item.EveTrophy);
         self.body.add(BreastsPart.d);
         self.body.add(new CockPart().applyMod(new SizeMod(SizeMod.COCK_SIZE_BIG)));

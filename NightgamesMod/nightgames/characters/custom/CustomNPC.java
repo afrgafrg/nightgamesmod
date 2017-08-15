@@ -11,7 +11,6 @@ import nightgames.characters.NPC;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.ItemAmount;
-import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 
 public class CustomNPC extends BasePersonality {
@@ -73,7 +72,7 @@ public class CustomNPC extends BasePersonality {
             self.gain(i.item, i.amount);
         }
 
-        Skill.gainSkills(self);
+        self.gainSkills();
     }
 
     public void setGrowth() {

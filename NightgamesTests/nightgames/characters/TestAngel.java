@@ -8,7 +8,6 @@ import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 
 import java.util.Optional;
@@ -66,7 +65,7 @@ public class TestAngel extends BasePersonality {
         baseChar.outfitPlan.add(Clothing.getByID("sandals"));
         baseChar.change();
 
-        Skill.gainSkills(baseChar);
+        baseChar.gainSkills();
 
         return baseChar;
     }
@@ -89,7 +88,7 @@ public class TestAngel extends BasePersonality {
         self.change();
         self.att.put(Attribute.Seduction, 7);
         self.att.put(Attribute.Perception, 6);
-        Skill.gainSkills(self);
+        self.gainSkills();
 
         self.add(Trait.undisciplined);
         self.add(Trait.lickable);

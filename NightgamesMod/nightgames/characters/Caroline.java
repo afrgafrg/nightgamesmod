@@ -16,7 +16,6 @@ import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 
 public class Caroline extends BasePersonality {
@@ -49,7 +48,7 @@ public class Caroline extends BasePersonality {
         character.getStamina().setMax(120);
         character.getArousal().setMax(120);
         character.rank = 1;
-        Skill.gainSkills(character);
+        character.gainSkills();
 
         character.getMojo().setMax(110);
 

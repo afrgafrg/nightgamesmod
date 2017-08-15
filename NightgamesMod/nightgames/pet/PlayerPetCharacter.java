@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.items.clothing.Outfit;
-import nightgames.skills.Skill;
+import nightgames.skills.SkillPool;
 
 public class PlayerPetCharacter extends PetCharacter {
     private Player prototype;
@@ -28,7 +28,7 @@ public class PlayerPetCharacter extends PetCharacter {
         this.mojo.empty();
         this.arousal.empty();
         this.stamina.fill();
-        Skill.learnSkills(this);
+        SkillPool.learnSkills(this);
     }
 
     @Override

@@ -59,12 +59,7 @@ import nightgames.pet.CharacterPet;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.ArmType;
 import nightgames.pet.arms.ArmManager;
-import nightgames.skills.AssFuck;
-import nightgames.skills.Nothing;
-import nightgames.skills.OrgasmicThrust;
-import nightgames.skills.OrgasmicTighten;
-import nightgames.skills.Skill;
-import nightgames.skills.Tactics;
+import nightgames.skills.*;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
@@ -186,7 +181,23 @@ public abstract class Character extends Observable implements Cloneable {
         busy = 0;
         setRank(0);
 
-        Skill.learnSkills(this);
+        SkillPool.learnSkills(this);
+    }
+
+    public String gainSkills() {
+        String message = "";
+        if (getPure(Attribute.Dark) >= 6 && !has(Trait.darkpromises)) {
+            add(Trait.darkpromises);
+        } else if (!(getPure(Attribute.Dark) >= 6) && has(Trait.darkpromises)) {
+            remove(Trait.darkpromises);
+        }
+        boolean pheromonesRequirements = getPure(Attribute.Animism) >= 2 || has(Trait.augmentedPheromones);
+        if (pheromonesRequirements && !has(Trait.pheromones)) {
+            add(Trait.pheromones);
+        } else if (!pheromonesRequirements && has(Trait.pheromones)) {
+            remove(Trait.pheromones);
+        }
+        return message;
     }
 
     @Override
@@ -430,7 +441,7 @@ public abstract class Character extends Observable implements Cloneable {
         getGrowth().levelDown(this);
         levelPlan.remove(getLevel());
         level--;
-        return Formatter.capitalizeFirstLetter(subject()) + " lost a level! <br/>" + Skill.gainSkills(this);
+        return Formatter.capitalizeFirstLetter(subject()) + " lost a level! <br/>" + this.gainSkills();
     }
 
     public int getXP() {
@@ -1716,8 +1727,8 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         change();
-        Skill.gainSkills(this);
-        Skill.learnSkills(this);
+        this.gainSkills();
+        SkillPool.learnSkills(this);
     }
 
     private void addClothes(JsonArray array) {
@@ -3730,7 +3741,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void matchPrep(Match m) {
         if(getPure(Attribute.Ninjutsu)>=9){
-            Skill.gainSkills(this);
+            this.gainSkills();
             placeNinjaStash(m);
         }
         ArmManager manager = m.getMatchData().getDataFor(this).getArmManager();

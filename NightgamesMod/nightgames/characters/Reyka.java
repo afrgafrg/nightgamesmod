@@ -23,7 +23,6 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.skills.strategy.DisablingStrategy;
 import nightgames.skills.strategy.FacesitStrategy;
 import nightgames.skills.strategy.FootjobStrategy;
@@ -73,7 +72,7 @@ public class Reyka extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 2);
         self.setTrophy(Item.ReykaTrophy);
 
-        Skill.gainSkills(self);
+        self.gainSkills();
         self.getStamina().setMax(50);
         self.getArousal().setMax(120);
         self.getMojo().setMax(110);

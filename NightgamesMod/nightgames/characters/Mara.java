@@ -18,7 +18,6 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.skills.strategy.FootjobStrategy;
 import nightgames.skills.strategy.StraponStrategy;
 import nightgames.skills.strategy.TechStrategy;
@@ -177,7 +176,7 @@ public class Mara extends BasePersonality {
         self.getArousal().setMax(80);
         self.getMojo().setMax(120);
 
-        Skill.gainSkills(self);
+        self.gainSkills();
         self.setTrophy(Item.MaraTrophy);
         self.body.add(new FacePart(.1, 1.1));
         self.body.add(AssPart.generateGeneric().upgrade());

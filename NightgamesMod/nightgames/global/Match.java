@@ -7,16 +7,13 @@ import nightgames.areas.MapSchool;
 import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.gui.GUI;
-import nightgames.gui.RunnableButton;
-import nightgames.gui.SaveButton;
 import nightgames.modifier.Modifier;
-import nightgames.skills.Skill;
+import nightgames.skills.SkillPool;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
@@ -47,8 +44,8 @@ public class Match {
         map = MapSchool.buildMap();
         for (Character combatant : combatants) {
             score.put(combatant, 0);
-            GUI.gui.message(Skill.gainSkills(combatant));
-            Skill.learnSkills(combatant);
+            GUI.gui.message(combatant.gainSkills());
+            SkillPool.learnSkills(combatant);
             combatant.matchPrep(this);
         }
         time = 0;

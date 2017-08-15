@@ -17,7 +17,6 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 
 public class Mei extends BasePersonality {
@@ -51,7 +50,7 @@ public class Mei extends BasePersonality {
         character.getStamina().setMax(100);
         character.getArousal().setMax(150);
         character.rank = 1;
-        Skill.gainSkills(character);
+        character.gainSkills();
 
         character.getMojo().setMax(110);
 

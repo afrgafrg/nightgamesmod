@@ -30,7 +30,6 @@ import nightgames.gui.GUI;
 import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.Skill;
 import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
 import nightgames.skills.damage.DamageType;
@@ -97,7 +96,7 @@ public class Player extends Character {
                         gui.clearTextIfNeeded();
                         GUI.gui.message("Gained feat: " + feat.toString());
                         CharacterPool.getPlayer().add(feat);
-                        GUI.gui.message(Skill.gainSkills(CharacterPool.getPlayer()));
+                        GUI.gui.message(CharacterPool.getPlayer().gainSkills());
                         CharacterPool.getPlayer().traitPoints -= 1;
                         gui.refresh();
                         ding(gui);
@@ -118,7 +117,7 @@ public class Player extends Character {
         } else {
             gui.skippedFeat = false;
             gui.clearCommand();
-            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, Skill.gainSkills(player));
+            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, player.gainSkills());
             player.finishDing();
             if (player.getLevelsToGain() > 0) {
                 player.actuallyDing(gui.combat);

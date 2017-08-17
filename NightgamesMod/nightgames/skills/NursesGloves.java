@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.items.clothing.ClothingTrait;
 
 public class NursesGloves extends Skill {
@@ -36,7 +36,7 @@ public class NursesGloves extends Skill {
         } else {
             c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
-        getSelf().getOutfit().equip(Clothing.getByID("nursesgloves"));
+        getSelf().getOutfit().equip(ClothingTable.getByID("nursesgloves"));
         getSelf().consume(Item.MedicalSupplies, 1);
 
         return true;

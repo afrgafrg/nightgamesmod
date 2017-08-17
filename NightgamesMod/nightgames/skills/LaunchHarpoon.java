@@ -5,8 +5,8 @@ import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
-import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.nskills.tags.SkillTag;
 
 public class LaunchHarpoon extends Skill {
@@ -80,7 +80,7 @@ public class LaunchHarpoon extends Skill {
                                 + " a button on the device on {self:possessive} arm, and a strong suction"
                                 + " ripples through the toy, firmly locking it in place and starting a"
                                 + " strangely pleasurable vibration.", getSelf(), target, aim));
-               target.outfit.equip(Clothing.getByID("harpoononahole"));
+               target.outfit.equip(ClothingTable.getByID("harpoononahole"));
             } else {
                 c.write(getSelf(), Formatter.format("%sThe pliable material crawls its way inside of"
                                 + " {other:name-possessive} {other:body-part:pussy}, shaping itself"
@@ -91,7 +91,7 @@ public class LaunchHarpoon extends Skill {
                                 + " to come off easily. Meanwhile, the part of the toy lodged inside of"
                                 + " {other:direct-object} starts vibrating and squirming against"
                                 + " {other:possessive} sensitive flesh.", getSelf(), target, aim));
-                target.outfit.equip(Clothing.getByID("harpoondildo"));
+                target.outfit.equip(ClothingTable.getByID("harpoondildo"));
             }
             return true;
         } else {

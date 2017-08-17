@@ -19,6 +19,7 @@ import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Behind;
 import nightgames.stance.FaceSitting;
@@ -358,7 +359,7 @@ public class Command extends Skill {
                                     + "obviously designed to make the recepient squeal.");
                 }
                 getSelf().getOutfit()
-                         .equip(Clothing.getByID("strapon"));
+                         .equip(ClothingTable.getByID("strapon"));
                 getSelf().buildMojo(c, 10);
                 break;
             case MASTURBATE:

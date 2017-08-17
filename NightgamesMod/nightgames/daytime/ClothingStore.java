@@ -4,12 +4,13 @@ import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.gui.GUI;
 import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 
 public class ClothingStore extends Store {
 
     public ClothingStore(Character player) {
         super("Clothing Store", player);
-        Clothing.getAllBuyableFrom("ClothingStore").forEach(article -> add(article));
+        ClothingTable.getAllBuyableFrom("ClothingStore").forEach(article -> add(article));
     }
 
     @Override

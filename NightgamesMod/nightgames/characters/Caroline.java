@@ -15,7 +15,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 public class Caroline extends BasePersonality {
@@ -36,9 +36,9 @@ public class Caroline extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(Clothing.getByID("lacybra"));
-        character.outfitPlan.add(Clothing.getByID("lacepanties"));
-        character.outfitPlan.add(Clothing.getByID("stockings"));
+        character.outfitPlan.add(ClothingTable.getByID("lacybra"));
+        character.outfitPlan.add(ClothingTable.getByID("lacepanties"));
+        character.outfitPlan.add(ClothingTable.getByID("stockings"));
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Seduction, 1);

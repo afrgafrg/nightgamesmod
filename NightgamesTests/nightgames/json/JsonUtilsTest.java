@@ -3,7 +3,7 @@ package nightgames.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import nightgames.characters.Attribute;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.items.clothing.ClothingTrait;
 import org.hamcrest.collection.IsMapContaining;
 import org.hamcrest.core.IsCollectionContaining;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
  */
 public class JsonUtilsTest {
     @BeforeClass public static void setUpClass() throws Exception {
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
     }
 
     @Rule public ExpectedException thrown = ExpectedException.none();

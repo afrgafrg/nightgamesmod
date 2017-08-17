@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import nightgames.items.clothing.Clothing;
-import nightgames.items.clothing.ClothingSlot;
-import nightgames.items.clothing.ClothingTrait;
-import nightgames.items.clothing.Outfit;
+import nightgames.items.clothing.*;
 import nightgames.modifier.ModifierCategory;
 import nightgames.modifier.ModifierComponent;
 
@@ -161,14 +158,14 @@ public abstract class ClothingModifier implements ModifierCategory<ClothingModif
     public abstract String toString();
 
     public static void main(String[] args) {
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
         ClothingModifierCombiner combiner = new ClothingModifierCombiner();
 
         Outfit test1 = new Outfit();
-        test1.equip(Clothing.getByID("bra"));
-        test1.equip(Clothing.getByID("panties"));
-        test1.equip(Clothing.getByID("jeans"));
-        test1.equip(Clothing.getByID("shirt"));
+        test1.equip(ClothingTable.getByID("bra"));
+        test1.equip(ClothingTable.getByID("panties"));
+        test1.equip(ClothingTable.getByID("jeans"));
+        test1.equip(ClothingTable.getByID("shirt"));
 
         Outfit test2 = new Outfit(test1);
         Outfit test3 = new Outfit(test1);

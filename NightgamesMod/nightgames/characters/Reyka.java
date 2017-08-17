@@ -22,7 +22,7 @@ import nightgames.global.Flag;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.DisablingStrategy;
 import nightgames.skills.strategy.FacesitStrategy;
 import nightgames.skills.strategy.FootjobStrategy;
@@ -62,10 +62,10 @@ public class Reyka extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.incubus;
-        self.outfitPlan.add(Clothing.getByID("tanktop"));
-        self.outfitPlan.add(Clothing.getByID("miniskirt"));
-        self.outfitPlan.add(Clothing.getByID("garters"));
-        self.outfitPlan.add(Clothing.getByID("stilettopumps"));
+        self.outfitPlan.add(ClothingTable.getByID("tanktop"));
+        self.outfitPlan.add(ClothingTable.getByID("miniskirt"));
+        self.outfitPlan.add(ClothingTable.getByID("garters"));
+        self.outfitPlan.add(ClothingTable.getByID("stilettopumps"));
         self.change();
         self.modAttributeDontSaveData(Attribute.Dark, 2);
         self.modAttributeDontSaveData(Attribute.Seduction, 3);

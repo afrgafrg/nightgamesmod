@@ -14,7 +14,7 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 public class Yui extends BasePersonality {
@@ -43,10 +43,10 @@ public class Yui extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(Clothing.getByID("sarashi"));
-        character.outfitPlan.add(Clothing.getByID("shinobigarb"));
-        character.outfitPlan.add(Clothing.getByID("loincloth"));
-        character.outfitPlan.add(Clothing.getByID("tabi"));
+        character.outfitPlan.add(ClothingTable.getByID("sarashi"));
+        character.outfitPlan.add(ClothingTable.getByID("shinobigarb"));
+        character.outfitPlan.add(ClothingTable.getByID("loincloth"));
+        character.outfitPlan.add(ClothingTable.getByID("tabi"));
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Power, 1);

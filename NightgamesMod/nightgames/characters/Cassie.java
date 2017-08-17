@@ -18,7 +18,7 @@ import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.BreastStrategy;
 import nightgames.skills.strategy.NurseStrategy;
 import nightgames.skills.strategy.OralStrategy;
@@ -172,11 +172,11 @@ public class Cassie extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.runic;
-        self.outfitPlan.add(Clothing.getByID("bra"));
-        self.outfitPlan.add(Clothing.getByID("blouse"));
-        self.outfitPlan.add(Clothing.getByID("panties"));
-        self.outfitPlan.add(Clothing.getByID("skirt"));
-        self.outfitPlan.add(Clothing.getByID("shoes"));
+        self.outfitPlan.add(ClothingTable.getByID("bra"));
+        self.outfitPlan.add(ClothingTable.getByID("blouse"));
+        self.outfitPlan.add(ClothingTable.getByID("panties"));
+        self.outfitPlan.add(ClothingTable.getByID("skirt"));
+        self.outfitPlan.add(ClothingTable.getByID("shoes"));
 
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 1);
@@ -699,12 +699,12 @@ public class Cassie extends BasePersonality {
             character.body.addReplace(character.body.getRandomCock().applyMod(CockMod.runic), 1);
         }
         character.unequipAllClothing();
-        character.outfitPlan.add(Clothing.getByID("bra"));
-        character.outfitPlan.add(Clothing.getByID("blouse"));
-        character.outfitPlan.add(Clothing.getByID("cloak"));
-        character.outfitPlan.add(Clothing.getByID("panties"));
-        character.outfitPlan.add(Clothing.getByID("skirt"));
-        character.outfitPlan.add(Clothing.getByID("shoes"));
+        character.outfitPlan.add(ClothingTable.getByID("bra"));
+        character.outfitPlan.add(ClothingTable.getByID("blouse"));
+        character.outfitPlan.add(ClothingTable.getByID("cloak"));
+        character.outfitPlan.add(ClothingTable.getByID("panties"));
+        character.outfitPlan.add(ClothingTable.getByID("skirt"));
+        character.outfitPlan.add(ClothingTable.getByID("shoes"));
 
         character.modAttributeDontSaveData(Attribute.Arcane, 1);
         character.getGrowth().addOrRemoveTraits(character);

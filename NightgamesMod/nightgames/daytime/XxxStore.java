@@ -6,13 +6,13 @@ import nightgames.global.Flag;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.items.clothing.ClothingTable;
 
 public class XxxStore extends Store {
     public XxxStore(Character player) {
         super("XXX Store", player);
-        Clothing.getAllBuyableFrom("XxxStore").forEach(article -> {
+        ClothingTable.getAllBuyableFrom("XxxStore").forEach(article -> {
             add(article);
         });
         add(Item.Dildo);

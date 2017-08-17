@@ -7,7 +7,7 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 import java.util.Optional;
@@ -58,11 +58,11 @@ public class TestAngel extends BasePersonality {
         baseChar.body.add(EarPart.normal);
         baseChar.body.baseFemininity = 2;
 
-        baseChar.outfitPlan.add(Clothing.getByID("Tshirt"));
-        baseChar.outfitPlan.add(Clothing.getByID("bra"));
-        baseChar.outfitPlan.add(Clothing.getByID("thong"));
-        baseChar.outfitPlan.add(Clothing.getByID("miniskirt"));
-        baseChar.outfitPlan.add(Clothing.getByID("sandals"));
+        baseChar.outfitPlan.add(ClothingTable.getByID("Tshirt"));
+        baseChar.outfitPlan.add(ClothingTable.getByID("bra"));
+        baseChar.outfitPlan.add(ClothingTable.getByID("thong"));
+        baseChar.outfitPlan.add(ClothingTable.getByID("miniskirt"));
+        baseChar.outfitPlan.add(ClothingTable.getByID("sandals"));
         baseChar.change();
 
         baseChar.gainSkills();
@@ -80,11 +80,11 @@ public class TestAngel extends BasePersonality {
 
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.blessed;
-        self.outfitPlan.add(Clothing.getByID("Tshirt"));
-        self.outfitPlan.add(Clothing.getByID("bra"));
-        self.outfitPlan.add(Clothing.getByID("thong"));
-        self.outfitPlan.add(Clothing.getByID("miniskirt"));
-        self.outfitPlan.add(Clothing.getByID("sandals"));
+        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
+        self.outfitPlan.add(ClothingTable.getByID("bra"));
+        self.outfitPlan.add(ClothingTable.getByID("thong"));
+        self.outfitPlan.add(ClothingTable.getByID("miniskirt"));
+        self.outfitPlan.add(ClothingTable.getByID("sandals"));
         self.change();
         self.att.put(Attribute.Seduction, 7);
         self.att.put(Attribute.Perception, 6);
@@ -427,10 +427,10 @@ public class TestAngel extends BasePersonality {
         character.body.addReplace(PussyPart.generic.applyMod(DivineMod.INSTANCE), 1);
         character.body.addReplace(WingsPart.angelic, 5);
         character.unequipAllClothing();
-        character.outfitPlan.add(Clothing.getByID("translucentshawl"));
-        character.outfitPlan.add(Clothing.getByID("bikinitop"));
-        character.outfitPlan.add(Clothing.getByID("bikinibottoms"));
-        character.outfitPlan.add(Clothing.getByID("highheels"));
+        character.outfitPlan.add(ClothingTable.getByID("translucentshawl"));
+        character.outfitPlan.add(ClothingTable.getByID("bikinitop"));
+        character.outfitPlan.add(ClothingTable.getByID("bikinibottoms"));
+        character.outfitPlan.add(ClothingTable.getByID("highheels"));
         character.modAttributeDontSaveData(Attribute.Divinity, 1);
     }
 

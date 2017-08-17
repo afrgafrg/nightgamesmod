@@ -14,7 +14,7 @@ import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 public class Sarah extends BasePersonality {
@@ -35,8 +35,8 @@ public class Sarah extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(Clothing.getByID("frillybra"));
-        character.outfitPlan.add(Clothing.getByID("frillypanties"));
+        character.outfitPlan.add(ClothingTable.getByID("frillybra"));
+        character.outfitPlan.add(ClothingTable.getByID("frillypanties"));
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Power, 2);

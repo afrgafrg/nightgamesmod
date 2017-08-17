@@ -14,7 +14,7 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 public class Eve extends BasePersonality {
@@ -40,11 +40,11 @@ public class Eve extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        self.outfitPlan.add(Clothing.getByID("tanktop"));
-        self.outfitPlan.add(Clothing.getByID("crotchlesspanties"));
-        self.outfitPlan.add(Clothing.getByID("jeans"));
-        self.outfitPlan.add(Clothing.getByID("stilettopumps"));
-        self.outfitPlan.add(Clothing.getByID("garters"));
+        self.outfitPlan.add(ClothingTable.getByID("tanktop"));
+        self.outfitPlan.add(ClothingTable.getByID("crotchlesspanties"));
+        self.outfitPlan.add(ClothingTable.getByID("jeans"));
+        self.outfitPlan.add(ClothingTable.getByID("stilettopumps"));
+        self.outfitPlan.add(ClothingTable.getByID("garters"));
 
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 1);

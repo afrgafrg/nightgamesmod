@@ -4,7 +4,7 @@ import nightgames.Resources.ResourceLoader;
 import nightgames.characters.*;
 import nightgames.daytime.Daytime;
 import nightgames.gui.GUI;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
 import nightgames.skills.SkillPool;
 import nightgames.start.PlayerConfiguration;
@@ -49,7 +49,7 @@ public class GameState {
             GUI.gui.populatePlayer(characterPool.human);
         }
         SkillPool.buildSkillPool(characterPool.human);
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
         SkillPool.learnSkills(characterPool.human);
         characterPool.rebuildCharacterPool(config);
         // Add starting characters to players
@@ -105,7 +105,7 @@ public class GameState {
         characterPool.human = new Player("Dummy");
         GUI.gui.purgePlayer();
         SkillPool.buildSkillPool(characterPool.human);
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
         characterPool.rebuildCharacterPool(Optional.empty());
         Daytime.day = null;
     }

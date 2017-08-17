@@ -11,6 +11,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 
 /**
  * Gson TypeAdapter for Clothing that serializes and deserializes based on the Clothing's ID.
@@ -19,7 +20,7 @@ public class ClothingAdaptor implements JsonSerializer<Clothing>, JsonDeserializ
 
     @Override public Clothing deserialize(JsonElement jsonElement, Type type,
                     JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        return Clothing.getByID(jsonElement.getAsString());
+        return ClothingTable.getByID(jsonElement.getAsString());
     }
 
     @Override

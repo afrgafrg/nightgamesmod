@@ -5,7 +5,7 @@ import nightgames.characters.Character;
 import nightgames.global.Flag;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 
 public class Meditation extends Activity {
     private boolean acted;
@@ -79,8 +79,8 @@ public class Meditation extends Activity {
                 player.modAttributeDontSaveData(Attribute.Ki, 1);
                 Flag.flag("Trained" + Attribute.Ki.name());
                 acted = true;
-                if (!player.has(Clothing.getByID("gi"))) {
-                    player.gain(Clothing.getByID("gi"));
+                if (!player.has(ClothingTable.getByID("gi"))) {
+                    player.gain(ClothingTable.getByID("gi"));
                 }
                 choose("Leave", GUI.gui);
             } else {

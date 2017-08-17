@@ -8,10 +8,10 @@ import nightgames.characters.MaxAttribute;
 import nightgames.characters.PreferredAttribute;
 import nightgames.characters.custom.effect.CustomEffect;
 import nightgames.characters.custom.effect.MoneyModEffect;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
 import nightgames.items.Item;
 import nightgames.items.ItemAmount;
-import nightgames.items.clothing.Clothing;
 import nightgames.requirements.*;
 import nightgames.skills.Skill;
 import nightgames.skills.ThrowDraft;
@@ -42,7 +42,7 @@ public class JsonSourceNPCDataLoaderTest {
     JsonObject npcJSON;
 
     @BeforeClass public static void setUpJSONSourceNPCDataLoaderTest() throws Exception {
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
     }
 
     @Before public void setUp() throws Exception {

@@ -15,7 +15,7 @@ import nightgames.global.Formatter;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.*;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Hypersensitive;
@@ -160,12 +160,12 @@ public class Mara extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.bionic;
-        self.outfitPlan.add(Clothing.getByID("bra"));
-        self.outfitPlan.add(Clothing.getByID("Tshirt"));
-        self.outfitPlan.add(Clothing.getByID("underwear"));
-        self.outfitPlan.add(Clothing.getByID("shorts"));
-        self.outfitPlan.add(Clothing.getByID("pantyhose"));
-        self.outfitPlan.add(Clothing.getByID("boots"));
+        self.outfitPlan.add(ClothingTable.getByID("bra"));
+        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
+        self.outfitPlan.add(ClothingTable.getByID("underwear"));
+        self.outfitPlan.add(ClothingTable.getByID("shorts"));
+        self.outfitPlan.add(ClothingTable.getByID("pantyhose"));
+        self.outfitPlan.add(ClothingTable.getByID("boots"));
         self.change();
         self.modAttributeDontSaveData(Attribute.Cunning, 2);
         self.modAttributeDontSaveData(Attribute.Perception, 2);
@@ -366,7 +366,7 @@ public class Mara extends BasePersonality {
         character.getGrowth().addTrait(20, Trait.mindcontroller);
         character.getGrowth().addTrait(29, Trait.infrasound);
         character.getGrowth()
-                 .addClothing(29, Clothing.getByID("infrasoundnecklace"));
+                 .addClothing(29, ClothingTable.getByID("infrasoundnecklace"));
         character.getGrowth().addTrait(40, Trait.ControlledRelease);
         if (Flag.checkFlag(MARA_GENERAL_TECH_FOCUS)) {
             character.getGrowth().addTrait(53, Trait.RemoteControl);
@@ -458,13 +458,13 @@ public class Mara extends BasePersonality {
                             1);
         }
         character.unequipAllClothing();
-        character.outfitPlan.add(Clothing.getByID("bra"));
-        character.outfitPlan.add(Clothing.getByID("shirt"));
-        character.outfitPlan.add(Clothing.getByID("labcoat"));
-        character.outfitPlan.add(Clothing.getByID("underwear"));
-        character.outfitPlan.add(Clothing.getByID("pants"));
-        character.outfitPlan.add(Clothing.getByID("pantyhose"));
-        character.outfitPlan.add(Clothing.getByID("boots"));
+        character.outfitPlan.add(ClothingTable.getByID("bra"));
+        character.outfitPlan.add(ClothingTable.getByID("shirt"));
+        character.outfitPlan.add(ClothingTable.getByID("labcoat"));
+        character.outfitPlan.add(ClothingTable.getByID("underwear"));
+        character.outfitPlan.add(ClothingTable.getByID("pants"));
+        character.outfitPlan.add(ClothingTable.getByID("pantyhose"));
+        character.outfitPlan.add(ClothingTable.getByID("boots"));
         character.modAttributeDontSaveData(Attribute.Science, 1);
         character.getGrowth()
                  .addOrRemoveTraits(character);

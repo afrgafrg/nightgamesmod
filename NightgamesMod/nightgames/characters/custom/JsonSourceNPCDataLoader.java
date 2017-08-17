@@ -23,7 +23,7 @@ import nightgames.characters.custom.effect.CustomEffect;
 import nightgames.characters.custom.effect.MoneyModEffect;
 import nightgames.items.Item;
 import nightgames.items.ItemAmount;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
 import nightgames.requirements.JsonRequirementLoader;
 import nightgames.skills.Skill;
@@ -57,11 +57,11 @@ public class JsonSourceNPCDataLoader {
         JsonObject outfit = object.getAsJsonObject("outfit");
         JsonArray top = outfit.getAsJsonArray("top");
         for (JsonElement clothing : top) {
-            data.top.push(Clothing.getByID(clothing.getAsString()));
+            data.top.push(ClothingTable.getByID(clothing.getAsString()));
         }
         JsonArray bottom = outfit.getAsJsonArray("bottom");
         for (JsonElement clothing : bottom) {
-            data.bottom.push(Clothing.getByID(clothing.getAsString()));
+            data.bottom.push(ClothingTable.getByID(clothing.getAsString()));
         }
 
         // load stats

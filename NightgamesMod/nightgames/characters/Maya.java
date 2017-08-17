@@ -9,7 +9,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Flag;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Drowsy;
 import nightgames.status.Energized;
@@ -38,12 +38,12 @@ public class Maya extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        self.outfitPlan.add(Clothing.getByID("camisole"));
-        self.outfitPlan.add(Clothing.getByID("blouse"));
-        self.outfitPlan.add(Clothing.getByID("lacepanties"));
-        self.outfitPlan.add(Clothing.getByID("skirt"));
-        self.outfitPlan.add(Clothing.getByID("sneakers"));
-        self.outfitPlan.add(Clothing.getByID("socks"));
+        self.outfitPlan.add(ClothingTable.getByID("camisole"));
+        self.outfitPlan.add(ClothingTable.getByID("blouse"));
+        self.outfitPlan.add(ClothingTable.getByID("lacepanties"));
+        self.outfitPlan.add(ClothingTable.getByID("skirt"));
+        self.outfitPlan.add(ClothingTable.getByID("sneakers"));
+        self.outfitPlan.add(ClothingTable.getByID("socks"));
         self.change();
         self.modAttributeDontSaveData(Attribute.Dark, 10);
         self.modAttributeDontSaveData(Attribute.Seduction, 15);

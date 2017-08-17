@@ -11,7 +11,7 @@ import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.Loot;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 
 public class Cache implements Deployable {
     private int dc;
@@ -199,7 +199,7 @@ public class Cache implements Deployable {
                 reward.add(Item.DisSol);
                 break;
             case 18:
-                reward.add(Clothing.getByID("cup"));
+                reward.add(ClothingTable.getByID("cup"));
                 break;
             case 17:
                 reward.add(Item.SPotion);

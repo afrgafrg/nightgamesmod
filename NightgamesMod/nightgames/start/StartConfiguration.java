@@ -17,7 +17,7 @@ import com.google.gson.JsonParseException;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
 
 public class StartConfiguration {
@@ -124,7 +124,7 @@ public class StartConfiguration {
     }
 
     public static void main(String[] args) throws IOException, JsonParseException {
-        Clothing.buildClothingTable();
+        ClothingTable.buildClothingTable();
         Path path = new File("starts/Male Start.json").toPath();
         StartConfiguration cfg = parse(JsonUtils.rootJson(path).getAsJsonObject());
         System.out.println(cfg);

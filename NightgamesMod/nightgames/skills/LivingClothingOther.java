@@ -6,7 +6,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.nskills.tags.SkillTag;
 
 public class LivingClothingOther extends Skill {
@@ -40,8 +40,8 @@ public class LivingClothingOther extends Skill {
         } else {
             c.write(getSelf(), receive(c, 0, Result.normal, target));
         }
-        target.getOutfit().equip(Clothing.getByID("tentacletop"));
-        target.getOutfit().equip(Clothing.getByID("tentaclebottom"));
+        target.getOutfit().equip(ClothingTable.getByID("tentacletop"));
+        target.getOutfit().equip(ClothingTable.getByID("tentaclebottom"));
         return true;
     }
 

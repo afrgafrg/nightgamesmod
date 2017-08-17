@@ -10,6 +10,7 @@ import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.status.Stsflag;
 
 public class Strapon extends Skill {
@@ -43,7 +44,7 @@ public class Strapon extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        List<Clothing> unequipped = getSelf().getOutfit().equip(Clothing.getByID("strapon"));
+        List<Clothing> unequipped = getSelf().getOutfit().equip(ClothingTable.getByID("strapon"));
         if (unequipped.isEmpty()) {
             if (getSelf().human()) {
                 c.write(getSelf(), Formatter.capitalizeFirstLetter(deal(c, 0, Result.normal, target)));

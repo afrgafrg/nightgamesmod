@@ -1,67 +1,23 @@
 package nightgames.items.clothing;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-
-import nightgames.Resources.ResourceLoader;
 import nightgames.characters.Character;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.Trait;
-import nightgames.global.DebugFlags;
 import nightgames.items.Loot;
-import nightgames.json.JsonUtils;
 
 public class Clothing implements Loot {
     public static final int N_LAYERS = 5;
-    public static Map<String, Clothing> clothingTable;
-    static {
-        buildClothingTable();
-    }
-
-    public static void buildClothingTable() {
-        clothingTable = new HashMap<>();
-        try (InputStreamReader inputstreamreader = new InputStreamReader(
-                        ResourceLoader.getFileResourceAsStream("data/clothing/defaults.json"))) {
-            JsonArray defaultClothesJson = JsonUtils.rootJson(inputstreamreader).getAsJsonArray();
-            JsonClothingLoader.loadClothingListFromJson(defaultClothesJson).forEach(article -> {
-                clothingTable.put(article.id, article);
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_LOADING)) {
-                    System.out.println("Loaded " + article.id);
-                }
-            });
-        } catch (ClassCastException | JsonParseException | IOException e) {
-            e.printStackTrace();
-        }
-        ResourceLoader.getFileResourcesFromDirectory("data/clothing")
-                      .forEach(inputstream -> {
-                          try (InputStreamReader inputstreamreader = new InputStreamReader(inputstream)) {
-                              JsonArray clothesJson = new JsonParser().parse(inputstreamreader).getAsJsonArray();
-                              JsonClothingLoader.loadClothingListFromJson(clothesJson).forEach(article -> {
-                                  clothingTable.put(article.id, article);
-                                  if (DebugFlags.isDebugOn(DebugFlags.DEBUG_LOADING)) {
-                                      System.out.println("Loaded " + article.id);
-                                  }
-                              });
-                          } catch (ClassCastException | JsonParseException | IOException e) {
-                              e.printStackTrace();
-                          }
-                      });
-    }
 
     String name;
     int dc;
     String prefix;
     Set<ClothingTrait> attributes;
+    // TODO: It's strange to have clothing know where it's sold, rather than stores knowing what they carry.
     Set<String> stores;
     Set<Trait> buffs;
     Set<ClothingSlot> slots;
@@ -124,14 +80,6 @@ public class Clothing implements Loot {
         }
     }
 
-    public static Clothing getByID(String key) {
-        Clothing results = clothingTable.get(key);
-        if (results == null) {
-            throw new IllegalArgumentException(key + " is not a valid clothing key");
-        }
-        return results;
-    }
-
     public boolean is(ClothingTrait trait) {
         return attributes.contains(trait);
     }
@@ -164,15 +112,6 @@ public class Clothing implements Loot {
     @Override
     public String getID() {
         return id;
-    }
-
-    public static List<Clothing> getAllBuyableFrom(String shopName) {
-        return clothingTable.values()
-                            .stream()
-                            .filter(article -> {
-                                return article.stores.contains(shopName);
-                            })
-                            .collect(Collectors.toList());
     }
 
     public String getDesc() {

@@ -4,11 +4,10 @@ import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
 import nightgames.characters.Player;
 import nightgames.characters.Trait;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
-import nightgames.items.clothing.Clothing;
 import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -45,6 +44,6 @@ public class PlayerConfigurationTest {
                         .hasItems(Trait.pussyhandler, Trait.dickhandler, Trait.limbTraining1, Trait.tongueTraining1,
                                         Trait.powerfulhips, Trait.romantic, Trait.insatiable));
         assertThat(malePlayer.outfit.getEquipped(),
-                        IsCollectionContaining.hasItems(Clothing.getByID("gothshirt"), Clothing.getByID("gothpants")));
+                        IsCollectionContaining.hasItems(ClothingTable.getByID("gothshirt"), ClothingTable.getByID("gothpants")));
     }
 }

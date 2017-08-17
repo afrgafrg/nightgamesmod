@@ -1,23 +1,10 @@
 package nightgames.characters.custom;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
-import nightgames.characters.Attribute;
-import nightgames.characters.CharacterSex;
-import nightgames.characters.Growth;
-import nightgames.characters.MaxAttribute;
-import nightgames.characters.Plan;
-import nightgames.characters.PreferredAttribute;
-import nightgames.characters.Trait;
+import nightgames.characters.*;
 import nightgames.characters.body.Body;
 import nightgames.characters.custom.effect.CustomEffect;
 import nightgames.characters.custom.effect.MoneyModEffect;
@@ -30,6 +17,12 @@ import nightgames.skills.Skill;
 import nightgames.stance.Stance;
 import nightgames.status.Stsflag;
 import nightgames.utilities.DebugHelper;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class JsonSourceNPCDataLoader {
     private static JsonRequirementLoader requirementLoader = new JsonRequirementLoader();
@@ -57,11 +50,11 @@ public class JsonSourceNPCDataLoader {
         JsonObject outfit = object.getAsJsonObject("outfit");
         JsonArray top = outfit.getAsJsonArray("top");
         for (JsonElement clothing : top) {
-            data.top.push(ClothingTable.getByID(clothing.getAsString()));
+            ClothingTable.getByID(clothing.getAsString()).ifPresent(data.top::push);
         }
         JsonArray bottom = outfit.getAsJsonArray("bottom");
         for (JsonElement clothing : bottom) {
-            data.bottom.push(ClothingTable.getByID(clothing.getAsString()));
+            ClothingTable.getByID(clothing.getAsString()).ifPresent(data.bottom::push);
         }
 
         // load stats

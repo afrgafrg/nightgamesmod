@@ -44,6 +44,6 @@ public class PlayerConfigurationTest {
                         .hasItems(Trait.pussyhandler, Trait.dickhandler, Trait.limbTraining1, Trait.tongueTraining1,
                                         Trait.powerfulhips, Trait.romantic, Trait.insatiable));
         assertThat(malePlayer.outfit.getEquipped(),
-                        IsCollectionContaining.hasItems(ClothingTable.getByID("gothshirt"), ClothingTable.getByID("gothpants")));
+                        IsCollectionContaining.hasItems(ClothingTable.getByID("gothshirt").get(), ClothingTable.getByID("gothpants").get()));
     }
 }

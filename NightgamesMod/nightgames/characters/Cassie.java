@@ -18,7 +18,6 @@ import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.BreastStrategy;
 import nightgames.skills.strategy.NurseStrategy;
 import nightgames.skills.strategy.OralStrategy;
@@ -172,11 +171,11 @@ public class Cassie extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.runic;
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("blouse"));
-        self.outfitPlan.add(ClothingTable.getByID("panties"));
-        self.outfitPlan.add(ClothingTable.getByID("skirt"));
-        self.outfitPlan.add(ClothingTable.getByID("shoes"));
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("blouse");
+        self.outfitPlan.addByID("panties");
+        self.outfitPlan.addByID("skirt");
+        self.outfitPlan.addByID("shoes");
 
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 1);
@@ -699,12 +698,12 @@ public class Cassie extends BasePersonality {
             character.body.addReplace(character.body.getRandomCock().applyMod(CockMod.runic), 1);
         }
         character.unequipAllClothing();
-        character.outfitPlan.add(ClothingTable.getByID("bra"));
-        character.outfitPlan.add(ClothingTable.getByID("blouse"));
-        character.outfitPlan.add(ClothingTable.getByID("cloak"));
-        character.outfitPlan.add(ClothingTable.getByID("panties"));
-        character.outfitPlan.add(ClothingTable.getByID("skirt"));
-        character.outfitPlan.add(ClothingTable.getByID("shoes"));
+        character.outfitPlan.addByID("bra");
+        character.outfitPlan.addByID("blouse");
+        character.outfitPlan.addByID("cloak");
+        character.outfitPlan.addByID("panties");
+        character.outfitPlan.addByID("skirt");
+        character.outfitPlan.addByID("shoes");
 
         character.modAttributeDontSaveData(Attribute.Arcane, 1);
         character.getGrowth().addOrRemoveTraits(character);

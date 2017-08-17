@@ -134,9 +134,7 @@ public class Workshop extends Activity {
                 if (!player.has(Item.ShockGlove)) {
                     player.gain(Item.ShockGlove);
                 }
-                if (!player.has(ClothingTable.getByID("labcoat"))) {
-                    player.gain(ClothingTable.getByID("labcoat"));
-                }
+                player.gainIfAbsent(ClothingTable.getByID("labcoat"));
                 if (player.getPure(Attribute.Science) >= 4 && !player.has(Item.Aersolizer)) {
                     player.gain(Item.Aersolizer);
                 }

@@ -1,13 +1,13 @@
 package nightgames.utilities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.status.Disguised;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class DisguiseHelper {
     public static void disguiseCharacter(Character self, NPC target) {

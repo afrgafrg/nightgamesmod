@@ -13,7 +13,6 @@ import nightgames.global.Formatter;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.FacesitStrategy;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Feral;
@@ -48,12 +47,12 @@ public class Kat extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.primal;
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        self.outfitPlan.add(ClothingTable.getByID("panties"));
-        self.outfitPlan.add(ClothingTable.getByID("skirt"));
-        self.outfitPlan.add(ClothingTable.getByID("sneakers"));
-        self.outfitPlan.add(ClothingTable.getByID("socks"));
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("Tshirt");
+        self.outfitPlan.addByID("panties");
+        self.outfitPlan.addByID("skirt");
+        self.outfitPlan.addByID("sneakers");
+        self.outfitPlan.addByID("socks");
         self.change();
         self.setTrophy(Item.KatTrophy);
         self.modAttributeDontSaveData(Attribute.Power, 1);

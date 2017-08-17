@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
@@ -14,8 +11,10 @@ import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public class Sarah extends BasePersonality {
     private static final long serialVersionUID = 8601852023164119671L;
@@ -35,8 +34,8 @@ public class Sarah extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(ClothingTable.getByID("frillybra"));
-        character.outfitPlan.add(ClothingTable.getByID("frillypanties"));
+        character.outfitPlan.addByID("frillybra");
+        character.outfitPlan.addByID("frillypanties");
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Power, 2);

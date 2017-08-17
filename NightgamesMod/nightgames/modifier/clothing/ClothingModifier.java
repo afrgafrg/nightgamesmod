@@ -1,18 +1,13 @@
 package nightgames.modifier.clothing;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import nightgames.items.clothing.*;
 import nightgames.modifier.ModifierCategory;
 import nightgames.modifier.ModifierComponent;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public abstract class ClothingModifier implements ModifierCategory<ClothingModifier>, ModifierComponent {
     protected static final Set<Integer> ALL_LAYERS = Collections
@@ -74,10 +69,11 @@ public abstract class ClothingModifier implements ModifierCategory<ClothingModif
         equipped.removeIf(c -> forbiddenClothingTraits().stream().anyMatch(t -> c.attributes().contains(t)));
 
         // add forced items, first remove same slots
-        equipped.removeIf(c -> forcedItems().stream().map(Clothing::getByID)
+        equipped.removeIf(c -> ClothingTable.getIDs(forcedItems()).stream()
                         .anyMatch(c2 -> c2.getSlots().stream().anyMatch(s -> c.getSlots().contains(s))
                                         && c2.getLayer() == c.getLayer()));
-        forcedItems().stream().map(Clothing::getByID).forEach(equipped::add);
+        forcedItems().stream().map(ClothingTable::getByID).filter(Optional::isPresent).map(Optional::get)
+                        .forEach(equipped::add);
 
         equipped.forEach(outfit::equip);
     }

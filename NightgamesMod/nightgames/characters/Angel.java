@@ -16,7 +16,6 @@ import nightgames.global.Formatter;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 import java.util.Arrays;
@@ -39,11 +38,11 @@ public class Angel extends BasePersonality {
 
     public void applyBasicStats(Character self ) {
         preferredCockMod = CockMod.blessed;
-        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("thong"));
-        self.outfitPlan.add(ClothingTable.getByID("miniskirt"));
-        self.outfitPlan.add(ClothingTable.getByID("sandals"));
+        self.outfitPlan.addByID("Tshirt");
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("thong");
+        self.outfitPlan.addByID("miniskirt");
+        self.outfitPlan.addByID("sandals");
         self.change();
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
         self.modAttributeDontSaveData(Attribute.Perception, 1);
@@ -644,10 +643,10 @@ public class Angel extends BasePersonality {
         }
         character.body.addReplace(WingsPart.angelic, 5);
         character.unequipAllClothing();
-        character.outfitPlan.add(ClothingTable.getByID("translucentshawl"));
-        character.outfitPlan.add(ClothingTable.getByID("bikinitop"));
-        character.outfitPlan.add(ClothingTable.getByID("bikinibottoms"));
-        character.outfitPlan.add(ClothingTable.getByID("highheels"));
+        character.outfitPlan.addByID("translucentshawl");
+        character.outfitPlan.addByID("bikinitop");
+        character.outfitPlan.addByID("bikinibottoms");
+        character.outfitPlan.addByID("highheels");
         character.modAttributeDontSaveData(Attribute.Divinity, 1);
         character.getGrowth().addOrRemoveTraits(character);
     }

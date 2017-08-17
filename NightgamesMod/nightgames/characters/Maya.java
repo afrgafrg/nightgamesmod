@@ -1,7 +1,5 @@
 package nightgames.characters;
 
-import java.util.Optional;
-
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.custom.CharacterLine;
@@ -9,10 +7,11 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Flag;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Drowsy;
 import nightgames.status.Energized;
+
+import java.util.Optional;
 
 public class Maya extends BasePersonality {
 
@@ -38,12 +37,12 @@ public class Maya extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        self.outfitPlan.add(ClothingTable.getByID("camisole"));
-        self.outfitPlan.add(ClothingTable.getByID("blouse"));
-        self.outfitPlan.add(ClothingTable.getByID("lacepanties"));
-        self.outfitPlan.add(ClothingTable.getByID("skirt"));
-        self.outfitPlan.add(ClothingTable.getByID("sneakers"));
-        self.outfitPlan.add(ClothingTable.getByID("socks"));
+        self.outfitPlan.addByID("camisole");
+        self.outfitPlan.addByID("blouse");
+        self.outfitPlan.addByID("lacepanties");
+        self.outfitPlan.addByID("skirt");
+        self.outfitPlan.addByID("sneakers");
+        self.outfitPlan.addByID("socks");
         self.change();
         self.modAttributeDontSaveData(Attribute.Dark, 10);
         self.modAttributeDontSaveData(Attribute.Seduction, 15);

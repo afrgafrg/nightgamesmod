@@ -1,23 +1,18 @@
 package nightgames.characters;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
-import nightgames.characters.body.mods.ExtendedTonguedMod;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
+import nightgames.characters.body.mods.ExtendedTonguedMod;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public class Mei extends BasePersonality {
     private static final long serialVersionUID = 8601852023164119671L;
@@ -37,9 +32,9 @@ public class Mei extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(ClothingTable.getByID("negligee"));
-        character.outfitPlan.add(ClothingTable.getByID("lacythong"));
-        character.outfitPlan.add(ClothingTable.getByID("garters"));
+        character.outfitPlan.addByID("negligee");
+        character.outfitPlan.addByID("lacythong");
+        character.outfitPlan.addByID("garters");
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Power, 1);

@@ -2,6 +2,7 @@ package nightgames.start;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
+import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
 import nightgames.items.clothing.Clothing;
 import org.hamcrest.collection.IsMapContaining;
@@ -89,9 +90,9 @@ public class NpcConfigurationTest {
     @Test public void testClothing() throws Exception {
         NpcConfiguration mergedConfig = new NpcConfiguration(angelConfig, startConfig.npcCommon);
         TestAngel angel = new TestAngel(Optional.of(angelConfig), Optional.of(startConfig.npcCommon));
-        Clothing[] expectedClothing =
-                        mergedConfig.clothing.orElseThrow(() -> new AssertionError("Merged npc clothing config has no"))
-                                        .stream().map(Clothing::getByID).toArray(Clothing[]::new);
+        Clothing[] expectedClothing = ClothingTable.getIDs(mergedConfig.clothing
+                        .orElseThrow(() -> new AssertionError("Merged npc clothing config has no")))
+                        .toArray(new Clothing[] {});
         assertThat(angel.character.outfit.getEquipped(), hasItems(expectedClothing));
     }
 }

@@ -1,17 +1,8 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
-import nightgames.characters.body.mods.ExtendedTonguedMod;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
+import nightgames.characters.body.mods.ExtendedTonguedMod;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
 import nightgames.combat.CombatScene;
@@ -22,13 +13,11 @@ import nightgames.global.Flag;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
-import nightgames.skills.strategy.DisablingStrategy;
-import nightgames.skills.strategy.FacesitStrategy;
-import nightgames.skills.strategy.FootjobStrategy;
-import nightgames.skills.strategy.KnockdownStrategy;
-import nightgames.skills.strategy.OralStrategy;
+import nightgames.skills.strategy.*;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Reyka extends BasePersonality {
     private static final long serialVersionUID = 8553663088141308399L;
@@ -62,10 +51,10 @@ public class Reyka extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.incubus;
-        self.outfitPlan.add(ClothingTable.getByID("tanktop"));
-        self.outfitPlan.add(ClothingTable.getByID("miniskirt"));
-        self.outfitPlan.add(ClothingTable.getByID("garters"));
-        self.outfitPlan.add(ClothingTable.getByID("stilettopumps"));
+        self.outfitPlan.addByID("tanktop");
+        self.outfitPlan.addByID("miniskirt");
+        self.outfitPlan.addByID("garters");
+        self.outfitPlan.addByID("stilettopumps");
         self.change();
         self.modAttributeDontSaveData(Attribute.Dark, 2);
         self.modAttributeDontSaveData(Attribute.Seduction, 3);

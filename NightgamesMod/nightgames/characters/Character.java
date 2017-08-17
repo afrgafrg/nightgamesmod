@@ -23,10 +23,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
-import nightgames.items.clothing.Clothing;
-import nightgames.items.clothing.ClothingSlot;
-import nightgames.items.clothing.ClothingTrait;
-import nightgames.items.clothing.Outfit;
+import nightgames.items.clothing.*;
 import nightgames.json.JsonUtils;
 import nightgames.pet.CharacterPet;
 import nightgames.pet.PetCharacter;
@@ -69,7 +66,7 @@ public abstract class Character extends Observable implements Cloneable {
     protected Meter mojo;
     protected Meter willpower;
     public Outfit outfit;
-    public List<Clothing> outfitPlan;
+    public OutfitPlan outfitPlan;
     protected Area location;
     private CopyOnWriteArrayList<Skill> skills;
     public List<Status> status;
@@ -126,7 +123,7 @@ public abstract class Character extends Observable implements Cloneable {
         pleasured = false;
 
         outfit = new Outfit();
-        outfitPlan = new ArrayList<>();
+        outfitPlan = new OutfitPlan();
 
         closet = new HashSet<>();
         skills = (new CopyOnWriteArrayList<>());
@@ -175,7 +172,7 @@ public abstract class Character extends Observable implements Cloneable {
         c.arousal = arousal.clone();
         c.mojo = mojo.clone();
         c.willpower = willpower.clone();
-        c.outfitPlan = new ArrayList<>(outfitPlan);
+        c.outfitPlan = new OutfitPlan(this.outfitPlan);
         c.outfit = new Outfit(outfit);
         c.flags = new HashMap<>(flags);
         c.status = status; // Will be deep-copied in finishClone()
@@ -1698,8 +1695,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     private void addClothes(JsonArray array) {
-        outfitPlan.addAll(
-                        JsonUtils.stringsFromJson(array).stream().map(Clothing::getByID).collect(Collectors.toList()));
+        outfitPlan.addByID(JsonUtils.stringsFromJson(array));
     }
 
     public abstract void afterParty();
@@ -2388,6 +2384,14 @@ public abstract class Character extends Observable implements Cloneable {
     public void gain(Clothing item) {
         closet.add(item);
         setChanged();
+    }
+
+    public void gain(Optional<Clothing> item) {
+        item.ifPresent(this::gain);
+    }
+
+    public void gainIfAbsent(Optional<Clothing> clothing) {
+        clothing.filter(c -> !has(c)).ifPresent(this::gain);
     }
 
     public void gain(Item item, int q) {

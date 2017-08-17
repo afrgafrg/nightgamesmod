@@ -1,7 +1,5 @@
 package nightgames.areas;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
@@ -12,6 +10,8 @@ import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.ClothingTable;
+
+import java.util.ArrayList;
 
 public class Cache implements Deployable {
     private int dc;
@@ -199,7 +199,8 @@ public class Cache implements Deployable {
                 reward.add(Item.DisSol);
                 break;
             case 18:
-                reward.add(ClothingTable.getByID("cup"));
+                // TODO: I think this is the source of the empty caches I keep finding.
+                ClothingTable.getByID("cup").ifPresent(cup -> reward.add(cup));
                 break;
             case 17:
                 reward.add(Item.SPotion);

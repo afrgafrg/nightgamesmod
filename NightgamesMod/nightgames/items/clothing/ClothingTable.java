@@ -9,9 +9,7 @@ import nightgames.json.JsonUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClothingTable {
@@ -50,20 +48,41 @@ public class ClothingTable {
         });
     }
 
-    public static Clothing getByID(String key) {
-        Clothing results = clothingTable.get(key);
-        if (results == null) {
-            throw new IllegalArgumentException(key + " is not a valid clothing key");
+    /**
+     * Gets an item of clothing by its ID, logging an exception if the ID was not found.
+     * @param key The clothing ID to find.
+     * @return The item of Clothing, or null if no clothing with that ID was found.
+     */
+    private static Clothing getAndWarn(String key) {
+        Clothing clothing = clothingTable.get(key);
+        if (clothing == null) {
+            try {
+                throw new IllegalArgumentException("No clothing with ID " + key + " was found in the clothing table");
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
-        return results;
+        return clothing;
+    }
+
+    public static Optional<Clothing> getByID(String key) {
+        return Optional.ofNullable(getAndWarn(key));
+    }
+
+    /**
+     * Given a list of clothing IDs, returns a list of Clothing, excluding the IDs that were not found.
+     * @param ids A list of clothing IDs to find.
+     * @return A list of found Clothing items.
+     */
+    public static List<Clothing> getIDs(Collection<String> ids) {
+        return ids.stream().map(ClothingTable::getByID).filter(Optional::isPresent).map(Optional::get)
+                        .collect(Collectors.toList());
     }
 
     public static List<Clothing> getAllBuyableFrom(String shopName) {
         return clothingTable.values()
                             .stream()
-                            .filter(article -> {
-                                return article.stores.contains(shopName);
-                            })
+                            .filter(article -> article.stores.contains(shopName))
                             .collect(Collectors.toList());
     }
 }

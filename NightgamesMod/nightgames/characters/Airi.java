@@ -8,7 +8,6 @@ import nightgames.combat.*;
 import nightgames.daytime.Daytime;
 import nightgames.global.*;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.pet.arms.ArmManager;
 import nightgames.stance.Engulfed;
 import nightgames.start.NpcConfiguration;
@@ -49,12 +48,12 @@ public class Airi extends BasePersonality {
         self.setTrophy(Item.AiriTrophy);
         preferredCockMod = CockMod.error;
 
-        self.outfitPlan.add(ClothingTable.getByID("shirt"));
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("panties"));
-        self.outfitPlan.add(ClothingTable.getByID("skirt"));
-        self.outfitPlan.add(ClothingTable.getByID("pantyhose"));
-        self.outfitPlan.add(ClothingTable.getByID("shoes"));
+        self.outfitPlan.addByID("shirt");
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("panties");
+        self.outfitPlan.addByID("skirt");
+        self.outfitPlan.addByID("pantyhose");
+        self.outfitPlan.addByID("shoes");
         self.change();
         self.rank = 1;
         self.modAttributeDontSaveData(Attribute.Power, -1);

@@ -21,7 +21,6 @@ import nightgames.gui.GUI;
 import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.Stage;
 import nightgames.skills.Tactics;
 import nightgames.skills.damage.DamageType;
@@ -139,15 +138,15 @@ public class Player extends Character {
         self.availableAttributePoints = 0;
         self.setTrophy(Item.PlayerTrophy);
         if (initialGender.considersItselfFeminine()) {
-            outfitPlan.add(ClothingTable.getByID("bra"));
-            outfitPlan.add(ClothingTable.getByID("panties"));
+            outfitPlan.addByID("bra");
+            outfitPlan.addByID("panties");
         } else {
-            outfitPlan.add(ClothingTable.getByID("boxers"));
+            outfitPlan.addByID("boxers");
         }
-        outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        outfitPlan.add(ClothingTable.getByID("jeans"));
-        outfitPlan.add(ClothingTable.getByID("socks"));
-        outfitPlan.add(ClothingTable.getByID("sneakers"));
+        outfitPlan.addByID("Tshirt");
+        outfitPlan.addByID("jeans");
+        outfitPlan.addByID("socks");
+        outfitPlan.addByID("sneakers");
     }
 
     private void applyConfigStats(PlayerConfiguration config) {

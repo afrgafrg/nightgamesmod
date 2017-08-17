@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
@@ -14,8 +11,10 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public class Yui extends BasePersonality {
     /**
@@ -43,10 +42,10 @@ public class Yui extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(ClothingTable.getByID("sarashi"));
-        character.outfitPlan.add(ClothingTable.getByID("shinobigarb"));
-        character.outfitPlan.add(ClothingTable.getByID("loincloth"));
-        character.outfitPlan.add(ClothingTable.getByID("tabi"));
+        character.outfitPlan.addByID("sarashi");
+        character.outfitPlan.addByID("shinobigarb");
+        character.outfitPlan.addByID("loincloth");
+        character.outfitPlan.addByID("tabi");
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Power, 1);

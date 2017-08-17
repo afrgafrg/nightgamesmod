@@ -1,12 +1,6 @@
 package nightgames.characters;
 
-import java.util.Optional;
-
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
@@ -14,8 +8,9 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Optional;
 
 public class Eve extends BasePersonality {
     /**
@@ -40,11 +35,11 @@ public class Eve extends BasePersonality {
 
     @Override
     public void applyBasicStats(Character self) {
-        self.outfitPlan.add(ClothingTable.getByID("tanktop"));
-        self.outfitPlan.add(ClothingTable.getByID("crotchlesspanties"));
-        self.outfitPlan.add(ClothingTable.getByID("jeans"));
-        self.outfitPlan.add(ClothingTable.getByID("stilettopumps"));
-        self.outfitPlan.add(ClothingTable.getByID("garters"));
+        self.outfitPlan.addByID("tanktop");
+        self.outfitPlan.addByID("crotchlesspanties");
+        self.outfitPlan.addByID("jeans");
+        self.outfitPlan.addByID("stilettopumps");
+        self.outfitPlan.addByID("garters");
 
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 1);

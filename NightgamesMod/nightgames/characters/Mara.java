@@ -160,12 +160,12 @@ public class Mara extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.bionic;
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        self.outfitPlan.add(ClothingTable.getByID("underwear"));
-        self.outfitPlan.add(ClothingTable.getByID("shorts"));
-        self.outfitPlan.add(ClothingTable.getByID("pantyhose"));
-        self.outfitPlan.add(ClothingTable.getByID("boots"));
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("Tshirt");
+        self.outfitPlan.addByID("underwear");
+        self.outfitPlan.addByID("shorts");
+        self.outfitPlan.addByID("pantyhose");
+        self.outfitPlan.addByID("boots");
         self.change();
         self.modAttributeDontSaveData(Attribute.Cunning, 2);
         self.modAttributeDontSaveData(Attribute.Perception, 2);
@@ -363,15 +363,15 @@ public class Mara extends BasePersonality {
 
     private void useMindControl() {
         Flag.flag(MARA_MIND_CONTROL_FOCUS);
-        character.getGrowth().addTrait(20, Trait.mindcontroller);
-        character.getGrowth().addTrait(29, Trait.infrasound);
-        character.getGrowth()
-                 .addClothing(29, ClothingTable.getByID("infrasoundnecklace"));
-        character.getGrowth().addTrait(40, Trait.ControlledRelease);
+        Growth growth = character.getGrowth();
+        growth.addTrait(20, Trait.mindcontroller);
+        growth.addTrait(29, Trait.infrasound);
+        ClothingTable.getByID("infrasoundnecklace").ifPresent(clothing -> growth.addClothing(29, clothing));
+        growth.addTrait(40, Trait.ControlledRelease);
         if (Flag.checkFlag(MARA_GENERAL_TECH_FOCUS)) {
-            character.getGrowth().addTrait(53, Trait.RemoteControl);
+            growth.addTrait(53, Trait.RemoteControl);
         } else {
-            character.getGrowth().addTrait(53, Trait.EyeOpener);
+            growth.addTrait(53, Trait.EyeOpener);
         }
     }
 
@@ -458,13 +458,13 @@ public class Mara extends BasePersonality {
                             1);
         }
         character.unequipAllClothing();
-        character.outfitPlan.add(ClothingTable.getByID("bra"));
-        character.outfitPlan.add(ClothingTable.getByID("shirt"));
-        character.outfitPlan.add(ClothingTable.getByID("labcoat"));
-        character.outfitPlan.add(ClothingTable.getByID("underwear"));
-        character.outfitPlan.add(ClothingTable.getByID("pants"));
-        character.outfitPlan.add(ClothingTable.getByID("pantyhose"));
-        character.outfitPlan.add(ClothingTable.getByID("boots"));
+        character.outfitPlan.addByID("bra");
+        character.outfitPlan.addByID("shirt");
+        character.outfitPlan.addByID("labcoat");
+        character.outfitPlan.addByID("underwear");
+        character.outfitPlan.addByID("pants");
+        character.outfitPlan.addByID("pantyhose");
+        character.outfitPlan.addByID("boots");
         character.modAttributeDontSaveData(Attribute.Science, 1);
         character.getGrowth()
                  .addOrRemoveTraits(character);

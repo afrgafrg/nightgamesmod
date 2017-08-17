@@ -13,7 +13,6 @@ import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.skills.strategy.*;
 import nightgames.start.NpcConfiguration;
 
@@ -57,12 +56,12 @@ public class Jewel extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.enlightened;
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("tanktop"));
-        self.outfitPlan.add(ClothingTable.getByID("panties"));
-        self.outfitPlan.add(ClothingTable.getByID("jeans"));
-        self.outfitPlan.add(ClothingTable.getByID("sneakers"));
-        self.outfitPlan.add(ClothingTable.getByID("socks"));
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("tanktop");
+        self.outfitPlan.addByID("panties");
+        self.outfitPlan.addByID("jeans");
+        self.outfitPlan.addByID("sneakers");
+        self.outfitPlan.addByID("socks");
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 2);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
@@ -785,8 +784,8 @@ public class Jewel extends BasePersonality {
                             1);
         }
         character.unequipAllClothing();
-        character.outfitPlan.add(ClothingTable.getByID("gi"));
-        character.outfitPlan.add(ClothingTable.getByID("panties"));
+        character.outfitPlan.addByID("gi");
+        character.outfitPlan.addByID("panties");
         character.modAttributeDontSaveData(Attribute.Ki, 1);
         character.getGrowth()
                  .addOrRemoveTraits(character);

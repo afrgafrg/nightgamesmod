@@ -1,36 +1,17 @@
 package nightgames.start;
 
-import static nightgames.start.ConfigurationUtils.mergeOptionals;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import nightgames.characters.body.*;
+import nightgames.characters.body.mods.*;
+import nightgames.json.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.Body;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.TentaclePart;
-import nightgames.characters.body.WingsPart;
-import nightgames.characters.body.mods.ArcaneMod;
-import nightgames.characters.body.mods.CyberneticMod;
-import nightgames.characters.body.mods.DivineMod;
-import nightgames.characters.body.mods.FeralMod;
-import nightgames.characters.body.mods.GooeyMod;
-import nightgames.characters.body.mods.PartMod;
-import nightgames.characters.body.mods.SecondPussyMod;
-import nightgames.characters.body.mods.SizeMod;
-import nightgames.characters.body.mods.DemonicMod;
-import nightgames.json.JsonUtils;
+import static nightgames.start.ConfigurationUtils.mergeOptionals;
 
 class BodyConfiguration {
 
@@ -69,6 +50,17 @@ class BodyConfiguration {
         wings = mergeOptionals(primaryConfig.wings, secondaryConfig.wings);
         tentacles = mergeOptionals(primaryConfig.tentacles, secondaryConfig.tentacles);
         hotness = mergeOptionals(primaryConfig.hotness, secondaryConfig.hotness);
+    }
+
+    static Optional<BodyConfiguration> merge(Optional<BodyConfiguration> primary,
+                    Optional<BodyConfiguration> secondary) {
+        if (primary.isPresent()) {
+            return secondary.map(
+                            bodyConfiguration -> Optional.of(new BodyConfiguration(primary.get(), bodyConfiguration)))
+                            .orElse(primary);
+        } else {
+            return secondary;
+        }
     }
 
     static BodyConfiguration parse(JsonObject obj) {

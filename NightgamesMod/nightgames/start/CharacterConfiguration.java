@@ -1,31 +1,23 @@
 package nightgames.start;
 
-import static nightgames.start.ConfigurationUtils.mergeCollections;
-import static nightgames.start.ConfigurationUtils.mergeOptionals;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import nightgames.characters.Attribute;
+import nightgames.characters.*;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterSex;
-import nightgames.characters.Growth;
-import nightgames.characters.Trait;
 import nightgames.global.Flag;
 import nightgames.global.Random;
 import nightgames.items.clothing.Clothing;
+import nightgames.items.clothing.ClothingTable;
+import nightgames.items.clothing.OutfitPlan;
 import nightgames.json.JsonUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static nightgames.start.ConfigurationUtils.mergeCollections;
+import static nightgames.start.ConfigurationUtils.mergeOptionals;
 
 public abstract class CharacterConfiguration {
 
@@ -68,15 +60,7 @@ public abstract class CharacterConfiguration {
         xp = mergeOptionals(primaryConfig.xp, secondaryConfig.xp);
         clothing = mergeOptionals(primaryConfig.clothing, secondaryConfig.clothing);
         traits = mergeCollections(primaryConfig.traits, secondaryConfig.traits);
-        if (primaryConfig.body.isPresent()) {
-            if (secondaryConfig.body.isPresent()) {
-                body = Optional.of(new BodyConfiguration(primaryConfig.body.get(), secondaryConfig.body.get()));
-            } else {
-                body = primaryConfig.body;
-            }
-        } else {
-            body = secondaryConfig.body;
-        }
+        body = BodyConfiguration.merge(primaryConfig.body, secondaryConfig.body);
     }
 
     private Map<Integer, Map<Attribute, Integer>> calculateAttributeLevelPlan(Character base, int desiredLevel, Map<Attribute, Integer> desiredFinalAttributes) {
@@ -113,7 +97,7 @@ public abstract class CharacterConfiguration {
     }
 
     protected final void apply(Character base) {
-        name.ifPresent(n -> base.setName(n));
+        name.ifPresent(base::setName);
         money.ifPresent(m -> base.money = m);
         traits.ifPresent(t -> {
             base.clearTraits();
@@ -135,13 +119,13 @@ public abstract class CharacterConfiguration {
             }
         });
         base.att.putAll(attributes);
-        xp.ifPresent(x -> base.gainXPPure(x));
-        if (clothing.isPresent()) {
-            List<Clothing> clothes = clothing.get().stream().map(Clothing::getByID).collect(Collectors.toList());
-            base.outfitPlan = new ArrayList<>(clothes);
+        xp.ifPresent(base::gainXPPure);
+        clothing.ifPresent(ids -> {
+            List<Clothing> clothes = ClothingTable.getIDs(ids);
+            base.outfitPlan = new OutfitPlan(clothes);
             base.closet = new HashSet<>(clothes);
             base.change();
-        }
+        });
         body.ifPresent(b -> b.apply(base.body));
         base.levelUpIfPossible(null);
     }

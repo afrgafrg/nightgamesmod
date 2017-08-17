@@ -1,27 +1,16 @@
 package nightgames.items.clothing;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Formatter;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Outfit {
     private Map<ClothingSlot, List<Clothing>> outfit;
@@ -173,13 +162,21 @@ public class Outfit {
         return article;
     }
 
+    /**
+     * Equips an article of clothing, unequipping all conflicting clothes.
+     * @param article The item of clothing to equip.
+     * @return A list of all unequipped Clothing.
+     */
     public List<Clothing> equip(Clothing article) {
-        // get a list of things that will be unequipped by this
         List<Clothing> unequipped = article.getSlots().stream().map(slot -> outfit.get(slot).get(article.getLayer()))
-                        .filter(c -> c != null).map(this::unequip).collect(Collectors.toList());
+                        .filter(Objects::nonNull).map(this::unequip).collect(Collectors.toList());
         article.getSlots().forEach(slot -> outfit.get(slot).set(article.getLayer(), article));
         equipped.add(article);
         return unequipped;
+    }
+
+    public List<Clothing> equip(Optional<Clothing> article) {
+        return article.map(this::equip).orElse(new ArrayList<>());
     }
 
     public void dress(List<Clothing> pile) {

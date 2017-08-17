@@ -7,7 +7,6 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Random;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
 
 import java.util.Optional;
@@ -58,11 +57,11 @@ public class TestAngel extends BasePersonality {
         baseChar.body.add(EarPart.normal);
         baseChar.body.baseFemininity = 2;
 
-        baseChar.outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        baseChar.outfitPlan.add(ClothingTable.getByID("bra"));
-        baseChar.outfitPlan.add(ClothingTable.getByID("thong"));
-        baseChar.outfitPlan.add(ClothingTable.getByID("miniskirt"));
-        baseChar.outfitPlan.add(ClothingTable.getByID("sandals"));
+        baseChar.outfitPlan.addByID("Tshirt");
+        baseChar.outfitPlan.addByID("bra");
+        baseChar.outfitPlan.addByID("thong");
+        baseChar.outfitPlan.addByID("miniskirt");
+        baseChar.outfitPlan.addByID("sandals");
         baseChar.change();
 
         baseChar.gainSkills();
@@ -80,11 +79,11 @@ public class TestAngel extends BasePersonality {
 
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.blessed;
-        self.outfitPlan.add(ClothingTable.getByID("Tshirt"));
-        self.outfitPlan.add(ClothingTable.getByID("bra"));
-        self.outfitPlan.add(ClothingTable.getByID("thong"));
-        self.outfitPlan.add(ClothingTable.getByID("miniskirt"));
-        self.outfitPlan.add(ClothingTable.getByID("sandals"));
+        self.outfitPlan.addByID("Tshirt");
+        self.outfitPlan.addByID("bra");
+        self.outfitPlan.addByID("thong");
+        self.outfitPlan.addByID("miniskirt");
+        self.outfitPlan.addByID("sandals");
         self.change();
         self.att.put(Attribute.Seduction, 7);
         self.att.put(Attribute.Perception, 6);
@@ -427,10 +426,10 @@ public class TestAngel extends BasePersonality {
         character.body.addReplace(PussyPart.generic.applyMod(DivineMod.INSTANCE), 1);
         character.body.addReplace(WingsPart.angelic, 5);
         character.unequipAllClothing();
-        character.outfitPlan.add(ClothingTable.getByID("translucentshawl"));
-        character.outfitPlan.add(ClothingTable.getByID("bikinitop"));
-        character.outfitPlan.add(ClothingTable.getByID("bikinibottoms"));
-        character.outfitPlan.add(ClothingTable.getByID("highheels"));
+        character.outfitPlan.addByID("translucentshawl");
+        character.outfitPlan.addByID("bikinitop");
+        character.outfitPlan.addByID("bikinibottoms");
+        character.outfitPlan.addByID("highheels");
         character.modAttributeDontSaveData(Attribute.Divinity, 1);
     }
 

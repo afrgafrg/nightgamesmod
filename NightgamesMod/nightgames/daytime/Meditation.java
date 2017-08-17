@@ -79,9 +79,7 @@ public class Meditation extends Activity {
                 player.modAttributeDontSaveData(Attribute.Ki, 1);
                 Flag.flag("Trained" + Attribute.Ki.name());
                 acted = true;
-                if (!player.has(ClothingTable.getByID("gi"))) {
-                    player.gain(ClothingTable.getByID("gi"));
-                }
+                player.gainIfAbsent(ClothingTable.getByID("gi"));
                 choose("Leave", GUI.gui);
             } else {
                 GUI.gui.message("You don't have enough money for training.");

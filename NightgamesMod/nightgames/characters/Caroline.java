@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Collection;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BreastsPart;
@@ -15,8 +12,10 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.items.Item;
-import nightgames.items.clothing.ClothingTable;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Collection;
+import java.util.Optional;
 
 public class Caroline extends BasePersonality {
     private static final long serialVersionUID = 8601852023164119671L;
@@ -36,9 +35,9 @@ public class Caroline extends BasePersonality {
     @Override
     public void applyBasicStats(Character self) {
         preferredCockMod = CockMod.error;
-        character.outfitPlan.add(ClothingTable.getByID("lacybra"));
-        character.outfitPlan.add(ClothingTable.getByID("lacepanties"));
-        character.outfitPlan.add(ClothingTable.getByID("stockings"));
+        character.outfitPlan.addByID("lacybra");
+        character.outfitPlan.addByID("lacepanties");
+        character.outfitPlan.addByID("stockings");
 
         character.change();
         character.modAttributeDontSaveData(Attribute.Seduction, 1);

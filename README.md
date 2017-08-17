@@ -8,22 +8,24 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
 1. **DONE** Some tests are failing or broken. Restore to green status.
 
-2. **DONE** Move game logic out of GUI. For this step, code reaching into the gui package is fine; code reaching out is not. Might look uglier than before.
+1. **DONE [GUI BREAKUP]** Move game logic out of GUI. For this step, code reaching into the gui package is fine; code reaching out is not. Might look uglier than before.
 
-3. **DONE** Break up the Global monstrosity. Find similar parts and move them to their own classes/packages.
+1. **DONE [GLOBAL BREAKUP]** Break up the Global monstrosity. Find similar parts and move them to their own classes/packages.
 
    **ENOUGH** This looks like a good time to do some post-move cleanup.
 
-4. **DONE** Make the game loop explicit, or at least document it. (holy balls that was way easier than last time! amazing what focusing on one thing at a time will do)
+1. **DONE** Make the game loop explicit, or at least document it. (holy balls that was way easier than last time! amazing what focusing on one thing at a time will do)
 
-5. Concurrency is hard! Build infrastructure to make it easy to do things like wait for user input.
+1. **[STATIC DISCHARGE]** Reduce reliance on static fields and methods. Static members make testing harder and can introduce spooky action at a distance.
 
-6. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
+1. Concurrency is hard! Build infrastructure to make it easy to do things like wait for user input.
 
-7. Migrate combat to an event-based system, or at least some sort of system. Will enable step 8.
+1. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
 
-8. Make the effects of a trait or status viewable in a single location.
+1. Migrate combat to an event-based system, or at least some sort of system. Will enable step 8.
 
-9. man who even knows
+1. Make the effects of a trait or status viewable in a single location.
 
-10. anything that isn't done yet will probably change
+1. man who even knows
+
+1. anything that isn't done yet will probably change

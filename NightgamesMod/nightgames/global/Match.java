@@ -4,8 +4,10 @@ import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.areas.Cache;
 import nightgames.areas.MapSchool;
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.State;
+import nightgames.characters.Trait;
 import nightgames.gui.GUI;
 import nightgames.modifier.Modifier;
 import nightgames.skills.SkillPool;
@@ -89,23 +91,23 @@ public class Match {
     }
 
     public void startMatch() {
-        CharacterPool.getPlayer().getAddictions().forEach(a -> {
+        GameState.gameState.characterPool.getPlayer().getAddictions().forEach(a -> {
             Optional<Status> withEffect = a.startNight();
-            withEffect.ifPresent(s -> CharacterPool.getPlayer().addNonCombat(s));
+            withEffect.ifPresent(s -> GameState.gameState.characterPool.getPlayer().addNonCombat(s));
         });
         startMatchGui(GUI.gui);
         match.round();
     }
 
     public static HashSet<Character> getParticipants() {
-        return new HashSet<>(CharacterPool.players);
+        return new HashSet<>(GameState.gameState.characterPool.players);
     }
 
     public static List<Character> getMatchParticipantsInAffectionOrder() {
         if (match == null) {
             return Collections.emptyList();
         }
-        return CharacterPool.getInAffectionOrder(match.combatants.stream().filter(c -> !c.human()).collect(Collectors.toList()));
+        return GameState.gameState.characterPool.getInAffectionOrder(match.combatants.stream().filter(c -> !c.human()).collect(Collectors.toList()));
     }
 
     public static Match getMatch() {
@@ -258,7 +260,7 @@ public class Match {
                 character.add(Trait.masterheels);
             }
         }
-        CharacterPool.getPlayer().getAddictions().forEach(Addiction::endNight);
+        GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::endNight);
         matchComplete.countDown();
     }
 
@@ -328,7 +330,7 @@ public class Match {
     }
 
     public void quit() {
-        Character human = CharacterPool.getPlayer();
+        Character human = GameState.gameState.characterPool.getPlayer();
         if (human.state == State.combat) {
             if (human.location().fight.getCombat() != null) {
                 human.location().fight.getCombat().forfeit(human);

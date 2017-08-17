@@ -1,21 +1,23 @@
 package nightgames.modifier.standard;
 
-import java.util.Arrays;
-import java.util.List;
-
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
-import nightgames.global.*;
+import nightgames.global.Flag;
+import nightgames.global.GameState;
+import nightgames.global.Match;
+import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.modifier.BaseModifier;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LevelDrainModifier extends BaseModifier {
     public LevelDrainModifier() {
         custom = (c, m) -> {
             if (!c.human()) {
-                if (c.getLevel() < CharacterPool.getPlayer().getLevel() + 5) {
+                if (c.getLevel() < GameState.gameState.characterPool.getPlayer().getLevel() + 5) {
                     c.addTemporaryTrait(Trait.ExpertLevelDrainer, 999);
                 } else {
                     c.removeTemporarilyAddedTrait(Trait.ExpertLevelDrainer);
@@ -42,7 +44,7 @@ public class LevelDrainModifier extends BaseModifier {
 
     @Override
     public String intro() {
-        return "<i>\"" + CharacterPool.getPlayer().getName() + ", don't you think you are getting a bit too strong? "
+        return "<i>\"" + GameState.gameState.characterPool.getPlayer().getName() + ", don't you think you are getting a bit too strong? "
              + "The girls aren't really winning many matches any more! The benefactor doesn't like that, oh no he doesn't. Technically, I'm supposed to put you "
              + "in a different rotation with more difficult opponents, but the girls seems vehemently against it. Isn't it nice to be loved? "
              + "But since we can't really let this continue the way it's going, I have a proposal for you.\"</i> Lilly rubs her hands together mischeviously and takes out "
@@ -61,10 +63,10 @@ public class LevelDrainModifier extends BaseModifier {
 
     @Override
     public boolean isApplicable() {
-        int playerLevel = CharacterPool.getPlayer().getLevel();
+        int playerLevel = GameState.gameState.characterPool.getPlayer().getLevel();
         double averageLevel = Match.getParticipants().stream().filter(p -> !p.human()).filter(p -> !Flag.checkCharacterDisabledFlag(p)).mapToInt(Character::getLevel).average().orElse(0);
         return playerLevel > averageLevel + 5
-                        && (Flag.checkFlag(Flag.darkness) || CharacterPool.getPlayer().getRank() >= 2)
+                        && (Flag.checkFlag(Flag.darkness) || GameState.gameState.characterPool.getPlayer().getRank() >= 2)
                         && Match.getParticipants().stream().noneMatch(p -> p.has(Trait.leveldrainer));
     }
 

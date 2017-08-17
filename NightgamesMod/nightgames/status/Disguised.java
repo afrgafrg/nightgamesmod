@@ -1,13 +1,15 @@
 package nightgames.status;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.GameState;
+
+import java.util.Optional;
 
 public class Disguised extends Status {
     private NPC disguisedTarget;
@@ -109,7 +111,7 @@ public class Disguised extends Status {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Disguised(null, CharacterPool.getNPC(obj.get("disguisedTarget").getAsString()));
+        return new Disguised(null, GameState.gameState.characterPool.getNPC(obj.get("disguisedTarget").getAsString()));
     }
 
     public NPC getTarget() {

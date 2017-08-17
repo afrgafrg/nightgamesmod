@@ -1,16 +1,13 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.mods.FieryMod;
 import nightgames.characters.body.mods.SizeMod;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -20,10 +17,13 @@ import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 @SuppressWarnings("unused")
 public class JewelTime extends BaseNPCTime {
     public JewelTime(Character player) {
-        super(player, CharacterPool.getNPC("Jewel"));
+        super(player, GameState.gameState.characterPool.getNPC("Jewel"));
         knownFlag = "JewelKnown";
         giftedString = "\"Thanks! You're pretty nice you know?\"";
         giftString = "\"A present? I'm not going to go easy on you even if you bribe me you know?\"";
@@ -137,7 +137,7 @@ public class JewelTime extends BaseNPCTime {
             choose("Games", GUI.gui);
             choose("Sparring", GUI.gui);
             choose("Sex", GUI.gui);
-            if (CharacterPool.getPlayer()
+            if (GameState.gameState.characterPool.getPlayer()
                       .checkAddiction(AddictionType.DOMINANCE, npc)) {
                 choose("Ask about Dominance", GUI.gui);
             }
@@ -203,7 +203,7 @@ public class JewelTime extends BaseNPCTime {
                                   + "swept out from under you. You fall hard on your back, and Jewel less-than-gracefully"
                                   + " drops herself onto your chest, knocking the wind out of you. Before you can even"
                                   + " catch your breath, Jewel finishes pulling off your shirt and attaches two ropes to"
-                                  + " your wrists. <br/><br/>\"Right over here, " + CharacterPool.getPlayer().boyOrGirl() + ".\" She gets up and uses the ropes to"
+                                  + " your wrists. <br/><br/>\"Right over here, " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + ".\" She gets up and uses the ropes to"
                                   + " drag you to the couch, attaching the ropes to its legs. While you test how much "
                                   + "movement you still have, Jewel finishes her work by tying your ankles to other "
                                   + "furniture. Now spread-eagled on your back, the near future is looking rather bleak. "
@@ -234,9 +234,9 @@ public class JewelTime extends BaseNPCTime {
                                   + " of licking me. That should be good enough.\" She shoves you towards and out of the door,"
                                   + " leaving you standing in the hallway holding your shirt in your hands, to the great amusement"
                                   + " of some of Jewel's neighbors. You hurriedly pull the shirt on and make your way out of the dorm.");
-            CharacterPool.getPlayer()
+            GameState.gameState.characterPool.getPlayer()
                   .addict(null, AddictionType.DOMINANCE, npc, Addiction.MED_INCREASE);
-            CharacterPool.getPlayer()
+            GameState.gameState.characterPool.getPlayer()
                   .getAddiction(AddictionType.DOMINANCE)
                   .ifPresent(Addiction::flagDaytime);
             choose("Leave", GUI.gui);
@@ -392,7 +392,7 @@ public class JewelTime extends BaseNPCTime {
 
     @Override
     public Optional<String> getAddictionOption() {
-        return CharacterPool.getPlayer()
+        return GameState.gameState.characterPool.getPlayer()
                      .checkAddiction(AddictionType.DOMINANCE) ? Optional.of("Ask about Dominance") : Optional.empty();
     }
 }

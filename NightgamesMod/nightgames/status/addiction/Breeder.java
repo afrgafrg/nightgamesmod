@@ -1,16 +1,18 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Emotion;
+import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.GameState;
 import nightgames.status.Horny;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class Breeder extends Addiction {
     public Breeder(Character affected, Character cause, float magnitude) {
@@ -232,7 +234,7 @@ public class Breeder extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Breeder(NPC.noneCharacter(), CharacterPool.getCharacterByType(obj.get("cause").getAsString()),
+        return new Breeder(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 }

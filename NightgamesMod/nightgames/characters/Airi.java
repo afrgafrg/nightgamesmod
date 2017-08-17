@@ -1,25 +1,10 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.TentaclePart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.GooeyMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.characters.custom.CharacterLine;
-import nightgames.combat.Combat;
-import nightgames.combat.CombatScene;
-import nightgames.combat.CombatSceneChoice;
-import nightgames.combat.CombatantData;
-import nightgames.combat.Result;
+import nightgames.combat.*;
 import nightgames.daytime.Daytime;
 import nightgames.global.*;
 import nightgames.items.Item;
@@ -30,6 +15,11 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.Flatfooted;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Airi extends BasePersonality {
     private static final long serialVersionUID = -8169646189131720872L;
@@ -187,7 +177,7 @@ public class Airi extends BasePersonality {
                         new CombatSceneChoice("Transform?", (c, self, other) -> {
                             List<Character> lovers = Match
                                             .getMatchParticipantsInAffectionOrder().stream().filter(pa -> !pa.getType().equals(getType())).collect(Collectors.toList());
-                            Character lover = CharacterPool.getCharacterByType(new Angel().getType());
+                            Character lover = GameState.gameState.characterPool.getCharacterByType(new Angel().getType());
                             if (!lovers.isEmpty()) {
                                 lover = lovers.get(0);
                             }
@@ -249,7 +239,9 @@ public class Airi extends BasePersonality {
                             useMimicry();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )
@@ -328,7 +320,9 @@ public class Airi extends BasePersonality {
                             useTentacles();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 5 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )

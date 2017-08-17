@@ -1,9 +1,9 @@
 package nightgames.gui;
 
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.combat.IEncounter;
 import nightgames.global.Encs;
+import nightgames.global.GameState;
 import nightgames.global.Match;
 import nightgames.trap.Trap;
 
@@ -27,7 +27,7 @@ public class EncounterButton extends JButton {
         this.target = target;
         this.choice = choice;
         addActionListener(arg0 -> {
-            EncounterButton.this.enc.parse(EncounterButton.this.choice, CharacterPool.getPlayer(),
+            EncounterButton.this.enc.parse(EncounterButton.this.choice, GameState.gameState.characterPool.getPlayer(),
                             EncounterButton.this.target);
             Match.getMatch().resume();
         });
@@ -41,7 +41,7 @@ public class EncounterButton extends JButton {
         this.choice = choice;
         this.trap = trap;
         addActionListener(arg0 -> {
-            EncounterButton.this.enc.parse(EncounterButton.this.choice, CharacterPool.getPlayer(), EncounterButton.this.target,
+            EncounterButton.this.enc.parse(EncounterButton.this.choice, GameState.gameState.characterPool.getPlayer(), EncounterButton.this.target,
                             EncounterButton.this.trap);
             Match.getMatch().resume();
         });

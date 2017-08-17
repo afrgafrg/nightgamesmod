@@ -1,11 +1,7 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
@@ -13,6 +9,7 @@ import nightgames.characters.body.mods.ArcaneMod;
 import nightgames.characters.body.mods.SecondPussyMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -23,9 +20,12 @@ import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.Addiction.Severity;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class CassieTime extends BaseNPCTime {
     public CassieTime(Character player) {
-        super(player, CharacterPool.getNPC("Cassie"));
+        super(player, GameState.gameState.characterPool.getNPC("Cassie"));
         knownFlag = "CassieKnown";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
@@ -39,7 +39,7 @@ public class CassieTime extends BaseNPCTime {
                         + "she says without looking at you. <i>\"You're cute, funny, and we got along so well whenever we talked. I tried to think of ways to flirt with you so you'd see me as more than "
                         + "a friend, but I don't think I'd have ever worked up the courage to try. When I saw that we had both joined the games, I can't properly describe what I felt. Embarrassed"
                         + " of course - maybe more embarrassed than I've been in years - to be seen at a sexfighting competition by someone I knew. I was also really excited about the possibility "
-                        + "of being intimate with the " + CharacterPool.getPlayer().boyOrGirl() + " I liked. Most of all, I was scared that you might look down on me when you found out what a horny girl I am.\"</i> She grasps your hand and you "
+                        + "of being intimate with the " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + " I liked. Most of all, I was scared that you might look down on me when you found out what a horny girl I am.\"</i> She grasps your hand and you "
                         + "squeeze it reassuringly. You pull her towards you and kiss her softly. <i>\"I guess it turned out better than I could have hoped.\"</i><br/><br/>She sits up and looks at you, blushing "
                         + "deeply. <i>\"We can't keep lying here with my embarrassing story in the air, let's do some training.\"</i>";
         advTrait = Trait.witch;
@@ -163,10 +163,10 @@ public class CassieTime extends BaseNPCTime {
             choose("Games", GUI.gui);
             choose("Sparring", GUI.gui);
             choose("Sex", GUI.gui);
-            if (npc.has(Trait.magicmilk) && CharacterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
+            if (npc.has(Trait.magicmilk) && GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
                 choose("Ask for milk", GUI.gui);
             }
-        } else if (CharacterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
+        } else if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK)) {
             GUI.gui.message(
                             "You find Cassie studying in the library, a ways out of earshot of the other students. She catches your eye and smiles knowingly. "
                             + "Putting down her book, she walks to you and whispers in your ear, <i>Give me five minutes, then meet me in the girls bathroom on the third floor. Don't worry, it's always empty.</i>"
@@ -207,7 +207,7 @@ public class CassieTime extends BaseNPCTime {
                                             + "out together or practicing for the night games, but it won't change who she is. There's surely enough overlap between her two worlds for you to fit. She's quiet "
                                             + "for another short while, then stands up on her toes and presses her mouth softly against yours. You've tasted her lips before, but this is something different. this "
                                             + "is hesitant and innocent, like a lover's first kiss.<br/><br/><i>\"If I can pretend to be anyone, can I pretend to be your girlfriend?\"</i> You answer by wrapping your arms "
-                                            + "around her and kissing her tenderly. <i>\"Hanging out with a cute " + CharacterPool
+                                            + "around her and kissing her tenderly. <i>\"Hanging out with a cute " + GameState.gameState.characterPool
                                             .getPlayer().boyOrGirl() + " interspersed with wild sex games? Sounds like a great date,\"</i> she says, face flushed but "
                                             + "lit up in a genuine smile. <i>\"What exactly do you have in mind?\"</i>");
             npc.gainAffection(player, 1);
@@ -215,7 +215,7 @@ public class CassieTime extends BaseNPCTime {
             choose("Games", GUI.gui);
             choose("Sparring", GUI.gui);
             choose("Sex", GUI.gui);
-            if (npc.has(Trait.magicmilk) && CharacterPool.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
+            if (npc.has(Trait.magicmilk) && GameState.gameState.characterPool.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK) != Severity.NONE) {
                 choose("Ask for milk", GUI.gui);
             }
         }
@@ -227,7 +227,7 @@ public class CassieTime extends BaseNPCTime {
         if (choice.equals("Ask for milk")) {
             if (npc.getAffection(player) > 0) {
                 String msg;
-                switch (CharacterPool.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK)) {
+                switch (GameState.gameState.characterPool.getPlayer().getAddictionSeverity(AddictionType.MAGIC_MILK)) {
                     case HIGH:
                         msg = "You haven't been able to think of anything but Cassie all day, whether simply because of"
                                         + " her milk or because of some deeper feelings. She seems to understand the"
@@ -402,8 +402,8 @@ public class CassieTime extends BaseNPCTime {
             choose("Leave", GUI.gui);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
-            CharacterPool.getPlayer().addict(null, AddictionType.MAGIC_MILK, npc, Addiction.MED_INCREASE);
-            CharacterPool.getPlayer().getAddiction(AddictionType.MAGIC_MILK).ifPresent(Addiction::flagDaytime);
+            GameState.gameState.characterPool.getPlayer().addict(null, AddictionType.MAGIC_MILK, npc, Addiction.MED_INCREASE);
+            GameState.gameState.characterPool.getPlayer().getAddiction(AddictionType.MAGIC_MILK).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
             if (npc.getAffection(player) >= 12 && (!player.has(Trait.silvertongue) || Random.random(2) == 1)) {
                 GUI.gui.message(
@@ -418,8 +418,8 @@ public class CassieTime extends BaseNPCTime {
                                                 + "When she tongues you just under the glans and applies a little suction, it pushes you over the edge. You give a low groan and shoot your load into her mouth.<br/><br/>"
                                                 + "Cassie swallows your semen and giggles. <i>\"I think I found a sensitive spot. I'll have to remember that.\"</i> She doesn't move away from your groin, watching with a smile "
                                                 + "as your dick starts to soften. This isn't the first time she's seen a penis. Is it really that fascinating? Her cheeks grow slightly redder than they already were. "
-                                                + "<i>\"Girls are interested in sex too. I've spent a lot of nights thinking about " + CharacterPool
-                                                .getPlayer().boyOrGirl() + "s since puberty. You're the closest I've ever had to an actual " + CharacterPool
+                                                + "<i>\"Girls are interested in sex too. I've spent a lot of nights thinking about " + GameState.gameState.characterPool
+                                                .getPlayer().boyOrGirl() + "s since puberty. You're the closest I've ever had to an actual " + GameState.gameState.characterPool
                                                 .getPlayer().boyOrGirl() + "friend.\"</i> So she was a virgin "
                                                 + "when she first joined the night games? She fidgets a bit at the question, which you notice makes her hips wiggle in quite an attractive way. <i>\"Not quite a virgin. "
                                                 + "In high school, I had a close friend like that, but in the end we were just friends. One day as it's getting close to graduation, we end up talking about how we both want to lose "
@@ -565,6 +565,6 @@ public class CassieTime extends BaseNPCTime {
     
     @Override
     public Optional<String> getAddictionOption() {
-        return CharacterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK) ? Optional.of("Ask for milk") : Optional.empty();
+        return GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MAGIC_MILK) ? Optional.of("Ask for milk") : Optional.empty();
     }
 }

@@ -1,11 +1,11 @@
 package nightgames.skills;
 
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.NPC;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.pet.CharacterPet;
 
 public class SummonYui extends Skill {
@@ -15,7 +15,7 @@ public class SummonYui extends Skill {
 
     @Override
     public boolean requirements(Combat c, Character user, Character target) {
-        return CharacterPool.getCharacterByType("Yui").getAffection(getSelf()) >= 10;
+        return GameState.gameState.characterPool.getCharacterByType("Yui").getAffection(getSelf()) >= 10;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SummonYui extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        NPC yui = CharacterPool.getNPCByType("Yui");
+        NPC yui = GameState.gameState.characterPool.getNPCByType("Yui");
         int power = (getSelf().getLevel() + target.getLevel()) / 2;
         int ac = 4 + power / 3;
         writeOutput(c, Result.normal, target);

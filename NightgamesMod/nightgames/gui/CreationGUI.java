@@ -413,16 +413,16 @@ public class CreationGUI extends JPanel {
             String rate = (String) ExpBox.getSelectedItem();
             ExpDescription.setText(rate);
             if ("Slow".equals(rate)) {
-                GameState.xpRate = .5;
+                GameState.gameState.xpRate = .5;
             }
             if ("Normal".equals(rate)) {
-                GameState.xpRate = 1;
+                GameState.gameState.xpRate = 1;
             }
             if ("Fast".equals(rate)) {
-                GameState.xpRate = 1.5;
+                GameState.gameState.xpRate = 1.5;
             }
             if ("Very Fast".equals(rate)) {
-                GameState.xpRate = 3;
+                GameState.gameState.xpRate = 3;
             }
         });
         verticalBox.add(ExpDescription);
@@ -506,7 +506,7 @@ public class CreationGUI extends JPanel {
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
             GameState state = new GameState();
-            state.GameState(name, startConfig, traits, sex, selectedAttributes);
+            state.newGame(name, startConfig, traits, sex, selectedAttributes);
             GUI.gui.stateFuture.complete(state);
         }
     }

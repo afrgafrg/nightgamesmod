@@ -1,44 +1,14 @@
 package nightgames.characters;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Observable;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import nightgames.global.*;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import nightgames.actions.Action;
 import nightgames.actions.Move;
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.areas.NinjaStash;
-import nightgames.characters.body.Body;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.TentaclePart;
-import nightgames.characters.body.ToysPart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.characters.custom.AiModifiers;
@@ -48,6 +18,9 @@ import nightgames.combat.CombatantData;
 import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
 import nightgames.ftc.FTCMatch;
+import nightgames.global.*;
+import nightgames.global.Formatter;
+import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -57,35 +30,28 @@ import nightgames.items.clothing.Outfit;
 import nightgames.json.JsonUtils;
 import nightgames.pet.CharacterPet;
 import nightgames.pet.PetCharacter;
-import nightgames.pet.arms.ArmType;
 import nightgames.pet.arms.ArmManager;
+import nightgames.pet.arms.ArmType;
 import nightgames.skills.*;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
 import nightgames.stance.Stance;
-import nightgames.status.Abuff;
-import nightgames.status.Alluring;
-import nightgames.status.BodyFetish;
-import nightgames.status.Disguised;
-import nightgames.status.DivineCharge;
-import nightgames.status.DivineRecoil;
-import nightgames.status.Falling;
-import nightgames.status.Feral;
-import nightgames.status.Frenzied;
-import nightgames.status.InsertedStatus;
-import nightgames.status.Masochistic;
-import nightgames.status.Resistance;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.status.addiction.Addiction;
+import nightgames.status.addiction.Addiction.Severity;
 import nightgames.status.addiction.AddictionType;
 import nightgames.status.addiction.Dominance;
 import nightgames.status.addiction.MindControl;
-import nightgames.status.addiction.Addiction.Severity;
 import nightgames.trap.Trap;
 import nightgames.utilities.DebugHelper;
 import nightgames.utilities.ProseUtils;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public abstract class Character extends Observable implements Cloneable {
@@ -409,7 +375,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (has(Trait.fastLearner)) {
             rate += .2;
         }
-        rate *= GameState.xpRate;
+        rate *= GameState.gameState.xpRate;
         i = (int) Math.round(i * rate);
 
         if (!has(Trait.leveldrainer)) {
@@ -2484,7 +2450,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void resupply() {
         for (String victorType : mercy) {
-            Character victor = CharacterPool.getCharacterByType(victorType);
+            Character victor = GameState.gameState.characterPool.getCharacterByType(victorType);
             victor.bounty(has(Trait.event) ? 5 : 1, victor);
         }
         mercy.clear();
@@ -2527,7 +2493,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void finishMatch() {
         for (String victorType : mercy) {
-            Character victor = CharacterPool.getCharacterByType(victorType);
+            Character victor = GameState.gameState.characterPool.getCharacterByType(victorType);
             victor.bounty(has(Trait.event) ? 5 : 1, victor);
         }
         GUI.gui.clearImage();
@@ -3016,9 +2982,9 @@ public abstract class Character extends Observable implements Cloneable {
         b.append("<br/>");
         if (human()) {
             // ALWAYS GET JUDGED BY ANGEL. lol.
-            body.describeBodyText(b, CharacterPool.getCharacterByType("Angel"), notableOnly);
+            body.describeBodyText(b, GameState.gameState.characterPool.getCharacterByType("Angel"), notableOnly);
         } else {
-            body.describeBodyText(b, CharacterPool.getPlayer(), notableOnly);
+            body.describeBodyText(b, GameState.gameState.characterPool.getPlayer(), notableOnly);
         }
         if (getTraits().size() > 0) {
             b.append("<br/>Traits:<br/>");
@@ -3329,7 +3295,7 @@ public abstract class Character extends Observable implements Cloneable {
     public abstract String getPortrait(Combat c);
 
     public void modMoney(int i) {
-        setMoney((int) (money + Math.round(i * GameState.moneyRate)));
+        setMoney((int) (money + Math.round(i * GameState.gameState.moneyRate)));
     }
 
     public void setMoney(int i) {

@@ -1,13 +1,5 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BodyPart;
@@ -19,12 +11,15 @@ import nightgames.characters.custom.CommentSituation;
 import nightgames.characters.custom.RecruitmentData;
 import nightgames.combat.Combat;
 import nightgames.global.*;
+import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.skills.Skill;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.Addiction.Severity;
 import nightgames.utilities.MathUtils;
+
+import java.util.*;
 
 public abstract class BasePersonality implements Personality {
     /**
@@ -96,7 +91,7 @@ public abstract class BasePersonality implements Personality {
             if (addiction.atLeast(Severity.LOW)) {
                 Character cause = addiction.getCause();
                 int affection = character.getAffection(cause);
-                int affectionDelta = affection - character.getAffection(CharacterPool.getPlayer());
+                int affectionDelta = affection - character.getAffection(GameState.gameState.characterPool.getPlayer());
                 // day 10, this would be (10 + sqrt(10) * 5) * .7 = 18 affection lead to max
                 // day 60, this would be (10 + sqrt(70) * 5) * .7 = 36 affection lead to max
                 double chanceToDoDaytime = .25 + (addiction.getMagnitude() / 2) + MathUtils

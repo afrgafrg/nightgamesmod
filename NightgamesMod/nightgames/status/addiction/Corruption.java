@@ -1,33 +1,20 @@
 package nightgames.status.addiction;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 import com.google.gson.JsonObject;
-
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.NPC;
+import nightgames.characters.Trait;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.combat.Combat;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
-import nightgames.status.Abuff;
-import nightgames.status.Compulsion;
-import nightgames.status.Converted;
-import nightgames.status.DarkChaos;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
+
+import java.util.*;
 
 public class Corruption extends Addiction {
     public Corruption(Character affected, Character cause, float magnitude) {
@@ -358,7 +345,7 @@ public class Corruption extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new Corruption(NPC.noneCharacter(), CharacterPool.getCharacterByType(obj.get("cause").getAsString()),
+        return new Corruption(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 

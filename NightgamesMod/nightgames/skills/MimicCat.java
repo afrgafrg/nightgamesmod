@@ -1,7 +1,9 @@
 package nightgames.skills;
 
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Kat;
+import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.EarPart;
@@ -10,6 +12,7 @@ import nightgames.characters.body.mods.FeralMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.status.Abuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
@@ -27,7 +30,7 @@ public class MimicCat extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && CharacterPool.characterTypeInGame(Kat.class.getSimpleName());
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && GameState.gameState.characterPool.characterTypeInGame(Kat.class.getSimpleName());
     }
 
     @Override

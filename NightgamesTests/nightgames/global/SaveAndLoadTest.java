@@ -21,6 +21,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
  */
 public class SaveAndLoadTest {
     private Path savePath = new File("NightGamesTests/nightgames/global/test_save.ngs").toPath();
+    private GameState gameState;
 
     @BeforeClass public static void setUpSaveAndLoadTest() throws Exception {
         Main.initialize();
@@ -28,16 +29,17 @@ public class SaveAndLoadTest {
     }
 
     @Before public void setUp() throws Exception {
-        GameState.reset();
+        gameState = new GameState();
+        gameState.reset();
     }
 
     @Test public void testLoadAndSave() throws Exception {
         SaveFile.load(savePath.toFile());
-        SaveData firstLoadData = GameState.saveData();
+        SaveData firstLoadData = gameState.saveData();
         Path tempSave = Files.createTempFile("", "");
         SaveFile.save(tempSave.toFile());
         SaveFile.load(tempSave.toFile());
-        SaveData reloadedData = GameState.saveData();
+        SaveData reloadedData = gameState.saveData();
         assertThat(reloadedData.players, equalTo(firstLoadData.players));
         for (Character player : firstLoadData.players) {
             Character reloaded = reloadedData.players.stream().filter(p -> p.equals(player)).findFirst()

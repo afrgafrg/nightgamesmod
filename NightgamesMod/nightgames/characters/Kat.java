@@ -1,15 +1,6 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.FacePart;
-import nightgames.characters.body.PussyPart;
-import nightgames.characters.body.TailPart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.FeralMod;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.combat.Combat;
@@ -19,6 +10,7 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Flag;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -27,6 +19,9 @@ import nightgames.start.NpcConfiguration;
 import nightgames.status.Feral;
 import nightgames.status.Pheromones;
 import nightgames.status.Stsflag;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Kat extends BasePersonality {
     /**
@@ -176,7 +171,9 @@ public class Kat extends BasePersonality {
                             useSpeed();
                             usePower();
                             character.getGrowth().extraAttributes += 1;
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )
@@ -259,7 +256,9 @@ public class Kat extends BasePersonality {
                             useFrenzy();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )

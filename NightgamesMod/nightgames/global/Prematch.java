@@ -12,6 +12,7 @@ import nightgames.modifier.standard.NoModifier;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 /**
  * Base class for match setup.
@@ -34,7 +35,7 @@ public abstract class Prematch {
          * TODO Lots of FTC bugs right now, will disable it for the time being.
          * Enable again once some of the bugs are sorted out.
         MatchType type;
-        if (Flag.checkFlag(Flag.NoFTC) || CharacterPool.human.getLevel() < 15) {
+        if (Flag.checkFlag(Flag.NoFTC) || GameState.gameState.characterPool.human.getLevel() < 15) {
             type = MatchType.NORMAL;
         } else if (!Flag.checkFlag(Flag.didFTC) || DebugFlags.isDebugOn(DebugFlags.DEBUG_FTC)) {
             type = MatchType.FTC;
@@ -45,6 +46,18 @@ public abstract class Prematch {
         }
         return type.buildPrematch();
         */
+    }
+
+    private static Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
+        List<Character> randomizer = avail.stream()
+                        .filter(c -> !c.human())
+                        .filter(c -> !c.has(Trait.event))
+                        .filter(c -> !added.contains(c))
+                        .collect(Collectors.toList());
+        Collections.shuffle(randomizer);
+        Set<Character> results = new HashSet<>(added);
+        results.addAll(randomizer.subList(0, Math.min(Math.max(0, size - results.size())+1, randomizer.size())));
+        return results;
     }
 
     private void buildMatch(Collection<Character> combatants, Modifier mod) {
@@ -64,11 +77,11 @@ public abstract class Prematch {
 
     public void setUpMatch(Modifier matchmod) {
         assert Daytime.day == null;
-        Set<Character> lineup = new HashSet<>(CharacterPool.debugChars);
+        Set<Character> lineup = new HashSet<>(GameState.gameState.characterPool.debugChars);
         Character lover = null;
         int maxaffection = 0;
         Flag.unflag(Flag.FTC);
-        for (Character player : CharacterPool.players) {
+        for (Character player : GameState.gameState.characterPool.players) {
             player.getStamina().fill();
             player.getArousal().empty();
             player.getMojo().empty();
@@ -76,15 +89,15 @@ public abstract class Prematch {
             if (player.getPure(Attribute.Science) > 0) {
                 player.chargeBattery();
             }
-            if (CharacterPool.human.getAffection(player) > maxaffection && !player.has(Trait.event) && !Flag
+            if (GameState.gameState.characterPool.human.getAffection(player) > maxaffection && !player.has(Trait.event) && !Flag
                             .checkCharacterDisabledFlag(player)) {
-                maxaffection = CharacterPool.human.getAffection(player);
+                maxaffection = GameState.gameState.characterPool.human.getAffection(player);
                 lover = player;
             }
         }
         List<Character> participants = new ArrayList<>();
         // Disable characters flagged as disabled
-        for (Character c : CharacterPool.players) {
+        for (Character c : GameState.gameState.characterPool.players) {
             // Disabling the player wouldn't make much sense, and there's no PlayerDisabled flag.
             if (c.getType().equals("Player") || !Flag.checkCharacterDisabledFlag(c)) {
                 participants.add(c);
@@ -93,17 +106,17 @@ public abstract class Prematch {
         if (lover != null) {
             lineup.add(lover);
         }
-        lineup.add(CharacterPool.human);
+        lineup.add(GameState.gameState.characterPool.human);
         if (matchmod.name().equals("maya")) {
             if (!Flag.checkFlag(Flag.Maya)) {
-                CharacterPool.newChallenger(new Maya(CharacterPool.human.getLevel()));
+                GameState.gameState.characterPool.newChallenger(new Maya(GameState.gameState.characterPool.human.getLevel()));
                 Flag.flag(Flag.Maya);
             }
-            NPC maya = Optional.ofNullable(CharacterPool.getNPC("Maya")).orElseThrow(() -> new IllegalStateException(
+            NPC maya = Optional.ofNullable(GameState.gameState.characterPool.getNPC("Maya")).orElseThrow(() -> new IllegalStateException(
                             "Maya data unavailable when attempting to add her to lineup."));
             lineup.add(maya);
-            lineup = CharacterPool.pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(CharacterPool.players);
+            lineup = pickCharacters(participants, lineup, 5);
+            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
             Match.resting.removeAll(lineup);
             maya.gain(Item.Aphrodisiac, 10);
             maya.gain(Item.DisSol, 10);
@@ -125,13 +138,13 @@ public abstract class Prematch {
             if (!prey.human()) {
                 lineup.add(prey);
             }
-            lineup = CharacterPool.pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(CharacterPool.players);
+            lineup = pickCharacters(participants, lineup, 5);
+            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
             Match.resting.removeAll(lineup);
             buildMatch(lineup, matchmod);
         } else if (participants.size() > 5) {
-            lineup = CharacterPool.pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(CharacterPool.players);
+            lineup = pickCharacters(participants, lineup, 5);
+            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
             Match.resting.removeAll(lineup);
             buildMatch(lineup, matchmod);
         } else {

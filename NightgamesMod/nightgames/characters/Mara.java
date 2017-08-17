@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import nightgames.characters.body.AssPart;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.FacePart;
@@ -15,17 +12,17 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Flag;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.strategy.FootjobStrategy;
-import nightgames.skills.strategy.StraponStrategy;
-import nightgames.skills.strategy.TechStrategy;
-import nightgames.skills.strategy.UseToyStrategy;
-import nightgames.skills.strategy.WindUpStrategy;
+import nightgames.skills.strategy.*;
 import nightgames.start.NpcConfiguration;
 import nightgames.status.Hypersensitive;
 import nightgames.status.Oiled;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Mara extends BasePersonality {
     /**
@@ -250,8 +247,8 @@ public class Mara extends BasePersonality {
                             useGeneralTech();
                             useHarpoon();
                             character.getGrowth().extraAttributes += 1;
-                            CharacterPool.getPlayer()
-                                  .getGrowth().addTraitPoints(new int[] {12, 39}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool.getPlayer()
+                                  .getGrowth().addTraitPoints(new int[] {12, 39}, GameState.gameState.characterPool.getPlayer());
                             return true;
                         }))));
 
@@ -309,8 +306,8 @@ public class Mara extends BasePersonality {
                                             useMindControl();
                                             useOcto();
                                             character.getGrowth().extraAttributes += 1;
-                                            CharacterPool.getPlayer()
-                                                  .getGrowth().addTraitPoints(new int[] {21, 48}, CharacterPool.getPlayer());
+                                            GameState.gameState.characterPool.getPlayer()
+                                                  .getGrowth().addTraitPoints(new int[] {21, 48}, GameState.gameState.characterPool.getPlayer());
                                             return true;
                                         }))));
 

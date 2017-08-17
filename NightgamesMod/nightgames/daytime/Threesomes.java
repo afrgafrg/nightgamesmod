@@ -1,47 +1,47 @@
 package nightgames.daytime;
 
-import java.util.Optional;
-
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.gui.GUI;
+
+import java.util.Optional;
 
 public class Threesomes extends DaytimeEvent {
 
     public Threesomes(Character player) {
         super(player);
-        if (CharacterPool.getNPC("Cassie")
+        if (GameState.gameState.characterPool.getNPC("Cassie")
                   .getAffection(player) >= 20
-                        && CharacterPool.getNPC("Jewel")
+                        && GameState.gameState.characterPool.getNPC("Jewel")
                                  .getAffection(player) >= 20
-                        && CharacterPool.getNPC("Jewel")
-                                 .getAffection(CharacterPool.getNPC("Cassie")) >= 5) {
+                        && GameState.gameState.characterPool.getNPC("Jewel")
+                                 .getAffection(GameState.gameState.characterPool.getNPC("Cassie")) >= 5) {
                         //TODO && GameState.getValue(Flag.CassieDWV) >= 5) {
             register("CassieJewel", 5);
         }
-        if (CharacterPool.getNPC("Mara")
+        if (GameState.gameState.characterPool.getNPC("Mara")
                   .getAffection(player) >= 20
-                        && CharacterPool.getNPC("Jewel")
+                        && GameState.gameState.characterPool.getNPC("Jewel")
                                  .getAffection(player) >= 20
-                        && CharacterPool.getNPC("Jewel")
-                                 .getAffection(CharacterPool.getNPC("Mara")) >= 5) {
+                        && GameState.gameState.characterPool.getNPC("Jewel")
+                                 .getAffection(GameState.gameState.characterPool.getNPC("Mara")) >= 5) {
             register("MaraJewel", 5);
         }
-        if (CharacterPool.getNPC("Mara")
+        if (GameState.gameState.characterPool.getNPC("Mara")
                   .getAffection(player) >= 15
-                        && CharacterPool.getNPC("Angel")
+                        && GameState.gameState.characterPool.getNPC("Angel")
                                  .getAffection(player) >= 15
-                        && CharacterPool.getNPC("Angel")
-                                 .getAffection(CharacterPool.getNPC("Mara")) >= 10) {
+                        && GameState.gameState.characterPool.getNPC("Angel")
+                                 .getAffection(GameState.gameState.characterPool.getNPC("Mara")) >= 10) {
             register("AngelMara", 5);
         }
-        if (CharacterPool.getNPC("Mara")
+        if (GameState.gameState.characterPool.getNPC("Mara")
                   .getAffection(player) >= 15
-                        && CharacterPool.getNPC("Cassie")
+                        && GameState.gameState.characterPool.getNPC("Cassie")
                                  .getAffection(player) >= 15
-                        && CharacterPool.getNPC("Cassie")
-                                 .getAffection(CharacterPool.getNPC("Mara")) >= 10) {
+                        && GameState.gameState.characterPool.getNPC("Cassie")
+                                 .getAffection(GameState.gameState.characterPool.getNPC("Mara")) >= 10) {
             register("CassieMara", 5);
         }
     }

@@ -1,6 +1,6 @@
 package nightgames.modifier.standard;
 
-import nightgames.characters.CharacterPool;
+import nightgames.global.GameState;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.modifier.BaseModifier;
 
@@ -22,7 +22,7 @@ public class UnderwearOnlyModifier extends BaseModifier {
 
     @Override
     public String intro() {
-        return "<i>\"So, " + CharacterPool.getPlayer().getTrueName()
+        return "<i>\"So, " + GameState.gameState.characterPool.getPlayer().getTrueName()
                         + ", what would you say to another match in your underwear? For some reason, that just amuses the hell out of me. "
                         + "The bonus is still $" + bonus() + " per point.\"</i> ";
     }
@@ -38,7 +38,7 @@ public class UnderwearOnlyModifier extends BaseModifier {
 
     @Override
     public boolean isApplicable() {
-        return CharacterPool.getPlayer().outfitPlan.stream()
+        return GameState.gameState.characterPool.getPlayer().outfitPlan.stream()
                         .anyMatch(article -> article.getLayer() == 0 && (article.getSlots().contains(ClothingSlot.top)
                                         || article.getSlots().contains(ClothingSlot.bottom)));
     }

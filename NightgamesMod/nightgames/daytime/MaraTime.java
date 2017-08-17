@@ -1,17 +1,14 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.mods.CyberneticMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -21,9 +18,12 @@ import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class MaraTime extends BaseNPCTime {
     public MaraTime(Character player) {
-        super(player, CharacterPool.getNPC("Mara"));
+        super(player, GameState.gameState.characterPool.getNPC("Mara"));
         knownFlag = "MaraKnown";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
@@ -138,10 +138,10 @@ public class MaraTime extends BaseNPCTime {
             if(player.getPure(Attribute.Arcane)>=3){
                 choose("Faerie play", GUI.gui);
             }
-            if (CharacterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
+            if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
                 choose("Confront about control", GUI.gui);
             }
-        } else if (CharacterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
+        } else if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL)) {
             GUI.gui
             .message("Mara low-affection addiction intro");
             if (npc.getAttraction(player) < 15) {
@@ -226,7 +226,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "you. <i>\"Okay, so, now... Just... Strip and sit in that chair over there.\"</i> Still mute, you do"
                                       + " as she says. Once you've seated yourself, Mara walks over and kneels down in front of you. She looks"
                                       + " at your limp cock, and a smirk forms on her face. <i>\"Let's see if this works: Get hard.\"</i> You"
-                                      + " want to tell her that's not something " + CharacterPool.getPlayer().guyOrGirl() + "s can really control like that, but inexplicably you feel "
+                                      + " want to tell her that's not something " + GameState.gameState.characterPool.getPlayer().guyOrGirl() + "s can really control like that, but inexplicably you feel "
                                       + "the familiar sensation of blood rushing into your dick. Within seconds, it's as hard as it's ever been."
                                       + " <i>\"Oooh, that's going to be useful at night! Now, until I say otherwise, don't cum!\"</i> You do "
                                       + "<i>not</i> like the sound of that, but it's not as if you can actually do anything about it. You are "
@@ -264,8 +264,8 @@ public class MaraTime extends BaseNPCTime {
                                       + " it's worth it?");
             }
             choose("Leave", GUI.gui);
-            CharacterPool.getPlayer().addict(null, AddictionType.MIND_CONTROL, npc, Addiction.MED_INCREASE);
-            CharacterPool.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
+            GameState.gameState.characterPool.getPlayer().addict(null, AddictionType.MIND_CONTROL, npc, Addiction.MED_INCREASE);
+            GameState.gameState.characterPool.getPlayer().getAddiction(AddictionType.MIND_CONTROL).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
             if (npc.getAffection(player) >= 8 && (!player.has(Trait.ticklemonster) || Random.random(2) == 1)) {
@@ -273,7 +273,8 @@ public class MaraTime extends BaseNPCTime {
                       .message("You invite Mara to your room some fun. As soon as you get there she walks up behind you, shoves her hand down the front of your pants, and grabs you penis. "
                                       + "You're taken by surprise, but it doesn't stop you from getting hard in her hand. <i>\"You said we're here to have fun and I've decided you're my toy today,\"</i> she whispers "
                                       + "in an unusually sultry voice. When you're fully erect, she withdraws her hand and orders you to strip. Once you're naked, she has you sit on the bed and begins to fondle "
-                                      + "your balls. <i>\"" + Formatter.capitalizeFirstLetter(CharacterPool.getPlayer().boyOrGirl()) + "s get really nervous when I play with these, but it feels good, doesn't it?\"</i> She's mostly back to her typical, mischievous self, but you can see a "
+                                      + "your balls. <i>\"" + Formatter.capitalizeFirstLetter(
+                                      GameState.gameState.characterPool.getPlayer().boyOrGirl()) + "s get really nervous when I play with these, but it feels good, doesn't it?\"</i> She's mostly back to her typical, mischievous self, but you can see a "
                                       + "dominant gleam in her eye. She takes her time undressing, turning it into a full stripshow, then she sits on your lap facing you. Her pussy is close enough to your straining "
                                       + "dick that you can feel her heat. <i>\"I think it would be a lot of fun to train you,\"</i> she says in her sweetest, innocent voice. <i>\"I'll train you so no other girl can get you "
                                       + "hard, but you'll come instantly at my touch. Then you'll win against everyone except me. Doesn't that sound advantageous for both of us?\"</i> You can't tell if she's joking or "
@@ -391,7 +392,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "noise escapes her as she lays there, unresisting. As suddenly as you grabbed her, you release her and stand back up, leaving her a bit dazed. You finally feel like your head is clear. "
                                       + "Looking at the board, you realize you're trailing enough in units to use your flare card, giving you an extra action. Playing a gun tower disrupts Mara's formation and, by the end of your "
                                       + "turn, you're in a much better position. <br/><br/><i>\"That's not fair!\"</i> Mara protests as she comes to her senses. <i>\"You can't play with a girl's heart like that just to win a game.\"</i> It doesn't "
-                                      + "really seem like you did anything worse than what she was doing just seconds ago. <i>\"It's completely different. If you tease a " + CharacterPool
+                                      + "really seem like you did anything worse than what she was doing just seconds ago. <i>\"It's completely different. If you tease a " + GameState.gameState.characterPool
                                       .getPlayer().boyOrGirl() + ", he just gets hard and then you have something else to "
                                       + "tease. But if you do that to a girl, she's going to fall in love! Look at my flushed cheeks. Feel my heartbeat. I'm madly in love right now and it's totally your fault!\"</i> She glares down "
                                       + "at the gameboard and looks through her cards. <i>\"I'm going to have to completely destroy you to avenge the wounded heart of a pure maiden.\"</i><br/><br/>In the end, Mara still ends up winning, but "
@@ -420,7 +421,7 @@ public class MaraTime extends BaseNPCTime {
                                       + "you can't really get mad at her for doing it effectively. She sits down on the mat and moves your head to her lap. <i>\"Here you go, we'll stay like this while you recover.\"</i> Her warm, "
                                       + "bare thighs make a very good pillow. You'd probably be able to enjoy it more if you weren't distracted by the pain from your balls. <i>\"I wish I had a chance of winning without hurting "
                                       + "you so much,\"</i> Mara says while stroking your hair. <i>\"I'm not as strong as Jewel, or as sexy as Angel. What I am is clever. The only way I can win it by finding my opponent's weakness "
-                                      + "and hitting it as hard as I can.\"</i> She leans down and softly kisses you on the lips. <i>\"Unfortunately, sometimes that means hurting a " + CharacterPool
+                                      + "and hitting it as hard as I can.\"</i> She leans down and softly kisses you on the lips. <i>\"Unfortunately, sometimes that means hurting a " + GameState.gameState.characterPool
                                       .getPlayer().boyOrGirl() + " I like a lot.\"</i><br/><br/>By now, the pain in your groin "
                                       + "has started to recede and you're starting to react to being held by a naked girl. Mara glances between your legs and smiles. <i>\"Looks like you're feeling better.\"</i> She gently strokes "
                                       + "your dick until it becomes completely hard. <i>\"Feeling well enough for a quick squirt?\"</i> Your face reddens a bit at how she phrased her offer, but you nod. She grasps your shaft more "
@@ -509,7 +510,7 @@ public class MaraTime extends BaseNPCTime {
     
     @Override
     public Optional<String> getAddictionOption() {
-        return CharacterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL) ?
+        return GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.MIND_CONTROL) ?
                         Optional.of("Confront about control") : Optional.empty();
     }
 }

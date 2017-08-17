@@ -1,23 +1,12 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import nightgames.actions.Action;
 import nightgames.actions.Leap;
 import nightgames.actions.Move;
 import nightgames.actions.Shortcut;
 import nightgames.areas.Area;
 import nightgames.areas.Deployable;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.TentaclePart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.GooeyMod;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
@@ -25,6 +14,8 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
+import nightgames.global.Formatter;
+import nightgames.global.Random;
 import nightgames.gui.ActionButton;
 import nightgames.gui.GUI;
 import nightgames.gui.RunnableButton;
@@ -37,13 +28,11 @@ import nightgames.stance.Behind;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
 import nightgames.start.PlayerConfiguration;
-import nightgames.status.Enthralled;
-import nightgames.status.Masochistic;
-import nightgames.status.Pheromones;
-import nightgames.status.PlayerSlimeDummy;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.trap.Trap;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Player extends Character {
     public GUI gui;
@@ -73,7 +62,7 @@ public class Player extends Character {
         if (gui.combat != null) {
             gui.combat.pause();
         }
-        Player player = CharacterPool.human;
+        Player player = GameState.gameState.characterPool.human;
         if (player.availableAttributePoints > 0) {
             Formatter.writeIfCombatUpdateImmediately(gui.combat, player, player.availableAttributePoints + " Attribute Points remain.\n");
             gui.clearCommand();
@@ -95,9 +84,9 @@ public class Player extends Character {
                     RunnableButton button = new RunnableButton(feat.toString(), () -> {
                         gui.clearTextIfNeeded();
                         GUI.gui.message("Gained feat: " + feat.toString());
-                        CharacterPool.getPlayer().add(feat);
-                        GUI.gui.message(CharacterPool.getPlayer().gainSkills());
-                        CharacterPool.getPlayer().traitPoints -= 1;
+                        GameState.gameState.characterPool.getPlayer().add(feat);
+                        GUI.gui.message(GameState.gameState.characterPool.getPlayer().gainSkills());
+                        GameState.gameState.characterPool.getPlayer().traitPoints -= 1;
                         gui.refresh();
                         ding(gui);
                     });
@@ -185,7 +174,7 @@ public class Player extends Character {
         if (GUI.gui.combat != null && (GUI.gui.combat.p1.human() || GUI.gui.combat.p2.human())) {
             body.describeBodyText(b, GUI.gui.combat.getOpponent(this), false);
         } else {
-            body.describeBodyText(b, CharacterPool.getCharacterByType("Angel"), false);
+            body.describeBodyText(b, GameState.gameState.characterPool.getCharacterByType("Angel"), false);
         }
         if (getTraits().size() > 0) {
             b.append("<br/>Traits:<br/>");

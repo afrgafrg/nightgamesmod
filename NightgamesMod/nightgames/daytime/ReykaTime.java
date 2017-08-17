@@ -1,22 +1,12 @@
 package nightgames.daytime;
 
-import static nightgames.requirements.RequirementShortcuts.bodypart;
-import static nightgames.requirements.RequirementShortcuts.not;
-
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
 import nightgames.characters.body.mods.SizeMod;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -26,9 +16,15 @@ import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static nightgames.requirements.RequirementShortcuts.bodypart;
+import static nightgames.requirements.RequirementShortcuts.not;
+
 public class ReykaTime extends BaseNPCTime {
     public ReykaTime(Character player) {
-        super(player, CharacterPool.getNPC("Reyka"));
+        super(player, GameState.gameState.characterPool.getNPC("Reyka"));
         knownFlag = "Reyka";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? You shouldn't have!\"";
@@ -217,10 +213,10 @@ public class ReykaTime extends BaseNPCTime {
             choose("Games", GUI.gui);
             choose("Sparring", GUI.gui);
             choose("Sex", GUI.gui);
-            if (CharacterPool.getPlayer().checkAddiction(AddictionType.CORRUPTION)) {
+            if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.CORRUPTION)) {
                 choose("Strengthen Corruption", GUI.gui);
             }
-        } else if (CharacterPool.getPlayer()
+        } else if (GameState.gameState.characterPool.getPlayer()
                          .checkAddiction(AddictionType.CORRUPTION)) {
             GUI.gui
                   .message("Reyka low-affection corruption intro");
@@ -364,9 +360,9 @@ public class ReykaTime extends BaseNPCTime {
                                       + " you head home. ");
             }
             choose("Leave", GUI.gui);
-            CharacterPool.getPlayer()
+            GameState.gameState.characterPool.getPlayer()
                   .addict(null, AddictionType.CORRUPTION, npc, Addiction.MED_INCREASE);
-            CharacterPool.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
+            GameState.gameState.characterPool.getPlayer().getAddiction(AddictionType.CORRUPTION).ifPresent(Addiction::flagDaytime);
         } else if (choice.equals("Sex")) {
             if (npc.getAffection(player) >= 8 && (!player.has(Trait.desensitized) || Random.random(2) == 1)) {
                 GUI.gui
@@ -554,7 +550,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "losing clothes left and right. At the six-minute mark, she starts sprinting circles around you "
                                           + "inhumanly fast before grabbing you from behind. She holds you in place with one arm across your chest, "
                                           + "while she uses her other hand to fondle your already rising dick. <i>\"Yum, playtime.\"</i> With that, she pulls "
-                                          + "down your boxers and lets you go. <i>\"Next time, " + CharacterPool.getPlayer().boyOrGirl() + ", you're mine!\"</i> As you start the final round, three "
+                                          + "down your boxers and lets you go. <i>\"Next time, " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + ", you're mine!\"</i> As you start the final round, three "
                                           + "minutes remain on the clock. You aren't trying anymore fancy moves, instead opting to stay as far away "
                                           + "as possible. She gets close a couple times though, slapping your ass a few times. Your escapes are "
                                           + "hindered somewhat by the protrusion in your groin, but you make it to eight and a half minutes, "
@@ -618,7 +614,7 @@ public class ReykaTime extends BaseNPCTime {
                                           + "faculties in good condition if you are to study later. <i>\"Hey, you came to me! But alright, I guess we can "
                                           + "swap roles this time. I'll even level the playing field for you.\"</i> Unbidden images of wings sprouting "
                                           + "from your back come to mind, and you waste no time making clear to her you don't want them. <i>\"That's, "
-                                          + "not what I meant, you silly " + CharacterPool.getPlayer().boyOrGirl() + ". That would require at least five souls and I'm not allowed to harvest "
+                                          + "not what I meant, you silly " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + ". That would require at least five souls and I'm not allowed to harvest "
                                           + "any here. No, I meant the hunting instincts, you know, so you can track my movements?\"</i> Come again? "
                                           + "That kind of defeats the point of the game, but it sure sounds interesting... You ask her to elaborate. "
                                           + "<i>\"Well, it's quite simple really: I weave a little spell, and you gain a seventh sense!\"</i> You are too "
@@ -634,7 +630,7 @@ public class ReykaTime extends BaseNPCTime {
                 }
                 GUI.gui
                       .message("Reyka pulls you out towards the dorms. A lot of people, men and women alike, look your way, "
-                                      + "jealous at the " + CharacterPool.getPlayer().guyOrGirl() + " who is getting tugged towards the dorms by a stunningly beautiful woman "
+                                      + "jealous at the " + GameState.gameState.characterPool.getPlayer().guyOrGirl() + " who is getting tugged towards the dorms by a stunningly beautiful woman "
                                       + "with a devilish grin on her face. You are not so sure if you are all that lucky, but hey, it "
                                       + "could be worse. You just hope she won't drag you to a family dinner some time, that brother of "
                                       + "hers doesn't sound like the type of guy you would get along with. That, and the cuisine would "
@@ -736,6 +732,6 @@ public class ReykaTime extends BaseNPCTime {
     
     @Override
     public Optional<String> getAddictionOption() {
-        return CharacterPool.getPlayer().checkAddiction(AddictionType.CORRUPTION) ? Optional.of("Strengthen Corruption") : Optional.empty();
+        return GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.CORRUPTION) ? Optional.of("Strengthen Corruption") : Optional.empty();
     }
 }

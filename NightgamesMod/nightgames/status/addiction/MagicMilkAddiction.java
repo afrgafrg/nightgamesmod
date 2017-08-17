@@ -1,19 +1,18 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class MagicMilkAddiction extends Addiction {
     private int originalMaxWill;
@@ -202,7 +201,7 @@ public class MagicMilkAddiction extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new MagicMilkAddiction(NPC.noneCharacter(), CharacterPool.getCharacterByType(obj.get("cause").getAsString()),
+        return new MagicMilkAddiction(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause").getAsString()),
                         (float) obj.get("magnitude").getAsInt());
     }
 

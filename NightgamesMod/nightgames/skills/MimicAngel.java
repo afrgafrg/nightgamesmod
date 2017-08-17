@@ -2,7 +2,6 @@ package nightgames.skills;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.CockMod;
@@ -11,6 +10,7 @@ import nightgames.characters.body.mods.DivineMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.status.Abuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
@@ -28,7 +28,7 @@ public class MimicAngel extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && CharacterPool.getNPC("Angel").has(Trait.demigoddess);
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && GameState.gameState.characterPool.getNPC("Angel").has(Trait.demigoddess);
     }
 
     @Override

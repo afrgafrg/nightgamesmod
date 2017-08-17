@@ -1,23 +1,6 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import nightgames.actions.Action;
-import nightgames.actions.Leap;
-import nightgames.actions.Move;
-import nightgames.actions.Movement;
-import nightgames.actions.Resupply;
-import nightgames.actions.Shortcut;
+import nightgames.actions.*;
 import nightgames.areas.Area;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.custom.CharacterLine;
@@ -29,6 +12,8 @@ import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
+import nightgames.global.Formatter;
+import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -43,12 +28,11 @@ import nightgames.skills.strategy.DefaultStrategy;
 import nightgames.stance.Behind;
 import nightgames.stance.Neutral;
 import nightgames.stance.Position;
-import nightgames.status.Disguised;
-import nightgames.status.Enthralled;
-import nightgames.status.Pheromones;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.trap.Trap;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class NPC extends Character {
     public static final NPC noneCharacter = new NPC("none", 1, null);
@@ -642,7 +626,7 @@ public class NPC extends Character {
 
     @Override
     public void afterParty() {
-        GUI.gui.message(getRandomLineFor(CharacterLine.NIGHT_LINER, null, CharacterPool.getPlayer()));
+        GUI.gui.message(getRandomLineFor(CharacterLine.NIGHT_LINER, null, GameState.gameState.characterPool.getPlayer()));
     }
 
     public void daytime(int time) {

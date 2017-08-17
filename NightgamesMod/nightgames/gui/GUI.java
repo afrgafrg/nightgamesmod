@@ -1,8 +1,10 @@
 package nightgames.gui;
 
 import nightgames.Resources.ResourceLoader;
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.Meter;
+import nightgames.characters.Player;
 import nightgames.combat.Combat;
 import nightgames.daytime.Activity;
 import nightgames.daytime.Daytime;
@@ -160,7 +162,7 @@ public class GUI extends JFrame implements Observer {
                                 "Do you want to restart the game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    GameState.reset();
+                    GameState.gameState.reset();
                 }
             }
         });
@@ -1055,7 +1057,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void refresh() {
-        Player player = CharacterPool.human;
+        Player player = GameState.gameState.characterPool.human;
         stamina.setText("Stamina: " + getLabelString(player.getStamina()));
         arousal.setText("Arousal: " + getLabelString(player.getArousal()));
         mojo.setText("Mojo: " + getLabelString(player.getMojo()));
@@ -1148,7 +1150,7 @@ public class GUI extends JFrame implements Observer {
         }
         JPanel statsPanel = new JPanel(new GridLayout(0, 3));
 
-        Player player = CharacterPool.human;
+        Player player = GameState.gameState.characterPool.human;
 
         statusPanel.add(statsPanel);
         //statsPanel.setPreferredSize(new Dimension(400, 200));

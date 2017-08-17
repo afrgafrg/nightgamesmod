@@ -30,8 +30,8 @@ public class NpcConfigurationTest {
         startConfig = StartConfiguration.parse(JsonUtils.rootJson(file).getAsJsonObject());
         angelConfig = startConfig.findNpcConfig("TestAngel")
                         .orElseThrow(() -> new NoSuchElementException("TestAngel not found in test config."));
-        GameState.reset();
-        new GameState().GameState("Dummy", Optional.empty(), Collections.emptyList(), CharacterSex.asexual, Collections.emptyMap());
+        GameState.gameState.reset();
+        new GameState().newGame("Dummy", Optional.empty(), Collections.emptyList(), CharacterSex.asexual, Collections.emptyMap());
     }
 
     @Test public void testConfigMerge() throws Exception {

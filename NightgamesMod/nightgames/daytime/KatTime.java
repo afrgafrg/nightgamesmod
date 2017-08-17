@@ -1,20 +1,16 @@
 package nightgames.daytime;
 
-import static nightgames.requirements.RequirementShortcuts.bodypart;
-import static nightgames.requirements.RequirementShortcuts.not;
-
-import java.util.ArrayList;
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
 import nightgames.characters.body.CockPart;
+import nightgames.characters.body.EarPart;
 import nightgames.characters.body.TailPart;
 import nightgames.characters.body.mods.FeralMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.requirements.BodyPartRequirement;
@@ -23,9 +19,14 @@ import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
+import java.util.ArrayList;
+
+import static nightgames.requirements.RequirementShortcuts.bodypart;
+import static nightgames.requirements.RequirementShortcuts.not;
+
 public class KatTime extends BaseNPCTime {
     public KatTime(Character player) {
-        super(player, CharacterPool.getNPC("Kat"));
+        super(player, GameState.gameState.characterPool.getNPC("Kat"));
         knownFlag = "Kat";
         giftedString = "\"Awww thanks!\"";
         giftString = "\"A present? That was unexpected nya\"";
@@ -160,13 +161,13 @@ public class KatTime extends BaseNPCTime {
             choose("Sparring", GUI.gui);
             choose("Sex", GUI.gui);
             if (Flag.checkFlag(Flag.metAisha) && !Flag.checkFlag(Flag.catspirit)
-                            && CharacterPool.getNPC("Kat").getAffection(player) >= 5) {
+                            && GameState.gameState.characterPool.getNPC("Kat").getAffection(player) >= 5) {
                 choose("Ask about Animal Spirit", GUI.gui);
             }
-            if (CharacterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
+            if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
                 choose("Must... Fuck...", GUI.gui);
             }
-        } else if (CharacterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
+        } else if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
             GUI.gui
             .message("Kat low-affection addiction intro");
             if (npc.getAttraction(player) < 15) {
@@ -210,7 +211,7 @@ public class KatTime extends BaseNPCTime {
                                             + "also stands between you and Kat. This is bad. You quickly explain that you weren't trying to scare Kat, you just wanted to talk to her. <br/><br/><i>\"Our Kat is pretty delicate. "
                                             + "Maybe you should learn how to approach a girl without scaring her before you try to pick her up.\"</i> The brunette speaks in a reasonable tone, but there's a definite "
                                             + "edge to her voice. The redhead snorts and starts to lead Kat away. <br/><i>\"I don't want this creep talking to Kat at all.\"</i> Kat tugs on the girl's sleeve to stop her and "
-                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + CharacterPool
+                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + GameState.gameState.characterPool
                                             .getPlayer().guyOrGirl() + "? Are you kidding me?\"</i> The brunette joins the two of them and they enter a brief huddle. "
                                             + "You stand there awkwardly, unable to hear their conversation. There are more than a few glances in your direction, and Kat's face is gradually turning red. <br/>Eventually, "
                                             + "Kat leaves the huddle to stand behind you, as if hiding from her friends. The calmer of the two girls gives you an awkward smile. <i>\"We'll give you two some space.\"</i> "
@@ -226,7 +227,7 @@ public class KatTime extends BaseNPCTime {
                                             + "leave her horny and unsatisfied? She squirms noticeably as she sits up on the bed. <i>\"It's really frustrating to stop nyow, but I need to be patient. I'm counting on "
                                             + "you to reward me when we're done.\"</i> She settles into a comfortable seated position on the bed, apparently not bothered that her naked lower half is visible. <i>\"We've "
                                             + "fought together a bunch, but since you're myaking an effort to get to know me, I wanted to explain how my animal spirit works. The Girl was too flustered about being "
-                                            + "alone with a " + CharacterPool.getPlayer().boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
+                                            + "alone with a " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
                                             + "By arousing Kat, you brought out her animal side. So that's who "
                                             + "you're talking to now? <i>\"The urge to mate is a very primal thing. The more I feel it, the stronger the cat spirit gets, which improves my instinct and my reflexes. It's "
                                             + "nyat like a Jekyll and Hyde thing though. The Girl and the Cat have the same memories, same intelligence, same personality, and same interests. I'm still Kat, just "
@@ -315,8 +316,8 @@ public class KatTime extends BaseNPCTime {
                                 + " that, is that a bad thing?");
             }
             choose("Leave", GUI.gui);
-            CharacterPool.getPlayer().addict(null, AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
-            CharacterPool.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
+            GameState.gameState.characterPool.getPlayer().addict(null, AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
+            GameState.gameState.characterPool.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
             GUI.gui.message(
@@ -324,7 +325,7 @@ public class KatTime extends BaseNPCTime {
                                             + "an eagerness to her voice. You both want the same thing. You give her a quick kiss on the lips and help her remove her shirt. She shyly crosses her arms over her bra "
                                             + "and smiles weakly. <i>\"It's embarrassing if I'm the only one who is naked. Take off your shirt too.\"</i> You obligingly strip of your own top and she helps you remove "
                                             + "her bra. Her breasts are quite big and soft looking, considering her petite build. If she didn't cover up her body with baggy clothing during the day, her friends would "
-                                            + "surely need to beat " + CharacterPool.getPlayer().guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
+                                            + "surely need to beat " + GameState.gameState.characterPool.getPlayer().guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
                                             + "your turn to undress.\"</i> Of course, she deserves a little eye candy too. You kick off your pants, leaving only your boxers. Kat hesitantly takes her hands off her chest "
                                             + "so she can remove her pants. <br/><br/>"
                                             + "You're both down to your underwear and Kat stares at your boxers in anticipation. She's obviously ready for some passionate sex, but you "
@@ -343,7 +344,7 @@ public class KatTime extends BaseNPCTime {
                                             + "to sit behind her. She's a bit startled when you pull her into your lap to lean against your chest. From this new position, you slip your hand between her legs and resume "
                                             + "fingering her. She lets out breathy moans and shivers in your arms. Within a handful of seconds, you feel her tail twitching against you leg and her moans have a clear mewing "
                                             + "quality. <br/><br/>"
-                                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + CharacterPool
+                                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + GameState.gameState.characterPool
                                             .getPlayer().boyOrGirl() + "... and the "
                                             + "warmth... and the breath on my neck! How is a girl suppose to handle that?\"</i> She squirms out of your arms and turns to face you. <i>\"I know this 'training' was just an "
                                             + "excuse to tease me. I didn't complain because I liked what you were doing, but it's your turn nyow. Either get those boxers off, or they're gonnya be shredded.\"</i> You "

@@ -1,16 +1,15 @@
 package nightgames.skills;
 
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.TailPart;
-import nightgames.characters.body.WingsPart;
+import nightgames.characters.Reyka;
+import nightgames.characters.Trait;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.DemonicMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.status.Abuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
@@ -28,7 +27,7 @@ public class MimicSuccubus extends Skill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && CharacterPool.characterTypeInGame(Reyka.class.getSimpleName());
+        return getSelf().canRespond() && !getSelf().is(Stsflag.mimicry) && GameState.gameState.characterPool.characterTypeInGame(Reyka.class.getSimpleName());
     }
 
     @Override

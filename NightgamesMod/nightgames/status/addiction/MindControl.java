@@ -1,14 +1,14 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.skills.damage.DamageType;
 import nightgames.stance.Anal;
@@ -17,6 +17,8 @@ import nightgames.stance.Position;
 import nightgames.status.Enthralled;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class MindControl extends Addiction {
 
@@ -236,7 +238,7 @@ public class MindControl extends Addiction {
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new MindControl(NPC.noneCharacter(), CharacterPool.getCharacterByType(obj.get("cause").getAsString()),
+        return new MindControl(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause").getAsString()),
                         obj.get("magnitude").getAsInt());
     }
 

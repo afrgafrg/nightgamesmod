@@ -1,34 +1,15 @@
 package nightgames.combat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import nightgames.areas.Area;
 import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.characters.body.Body;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.mods.ArcaneMod;
-import nightgames.characters.body.mods.CyberneticMod;
-import nightgames.characters.body.mods.DivineMod;
-import nightgames.characters.body.mods.FeralMod;
-import nightgames.characters.body.mods.FieryMod;
-import nightgames.characters.body.mods.GooeyMod;
-import nightgames.characters.body.mods.PartMod;
-import nightgames.characters.body.mods.PlantMod;
-import nightgames.characters.body.mods.DemonicMod;
+import nightgames.characters.body.mods.*;
 import nightgames.global.*;
+import nightgames.global.Formatter;
+import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
@@ -39,55 +20,17 @@ import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.Pet;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.ArmManager;
-import nightgames.skills.Anilingus;
-import nightgames.skills.AssFuck;
-import nightgames.skills.BreastWorship;
-import nightgames.skills.CockWorship;
-import nightgames.skills.Command;
-import nightgames.skills.ConcedePosition;
-import nightgames.skills.FootWorship;
-import nightgames.skills.Grind;
-import nightgames.skills.PetInitiatedThreesome;
-import nightgames.skills.Piston;
-import nightgames.skills.PussyGrind;
-import nightgames.skills.PussyWorship;
-import nightgames.skills.Reversal;
-import nightgames.skills.Skill;
-import nightgames.skills.Tactics;
-import nightgames.skills.Thrust;
-import nightgames.skills.WildThrust;
-import nightgames.stance.Behind;
-import nightgames.stance.Kneeling;
-import nightgames.stance.Mount;
-import nightgames.stance.Neutral;
-import nightgames.stance.Pin;
-import nightgames.stance.Position;
-import nightgames.stance.Stance;
-import nightgames.stance.StandingOver;
-import nightgames.stance.TribadismStance;
-import nightgames.status.Abuff;
-import nightgames.status.Alluring;
-import nightgames.status.BodyFetish;
-import nightgames.status.Braced;
-import nightgames.status.Compulsive;
+import nightgames.skills.*;
+import nightgames.stance.*;
+import nightgames.status.*;
 import nightgames.status.Compulsive.Situation;
-import nightgames.status.CounterStatus;
-import nightgames.status.DivineCharge;
-import nightgames.status.Enthralled;
-import nightgames.status.Falling;
-import nightgames.status.Flatfooted;
-import nightgames.status.Frenzied;
-import nightgames.status.SapphicSeduction;
-import nightgames.status.Slimed;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
 import nightgames.status.Stunned;
-import nightgames.status.Trance;
-import nightgames.status.Wary;
-import nightgames.status.Winded;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.Addiction.Severity;
 import nightgames.status.addiction.AddictionType;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Combat extends Observable implements Cloneable {
     private enum CombatPhase {
@@ -432,7 +375,7 @@ public class Combat extends Observable implements Cloneable {
             NPC commenter = (NPC) other;
             Optional<String> comment = commenter.getComment(this);
             if (comment.isPresent()) {
-                write(commenter, "<i>\"" + Formatter.format(comment.get(), commenter, CharacterPool.getPlayer()) + "\"</i>");
+                write(commenter, "<i>\"" + Formatter.format(comment.get(), commenter, GameState.gameState.characterPool.getPlayer()) + "\"</i>");
             }
         }
     }
@@ -860,9 +803,9 @@ public class Combat extends Observable implements Cloneable {
     private String describe(Character player, Character other) {
         if (beingObserved) {
             return "<font color='rgb(255,220,220)'>"
-                            + other.describe(CharacterPool.getPlayer().get(Attribute.Perception), this)
+                            + other.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
                             + "</font><br/><br/><font color='rgb(220,220,255)'>"
-                            + player.describe(CharacterPool.getPlayer().get(Attribute.Perception), this)
+                            + player.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
                             + "</font><br/><br/><font color='rgb(134,196,49)'><b>"
                             + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "</b></font>";
         } else if (!player.is(Stsflag.blinded)) {
@@ -1236,7 +1179,7 @@ public class Combat extends Observable implements Cloneable {
         if (text.length() > 0) {
             if (user.human()) {
                 message = message + "<br/><font color='rgb(200,200,255)'>" + text + "<font color='white'>";
-            } else if (user.isPet() && user.isPetOf(CharacterPool.getPlayer())) {
+            } else if (user.isPet() && user.isPetOf(GameState.gameState.characterPool.getPlayer())) {
                 message = message + "<br/><font color='rgb(130,225,200)'>" + text + "<font color='white'>";
             } else if (user.isPet()) {
                 message = message + "<br/><font color='rgb(210,130,255)'>" + text + "<font color='white'>";

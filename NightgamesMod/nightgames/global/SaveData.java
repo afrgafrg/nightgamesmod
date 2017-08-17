@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.json.JsonUtils;
 
 import java.util.HashMap;
@@ -41,17 +40,21 @@ public class SaveData {
         counters = new HashMap<>();
     }
 
-    public SaveData(JsonObject rootJSON) {
+    SaveData(JsonObject rootJSON) {
+        this(rootJSON, GameState.gameState);
+    }
+
+    public SaveData(JsonObject rootJSON, GameState gameState) {
         this();
         if (rootJSON.has("xpRate")) {
-            GameState.xpRate = rootJSON.get("xpRate").getAsDouble();
+            GameState.gameState.xpRate = rootJSON.get("xpRate").getAsDouble();
         }
 
         JsonArray charactersJSON = rootJSON.getAsJsonArray(JSONKey.PLAYERS.key);
         for (JsonElement element : charactersJSON) {
             JsonObject characterJSON = element.getAsJsonObject();
             String type = characterJSON.get("type").getAsString();
-            Character character = CharacterPool.getCharacterByType(type);
+            Character character = gameState.characterPool.getCharacterByType(type);
             character.load(characterJSON);
 
             players.add(character);
@@ -77,7 +80,7 @@ public class SaveData {
 
     public JsonObject toJson() {
         JsonObject rootJSON = new JsonObject();
-        rootJSON.add("xpRate", new JsonPrimitive(GameState.xpRate));
+        rootJSON.add("xpRate", new JsonPrimitive(GameState.gameState.xpRate));
 
         JsonArray characterJSON = new JsonArray();
         players.stream().map(Character::save).forEach(characterJSON::add);

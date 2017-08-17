@@ -1,16 +1,18 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.global.Time;
 import nightgames.gui.GUI;
 import nightgames.status.addiction.Addiction;
+
+import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class Daytime {
     public static Daytime day;
@@ -57,8 +59,8 @@ public class Daytime {
     private boolean morning() {
         GUI.gui
               .clearText();
-        CharacterPool.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        CharacterPool.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(
+        GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
+        GameState.gameState.characterPool.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(
                         s -> GUI.gui.message(s));
         if (eventMgr.playMorningScene()) {
             time = 12;
@@ -139,7 +141,7 @@ public class Daytime {
                 }
             }
         } else {
-            for (Character npc : CharacterPool.everyone()) {
+            for (Character npc : GameState.gameState.characterPool.everyone()) {
                 if (!npc.human() && npc instanceof NPC) {
                     if (npc.getLevel() / 10 > npc.getRank()) {
                         npc.rankup();

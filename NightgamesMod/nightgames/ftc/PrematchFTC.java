@@ -1,16 +1,17 @@
 package nightgames.ftc;
 
+import nightgames.characters.Character;
+import nightgames.characters.Player;
+import nightgames.global.*;
+import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
+import nightgames.gui.SaveButton;
+import nightgames.modifier.standard.FTCModifier;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-
-import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
-import nightgames.characters.Player;
-import nightgames.global.*;
-import nightgames.gui.*;
-import nightgames.modifier.standard.FTCModifier;
 
 /**
  * Setup for FTC matches.
@@ -77,7 +78,7 @@ public class PrematchFTC extends Prematch {
         try {
             Response response = GUI.gui.promptFuture(choices).get();
             if (response == Response.volunteer) {
-                prey = CharacterPool.getPlayer();
+                prey = GameState.gameState.characterPool.getPlayer();
                 if (!Flag.checkFlag(Flag.didFTC)) {
                     message = "\"That's the spirit! Oh, did I mention the Prey has to be naked"
                                     + " for the duration of the match and can't use any items?\" Lilly grins mischievously as she"

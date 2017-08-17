@@ -1,15 +1,16 @@
 package nightgames.daytime;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.characters.custom.RecruitmentData;
 import nightgames.global.Flag;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.gui.GUI;
 import nightgames.status.addiction.Addiction;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Informant extends Activity {
     boolean acted;
@@ -335,12 +336,12 @@ public class Informant extends Activity {
         if (choice.equals("Select Competitors")) {
             GUI.gui
             .message("Haha, feeling the heat? That's okay, I can talk to the organizers about redirecting some of the competitors to other sessions. Just let me know who is becoming too much for you.");
-            CharacterPool.everyone().stream()
+            GameState.gameState.characterPool.everyone().stream()
                   .filter(c -> !c.human())
                   .filter(c -> !Flag.checkCharacterDisabledFlag(c))
                   .forEach(character -> choose(String.format(REMOVE_PREFIX + "%s", character.getTrueName()),
                                   GUI.gui));
-            CharacterPool.everyone().stream()
+            GameState.gameState.characterPool.everyone().stream()
                   .filter(c -> !c.human())
                   .filter(c -> Flag.checkCharacterDisabledFlag(c) && !c.getType().equals("Yui"))
                   .forEach(character -> choose(String.format(RETURN_PREFIX + "%s", character.getTrueName()),
@@ -352,7 +353,7 @@ public class Informant extends Activity {
             String name = choice.substring(REMOVE_PREFIX.length());
             GUI.gui
                   .message("Got it, I'll see about sending " + name+ " to another session.");
-            Flag.setCharacterDisabledFlag(CharacterPool.getParticipantsByName(name));
+            Flag.setCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantsByName(name));
             choose("Select Competitors", GUI.gui);
             return;
         }
@@ -360,7 +361,7 @@ public class Informant extends Activity {
             String name = choice.substring(RETURN_PREFIX.length());
             GUI.gui
                   .message("Missing " + name+ " already? I'll see what I can do.");
-            Flag.unsetCharacterDisabledFlag(CharacterPool.getParticipantsByName(name));
+            Flag.unsetCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantsByName(name));
             choose("Select Competitors", GUI.gui);
             return;
         }
@@ -397,8 +398,8 @@ public class Informant extends Activity {
                                       + "than you.\"</i><br/><br/>");
                 choose("Kat: $1000", GUI.gui);
             }
-            for (Character c : CharacterPool.allNPCs()) {
-                if (c.isCustomNPC() && !CharacterPool.everyone()
+            for (Character c : GameState.gameState.characterPool.allNPCs()) {
+                if (c.isCustomNPC() && !GameState.gameState.characterPool.everyone()
                                               .contains(c)) {
                     NPC npc = (NPC) c;
                     RecruitmentData data = npc.getRecruitmentData();
@@ -447,7 +448,7 @@ public class Informant extends Activity {
                     GUI.gui
                           .message("<i>\"" + data.confirm + "\"</i>");
                     acted = true;
-                    CharacterPool.newChallenger(npc.ai);
+                    GameState.gameState.characterPool.newChallenger(npc.ai);
                 } else {
                     GUI.gui
                           .message("You cannot pay the cost.<br/><br/>");
@@ -462,7 +463,7 @@ public class Informant extends Activity {
                 GUI.gui
                       .message("<i>\"Ok, I'll talk to Reyka. She spends a lot of nights surfing the internet, but I'm sure she wouldn't mind an opportunity for some free prey.\"</i>");
                 acted = true;
-                CharacterPool.newChallenger(CharacterPool.getNPCByType(new Reyka().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Reyka().getType()).ai);
                 Flag.flag(Flag.Reyka);
             } else {
                 GUI.gui
@@ -477,7 +478,7 @@ public class Informant extends Activity {
                                       + "Word of advice, Airi's isn't all that personable to begin with, but her entire uh \"personality\" changes when she cums. "
                                       + "Don't let it catch you off guard.\"</i>");
                 acted = true;
-                CharacterPool.newChallenger(CharacterPool.getNPCByType(new Airi().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Airi().getType()).ai);
                 Flag.flag(Flag.Airi);
             } else {
                 GUI.gui
@@ -491,7 +492,7 @@ public class Informant extends Activity {
                       .message("<i>\"Pleasure doing business with you. Just be nice to Kat. She's very catlike and confident when she's turned on, but during the day or after climax, she's "
                                       + "just an ordinary girl. Besides, if her fans hear that you've been mean to her, they'll probably kick your ass. That includes me, by the way.\"</i>");
                 acted = true;
-                CharacterPool.newChallenger(CharacterPool.getNPCByType(new Kat().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Kat().getType()).ai);
                 Flag.flag(Flag.Kat);
             } else {
                 GUI.gui
@@ -508,7 +509,7 @@ public class Informant extends Activity {
                                       + " for after all.\"</i>");
 
                 acted = true;
-                CharacterPool.newChallenger(CharacterPool.getNPCByType(new Eve().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Eve().getType()).ai);
                 Flag.flag(Flag.Eve);
             } else {
                 GUI.gui
@@ -517,7 +518,7 @@ public class Informant extends Activity {
         }
         if (choice.equals("Competition Info")) {
             String message = "<i>\"You want to know how the competition is doing? I can give you a breakdown on each of your opponents:\"</i><br/><br/>";
-            for (Character npc : CharacterPool.everyone()) {
+            for (Character npc : GameState.gameState.characterPool.everyone()) {
                 if (!npc.human() && !Flag.checkCharacterDisabledFlag(npc)) {
                     message = message + npc.dumpstats(false) + "<br/><br/>";
                 }
@@ -526,7 +527,7 @@ public class Informant extends Activity {
                   .message(message);
         }
         if (choice.equals("Help with Addiction")) {
-            Addiction add = CharacterPool.getPlayer()
+            Addiction add = GameState.gameState.characterPool.getPlayer()
                                   .getStrongestAddiction()
                                   .get();
             String message = "You tell Aesop about the feelings you've been having"
@@ -588,7 +589,7 @@ public class Informant extends Activity {
             choose("Competition Info", GUI.gui);
             choose("Select Competitors", GUI.gui);
         }
-        if (CharacterPool.getPlayer()
+        if (GameState.gameState.characterPool.getPlayer()
                   .checkAddiction()) {
             choose("Help with Addiction", GUI.gui);
         }

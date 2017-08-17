@@ -1,14 +1,14 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.global.Configuration;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
+
+import java.util.ArrayList;
 
 public class Porn extends Activity {
     public Porn(Character player) {
@@ -96,13 +96,13 @@ public class Porn extends Activity {
             available.add(Scene.basic1);
             available.add(Scene.basic2);
             available.add(Scene.basic3);
-            if (CharacterPool.getNPC("Mara").getAffection(player) >= 5) {
+            if (GameState.gameState.characterPool.getNPC("Mara").getAffection(player) >= 5) {
                 available.add(Scene.mara1);
             }
-            if (CharacterPool.getNPC("Angel").getAffection(player) >= 10) {
+            if (GameState.gameState.characterPool.getNPC("Angel").getAffection(player) >= 10) {
                 available.add(Scene.angel1);
             }
-            if (Flag.checkFlag(Flag.Reyka) && CharacterPool.getNPC("Reyka").getAffection(player) >= 1) {
+            if (Flag.checkFlag(Flag.Reyka) && GameState.gameState.characterPool.getNPC("Reyka").getAffection(player) >= 1) {
                 available.add(Scene.reyka1);
             }
         }

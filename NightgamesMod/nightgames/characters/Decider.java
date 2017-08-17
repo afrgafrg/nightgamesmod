@@ -1,11 +1,5 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import nightgames.actions.Action;
 import nightgames.actions.Move;
 import nightgames.actions.Movement;
@@ -18,6 +12,12 @@ import nightgames.pet.PetCharacter;
 import nightgames.skills.Skill;
 import nightgames.skills.Tactics;
 import nightgames.skills.Wait;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Decider {
     private static void addAllSkillsWithPriority(ArrayList<WeightedSkill> priority, HashSet<Skill> skills,
@@ -217,7 +217,7 @@ public class Decider {
         Character bff = null;
         if (!self.attractions.isEmpty()) {
             for (String key : self.attractions.keySet()) {
-                Character friend = CharacterPool.getCharacterByType(key);
+                Character friend = GameState.gameState.characterPool.getCharacterByType(key);
                 if (self.getAttraction(friend) > max && !friend.human()) {
                     max = self.getAttraction(friend);
                     bff = friend;

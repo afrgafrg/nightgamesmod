@@ -1,24 +1,24 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockPart;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.requirements.BodyPartRequirement;
 import nightgames.requirements.NotRequirement;
 import nightgames.requirements.RequirementShortcuts;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class AiriTime extends BaseNPCTime {
     public AiriTime(Character player) {
-        super(player, CharacterPool.getNPC("Airi"));
+        super(player, GameState.gameState.characterPool.getNPC("Airi"));
         knownFlag = "Airi";
         giftedString = "\"Uhm... thank you!\"";
         giftString = "\"Oh wow... for me? th-thanks...!\"";
@@ -221,8 +221,8 @@ public class AiriTime extends BaseNPCTime {
                             + "gentle climaxes you've had. You relax. You know that Airi will take good care of you, so you just let her do her thing."
                             + "<br/><br/>"
                             + "The time goes by all too quickly, and Airi finally releases you from her body. You almost fall when you try getting up; your muscles are so relaxed that you could barely move at first. Airi, now back in human form, reaches up on her tiptoes "
-                            + "and gives you a sweet kiss. <i>\"That was fun, and the fluids really helped me out. Uhm... let's do it again soon okay?\"</i>", CharacterPool
-                            .getCharacterByType("Airi"), CharacterPool.getPlayer()));
+                            + "and gives you a sweet kiss. <i>\"That was fun, and the fluids really helped me out. Uhm... let's do it again soon okay?\"</i>", GameState.gameState.characterPool
+                            .getCharacterByType("Airi"), GameState.gameState.characterPool.getPlayer()));
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -250,8 +250,8 @@ public class AiriTime extends BaseNPCTime {
                             + "After you cum, Airi finally lets you go and returns to human form. She smiles at you triumphantly and asks, <i>\"Looks like I won this time... Want to go again? Double or nothing... No more transforming, I promise.\"</i> You're not sure you can trust her promise, but the desire to get back at her cheating "
                             + "gets the better of you and you agree. Facing off one last time, you try the same tactics again and rush towards her. Suddenly, you feel a pressure at your prostate again and are forcibly made to cum again before you even reach Airi. Falling at her feet, you can only shoot your sperm into the air as the unexpected "
                             + "pleasure forces you to your knees. It looks like Airi never actually took out the slime that invaded your ass, and simply hid it inside you. The petite asian walks over to you and toys with your erection a bit with her feet. <i>\"Looks like there's many ways to win the same fight,\"</i> she giggles. "
-                            + "Defeated, you can only sigh in resignation. Looks like you have a couple of expensive dates soon.", CharacterPool
-                            .getCharacterByType("Airi"), CharacterPool.getPlayer()));
+                            + "Defeated, you can only sigh in resignation. Looks like you have a couple of expensive dates soon.", GameState.gameState.characterPool
+                            .getCharacterByType("Airi"), GameState.gameState.characterPool.getPlayer()));
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -264,7 +264,7 @@ public class AiriTime extends BaseNPCTime {
         } else if (choice.equals("Games")) {
             GUI.gui.loadPortrait("airi_human.jpg");
             GUI.gui.showPortrait();
-            GUI.gui.message(Formatter.format("[Placeholder]You play monster hunter with Airi.", CharacterPool.getCharacterByType("Airi"), CharacterPool
+            GUI.gui.message(Formatter.format("[Placeholder]You play monster hunter with Airi.", GameState.gameState.characterPool.getCharacterByType("Airi"), GameState.gameState.characterPool
                             .getPlayer()));
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);

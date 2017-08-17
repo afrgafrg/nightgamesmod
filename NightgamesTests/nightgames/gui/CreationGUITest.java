@@ -1,8 +1,8 @@
 package nightgames.gui;
 
 import nightgames.characters.Attribute;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
+import nightgames.global.GameState;
 import org.hamcrest.core.IsCollectionContaining;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests involving the CreationGUI.
@@ -30,8 +30,8 @@ public class CreationGUITest {
         creationGUI.seduction = 11;
         creationGUI.cunning = 9;
         creationGUI.makeGame(Optional.empty());
-        assertThat(CharacterPool.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
+        assertThat(GameState.gameState.characterPool.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
                         hasEntry(Attribute.Cunning, 9)));
-        assertThat(CharacterPool.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
+        assertThat(GameState.gameState.characterPool.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
     }
 }

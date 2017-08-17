@@ -1,18 +1,17 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.combat.Combat;
 import nightgames.global.DebugFlags;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public abstract class Addiction extends Status {
 
@@ -257,7 +256,7 @@ public abstract class Addiction extends Status {
     }
 
     public static Addiction load(Character self, JsonObject object) {
-        Character cause = CharacterPool.getNPCByType(object.get("cause").getAsString());
+        Character cause = GameState.gameState.characterPool.getNPCByType(object.get("cause").getAsString());
         if (cause == null) {
             return null;
         }

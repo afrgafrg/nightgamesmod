@@ -1,8 +1,5 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.FacePart;
@@ -16,10 +13,14 @@ import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Flag;
 import nightgames.global.Formatter;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.start.NpcConfiguration;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class Angel extends BasePersonality {
     private static final long serialVersionUID = -8169646189131720872L;
@@ -118,7 +119,9 @@ public class Angel extends BasePersonality {
                             useSex();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )
@@ -182,7 +185,9 @@ public class Angel extends BasePersonality {
                             useFollowers();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, CharacterPool.getPlayer());
+                            GameState.gameState.characterPool
+                                            .getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, GameState.gameState.characterPool
+                                            .getPlayer());
                             return true;
                         })
                     )

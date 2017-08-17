@@ -1,15 +1,6 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockMod;
-import nightgames.characters.body.FacePart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.FieryMod;
 import nightgames.characters.body.mods.TrainedMod;
 import nightgames.characters.custom.CharacterLine;
@@ -19,15 +10,17 @@ import nightgames.combat.CombatSceneChoice;
 import nightgames.combat.Result;
 import nightgames.daytime.Daytime;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
-import nightgames.skills.strategy.FacesitStrategy;
-import nightgames.skills.strategy.FootjobStrategy;
-import nightgames.skills.strategy.KnockdownStrategy;
-import nightgames.skills.strategy.ReceiveAnalStrategy;
-import nightgames.skills.strategy.StraponStrategy;
+import nightgames.skills.strategy.*;
 import nightgames.start.NpcConfiguration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 public class Jewel extends BasePersonality {
     /**
@@ -171,9 +164,9 @@ public class Jewel extends BasePersonality {
                                             useMartial();
                                             growth.extraAttributes += 1;
                                             // some compensation for the added difficulty. She gets 4 traits and 3 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                                            CharacterPool.getPlayer()
+                                            GameState.gameState.characterPool.getPlayer()
                                                   .getGrowth()
-                                                  .addTraitPoints(new int[] {25, 47}, CharacterPool.getPlayer());
+                                                  .addTraitPoints(new int[] {25, 47}, GameState.gameState.characterPool.getPlayer());
                                             return true;
                                         }))));
 
@@ -206,9 +199,9 @@ public class Jewel extends BasePersonality {
                             usePhysical();
                             character.getGrowth().extraAttributes += 1;
                             // some compensation for the added difficulty. She gets 4 traits and 3 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            CharacterPool.getPlayer()
+                            GameState.gameState.characterPool.getPlayer()
                                   .getGrowth()
-                                  .addTraitPoints(new int[] {1, 57}, CharacterPool.getPlayer());
+                                  .addTraitPoints(new int[] {1, 57}, GameState.gameState.characterPool.getPlayer());
                             return true;
                         }))));
 

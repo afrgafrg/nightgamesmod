@@ -32,7 +32,7 @@ public class SaveFile {
     }
 
     public static void save(File file) {
-        SaveData data = GameState.saveData();
+        SaveData data = GameState.gameState.saveData();
         JsonObject saveJson = data.toJson();
 
         try (JsonWriter saver = new JsonWriter(new FileWriter(file))) {
@@ -72,8 +72,8 @@ public class SaveFile {
     }
 
     public static GameState load(File file) throws IOException {
-        GameState.resetForLoad();
         GameState loadedGame = new GameState();
+        loadedGame.resetForLoad();
 
         JsonObject object;
         try (Reader loader = new InputStreamReader(new FileInputStream(file))) {
@@ -83,7 +83,7 @@ public class SaveFile {
             // Couldn't load data; just get out
             throw e;
         }
-        SaveData data = new SaveData(object);
+        SaveData data = new SaveData(object, loadedGame);
         return loadedGame.loadData(data);
     }
 

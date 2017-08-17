@@ -1,24 +1,23 @@
 package nightgames.combat;
 
-import java.io.Serializable;
-import java.util.Optional;
-
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
-import nightgames.characters.*;
+import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.characters.State;
+import nightgames.characters.Trait;
 import nightgames.global.*;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
-import nightgames.status.Enthralled;
-import nightgames.status.Flatfooted;
-import nightgames.status.Hypersensitive;
-import nightgames.status.Status;
-import nightgames.status.Stsflag;
+import nightgames.status.*;
 import nightgames.trap.Spiderweb;
 import nightgames.trap.Trap;
 
-import static nightgames.combat.Combat.Initiation.*;
+import java.io.Serializable;
+import java.util.Optional;
+
+import static nightgames.combat.Combat.Initiation.ambushRegular;
+import static nightgames.combat.Combat.Initiation.ambushStrip;
 
 public class Encounter implements Serializable, IEncounter {
 
@@ -542,7 +541,7 @@ public class Encounter implements Serializable, IEncounter {
                 aphrodisiactrick(self, target);
                 break;
             case stealclothes:
-                steal(CharacterPool.getPlayer(), target);
+                steal(GameState.gameState.characterPool.getPlayer(), target);
                 break;
             case fight:
                 fightOrFlight(self, true, Optional.empty());

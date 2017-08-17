@@ -1,7 +1,6 @@
 package nightgames.global;
 
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
 import nightgames.gui.*;
 
@@ -51,7 +50,7 @@ public class Postmatch {
         double level = 0;
         int maxLevelTracker = 0;
 
-        for (Character player : CharacterPool.players) {
+        for (Character player : GameState.gameState.characterPool.players) {
             player.getStamina().fill();
             player.getArousal().empty();
             player.getMojo().empty();
@@ -61,20 +60,20 @@ public class Postmatch {
                 maxLevelTracker = Math.max(player.getLevel(), maxLevelTracker);
             }
         }
-        final int maxLevel = maxLevelTracker / CharacterPool.players.size();
-        CharacterPool.players.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2).forEach(c -> {
+        final int maxLevel = maxLevelTracker / GameState.gameState.characterPool.players.size();
+        GameState.gameState.characterPool.players.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2).forEach(c -> {
             while (c.getLevel() < maxLevel + 2) {
                 c.ding(null);
             }
         });
-        CharacterPool.players.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
+        GameState.gameState.characterPool.players.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
                         .forEach(c -> {
                             while (c.getLevel() < maxLevel + 5) {
                                 c.ding(null);
                             }
                         });
 
-        level /= CharacterPool.players.size();
+        level /= GameState.gameState.characterPool.players.size();
 
         for (Character rested : Match.resting) {
             rested.gainXP(100 + Math.max(0, (int) Math.round(10 * (level - rested.getLevel()))));

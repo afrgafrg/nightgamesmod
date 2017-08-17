@@ -1,18 +1,17 @@
 package nightgames.status.addiction;
 
-import java.util.Optional;
-
 import com.google.gson.JsonObject;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.GameState;
 import nightgames.status.Masochistic;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
+
+import java.util.Optional;
 
 public class Dominance extends Addiction {
     private int originalWill;
@@ -220,7 +219,7 @@ public class Dominance extends Addiction {
 
     @Override
     public Status loadFromJson(JsonObject obj) {
-        return new Dominance(NPC.noneCharacter(), CharacterPool.getCharacterByType(obj.get("cause")
+        return new Dominance(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause")
                                                           .getAsString()),
                         (float) obj.get("magnitude")
                                    .getAsInt());

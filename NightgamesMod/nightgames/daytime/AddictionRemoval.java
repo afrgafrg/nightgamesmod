@@ -1,8 +1,8 @@
 package nightgames.daytime;
 
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.gui.GUI;
 
 public class AddictionRemoval extends Activity {
@@ -16,7 +16,7 @@ public class AddictionRemoval extends Activity {
 
     @Override
     public boolean known() {
-        return Flag.checkFlag(Flag.AddictionAdvice) && CharacterPool.getPlayer()
+        return Flag.checkFlag(Flag.AddictionAdvice) && GameState.gameState.characterPool.getPlayer()
                                                                .checkAddiction();
     }
 
@@ -55,12 +55,13 @@ public class AddictionRemoval extends Activity {
             GUI.gui.message("Nervously, you handed over the money for the overload treatment. You don't"
                             + " remember what happened next, but you do know that now your addiction is far"
                             + " stronger than before. Let's hope this works.");
-            CharacterPool.getPlayer().getStrongestAddiction().get().overload();
+            GameState.gameState.characterPool.getPlayer().getStrongestAddiction().get().overload();
         } else if (choice.equals(SAFE_OPT)) {
             player.money -= 15000;
             GUI.gui.message("You dole out the mountain of cash and are taken to the back for your treatment."
                             + " When you emerge, you are completely free of your addiction.");
-            CharacterPool.getPlayer().removeStatusImmediately(CharacterPool.getPlayer().getStrongestAddiction().get());
+            GameState.gameState.characterPool.getPlayer().removeStatusImmediately(
+                            GameState.gameState.characterPool.getPlayer().getStrongestAddiction().get());
         } else if (choice.equals("Leave")) {
             done(true);
             return;

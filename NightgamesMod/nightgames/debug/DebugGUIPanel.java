@@ -1,6 +1,16 @@
 package nightgames.debug;
 
-import java.awt.GridLayout;
+import nightgames.characters.Attribute;
+import nightgames.characters.Character;
+import nightgames.characters.Trait;
+import nightgames.global.DebugFlags;
+import nightgames.global.GameState;
+import nightgames.global.Match;
+import nightgames.gui.GUI;
+import nightgames.items.Item;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -9,22 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import nightgames.characters.Character;
-import nightgames.characters.Attribute;
-import nightgames.characters.CharacterPool;
-import nightgames.characters.Trait;
-import nightgames.global.DebugFlags;
-import nightgames.global.Match;
-import nightgames.gui.GUI;
-import nightgames.items.Item;
 
 @SuppressWarnings("unused")
 public class DebugGUIPanel extends JPanel {
@@ -43,7 +37,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.setXP (\\d+)", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 target.setXP(Integer.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -51,7 +45,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.setMoney (\\d+)", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 target.setMoney(Integer.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -59,7 +53,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.move (\\w+)", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 target.travel(Match.getMatch().getAreas().stream().filter(area -> area.name.toLowerCase().contains(list.get(2).toLowerCase())).findAny().get());
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -67,7 +61,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addTrait (\\w+)", (output, list) -> {
             try {
-            	Character target = CharacterPool.getCharacterByType(list.get(1));
+            	Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
             	if (list.get(2).equals("all")) {
             		for (Trait t : Trait.values()) {
             			target.add(t);
@@ -83,7 +77,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.removeTrait (\\w+)", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 target.remove(Trait.valueOf(list.get(2)));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
@@ -93,7 +87,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addItem (\\w+) ?(\\d+)?", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 int amt = 1;
                 if (list.size() > 3 && list.get(3) != null) {
                     amt = Integer.valueOf(list.get(3));
@@ -107,7 +101,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addAtt (\\w+) ?(\\d+)?", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 int amt = 1;
                 if (list.size() > 3 && list.get(3) != null) {
                     amt = Integer.valueOf(list.get(3));
@@ -121,12 +115,12 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addAffection (\\d+)?", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 int amt = 1;
                 if (list.size() > 2 && list.get(2) != null) {
                     amt = Integer.valueOf(list.get(2));
                 }
-                target.gainAffection(CharacterPool.getPlayer(), amt);
+                target.gainAffection(GameState.gameState.characterPool.getPlayer(), amt);
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             } catch (IllegalArgumentException e) {
@@ -135,12 +129,12 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.addAttraction (\\d+)?", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 int amt = 1;
                 if (list.size() > 2 && list.get(2) != null) {
                     amt = Integer.valueOf(list.get(2));
                 }
-                target.gainAttraction(CharacterPool.getPlayer(), amt);
+                target.gainAttraction(GameState.gameState.characterPool.getPlayer(), amt);
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             } catch (IllegalArgumentException e) {
@@ -148,7 +142,7 @@ public class DebugGUIPanel extends JPanel {
             }
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.ding( \\d+)?", (output, list) -> {
-            Character target = CharacterPool.getCharacterByType(list.get(1));
+            Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
             if (target == null) {
                 output.setText(list.get(1) + " is not a valid charater");
                 return;
@@ -164,7 +158,7 @@ public class DebugGUIPanel extends JPanel {
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.list", (output, list) -> {
             try {
-                Character target = CharacterPool.getCharacterByType(list.get(1));
+                Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 StringBuilder sb = new StringBuilder();
                 sb.append("Level: " + target.getLevel() + "\n");
                 List<Trait> traits = new ArrayList<>(target.getTraits());
@@ -180,7 +174,7 @@ public class DebugGUIPanel extends JPanel {
                 output.setText(String.format("Stamina [%s]\nArousal [%s]\nMojo [%s]\nWillpower [%s]\nAttractiveness: %.01f\n%s\n%s",
                                 target.getStamina().toString(), target.getArousal().toString(),
                                 target.getMojo().toString(), target.getWillpower().toString(), target.body.getHotness(
-                                                CharacterPool.getPlayer()), attString, sb.toString()));
+                                                GameState.gameState.characterPool.getPlayer()), attString, sb.toString()));
             } catch (NullPointerException e) {
                 output.setText(list.get(1) + " is not a valid charater");
             }

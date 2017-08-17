@@ -14,52 +14,63 @@ import nightgames.start.StartConfiguration;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Tracks Characters in current game.
  */
 public class CharacterPool {
-    public static Map<String, NPC> characterPool;   // All starting and unlockable characters
-    public static Set<Character> players = new HashSet<>();           // All currently unlocked characters
-    public static Set<Character> debugChars = new HashSet<>();
-    public static Player human;
+    public Map<String, NPC> characterPool;   // All starting and unlockable characters
+    public Set<Character> players = new HashSet<>();           // All currently unlocked characters
+    public Set<Character> debugChars = new HashSet<>();
+    public Player human;
 
-    /**
-     * WARNING DO NOT USE THIS IN ANY COMBAT RELATED CODE.
-     * IT DOES NOT TAKE INTO ACCOUNT THAT THE PLAYER GETS CLONED. WARNING. WARNING.
-     * @return
-     */
-    public static Player getPlayer() {
-        return human;
-    }
-
-    public static List<Character> getInAffectionOrder(List<Character> viableList) {
-        List<Character> results = new ArrayList<>(viableList);
-        results.sort((a, b) -> a.getAffection(getPlayer()) - b.getAffection(getPlayer()));
-        return results;
-    }
-
-    public static NPC getNPCByType(String type) {
-        NPC results = characterPool.get(type);
-        if (results == null) {
-            System.err.println("failed to find NPC for type " + type);
-        }
-        return results;
-    }
-
-    public static Character getCharacterByType(String type) {
-        if (type.equals(human.getType())) {
-            return human;
-        }
-        return getNPCByType(type);
-    }
-
-    private static Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
+    private Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
         return startConfig.isPresent() ? startConfig.get().findNpcConfig(type) : Optional.empty();
     }
 
-    public static void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
+    public Set<Character> everyone() {
+        return players;
+    }
+
+    public boolean newChallenger(Personality challenger) {
+        if (!players.contains(challenger.getCharacter())) {
+            int targetLevel = human.getLevel();
+            if (challenger.getCharacter().has(Trait.leveldrainer)) {
+                targetLevel -= 4;
+            }
+            while (challenger.getCharacter().getLevel() <= targetLevel) {
+                challenger.getCharacter().ding(null);
+            }
+            players.add(challenger.getCharacter());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public NPC getNPC(String name) {
+        for (Character c : allNPCs()) {
+            if (c.getType().equalsIgnoreCase(name)) {
+                return (NPC) c;
+            }
+        }
+        System.err.println("NPC \"" + name + "\" is not loaded.");
+        return null;
+    }
+
+    public boolean characterTypeInGame(String type) {
+        return players.stream().anyMatch(c -> type.equals(c.getType()));
+    }
+
+    public Collection<NPC> allNPCs() {
+        return characterPool.values();
+    }
+
+    public Character getParticipantsByName(String name) {
+        return players.stream().filter(c -> c.getTrueName().equals(name)).findAny().get();
+    }
+
+    public void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
         characterPool = new HashMap<>();
         debugChars.clear();
 
@@ -112,57 +123,33 @@ public class CharacterPool {
         debugChars.add(reyka.getCharacter());
     }
 
-    public static Set<Character> everyone() {
-        return players;
-    }
-
-    public static boolean newChallenger(Personality challenger) {
-        if (!players.contains(challenger.getCharacter())) {
-            int targetLevel = human.getLevel();
-            if (challenger.getCharacter().has(Trait.leveldrainer)) {
-                targetLevel -= 4;
-            }
-            while (challenger.getCharacter().getLevel() <= targetLevel) {
-                challenger.getCharacter().ding(null);
-            }
-            players.add(challenger.getCharacter());
-            return true;
-        } else {
-            return false;
+    public Character getCharacterByType(String type) {
+        if (type.equals(human.getType())) {
+            return human;
         }
+        return getNPCByType(type);
     }
 
-    public static NPC getNPC(String name) {
-        for (Character c : allNPCs()) {
-            if (c.getType().equalsIgnoreCase(name)) {
-                return (NPC) c;
-            }
+    public NPC getNPCByType(String type) {
+        NPC results = characterPool.get(type);
+        if (results == null) {
+            System.err.println("failed to find NPC for type " + type);
         }
-        System.err.println("NPC \"" + name + "\" is not loaded.");
-        return null;
-    }
-
-    public static boolean characterTypeInGame(String type) {
-        return players.stream().anyMatch(c -> type.equals(c.getType()));
-    }
-
-    public static Collection<NPC> allNPCs() {
-        return characterPool.values();
-    }
-
-    public static Character getParticipantsByName(String name) {
-        return players.stream().filter(c -> c.getTrueName().equals(name)).findAny().get();
-    }
-
-    public static Set<Character> pickCharacters(Collection<Character> avail, Collection<Character> added, int size) {
-        List<Character> randomizer = avail.stream()
-                        .filter(c -> !c.human())
-                        .filter(c -> !c.has(Trait.event))
-                        .filter(c -> !added.contains(c))
-                        .collect(Collectors.toList());
-        Collections.shuffle(randomizer);
-        Set<Character> results = new HashSet<>(added);
-        results.addAll(randomizer.subList(0, Math.min(Math.max(0, size - results.size())+1, randomizer.size())));
         return results;
+    }
+
+    public List<Character> getInAffectionOrder(List<Character> viableList) {
+        List<Character> results = new ArrayList<>(viableList);
+        results.sort(Comparator.comparingInt(a -> a.getAffection(getPlayer())));
+        return results;
+    }
+
+    /**
+     * WARNING DO NOT USE THIS IN ANY COMBAT RELATED CODE.
+     * IT DOES NOT TAKE INTO ACCOUNT THAT THE PLAYER GETS CLONED. WARNING. WARNING.
+     * @return
+     */
+    public Player getPlayer() {
+        return human;
     }
 }

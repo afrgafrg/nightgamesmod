@@ -1,17 +1,17 @@
 package nightgames.actions;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import nightgames.areas.Area;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.characters.Trait;
+import nightgames.global.GameState;
 import nightgames.global.Match;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.status.Detected;
 import nightgames.status.Horny;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Locate extends Action {
     private static final long serialVersionUID = 1L;
@@ -59,7 +59,7 @@ public class Locate extends Action {
             gui.clearText();
             gui.clearCommand();
             Match.getMatch().resume();
-        } else if ((target = CharacterPool.getParticipantsByName(choice)) != null) {
+        } else if ((target = GameState.gameState.characterPool.getParticipantsByName(choice)) != null) {
             Area area = target.location();
             gui.clearText();
             if (area != null) {

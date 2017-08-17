@@ -1,19 +1,19 @@
 package nightgames.daytime;
 
-import java.util.Collections;
-
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
-import nightgames.characters.CharacterPool;
 import nightgames.global.Flag;
+import nightgames.global.GameState;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
+
+import java.util.Collections;
 
 public class YuiTime extends BaseNPCTime {
     private boolean acted;
 
     public YuiTime(Character player) {
-        super(player, CharacterPool.getNPC("Yui"));
+        super(player, GameState.gameState.characterPool.getNPC("Yui"));
         knownFlag = "YuiLoyalty";
         giftedString = "\"Thanks! You're a pretty nice you know?\"";
         giftString = "\"A present? I'm not going to go easy on you even if you bribe me you know?\"";

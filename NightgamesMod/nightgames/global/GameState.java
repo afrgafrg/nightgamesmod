@@ -21,34 +21,39 @@ import java.util.stream.Collectors;
  * Creates, destroys, and maintains the state of a running game.
  */
 public class GameState {
-    private volatile static GameState gameState;
-    public static double moneyRate = 1.0;
-    public static double xpRate = 1.0;
+    public volatile static GameState gameState;
+    public double moneyRate;
+    public double xpRate;
     private static boolean ingame = false;
     private volatile boolean run;
+    public CharacterPool characterPool;
 
+    // TODO: Make new GameStates start in a usable condition. Currently needs a separate reset() or newGame() call.
     public GameState() {
         gameState = this;
+        characterPool = new CharacterPool();
+        xpRate = 1.0;
+        moneyRate = 1.0;
     }
 
-    public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
+    public void newGame(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                     CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
-        CharacterPool.human = new Player(playerName, pickedGender, playerConfig, pickedTraits, selectedAttributes);
-        if(CharacterPool.human.has(Trait.largereserves)) {
-            CharacterPool.human.getWillpower().gain(20);
+        characterPool.human = new Player(playerName, pickedGender, playerConfig, pickedTraits, selectedAttributes);
+        if(characterPool.human.has(Trait.largereserves)) {
+            characterPool.human.getWillpower().gain(20);
         }
-        CharacterPool.players.add(CharacterPool.human);
+        characterPool.players.add(characterPool.human);
         if (GUI.gui != null) {
-            GUI.gui.populatePlayer(CharacterPool.human);
+            GUI.gui.populatePlayer(characterPool.human);
         }
-        SkillPool.buildSkillPool(CharacterPool.human);
+        SkillPool.buildSkillPool(characterPool.human);
         Clothing.buildClothingTable();
-        SkillPool.learnSkills(CharacterPool.human);
-        CharacterPool.rebuildCharacterPool(config);
+        SkillPool.learnSkills(characterPool.human);
+        characterPool.rebuildCharacterPool(config);
         // Add starting characters to players
-        CharacterPool.players.addAll(CharacterPool.characterPool.values().stream().filter(npc -> npc.isStartCharacter).collect(Collectors.toList()));
+        characterPool.players.addAll(characterPool.characterPool.values().stream().filter(npc -> npc.isStartCharacter).collect(Collectors.toList()));
         if (!cfgFlags.isEmpty()) {
             Flag.flags = cfgFlags.stream().collect(Collectors.toSet());
         }
@@ -56,7 +61,7 @@ public class GameState {
         configurationFlags.forEach((flag, val) -> Flag.setFlag(flag, val));
         Time.time = Time.NIGHT;
         Time.date = 1;
-        Flag.setCharacterDisabledFlag(CharacterPool.getNPCByType("Yui"));
+        Flag.setCharacterDisabledFlag(GameState.gameState.characterPool.getNPCByType("Yui"));
         Flag.setFlag(Flag.systemMessages, true);
     }
 
@@ -66,15 +71,15 @@ public class GameState {
      * @param data A SaveData object, as loaded from save files.
      */
     protected GameState loadData(SaveData data) {
-        CharacterPool.players.addAll(data.players);
-        CharacterPool.players.stream().filter(c -> c instanceof NPC).forEach(
-                        c -> CharacterPool.characterPool.put(c.getType(), (NPC) c));
+        characterPool.players.addAll(data.players);
+        characterPool.players.stream().filter(c -> c instanceof NPC).forEach(
+                        c -> characterPool.characterPool.put(c.getType(), (NPC) c));
         Flag.flags.addAll(data.flags);
         Flag.counters.putAll(data.counters);
         Time.date = data.date;
         Time.time = data.time;
         GUI.gui.fontsize = data.fontsize;
-        GUI.gui.populatePlayer(CharacterPool.human);
+        GUI.gui.populatePlayer(characterPool.human);
         return this;
     }
 
@@ -82,9 +87,9 @@ public class GameState {
         return gameState;
     }
 
-    protected static SaveData saveData() {
+    protected SaveData saveData() {
         SaveData data = new SaveData();
-        data.players.addAll(CharacterPool.players);
+        data.players.addAll(characterPool.players);
         data.flags.addAll(Flag.flags);
         data.counters.putAll(Flag.counters);
         data.time = Time.time;
@@ -93,15 +98,15 @@ public class GameState {
         return data;
     }
 
-    protected static void resetForLoad() {
-        CharacterPool.players.clear();
+    protected void resetForLoad() {
+        characterPool.players.clear();
         Flag.flags.clear();
         GUI.gui.clearText();
-        CharacterPool.human = new Player("Dummy");
+        characterPool.human = new Player("Dummy");
         GUI.gui.purgePlayer();
-        SkillPool.buildSkillPool(CharacterPool.human);
+        SkillPool.buildSkillPool(characterPool.human);
         Clothing.buildClothingTable();
-        CharacterPool.rebuildCharacterPool(Optional.empty());
+        characterPool.rebuildCharacterPool(Optional.empty());
         Daytime.day = null;
     }
 
@@ -133,12 +138,12 @@ public class GameState {
                         + " Everyone agrees." + " The first match starts at exactly 10:00.";
     }
 
-    public static void reset() {
-        CharacterPool.players.clear();
+    public void reset() {
+        characterPool.players.clear();
         Flag.flags.clear();
         Daytime.day = null;
         Match.match = null;
-        CharacterPool.human = new Player("Dummy");
+        characterPool.human = new Player("Dummy");
         GUI.gui.purgePlayer();
         xpRate = 1.0;
         GUI.gui.createCharacter();
@@ -159,14 +164,14 @@ public class GameState {
                     CompletableFuture<Match> preparedMatch = new CompletableFuture<>();
                     Prematch prematch = Prematch.decideMatchType(preparedMatch);
                     // set up match
-                    prematch.prompt(CharacterPool.human);
+                    prematch.prompt(characterPool.human);
                     Match match = preparedMatch.get();
                     // start match
                     CountDownLatch matchComplete = match.matchComplete;
                     match.startMatch();
                     // end match
                     matchComplete.await();
-                    Postmatch postmatch = new Postmatch(CharacterPool.getPlayer(), match.combatants);
+                    Postmatch postmatch = new Postmatch(GameState.gameState.characterPool.getPlayer(), match.combatants);
                     postmatch.endMatch();
                     // set time to next day
                     Time.date++;
@@ -179,7 +184,7 @@ public class GameState {
                 }
                 if (Time.getTime() == Time.DAY) {
                     Match.match = null;
-                    Daytime.day = new Daytime(CharacterPool.human);
+                    Daytime.day = new Daytime(characterPool.human);
                     // do daytime stuff
                     Daytime.day.plan();
                     Daytime.day.readyForNight.await();

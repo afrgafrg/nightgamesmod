@@ -353,7 +353,7 @@ public class Informant extends Activity {
             String name = choice.substring(REMOVE_PREFIX.length());
             GUI.gui
                   .message("Got it, I'll see about sending " + name+ " to another session.");
-            Flag.setCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantsByName(name));
+            Flag.setCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantByName(name));
             choose("Select Competitors", GUI.gui);
             return;
         }
@@ -361,7 +361,7 @@ public class Informant extends Activity {
             String name = choice.substring(RETURN_PREFIX.length());
             GUI.gui
                   .message("Missing " + name+ " already? I'll see what I can do.");
-            Flag.unsetCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantsByName(name));
+            Flag.unsetCharacterDisabledFlag(GameState.gameState.characterPool.getParticipantByName(name));
             choose("Select Competitors", GUI.gui);
             return;
         }

@@ -32,7 +32,7 @@ public class CharacterPool {
         return players;
     }
 
-    public boolean newChallenger(Personality challenger) {
+    public void newChallenger(Personality challenger) {
         if (!players.contains(challenger.getCharacter())) {
             int targetLevel = human.getLevel();
             if (challenger.getCharacter().has(Trait.leveldrainer)) {
@@ -42,10 +42,8 @@ public class CharacterPool {
                 challenger.getCharacter().ding(null);
             }
             players.add(challenger.getCharacter());
-            return true;
-        } else {
-            return false;
         }
+
     }
 
     public NPC getNPC(String name) {
@@ -66,16 +64,16 @@ public class CharacterPool {
         return characterPool.values();
     }
 
-    public Character getParticipantsByName(String name) {
-        return players.stream().filter(c -> c.getTrueName().equals(name)).findAny().get();
+    public Character getParticipantByName(String name) {
+        return players.stream().filter(c -> c.getTrueName().equals(name)).findAny()
+                        .orElseThrow(() -> new NoSuchElementException("Could not find particpant " + name));
     }
 
     public void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
         characterPool = new HashMap<>();
         debugChars.clear();
 
-        Optional<NpcConfiguration> commonConfig =
-                        startConfig.isPresent() ? Optional.of(startConfig.get().npcCommon) : Optional.empty();
+        Optional<NpcConfiguration> commonConfig = startConfig.map(startConfiguration -> startConfiguration.npcCommon);
 
         try (InputStreamReader reader = new InputStreamReader(
                         ResourceLoader.getFileResourceAsStream("characters/included.json"))) {

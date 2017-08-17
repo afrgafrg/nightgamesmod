@@ -59,7 +59,7 @@ public class Locate extends Action {
             gui.clearText();
             gui.clearCommand();
             Match.getMatch().resume();
-        } else if ((target = GameState.gameState.characterPool.getParticipantsByName(choice)) != null) {
+        } else if ((target = GameState.gameState.characterPool.getParticipantByName(choice)) != null) {
             Area area = target.location();
             gui.clearText();
             if (area != null) {

@@ -4,6 +4,8 @@ My previous rewrite attempt in explicit-loops stalled, partly due to trying to k
 
 This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. Commits to this branch will be either bugfixes or refactoring.
 
+--Ryplinn
+
 ## Steps taken/planned
 
 1. **DONE** Some tests are failing or broken. Restore to green status.

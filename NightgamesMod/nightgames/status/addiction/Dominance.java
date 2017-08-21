@@ -6,7 +6,6 @@ import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.global.GameState;
 import nightgames.status.Masochistic;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
@@ -16,13 +15,13 @@ import java.util.Optional;
 public class Dominance extends Addiction {
     private int originalWill;
 
-    public Dominance(Character affected, Character cause, float magnitude) {
+    public Dominance(Character affected, String cause, float magnitude) {
         super(affected, "Dominance", cause, magnitude);
         flags.add(Stsflag.victimComplex);
         originalWill = -1;
     }
 
-    public Dominance(Character affected, Character cause) {
+    public Dominance(Character affected, String cause) {
         this(affected, cause, .01f);
     }
 
@@ -68,11 +67,11 @@ public class Dominance extends Addiction {
     protected String describeIncrease() {
         switch (getSeverity()) {
             case HIGH:
-                return "Held down by " + cause.getName() + ", you feel completely powerless to resist.";
+                return "Held down by " + getCause().getName() + ", you feel completely powerless to resist.";
             case LOW:
-                return "You feel strangely weak in " + cause.getName() + "'s powerful hold.";
+                return "You feel strangely weak in " + getCause().getName() + "'s powerful hold.";
             case MED:
-                return "Something about the way " + cause.getName() + " is holding on to you is causing your strength to seep away.";
+                return "Something about the way " + getCause().getName() + " is holding on to you is causing your strength to seep away.";
             case NONE:
             default:
                 return "";
@@ -83,12 +82,12 @@ public class Dominance extends Addiction {
     protected String describeDecrease() {
         switch (getSeverity()) {
             case LOW:
-                return "More and more of your strength is returning since escaping from " + cause.getName() + ". ";
+                return "More and more of your strength is returning since escaping from " + getCause().getName() + ". ";
             case MED:
-                return "You find some of the strange weakness caused by " + cause.getName() + "'s powerful hold"
+                return "You find some of the strange weakness caused by " + getCause().getName() + "'s powerful hold"
                                 + " fleeing your bones. ";
             case NONE:
-                return "You have completely recovered from " + cause.getName() + "'s hold. ";
+                return "You have completely recovered from " + getCause().getName() + "'s hold. ";
             case HIGH:
             default:
                 return "";
@@ -97,7 +96,7 @@ public class Dominance extends Addiction {
 
     @Override
     protected String describeWithdrawal() {
-        return "Your body longs for the exquisite pain and submission " + cause.getName() + " can bring you,"
+        return "Your body longs for the exquisite pain and submission " + getCause().getName() + " can bring you,"
                         + " reducing your stamina and causing masochisitic tendencies.";
     }
 
@@ -116,7 +115,7 @@ public class Dominance extends Addiction {
         return "<i>\"Is that all? With all the weird shit going on around here, you're worried about a submissive"
                         + " streak? Well, sure, I can see how it would be a problem. Being held down does not"
                         + " help your chances in a fight, and if you actually enjoy it you are not at all"
-                        + " likely to win. Basically, if " + cause.pronoun() + " gets you down and tied up or something, you're going"
+                        + " likely to win. Basically, if " + getCause().pronoun() + " gets you down and tied up or something, you're going"
                         + " to lose, because you subconciously don't actually want to win.\"</i> That does sound"
                         + " pretty bad... Any upsides? <i>\"Well, I suppose that being on the receiving end of such"
                         + " a powerful dominance, the stuff other people do won't make as much of an impression."
@@ -137,12 +136,12 @@ public class Dominance extends Addiction {
     @Override
     public String initialMessage(Combat c, Optional<Status> replacement) {
         if (inWithdrawal) {
-            return cause.getName() + " is looking meaner than ever after you neglected to visit today. Equal"
+            return getCause().getName() + " is looking meaner than ever after you neglected to visit today. Equal"
                             + " parts of fear and desire well up inside of you at the thought of what "
-                            + cause.pronoun() + " might do to you.";
+                            + getCause().pronoun() + " might do to you.";
         }
-        return "You are conflicted at the sight of " + cause.getName() + ". One part of you still remembers"
-                        + " the pain and humiliation " + cause.pronoun() + " can cause and"
+        return "You are conflicted at the sight of " + getCause().getName() + ". One part of you still remembers"
+                        + " the pain and humiliation " + getCause().pronoun() + " can cause and"
                         + " is terrified because of it, the other part is getting excited"
                         + " for the very same reason.";
     }
@@ -214,14 +213,12 @@ public class Dominance extends Addiction {
 
     @Override
     public Status instance(Character newAffected, Character newOther) {
-        return new Dominance((Character) newAffected, newOther, magnitude);
+        return new Dominance(newAffected, newOther.getType(), magnitude);
     }
 
     @Override
     public Status loadFromJson(JsonObject obj) {
-        return new Dominance(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause")
-                                                          .getAsString()),
-                        (float) obj.get("magnitude")
-                                   .getAsInt());
+        return new Dominance(NPC.noneCharacter(), obj.get("cause").getAsString(),
+                        (float) obj.get("magnitude").getAsInt());
     }
 }

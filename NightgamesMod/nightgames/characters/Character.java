@@ -3975,7 +3975,7 @@ public abstract class Character extends Observable implements Cloneable {
             if (dbg) {
                 System.out.printf("Creating initial %s on player with %.3f\n", type.name(), mag);
             }
-            Addiction addict = type.build(this, cause, mag);
+            Addiction addict = type.build(this, cause.getType(), mag);
             addNonCombat(addict);
             addict.describeInitial();
         }
@@ -4024,7 +4024,7 @@ public abstract class Character extends Observable implements Cloneable {
                 System.out.printf("Creating initial %s on player with %.3f (Combat vs %s)\n", type.name(), mag,
                                 cause.getTrueName());
             }
-            Addiction addict = type.build(this, cause, Addiction.LOW_THRESHOLD);
+            Addiction addict = type.build(this, cause.getType(), Addiction.LOW_THRESHOLD);
             addict.aggravateCombat(c, mag);
             add(c, addict);
         }

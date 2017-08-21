@@ -23,7 +23,7 @@ public abstract class Addiction extends Status {
     public static final float MED_THRESHOLD = .4f;
     public static final float HIGH_THRESHOLD = .7f;
 
-    protected final transient Character cause;
+    private final transient String cause;
     protected float magnitude;
     protected float combatMagnitude;
 
@@ -33,7 +33,7 @@ public abstract class Addiction extends Status {
 
     protected boolean inWithdrawal;
 
-    protected Addiction(Character affected, String name, Character cause, float magnitude) {
+    protected Addiction(Character affected, String name, String cause, float magnitude) {
         super(name, affected);
         flag(Stsflag.permanent);
         this.name = name;
@@ -45,12 +45,12 @@ public abstract class Addiction extends Status {
         overloading = false;
     }
 
-    protected Addiction(Character affected, String name, Character cause) {
+    protected Addiction(Character affected, String name, String cause) {
         this(affected, name, cause, .01f);
     }
     
     public Character getCause() {
-        return cause;
+        return GameState.gameState.characterPool.getCharacterByType(cause);
     }
 
     @Override
@@ -105,7 +105,7 @@ public abstract class Addiction extends Status {
     @Override  public JsonObject saveToJson() {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", getType().name());
-        obj.addProperty("cause", cause.getType());
+        obj.addProperty("cause", cause);
         obj.addProperty("magnitude", magnitude);
         obj.addProperty("combat", combatMagnitude);
         obj.addProperty("overloading", overloading);
@@ -162,7 +162,7 @@ public abstract class Addiction extends Status {
         if (inWithdrawal) {
             Optional<Status> opt = withdrawalEffects();
             if (opt.isPresent() && !affected.has(opt.get()))
-                affected.addNonCombat(opt.get().instance(affected, cause));
+                affected.addNonCombat(opt.get().instance(affected, getCause()));
         }
     }
 
@@ -181,7 +181,7 @@ public abstract class Addiction extends Status {
 
     public Optional<Status> startCombat(Combat c, Character opp) {
         combatMagnitude = atLeast(Severity.MED) ? .2f : .0f;
-        if (opp.equals(cause) && atLeast(Severity.LOW)) {
+        if (opp.equals(getCause()) && atLeast(Severity.LOW)) {
             flags.forEach(affected::flagStatus);
             return addictionEffects();
         }
@@ -204,7 +204,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude + amt);
         if (getSeverity() != old) {
-            Formatter.writeIfCombat(c, cause, Formatter.format(describeIncrease(), affected, cause));
+            Formatter.writeIfCombat(c, getCause(), Formatter.format(describeIncrease(), affected, getCause()));
         }
     }
 
@@ -212,7 +212,7 @@ public abstract class Addiction extends Status {
         Severity old = getSeverity();
         magnitude = clamp(magnitude - amt);
         if (getSeverity() != old) {
-            Formatter.writeIfCombat(c, cause, Formatter.format(describeDecrease(), affected, cause));
+            Formatter.writeIfCombat(c, getCause(), Formatter.format(describeDecrease(), affected, getCause()));
         }
     }
 
@@ -220,7 +220,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude + amt);
         if (getSeverity() != old) {
-            Formatter.writeIfCombat(c, cause, Formatter.format(describeCombatIncrease(), affected, cause));
+            Formatter.writeIfCombat(c, getCause(), Formatter.format(describeCombatIncrease(), affected, getCause()));
         }
     }
 
@@ -228,7 +228,7 @@ public abstract class Addiction extends Status {
         Severity old = getCombatSeverity();
         combatMagnitude = clamp(combatMagnitude - amt);
         if (getSeverity() != old) {
-            Formatter.writeIfCombat(c, cause, Formatter.format(describeCombatDecrease(), affected, cause));
+            Formatter.writeIfCombat(c, getCause(), Formatter.format(describeCombatDecrease(), affected, getCause()));
         }
     }
 
@@ -256,7 +256,7 @@ public abstract class Addiction extends Status {
     }
 
     public static Addiction load(Character self, JsonObject object) {
-        Character cause = GameState.gameState.characterPool.getNPCByType(object.get("cause").getAsString());
+        String cause = object.get("cause").getAsString();
         if (cause == null) {
             return null;
         }
@@ -278,6 +278,37 @@ public abstract class Addiction extends Status {
     }
 
     public boolean wasCausedBy(Character target) {
-        return target != null && target.getType().equals(cause.getType());
+        return target != null && target.getType().equals(getCause().getType());
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Addiction addiction = (Addiction) o;
+
+        if (Float.compare(addiction.magnitude, magnitude) != 0)
+            return false;
+        if (Float.compare(addiction.combatMagnitude, combatMagnitude) != 0)
+            return false;
+        if (didDaytime != addiction.didDaytime)
+            return false;
+        if (overloading != addiction.overloading)
+            return false;
+        if (inWithdrawal != addiction.inWithdrawal)
+            return false;
+        return cause.equals(addiction.cause);
+    }
+
+    @Override public int hashCode() {
+        int result = cause.hashCode();
+        result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+        result = 31 * result + (combatMagnitude != +0.0f ? Float.floatToIntBits(combatMagnitude) : 0);
+        result = 31 * result + (didDaytime ? 1 : 0);
+        result = 31 * result + (overloading ? 1 : 0);
+        result = 31 * result + (inWithdrawal ? 1 : 0);
+        return result;
     }
 }

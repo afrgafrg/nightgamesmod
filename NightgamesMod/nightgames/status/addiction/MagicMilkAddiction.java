@@ -7,7 +7,6 @@ import nightgames.characters.NPC;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Formatter;
-import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
@@ -17,13 +16,13 @@ import java.util.Optional;
 public class MagicMilkAddiction extends Addiction {
     private int originalMaxWill;
 
-    public MagicMilkAddiction(Character affected, Character cause, float magnitude) {
+    public MagicMilkAddiction(Character affected, String cause, float magnitude) {
         super(affected, "Magic Milk Addiction", cause, magnitude);
         flag(Stsflag.magicmilkcraving);
         flag(Stsflag.tolerance); // immune to regular addiction
     }
 
-    public MagicMilkAddiction(Character affected, Character cause) {
+    public MagicMilkAddiction(Character affected, String cause) {
         this(affected, cause, .01f);
     }
 
@@ -50,9 +49,9 @@ public class MagicMilkAddiction extends Addiction {
     protected String describeIncrease() {
         switch (getSeverity()) {
             case HIGH:
-                return "You feel empty without " + cause.getName() + "'s milk flowing down your throat. You need more!";
+                return "You feel empty without " + getCause().getName() + "'s milk flowing down your throat. You need more!";
             case LOW:
-                return "You feel a strange yearning for more of " + cause.getName() + "'s milk.";
+                return "You feel a strange yearning for more of " + getCause().getName() + "'s milk.";
             case MED:
                 return "You know it's bad for you, but you really want more of that milk.";
             case NONE:
@@ -65,9 +64,9 @@ public class MagicMilkAddiction extends Addiction {
     protected String describeDecrease() {
         switch (getSeverity()) {
             case LOW:
-                return "The desire for " + cause.getName() + "'s milk has calmed down somewhat.";
+                return "The desire for " + getCause().getName() + "'s milk has calmed down somewhat.";
             case MED:
-                return "You still know you're addicted to " + cause.getName() + "'s milk, but you"
+                return "You still know you're addicted to " + getCause().getName() + "'s milk, but you"
                                 + " can control yourself a little better now.";
             case NONE:
                 return "Finally, you feel the last remnants of the unnatural thirst for milk leave you.";
@@ -81,13 +80,13 @@ public class MagicMilkAddiction extends Addiction {
     protected String describeWithdrawal() {
         switch (getSeverity()) {
             case HIGH:
-                return "<b>You haven't had any of " + cause.getName() + "'s milk today, and the thirst threatens"
+                return "<b>You haven't had any of " + getCause().getName() + "'s milk today, and the thirst threatens"
                                 + " to overwhelm you. You won't last long in fights tonight...</b>";
             case LOW:
-                return "<b>You feel a little uneasy going without " + cause.getName() + "'s milk for a whole day,"
+                return "<b>You feel a little uneasy going without " + getCause().getName() + "'s milk for a whole day,"
                                 + " and it's distracting you to the point where it lowers your willpower!</b>";
             case MED:
-                return "<b>The thirst for " + cause.getName() + "'s milk burns within you, "
+                return "<b>The thirst for " + getCause().getName() + "'s milk burns within you, "
                                 + "scorching away such useless things as a strong will.</b>";
             case NONE:
                 throw new IllegalStateException("Tried to describe withdrawal for an inactive milk addiction.");
@@ -98,23 +97,23 @@ public class MagicMilkAddiction extends Addiction {
 
     @Override
     protected String describeCombatIncrease() {
-        return "The swaying of " + cause.getName() + "'s breasts causes "
-                        + "you to remember vividly the taste of " + cause.directObject() + " milk. You know you want more.";
+        return "The swaying of " + getCause().getName() + "'s breasts causes "
+                        + "you to remember vividly the taste of " + getCause().directObject() + " milk. You know you want more.";
     }
 
     @Override
     protected String describeCombatDecrease() {
-        return "Having drank some of " + cause.getName() + "'s sweet nectar, the thirst fades into the background. A part"
+        return "Having drank some of " + getCause().getName() + "'s sweet nectar, the thirst fades into the background. A part"
                         + " of you is already looking forward to more, though.";
     }
 
     @Override
     public String initialMessage(Combat c, Optional<Status> replacement) {
         if (inWithdrawal) {
-            return "The burning thirst wells up at the sight of " + cause.getName() + ". It would be so easy to subdue,"
+            return "The burning thirst wells up at the sight of " + getCause().getName() + ". It would be so easy to subdue,"
                         + " just a little sip...";
         }
-        return "\"Milk\" is the first thing you think of when you see " + cause.getName() + ". "
+        return "\"Milk\" is the first thing you think of when you see " + getCause().getName() + ". "
                         + "You won't be able to ignore your urges for long...";
     }
 
@@ -122,12 +121,12 @@ public class MagicMilkAddiction extends Addiction {
     public String describe(Combat c) {
         switch (getCombatSeverity()) {
             case HIGH:
-                return "You are desperate for more milk and can't even think of resisting " + cause.directObject() + ".";
+                return "You are desperate for more milk and can't even think of resisting " + getCause().directObject() + ".";
             case LOW:
-                return "You are distracted by the lingering sweetness of " + cause.getName() + "'s milk, "
+                return "You are distracted by the lingering sweetness of " + getCause().getName() + "'s milk, "
                                 + "and it's sapping your will to resist.";
             case MED:
-                return "You thirst for more of " + cause.getName() + "'s milk and are struggling to keep your mind in the game.";
+                return "You thirst for more of " + getCause().getName() + "'s milk and are struggling to keep your mind in the game.";
             case NONE:
             default:
                 return "";
@@ -197,11 +196,11 @@ public class MagicMilkAddiction extends Addiction {
 
     @Override
     public Status instance(Character newAffected, Character newOther) {
-        return new MagicMilkAddiction(newAffected, newOther, magnitude);
+        return new MagicMilkAddiction(newAffected, newOther.getType(), magnitude);
     }
 
     @Override public Status loadFromJson(JsonObject obj) {
-        return new MagicMilkAddiction(NPC.noneCharacter(), GameState.gameState.characterPool.getCharacterByType(obj.get("cause").getAsString()),
+        return new MagicMilkAddiction(NPC.noneCharacter(), obj.get("cause").getAsString(),
                         (float) obj.get("magnitude").getAsInt());
     }
 
@@ -259,21 +258,31 @@ public class MagicMilkAddiction extends Addiction {
             case HIGH:
                 aggravate(null, MED_INCREASE);
                 flagDaytime();
-                return "You wake up in the morning with a burning need for " + cause.getName() + "'s milk. The thought of resisting the urge doesn't even enter your mind. You quickly whip out your cellphone and dial " + cause.getName() + "'s number. "
-                                + "Moments later, an amused voice answers. You sob into the phone, begging for " + cause.getName() + "'s milk. Luckily, " + cause.getName() + " doesn't seem to want to tease you today, and readily agrees to drop by. "
-                                + "Fifteen agonizing minutes later, the doorbell rings and you rush to answer. Giving you a quick and dirty kiss at the door way, " + cause.getName() + " enters your room and sits down on your bed. "
-                                + Formatter.capitalizeFirstLetter(cause.pronoun()) + " pats " + cause.directObject() + " lap and motions for you to strip and lie down. You quickly comply and lay in " + cause.directObject() + " lap facing the ceiling, giddy for more milk. <br/>"
-                                + "With a coying grin, " + cause.getName() + " strips off " + cause.directObject() + " top and lets " + cause.directObject() + " bountiful breasts bounce free of " + cause.directObject() + " bra. Your eyes immediately zeroes into " + cause.directObject() + " nipples, already dripping with opalescent white fluids. "
-                                + cause.getName() + " lowers " + cause.directObject() + " breasts into your face, and you happily start drinking " + cause.directObject() + " mindbending milk. Seconds turn into minutes and minutes turn into hours. "
-                                + "You don't know how long your were nursing at " + cause.directObject() + " teats, but you seemed to have dozed off in the middle of it. You find yourself on the bed by yourself, with a blanket covering you. "
-                                + cause.getName() + " has already left, but left a note on the kitchen table, <br/><i>Hey hun, unfortunately I have to get to class. I made you some lunch that I put in the fridge, and left you a bottle of milk in case the cravings come back. I'll see you tonight at the games okay? Love you baby.</i><br/><br/>";
+                return "You wake up in the morning with a burning need for " + getCause().getName() + "'s milk. The thought of resisting the urge doesn't even enter your mind. You quickly whip out your cellphone and dial " + getCause()
+                                .getName() + "'s number. "
+                                + "Moments later, an amused voice answers. You sob into the phone, begging for " + getCause()
+                                .getName() + "'s milk. Luckily, " + getCause().getName() + " doesn't seem to want to tease you today, and readily agrees to drop by. "
+                                + "Fifteen agonizing minutes later, the doorbell rings and you rush to answer. Giving you a quick and dirty kiss at the door way, " + getCause()
+                                .getName() + " enters your room and sits down on your bed. "
+                                + Formatter.capitalizeFirstLetter(getCause().pronoun()) + " pats " + getCause().directObject() + " lap and motions for you to strip and lie down. You quickly comply and lay in " + getCause()
+                                .directObject() + " lap facing the ceiling, giddy for more milk. <br/>"
+                                + "With a coying grin, " + getCause().getName() + " strips off " + getCause().directObject() + " top and lets " + getCause()
+                                .directObject() + " bountiful breasts bounce free of " + getCause().directObject() + " bra. Your eyes immediately zeroes into " + getCause()
+                                .directObject() + " nipples, already dripping with opalescent white fluids. "
+                                + getCause().getName() + " lowers " + getCause().directObject() + " breasts into your face, and you happily start drinking " + getCause()
+                                .directObject() + " mindbending milk. Seconds turn into minutes and minutes turn into hours. "
+                                + "You don't know how long your were nursing at " + getCause().directObject() + " teats, but you seemed to have dozed off in the middle of it. You find yourself on the bed by yourself, with a blanket covering you. "
+                                + getCause().getName() + " has already left, but left a note on the kitchen table, <br/><i>Hey hun, unfortunately I have to get to class. I made you some lunch that I put in the fridge, and left you a bottle of milk in case the cravings come back. I'll see you tonight at the games okay? Love you baby.</i><br/><br/>";
             case MED:
-                return "When you wake up in the morning, the first thing you think of is " + cause.getName() + "'s breasts. And the second. And the third. In fact, you realize that's all you can think of right now. "
-                                + "You sigh and attempt to take a cold shower to tear your mind from " + cause.directObject() + " sinfully sweet milk. Unfortunately, it does you little good. You will have to make a choice between toughing it out, or caving and calling " + cause.getName() + " for a helping of " + cause.directObject() + " addictive cream.<br/><br/>";
+                return "When you wake up in the morning, the first thing you think of is " + getCause().getName() + "'s breasts. And the second. And the third. In fact, you realize that's all you can think of right now. "
+                                + "You sigh and attempt to take a cold shower to tear your mind from " + getCause().directObject() + " sinfully sweet milk. Unfortunately, it does you little good. You will have to make a choice between toughing it out, or caving and calling " + getCause()
+                                .getName() + " for a helping of " + getCause().directObject() + " addictive cream.<br/><br/>";
             case LOW:
-                return "You wake up in the morning with damp underwear. You realize that you've been dreaming of " + cause.getName() + "'s milk the entire night. This can't be healthy... <br/>"
-                + "You want to immediately head over to " + cause.getName() + "'s and ask for another helping, but quickly realize that will just feed the addiction. "
-                + "However, at this rate, you will be thinking of " + cause.directObject() + " the entire day, and affect your willpower. You will have to make a decision to tough it out or call " + cause.directObject() + " up and ask for more.<br/><br/>";
+                return "You wake up in the morning with damp underwear. You realize that you've been dreaming of " + getCause()
+                                .getName() + "'s milk the entire night. This can't be healthy... <br/>"
+                + "You want to immediately head over to " + getCause().getName() + "'s and ask for another helping, but quickly realize that will just feed the addiction. "
+                + "However, at this rate, you will be thinking of " + getCause().directObject() + " the entire day, and affect your willpower. You will have to make a decision to tough it out or call " + getCause()
+                                .directObject() + " up and ask for more.<br/><br/>";
             case NONE:
             default:
                 return "You wake up in the morning with your throat feeling strangely parched. You step into the kitchen and take out a carton of milk to attempt to slake your thirst. "
@@ -283,11 +292,11 @@ public class MagicMilkAddiction extends Addiction {
 
     @Override
     public String informantsOverview() {
-        return "You let " + cause.getName() + "'s milk get to you? I know those new and improved"
+        return "You let " + getCause().getName() + "'s milk get to you? I know those new and improved"
                         + " boobs are great to look at, but couldn't you be a bit more careful?"
                         + " Now I'm not at liberty to tell you how I know this, but you'll have noticed that "
                         + "you're likely to find yourself unwilling to keep fighting if you allow this thing"
-                        + " to grow too bad. At first it'll only be when directly confronted with " + cause.directObject() + " directly,"
+                        + " to grow too bad. At first it'll only be when directly confronted with " + getCause().directObject() + " directly,"
                         + " but if you don't drink for long enough, well, you won't do very well. That said, it"
                         + " does at least mean you won't be affected by any weaker addictive substances, so you've"
                         + " got that going for you.";

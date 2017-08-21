@@ -1,14 +1,20 @@
 package nightgames.global;
 
 import nightgames.characters.Player;
-import nightgames.gui.*;
+import nightgames.gui.ContinueButton;
+import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
+import nightgames.gui.SaveButton;
 import nightgames.modifier.Modifier;
 import nightgames.modifier.ModifierPool;
 import nightgames.modifier.standard.MayaModifier;
 import nightgames.modifier.standard.NoModifier;
 import nightgames.modifier.standard.UnderwearOnlyModifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -74,6 +80,7 @@ public class PreMatchSchool extends Prematch {
         } else if (player.getRank() > 0 && Time.getDate() % 30 == 0) {
             type = new MayaModifier();
             message += type.intro();
+            choices.add(Response.start.value());
         } else {
             message += "You arrive at the student union with about 10 minutes to spare before the start of the match. You greet each of the girls and make some idle chatter with "
                             + "them before you check in with Lilly to see if she has any custom rules for you.<br/><br/>";
@@ -82,6 +89,8 @@ public class PreMatchSchool extends Prematch {
             if (!type.name().equals("normal")) {
                 choices.add(Response.accept.value());
                 choices.add(Response.refuse.value());
+            } else {
+                choices.add(Response.start.value());
             }
         }
 

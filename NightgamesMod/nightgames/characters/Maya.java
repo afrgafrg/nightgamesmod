@@ -17,6 +17,11 @@ public class Maya extends BasePersonality {
 
     private static final long serialVersionUID = 447375506153223682L;
 
+    // For loading from save
+    public Maya() {
+        super("Maya", Optional.empty(), Optional.empty(), false);
+    }
+
     public Maya(int playerLevel) {
         this(playerLevel, Optional.empty(), Optional.empty());
     }
@@ -55,7 +60,7 @@ public class Maya extends BasePersonality {
         self.getMojo().setMax(150);
         self.getWillpower().setMax(100);
 
-        self.gainSkills();
+        self.adjustTraits();
         self.setTrophy(Item.MayaTrophy);
 
         self.body.add(BreastsPart.d);

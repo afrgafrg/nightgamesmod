@@ -185,7 +185,7 @@ public class Cassie extends BasePersonality {
 
         self.getStamina().setMax(70);
         self.getArousal().setMax(100);
-        self.gainSkills();
+        self.adjustTraits();
         self.setTrophy(Item.CassieTrophy);
         self.body.add(BreastsPart.c);
         self.body.add(AssPart.generateGeneric().upgrade().upgrade().upgrade());

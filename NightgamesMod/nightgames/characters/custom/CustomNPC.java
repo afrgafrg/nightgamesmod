@@ -72,7 +72,7 @@ public class CustomNPC extends BasePersonality {
             self.gain(i.item, i.amount);
         }
 
-        self.gainSkills();
+        self.adjustTraits();
     }
 
     public void setGrowth() {

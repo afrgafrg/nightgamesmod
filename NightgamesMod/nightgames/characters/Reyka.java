@@ -61,7 +61,7 @@ public class Reyka extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 2);
         self.setTrophy(Item.ReykaTrophy);
 
-        self.gainSkills();
+        self.adjustTraits();
         self.getStamina().setMax(50);
         self.getArousal().setMax(120);
         self.getMojo().setMax(110);

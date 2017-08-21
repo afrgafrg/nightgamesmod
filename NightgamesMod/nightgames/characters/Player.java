@@ -85,7 +85,7 @@ public class Player extends Character {
                         gui.clearTextIfNeeded();
                         GUI.gui.message("Gained feat: " + feat.toString());
                         GameState.gameState.characterPool.getPlayer().add(feat);
-                        GUI.gui.message(GameState.gameState.characterPool.getPlayer().gainSkills());
+                        GameState.gameState.characterPool.getPlayer().adjustTraits();
                         GameState.gameState.characterPool.getPlayer().traitPoints -= 1;
                         gui.refresh();
                         ding(gui);
@@ -106,7 +106,8 @@ public class Player extends Character {
         } else {
             gui.skippedFeat = false;
             gui.clearCommand();
-            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, player.gainSkills());
+            player.adjustTraits();
+            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, "");
             player.finishDing();
             if (player.getLevelsToGain() > 0) {
                 player.actuallyDing(gui.combat);

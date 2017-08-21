@@ -147,7 +147,7 @@ public abstract class Character extends Observable implements Cloneable {
         SkillPool.learnSkills(this);
     }
 
-    public String gainSkills() {
+    public void adjustTraits() {
         String message = "";
         if (getPure(Attribute.Dark) >= 6 && !has(Trait.darkpromises)) {
             add(Trait.darkpromises);
@@ -160,7 +160,6 @@ public abstract class Character extends Observable implements Cloneable {
         } else if (!pheromonesRequirements && has(Trait.pheromones)) {
             remove(Trait.pheromones);
         }
-        return message;
     }
 
     @Override
@@ -404,7 +403,8 @@ public abstract class Character extends Observable implements Cloneable {
         getGrowth().levelDown(this);
         levelPlan.remove(getLevel());
         level--;
-        return Formatter.capitalizeFirstLetter(subject()) + " lost a level! <br/>" + this.gainSkills();
+        this.adjustTraits();
+        return Formatter.capitalizeFirstLetter(subject()) + " lost a level! <br/>";
     }
 
     public int getXP() {
@@ -1690,7 +1690,6 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         change();
-        this.gainSkills();
         SkillPool.learnSkills(this);
     }
 
@@ -3711,7 +3710,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void matchPrep(Match m) {
         if(getPure(Attribute.Ninjutsu)>=9){
-            this.gainSkills();
+            this.adjustTraits();
             placeNinjaStash(m);
         }
         ArmManager manager = m.getMatchData().getDataFor(this).getArmManager();

@@ -64,7 +64,7 @@ public class TestAngel extends BasePersonality {
         baseChar.outfitPlan.addByID("sandals");
         baseChar.change();
 
-        baseChar.gainSkills();
+        baseChar.adjustTraits();
 
         return baseChar;
     }
@@ -87,7 +87,7 @@ public class TestAngel extends BasePersonality {
         self.change();
         self.att.put(Attribute.Seduction, 7);
         self.att.put(Attribute.Perception, 6);
-        self.gainSkills();
+        self.adjustTraits();
 
         self.add(Trait.undisciplined);
         self.add(Trait.lickable);

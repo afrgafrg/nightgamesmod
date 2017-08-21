@@ -173,7 +173,7 @@ public class Mara extends BasePersonality {
         self.getArousal().setMax(80);
         self.getMojo().setMax(120);
 
-        self.gainSkills();
+        self.adjustTraits();
         self.setTrophy(Item.MaraTrophy);
         self.body.add(new FacePart(.1, 1.1));
         self.body.add(AssPart.generateGeneric().upgrade());

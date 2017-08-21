@@ -65,7 +65,7 @@ public class Jewel extends BasePersonality {
         self.change();
         self.modAttributeDontSaveData(Attribute.Power, 2);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
-        self.gainSkills();
+        self.adjustTraits();
         self.getMojo()
             .setMax(80);
 

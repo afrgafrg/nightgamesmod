@@ -46,7 +46,7 @@ public class Angel extends BasePersonality {
         self.change();
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
         self.modAttributeDontSaveData(Attribute.Perception, 1);
-        self.gainSkills();
+        self.adjustTraits();
 
         self.getStamina().setMax(60);
         self.getArousal().setMax(110);

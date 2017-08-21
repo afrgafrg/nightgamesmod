@@ -47,7 +47,7 @@ public class Eve extends BasePersonality {
         self.modAttributeDontSaveData(Attribute.Cunning, 1);
         self.modAttributeDontSaveData(Attribute.Speed, 1);
         self.modAttributeDontSaveData(Attribute.Seduction, 2);
-        self.gainSkills();
+        self.adjustTraits();
         self.setTrophy(Item.EveTrophy);
         self.body.add(BreastsPart.d);
         self.body.add(new CockPart().applyMod(new SizeMod(SizeMod.COCK_SIZE_BIG)));

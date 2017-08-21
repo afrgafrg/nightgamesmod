@@ -47,7 +47,7 @@ public class Caroline extends BasePersonality {
         character.getStamina().setMax(120);
         character.getArousal().setMax(120);
         character.rank = 1;
-        character.gainSkills();
+        character.adjustTraits();
 
         character.getMojo().setMax(110);
 

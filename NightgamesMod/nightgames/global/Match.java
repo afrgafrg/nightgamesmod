@@ -46,7 +46,7 @@ public class Match {
         map = MapSchool.buildMap();
         for (Character combatant : combatants) {
             score.put(combatant, 0);
-            GUI.gui.message(combatant.gainSkills());
+            combatant.adjustTraits();
             SkillPool.learnSkills(combatant);
             combatant.matchPrep(this);
         }

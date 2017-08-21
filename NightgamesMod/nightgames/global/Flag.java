@@ -81,7 +81,8 @@ public enum Flag {
     femaleTGIntoHerm, 
     SuperTraitMode,
     AutoNext,
-    NoFTC
+    NoFTC,
+    LegacyCharAvailableSave
     ;
 
     static Set<String> flags = new HashSet<>();

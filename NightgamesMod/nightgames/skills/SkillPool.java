@@ -1,7 +1,6 @@
 package nightgames.skills;
 
 import nightgames.characters.Character;
-import nightgames.characters.NPC;
 import nightgames.global.DebugFlags;
 import nightgames.pet.Ptype;
 
@@ -13,9 +12,6 @@ import java.util.Set;
  */
 public class SkillPool {
     public static Set<Skill> skillPool = new HashSet<>();
-    static {
-        SkillPool.buildSkillPool(NPC.noneCharacter());
-    }
 
     public static void buildSkillPool(Character ch) {
         skillPool.clear();

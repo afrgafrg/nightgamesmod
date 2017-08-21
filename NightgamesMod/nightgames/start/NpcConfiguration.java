@@ -1,15 +1,14 @@
 package nightgames.start;
 
-import static nightgames.start.ConfigurationUtils.mergeOptionals;
-
-import java.util.Optional;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import nightgames.characters.CharacterSex;
 import nightgames.characters.NPC;
 import nightgames.json.JsonUtils;
+
+import java.util.Optional;
+
+import static nightgames.start.ConfigurationUtils.mergeOptionals;
 
 public class NpcConfiguration extends CharacterConfiguration {
     // Optional because NpcConfiguration is used for both NPCs and adjustments common to all NPCs
@@ -61,6 +60,7 @@ public class NpcConfiguration extends CharacterConfiguration {
         super.apply(base);
         if (isStartCharacter.isPresent()) {
             base.isStartCharacter = isStartCharacter.get();
+            base.available = isStartCharacter.get();
         }
     }
 

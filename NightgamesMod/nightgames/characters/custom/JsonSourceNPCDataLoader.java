@@ -4,10 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import nightgames.Resources.ResourceLoader;
 import nightgames.characters.*;
 import nightgames.characters.body.Body;
 import nightgames.characters.custom.effect.CustomEffect;
 import nightgames.characters.custom.effect.MoneyModEffect;
+import nightgames.global.SaveFile;
 import nightgames.items.Item;
 import nightgames.items.ItemAmount;
 import nightgames.items.clothing.ClothingTable;
@@ -34,12 +36,12 @@ public class JsonSourceNPCDataLoader {
         stats.willpower = resources.get("willpower").getAsFloat();
     }
 
-    public static NPCData load(InputStream in) throws JsonParseException {
+    public static DataBackedNPCData load(InputStream in) throws JsonParseException {
         JsonObject object = JsonUtils.rootJson(new InputStreamReader(in)).getAsJsonObject();
         return load(object);
     }
 
-    public static NPCData load(JsonObject object) {
+    public static DataBackedNPCData load(JsonObject object) {
         DataBackedNPCData data = new DataBackedNPCData();
         data.name = object.get("name").getAsString();
         data.type = object.get("type").getAsString();
@@ -228,5 +230,30 @@ public class JsonSourceNPCDataLoader {
 
      private static void loadComments(JsonArray arr, DataBackedNPCData data) {
         arr.forEach(e -> CommentSituation.parseComment(e.getAsJsonObject(), data.comments));
+    }
+
+    /**
+     * Finds the correct character definition file for a custom character loaded from a save file.
+     * @param saveJson The save file data.
+     * @return The DataBackedNPCData loaded from the definition file.
+     */
+    public static DataBackedNPCData loadBaseData(JsonObject saveJson) throws SaveFile.SaveFileException {
+        String name = saveJson.get("name").getAsString();
+        String type = saveJson.get("type").getAsString();
+        if (type.startsWith(CustomNPC.TYPE_PREFIX)) {
+            type = type.replace(CustomNPC.TYPE_PREFIX, "");
+        }
+
+        // assuming that character name and the file name are the same
+        // TODO: store definition file in save file
+        String definitionPath = String.format("characters/%s.json", name.toLowerCase());
+        DataBackedNPCData data = load(ResourceLoader
+                        .getFileResourceAsStream(definitionPath));
+        if (!data.type.equals(type)) {
+            throw new SaveFile.SaveFileException(
+                            String.format("Custom NPC %s loaded from save file does not match type in definition file: definition type %s, save type %s",
+                                            name, data.type, type));
+        }
+        return data;
     }
 }

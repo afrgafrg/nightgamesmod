@@ -77,11 +77,12 @@ public abstract class Prematch {
 
     public void setUpMatch(Modifier matchmod) {
         assert Daytime.day == null;
-        Set<Character> lineup = new HashSet<>(GameState.gameState.characterPool.debugChars);
+        CharacterPool characterPool = GameState.gameState.characterPool;
+        Set<Character> lineup = new HashSet<>(characterPool.debugChars);
         Character lover = null;
         int maxaffection = 0;
         Flag.unflag(Flag.FTC);
-        for (Character player : GameState.gameState.characterPool.players) {
+        for (Character player : characterPool.availableNpcs()) {
             player.getStamina().fill();
             player.getArousal().empty();
             player.getMojo().empty();
@@ -89,34 +90,34 @@ public abstract class Prematch {
             if (player.getPure(Attribute.Science) > 0) {
                 player.chargeBattery();
             }
-            if (GameState.gameState.characterPool.human.getAffection(player) > maxaffection && !player.has(Trait.event) && !Flag
+            if (characterPool.human.getAffection(player) > maxaffection && !player.has(Trait.event) && !Flag
                             .checkCharacterDisabledFlag(player)) {
-                maxaffection = GameState.gameState.characterPool.human.getAffection(player);
+                maxaffection = characterPool.human.getAffection(player);
                 lover = player;
             }
         }
         List<Character> participants = new ArrayList<>();
+        participants.add(characterPool.human);
         // Disable characters flagged as disabled
-        for (Character c : GameState.gameState.characterPool.players) {
-            // Disabling the player wouldn't make much sense, and there's no PlayerDisabled flag.
-            if (c.getType().equals("Player") || !Flag.checkCharacterDisabledFlag(c)) {
-                participants.add(c);
+        for (NPC npc : characterPool.availableNpcs()) {
+            if (!Flag.checkCharacterDisabledFlag(npc)) {
+                participants.add(npc);
             }
         }
         if (lover != null) {
             lineup.add(lover);
         }
-        lineup.add(GameState.gameState.characterPool.human);
+        lineup.add(characterPool.human);
         if (matchmod.name().equals("maya")) {
             if (!Flag.checkFlag(Flag.Maya)) {
-                GameState.gameState.characterPool.newChallenger(new Maya(GameState.gameState.characterPool.human.getLevel()));
+                characterPool.newChallenger(new Maya(characterPool.human.getLevel()).getCharacter());
                 Flag.flag(Flag.Maya);
             }
-            NPC maya = Optional.ofNullable(GameState.gameState.characterPool.getNPC("Maya")).orElseThrow(() -> new IllegalStateException(
+            NPC maya = Optional.ofNullable(characterPool.getNPC("Maya")).orElseThrow(() -> new IllegalStateException(
                             "Maya data unavailable when attempting to add her to lineup."));
             lineup.add(maya);
             lineup = pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
+            Match.resting = new HashSet<>(characterPool.availableNpcs());
             Match.resting.removeAll(lineup);
             maya.gain(Item.Aphrodisiac, 10);
             maya.gain(Item.DisSol, 10);
@@ -139,12 +140,12 @@ public abstract class Prematch {
                 lineup.add(prey);
             }
             lineup = pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
+            Match.resting = new HashSet<>(characterPool.availableNpcs());
             Match.resting.removeAll(lineup);
             buildMatch(lineup, matchmod);
         } else if (participants.size() > 5) {
             lineup = pickCharacters(participants, lineup, 5);
-            Match.resting = new HashSet<>(GameState.gameState.characterPool.players);
+            Match.resting = new HashSet<>(characterPool.availableNpcs());
             Match.resting.removeAll(lineup);
             buildMatch(lineup, matchmod);
         } else {

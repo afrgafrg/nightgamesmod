@@ -1,11 +1,14 @@
 package nightgames.global;
 
 import com.google.gson.JsonObject;
-import nightgames.characters.*;
+import nightgames.characters.BlankPersonality;
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.gui.TestGUI;
-import org.hamcrest.*;
-import org.junit.Before;
+import org.hamcrest.Description;
+import org.hamcrest.Factory;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,32 +23,30 @@ import static org.hamcrest.core.IsEqual.equalTo;
  * Tests for saving and loading game data.
  */
 public class SaveAndLoadTest {
-    private Path savePath = new File("NightGamesTests/nightgames/global/test_save.ngs").toPath();
-    private GameState gameState;
 
     @BeforeClass public static void setUpSaveAndLoadTest() throws Exception {
         Main.initialize();
         new TestGUI();
     }
 
-    @Before public void setUp() throws Exception {
-        gameState = new GameState();
-        gameState.reset();
-    }
-
     @Test public void testLoadAndSave() throws Exception {
-        SaveFile.load(savePath.toFile());
-        SaveData firstLoadData = gameState.saveData();
+        Path savePath = new File("NightGamesTests/nightgames/global/test_save.ngs").toPath();
+        GameState gameState = new GameState(SaveFile.load(savePath.toFile()));
+        SaveData firstLoadData = new SaveData(gameState);
         Path tempSave = Files.createTempFile("", "");
-        SaveFile.save(tempSave.toFile());
-        SaveFile.load(tempSave.toFile());
-        SaveData reloadedData = gameState.saveData();
-        assertThat(reloadedData.players, equalTo(firstLoadData.players));
-        for (Character player : firstLoadData.players) {
-            Character reloaded = reloadedData.players.stream().filter(p -> p.equals(player)).findFirst()
+        SaveFile.save(tempSave.toFile(), firstLoadData);
+        gameState = new GameState(SaveFile.load(tempSave.toFile()));
+        SaveData reloadedData = new SaveData(gameState);
+        assertThat(reloadedData.npcs, equalTo(firstLoadData.npcs));
+        for (NPC firstLoadNpc : firstLoadData.npcs) {
+            NPC reloadedNpc = reloadedData.npcs.stream().filter(p -> p.equals(firstLoadNpc)).findFirst()
                             .orElseThrow(AssertionError::new);
-            assertThat(reloaded, CharacterStatMatcher.statsMatch(player));
+            assertThat(reloadedNpc, CharacterStatMatcher.statsMatch(firstLoadNpc));
+            assertThat(reloadedNpc.status, equalTo(firstLoadNpc.status));
         }
+        assertThat(reloadedData.player, equalTo(firstLoadData.player));
+        assertThat(reloadedData.player.status, equalTo(firstLoadData.player.status));
+        assertThat(reloadedData.player, CharacterStatMatcher.statsMatch(firstLoadData.player));
         assertThat(reloadedData, equalTo(firstLoadData));
     }
 
@@ -57,6 +58,30 @@ public class SaveAndLoadTest {
         BlankPersonality afterNPC = new BlankPersonality("AffectionateLoad");
         afterNPC.character.load(npcJson);
         assertThat(afterNPC.character.getAffections(), equalTo(beforeNPC.character.getAffections()));
+    }
+
+    /**
+     * Makes sure older save files are properly updated on load.
+     */
+    @Test public void testLoadLegacySave() throws Exception {
+        Path savePath = new File("NightGamesTests/nightgames/global/test_save_legacy.ngs").toPath();
+        GameState gameState = new GameState(SaveFile.load(savePath.toFile()));
+        SaveData firstLoadData = new SaveData(gameState);
+        Path tempSave = Files.createTempFile("", "");
+        SaveFile.save(tempSave.toFile(), firstLoadData);
+        gameState = new GameState(SaveFile.load(tempSave.toFile()));
+        SaveData reloadedData = new SaveData(gameState);
+        assertThat(reloadedData.npcs, equalTo(firstLoadData.npcs));
+        for (NPC firstLoadNpc : firstLoadData.npcs) {
+            NPC reloadedNpc = reloadedData.npcs.stream().filter(p -> p.equals(firstLoadNpc)).findFirst()
+                            .orElseThrow(AssertionError::new);
+            assertThat(reloadedNpc, CharacterStatMatcher.statsMatch(firstLoadNpc));
+            assertThat(reloadedNpc.status, equalTo(firstLoadNpc.status));
+        }
+        assertThat(reloadedData.player, equalTo(firstLoadData.player));
+        assertThat(reloadedData.player.status, equalTo(firstLoadData.player.status));
+        assertThat(reloadedData.player, CharacterStatMatcher.statsMatch(firstLoadData.player));
+        assertThat(reloadedData, equalTo(firstLoadData));
     }
 
     private static class CharacterStatMatcher extends TypeSafeMatcher<Character> {

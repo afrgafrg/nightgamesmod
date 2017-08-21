@@ -37,8 +37,9 @@ public abstract class BasePersonality implements Personality {
         type = getClass().getSimpleName();
         character = new NPC(name, 1, this);
         character.isStartCharacter = isStartCharacter;
+        character.available = isStartCharacter;
         preferredCockMod = CockMod.error;
-        preferredAttributes = new ArrayList<PreferredAttribute>();
+        preferredAttributes = new ArrayList<>();
     }
 
     public BasePersonality(String name, Optional<NpcConfiguration> charConfig,

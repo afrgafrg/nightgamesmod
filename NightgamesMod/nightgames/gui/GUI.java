@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -106,10 +108,9 @@ public class GUI extends JFrame implements Observer {
     private final static String USE_NONE = "NONE";
     private static final String USE_MAIN_TEXT_UI = "MAIN_TEXT";
     private static final String USE_CLOSET_UI = "CLOSET";
-    CompletableFuture<GameState> stateFuture;
+    volatile BlockingQueue<GameState> currentState = new ArrayBlockingQueue<>(1);
 
-    public GUI(CompletableFuture<GameState> stateFuture) {
-        this.stateFuture = stateFuture;
+    public GUI() {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -159,10 +160,11 @@ public class GUI extends JFrame implements Observer {
         mntmNewgame.addActionListener(arg0 -> {
             if (GameState.inGame()) {
                 int result = JOptionPane.showConfirmDialog(GUI.this,
-                                "Do you want to restart the game? You'll lose any unsaved progress.", "Start new game?",
+                                "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    GameState.gameState.reset();
+                    purgeGameState();
+                    createCharacter();
                 }
             }
         });
@@ -178,7 +180,19 @@ public class GUI extends JFrame implements Observer {
         //mntmLoad.setBackground(GUIColors.bgGrey);
         mntmLoad.setHorizontalAlignment(SwingConstants.CENTER);
 
-        mntmLoad.addActionListener(arg0 -> SaveFile.loadWithDialog(stateFuture));
+        mntmLoad.addActionListener(arg0 -> {
+            Optional<GameState> gameState = SaveFile.loadWithDialog();
+            if (gameState.isPresent()) {
+                purgeGameState();
+                try {
+                    currentState.put(gameState.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                populatePlayer(gameState.get().characterPool.human);
+
+            }
+        });
 
         menuBar.add(mntmLoad);
 
@@ -864,7 +878,7 @@ public class GUI extends JFrame implements Observer {
             } else {
                 mainPanel.remove(statusPanel);
             }
-            GUI.this.refresh();
+            refresh();
             mainPanel.validate();
         });
         bio.add(stsbtn);
@@ -910,7 +924,7 @@ public class GUI extends JFrame implements Observer {
         getContentPane().validate();
     }
 
-    public void purgePlayer() {
+    public void purgeGameState() {
         getContentPane().remove(gamePanel);
         clearText();
         clearCommand();
@@ -919,6 +933,11 @@ public class GUI extends JFrame implements Observer {
         mntmQuitMatch.setEnabled(false);
         combat = null;
         topPanel.removeAll();
+        if (GameState.gameState != null) {
+            GameState.gameState.closeGame();
+        }
+        currentState.clear();
+        GameState.gameState = null;
     }
 
     public void clearText() {
@@ -963,6 +982,7 @@ public class GUI extends JFrame implements Observer {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        refresh();
     }
 
     public void combatMessage(String text) {
@@ -1281,5 +1301,11 @@ public class GUI extends JFrame implements Observer {
         groupBox.removeAll();
         currentTactics = group;
         gui.showSkills();
+    }
+
+    public GameState getGameState() throws InterruptedException {
+        GameState state = currentState.take();
+        GameState.gameState = state;
+        return state;
     }
 }

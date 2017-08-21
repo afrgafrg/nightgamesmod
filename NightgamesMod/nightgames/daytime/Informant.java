@@ -448,7 +448,7 @@ public class Informant extends Activity {
                     GUI.gui
                           .message("<i>\"" + data.confirm + "\"</i>");
                     acted = true;
-                    GameState.gameState.characterPool.newChallenger(npc.ai);
+                    GameState.gameState.characterPool.newChallenger(npc);
                 } else {
                     GUI.gui
                           .message("You cannot pay the cost.<br/><br/>");
@@ -463,7 +463,7 @@ public class Informant extends Activity {
                 GUI.gui
                       .message("<i>\"Ok, I'll talk to Reyka. She spends a lot of nights surfing the internet, but I'm sure she wouldn't mind an opportunity for some free prey.\"</i>");
                 acted = true;
-                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Reyka().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Reyka().getType()));
                 Flag.flag(Flag.Reyka);
             } else {
                 GUI.gui
@@ -478,7 +478,7 @@ public class Informant extends Activity {
                                       + "Word of advice, Airi's isn't all that personable to begin with, but her entire uh \"personality\" changes when she cums. "
                                       + "Don't let it catch you off guard.\"</i>");
                 acted = true;
-                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Airi().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Airi().getType()));
                 Flag.flag(Flag.Airi);
             } else {
                 GUI.gui
@@ -492,7 +492,7 @@ public class Informant extends Activity {
                       .message("<i>\"Pleasure doing business with you. Just be nice to Kat. She's very catlike and confident when she's turned on, but during the day or after climax, she's "
                                       + "just an ordinary girl. Besides, if her fans hear that you've been mean to her, they'll probably kick your ass. That includes me, by the way.\"</i>");
                 acted = true;
-                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Kat().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Kat().getType()));
                 Flag.flag(Flag.Kat);
             } else {
                 GUI.gui
@@ -509,7 +509,7 @@ public class Informant extends Activity {
                                       + " for after all.\"</i>");
 
                 acted = true;
-                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Eve().getType()).ai);
+                GameState.gameState.characterPool.newChallenger(GameState.gameState.characterPool.getNPCByType(new Eve().getType()));
                 Flag.flag(Flag.Eve);
             } else {
                 GUI.gui

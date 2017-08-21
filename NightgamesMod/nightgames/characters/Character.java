@@ -1686,7 +1686,7 @@ public abstract class Character extends Observable implements Cloneable {
             } catch (Exception e) {
                 System.err.println("Failed to load status:");
                 System.err.println(JsonUtils.getGson().toJson(element));
-                e.printStackTrace();
+                throw e;
             }
         }
         change();

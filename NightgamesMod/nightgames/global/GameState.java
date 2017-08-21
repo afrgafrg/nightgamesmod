@@ -1,113 +1,81 @@
 package nightgames.global;
 
-import nightgames.Resources.ResourceLoader;
 import nightgames.characters.*;
 import nightgames.daytime.Daytime;
 import nightgames.gui.GUI;
-import nightgames.items.clothing.ClothingTable;
-import nightgames.json.JsonUtils;
 import nightgames.skills.SkillPool;
 import nightgames.start.PlayerConfiguration;
 import nightgames.start.StartConfiguration;
 
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 /**
  * Creates, destroys, and maintains the state of a running game.
  */
 public class GameState {
+    static final double DEFAULT_XP_RATE = 1.0;
+    static final double DEFAULT_MONEY_RATE = 1.0;
     public volatile static GameState gameState;
     public double moneyRate;
-    public double xpRate;
+    public double xpRate = DEFAULT_XP_RATE;
     private static boolean ingame = false;
     private volatile boolean run;
     public CharacterPool characterPool;
+    private volatile Thread loopThread;
 
     // TODO: Make new GameStates start in a usable condition. Currently needs a separate reset() or newGame() call.
-    public GameState() {
-        gameState = this;
-        characterPool = new CharacterPool();
-        xpRate = 1.0;
-        moneyRate = 1.0;
-    }
-
-    public void newGame(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
+    public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                     CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
+        characterPool = new CharacterPool(config);
+        xpRate = DEFAULT_XP_RATE;
+        moneyRate = DEFAULT_MONEY_RATE;
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
         characterPool.human = new Player(playerName, pickedGender, playerConfig, pickedTraits, selectedAttributes);
         if(characterPool.human.has(Trait.largereserves)) {
             characterPool.human.getWillpower().gain(20);
         }
-        characterPool.players.add(characterPool.human);
         if (GUI.gui != null) {
             GUI.gui.populatePlayer(characterPool.human);
         }
         SkillPool.buildSkillPool(characterPool.human);
-        ClothingTable.buildClothingTable();
         SkillPool.learnSkills(characterPool.human);
-        characterPool.rebuildCharacterPool(config);
-        // Add starting characters to players
-        characterPool.players.addAll(characterPool.characterPool.values().stream().filter(npc -> npc.isStartCharacter).collect(Collectors.toList()));
         if (!cfgFlags.isEmpty()) {
-            Flag.flags = cfgFlags.stream().collect(Collectors.toSet());
+            Flag.flags = new HashSet<>(cfgFlags);
         }
-        Map<String, Boolean> configurationFlags = JsonUtils.mapFromJson(JsonUtils.rootJson(new InputStreamReader(ResourceLoader.getFileResourceAsStream("data/globalflags.json"))).getAsJsonObject(), String.class, Boolean.class);
-        configurationFlags.forEach((flag, val) -> Flag.setFlag(flag, val));
         Time.time = Time.NIGHT;
         Time.date = 1;
-        Flag.setCharacterDisabledFlag(GameState.gameState.characterPool.getNPCByType("Yui"));
+        Flag.setCharacterDisabledFlag(characterPool.getNPCByType("Yui"));
         Flag.setFlag(Flag.systemMessages, true);
     }
 
     /**
-     * Loads game state data into static fields from SaveData object.
-     *
+     * Creates GameState from SaveData object.
      * @param data A SaveData object, as loaded from save files.
      */
-    protected GameState loadData(SaveData data) {
-        characterPool.players.addAll(data.players);
-        characterPool.players.stream().filter(c -> c instanceof NPC).forEach(
-                        c -> characterPool.characterPool.put(c.getType(), (NPC) c));
+    protected GameState(SaveData data) {
+        xpRate = data.xpRate;
+        // legacy support: previously we only saved unlocked NPCs.
+        if (Flag.checkFlag(Flag.LegacyCharAvailableSave)) {
+            characterPool = new CharacterPool(Optional.empty());
+            characterPool.updateNPCs(data.npcs);
+            characterPool.updatePlayer(data.player);
+        } else {
+            characterPool = new CharacterPool(data.player, data.npcs);
+        }
+        SkillPool.buildSkillPool(characterPool.human);
         Flag.flags.addAll(data.flags);
         Flag.counters.putAll(data.counters);
         Time.date = data.date;
         Time.time = data.time;
         GUI.gui.fontsize = data.fontsize;
-        GUI.gui.populatePlayer(characterPool.human);
-        return this;
     }
 
     public static GameState state() {
         return gameState;
-    }
-
-    protected SaveData saveData() {
-        SaveData data = new SaveData();
-        data.players.addAll(characterPool.players);
-        data.flags.addAll(Flag.flags);
-        data.counters.putAll(Flag.counters);
-        data.time = Time.time;
-        data.date = Time.date;
-        data.fontsize = GUI.gui.fontsize;
-        return data;
-    }
-
-    protected void resetForLoad() {
-        characterPool.players.clear();
-        Flag.flags.clear();
-        GUI.gui.clearText();
-        characterPool.human = new Player("Dummy");
-        GUI.gui.purgePlayer();
-        SkillPool.buildSkillPool(characterPool.human);
-        ClothingTable.buildClothingTable();
-        characterPool.rebuildCharacterPool(Optional.empty());
-        Daytime.day = null;
     }
 
     // TODO: Make this its own scene.
@@ -138,22 +106,12 @@ public class GameState {
                         + " Everyone agrees." + " The first match starts at exactly 10:00.";
     }
 
-    public void reset() {
-        characterPool.players.clear();
-        Flag.flags.clear();
-        Daytime.day = null;
-        Match.match = null;
-        characterPool.human = new Player("Dummy");
-        GUI.gui.purgePlayer();
-        xpRate = 1.0;
-        GUI.gui.createCharacter();
-    }
-
     public static boolean inGame() {
         return ingame;
     }
 
     public synchronized void gameLoop() {
+        loopThread = Thread.currentThread();
         ingame = true;
         run = true;
         while (run) {
@@ -204,7 +162,8 @@ public class GameState {
         ingame = false;
     }
 
-    public void wake() {
-        this.notifyAll();
+    public void closeGame() {
+        run = false;
+        loopThread.interrupt();
     }
 }

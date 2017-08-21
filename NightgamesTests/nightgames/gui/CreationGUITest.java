@@ -30,8 +30,9 @@ public class CreationGUITest {
         creationGUI.seduction = 11;
         creationGUI.cunning = 9;
         creationGUI.makeGame(Optional.empty());
-        assertThat(GameState.gameState.characterPool.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
+        GameState gameState = GUI.gui.currentState.take();
+        assertThat(gameState.characterPool.human.att, allOf(hasEntry(Attribute.Power, 5), hasEntry(Attribute.Seduction, 11),
                         hasEntry(Attribute.Cunning, 9)));
-        assertThat(GameState.gameState.characterPool.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
+        assertThat(gameState.characterPool.human.getTraits(), IsCollectionContaining.hasItems(Trait.romantic, Trait.insatiable));
     }
 }

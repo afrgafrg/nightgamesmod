@@ -2,22 +2,22 @@ package nightgames.start;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.CharacterSex;
+import nightgames.characters.TestAngel;
+import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingTable;
 import nightgames.json.JsonUtils;
-import nightgames.items.clothing.Clothing;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
-import nightgames.characters.TestAngel;
-import nightgames.global.GameState;
-
 import java.io.File;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -31,8 +31,6 @@ public class NpcConfigurationTest {
         startConfig = StartConfiguration.parse(JsonUtils.rootJson(file).getAsJsonObject());
         angelConfig = startConfig.findNpcConfig("TestAngel")
                         .orElseThrow(() -> new NoSuchElementException("TestAngel not found in test config."));
-        GameState.gameState.reset();
-        new GameState().newGame("Dummy", Optional.empty(), Collections.emptyList(), CharacterSex.asexual, Collections.emptyMap());
     }
 
     @Test public void testConfigMerge() throws Exception {
@@ -44,7 +42,7 @@ public class NpcConfigurationTest {
                         IsMapContaining.hasEntry(Attribute.Cunning, 15),
                         IsMapContaining.hasEntry(Attribute.Divinity, 10),
                         IsMapContaining.hasEntry(Attribute.Arcane, 2)));
-        assertThat(mergedConfig.body.map(body -> body.type).orElse(Optional.empty()),
+        assertThat(mergedConfig.body.flatMap(body -> body.type),
                         equalTo(Optional.of(BodyConfiguration.Archetype.ANGEL)));
         assertThat(mergedConfig.xp.orElse(0), equalTo(50));
         assertThat(mergedConfig.level.orElse(0), equalTo(5));

@@ -1,9 +1,6 @@
 package nightgames.characters.custom;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import com.google.gson.JsonObject;
 import nightgames.characters.BasePersonality;
 import nightgames.characters.Character;
 import nightgames.characters.Emotion;
@@ -12,6 +9,11 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.items.ItemAmount;
 import nightgames.start.NpcConfiguration;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class CustomNPC extends BasePersonality {
     private final NPCData data;
@@ -33,6 +35,11 @@ public class CustomNPC extends BasePersonality {
         for (int i = 1; i < data.getStats().level; i++) {
             character.ding(null);
         }
+    }
+
+    public CustomNPC(NPCData data, JsonObject saveJson) {
+        this(data);
+        this.character.load(saveJson);
     }
 
     @Override

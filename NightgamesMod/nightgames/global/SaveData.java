@@ -4,9 +4,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Personality;
+import nightgames.characters.Player;
+import nightgames.characters.custom.CustomNPC;
+import nightgames.characters.custom.JsonSourceNPCDataLoader;
+import nightgames.characters.custom.NPCData;
+import nightgames.gui.GUI;
 import nightgames.json.JsonUtils;
 
+import java.io.FileNotFoundException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,12 +25,14 @@ import java.util.Set;
  * SaveData specifies a schema for data that will be saved and loaded.
  */
 public class SaveData {
-    public final Set<Character> players;
+    public final Set<NPC> npcs;
+    public final Player player;
     public final Set<String> flags;
     public final Map<String, Float> counters;
-    public Time time;
-    public int date;
-    public int fontsize;
+    public final Time time;
+    public final int date;
+    public final int fontsize;
+    public final double xpRate;
 
     private enum JSONKey {
         PLAYERS("characters"), FLAGS("flags"), COUNTERS("counters"), TIME("time"), DATE("date"), FONTSIZE("fontsize");
@@ -33,37 +44,76 @@ public class SaveData {
         }
     }
 
+    // If an NPC should be modified by a start config, but has not yet been unlocked, the save file will not reflect that.
+    // TODO: resolve locked character discrepancy.
+    SaveData(GameState gameState) {
+        npcs = new HashSet<>(gameState.characterPool.characterPool.values());
+        player = gameState.characterPool.human;
+        flags = new HashSet<>(Flag.flags);
+        counters = new HashMap<>(Flag.counters);
+        time = Time.time;
+        date = Time.date;
+        fontsize = GUI.gui.fontsize;
+        xpRate = gameState.xpRate;
+    }
 
-    public SaveData() {
-        players = new HashSet<>();
+    SaveData(JsonObject rootJSON) throws SaveDataException {
         flags = new HashSet<>();
         counters = new HashMap<>();
-    }
-
-    SaveData(JsonObject rootJSON) {
-        this(rootJSON, GameState.gameState);
-    }
-
-    public SaveData(JsonObject rootJSON, GameState gameState) {
-        this();
         if (rootJSON.has("xpRate")) {
-            GameState.gameState.xpRate = rootJSON.get("xpRate").getAsDouble();
+            xpRate = rootJSON.get("xpRate").getAsDouble();
+        } else {
+            xpRate = GameState.DEFAULT_XP_RATE;
         }
 
-        JsonArray charactersJSON = rootJSON.getAsJsonArray(JSONKey.PLAYERS.key);
-        for (JsonElement element : charactersJSON) {
-            JsonObject characterJSON = element.getAsJsonObject();
-            String type = characterJSON.get("type").getAsString();
-            Character character = gameState.characterPool.getCharacterByType(type);
-            character.load(characterJSON);
-
-            players.add(character);
+        npcs = new HashSet<>();
+        Player human = null;
+        for (JsonElement element : rootJSON.getAsJsonArray(JSONKey.PLAYERS.key)) {
+            JsonObject charJson = element.getAsJsonObject();
+            String type = charJson.get("type").getAsString();
+            if (type.equals(Player.class.getSimpleName())) {
+                try {
+                    human = new Player(charJson);
+                } catch (Exception e) {
+                    throw new SaveDataException(e);
+                }
+            } else if (type.startsWith(CustomNPC.TYPE_PREFIX)) {
+                NPCData data;
+                try {
+                    data = JsonSourceNPCDataLoader.loadBaseData(charJson);
+                    if (data == null) {
+                        throw new FileNotFoundException("Could not find data file for custom NPC " + type);
+                    }
+                    npcs.add(new CustomNPC(data, charJson).getCharacter());
+                } catch (FileNotFoundException | SaveFile.SaveFileException e) {
+                    // TODO: warn the player in-game when NPCs are unable to be loaded.
+                    e.printStackTrace();
+                }
+            } else {
+                // this assumes that a character's type is the same as the name of their personality class
+                // there's probably a better way to do this that remains extensible without excessive boilerplate
+                // TODO: make this more robust vs class naming schemes
+                try {
+                    // find the right class
+                    Class<?> personalityClass = Class.forName("nightgames.characters." + type);
+                    Constructor ctor = personalityClass.getConstructor();
+                    // make new instance
+                    NPC npc = ((Personality) ctor.newInstance()).getCharacter();
+                    npc.load(charJson);
+                    npcs.add(npc);
+                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+                    System.err.println("Could not create personality for " + type);
+                    e.printStackTrace();
+                }
+            }
         }
+        if (human == null) {
+            throw new SaveDataException("Player data not found in save data");
+        }
+        player = human;
 
         JsonArray flagsJSON = rootJSON.getAsJsonArray(JSONKey.FLAGS.key);
-        for (JsonElement element : flagsJSON) {
-            flags.add(element.getAsString());
-        }
+        flagsJSON.forEach(element -> flags.add(element.getAsString()));
 
         JsonObject countersJSON = rootJSON.getAsJsonObject(JSONKey.COUNTERS.key);
         counters.putAll(JsonUtils.mapFromJson(countersJSON, String.class, Float.class));
@@ -78,12 +128,13 @@ public class SaveData {
         time = Time.fromDesc(rootJSON.get(JSONKey.TIME.key).getAsString());
     }
 
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject rootJSON = new JsonObject();
-        rootJSON.add("xpRate", new JsonPrimitive(GameState.gameState.xpRate));
+        rootJSON.add("xpRate", new JsonPrimitive(xpRate));
 
         JsonArray characterJSON = new JsonArray();
-        players.stream().map(Character::save).forEach(characterJSON::add);
+        characterJSON.add(player.save());
+        npcs.stream().map(NPC::save).forEach(characterJSON::add);
         rootJSON.add(JSONKey.PLAYERS.key, characterJSON);
 
         JsonArray flagJSON = new JsonArray();
@@ -112,27 +163,50 @@ public class SaveData {
 
         if (date != saveData.date)
             return false;
-        if (!players.equals(saveData.players))
+        if (fontsize != saveData.fontsize)
+            return false;
+        if (Double.compare(saveData.xpRate, xpRate) != 0)
+            return false;
+        if (!npcs.equals(saveData.npcs))
+            return false;
+        if (!player.equals(saveData.player))
             return false;
         if (!flags.equals(saveData.flags))
             return false;
         if (!counters.equals(saveData.counters))
             return false;
         return time == saveData.time;
-
     }
 
     @Override public int hashCode() {
-        int result = players.hashCode();
+        int result;
+        long temp;
+        result = npcs.hashCode();
+        result = 31 * result + player.hashCode();
         result = 31 * result + flags.hashCode();
         result = 31 * result + counters.hashCode();
         result = 31 * result + time.hashCode();
         result = 31 * result + date;
+        result = 31 * result + fontsize;
+        temp = Double.doubleToLongBits(xpRate);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
     @Override public String toString() {
-        return "SaveData{" + "players=" + players + ", flags=" + flags + ", counters=" + counters + ", time=" + time
-                        + ", date=" + date + '}';
+        return "SaveData{" + "npcs=" + npcs + ", player=" + player + ", flags=" + flags + ", counters=" + counters
+                        + ", time=" + time + ", date=" + date + ", fontsize=" + fontsize + ", xpRate=" + xpRate + '}';
+    }
+
+    public class SaveDataException extends Exception {
+        private static final long serialVersionUID = 1024586601078477748L;
+
+        public SaveDataException(String message) {
+            super(message);
+        }
+
+        public SaveDataException(Throwable cause) {
+            super(cause);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package nightgames.characters;
 
+import com.google.gson.JsonObject;
 import nightgames.actions.*;
 import nightgames.areas.Area;
 import nightgames.characters.body.BodyPart;
@@ -42,6 +43,7 @@ public class NPC extends Character {
     public Plan plan;
     private boolean fakeHuman;
     public boolean isStartCharacter = false;
+    public boolean available;   // True when the character has been unlocked, whether at the start or by fulfilling unlock requirements.
     private List<CombatStrategy> personalStrategies;
     private List<CombatScene> postCombatScenes;
     private Map<String, List<CharacterLine>> lines;
@@ -600,6 +602,12 @@ public class NPC extends Character {
         encounter.parse(response, this, target);
     }
 
+    @Override public JsonObject save() {
+        JsonObject saveJson = super.save();
+        saveJson.addProperty("available", available);
+        return saveJson;
+    }
+
     @Override
     public void intervene(IEncounter enc, Character p1, Character p2) {
         if (Random.random(20) + getAffection(p1) + (p1.has(Trait.sympathetic) ? 10 : 0) >= Random.random(20)
@@ -860,6 +868,16 @@ public class NPC extends Character {
     @Override
     public String getType() {
         return ai.getType();
+    }
+
+    @Override public void load(JsonObject object) {
+        super.load(object);
+        // Prior to adding the available field, characters appearing in save files were assumed to be unlocked.
+        if (object.has("available"))
+            available = object.get("available").getAsBoolean();
+        else
+            Flag.flag(Flag.LegacyCharAvailableSave);
+            available = true;
     }
 
     public RecruitmentData getRecruitmentData() {

@@ -14,65 +14,27 @@ import nightgames.start.StartConfiguration;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Tracks Characters in current game.
  */
 public class CharacterPool {
     public Map<String, NPC> characterPool;   // All starting and unlockable characters
-    public Set<Character> players = new HashSet<>();           // All currently unlocked characters
-    public Set<Character> debugChars = new HashSet<>();
+    public Set<NPC> debugChars;
     public Player human;
 
-    private Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
-        return startConfig.isPresent() ? startConfig.get().findNpcConfig(type) : Optional.empty();
-    }
-
-    public Set<Character> everyone() {
-        return players;
-    }
-
-    public void newChallenger(Personality challenger) {
-        if (!players.contains(challenger.getCharacter())) {
-            int targetLevel = human.getLevel();
-            if (challenger.getCharacter().has(Trait.leveldrainer)) {
-                targetLevel -= 4;
-            }
-            while (challenger.getCharacter().getLevel() <= targetLevel) {
-                challenger.getCharacter().ding(null);
-            }
-            players.add(challenger.getCharacter());
-        }
-
-    }
-
-    public NPC getNPC(String name) {
-        for (Character c : allNPCs()) {
-            if (c.getType().equalsIgnoreCase(name)) {
-                return (NPC) c;
-            }
-        }
-        System.err.println("NPC \"" + name + "\" is not loaded.");
-        return null;
-    }
-
-    public boolean characterTypeInGame(String type) {
-        return players.stream().anyMatch(c -> type.equals(c.getType()));
-    }
-
-    public Collection<NPC> allNPCs() {
-        return characterPool.values();
-    }
-
-    public Character getParticipantByName(String name) {
-        return players.stream().filter(c -> c.getTrueName().equals(name)).findAny()
-                        .orElseThrow(() -> new NoSuchElementException("Could not find particpant " + name));
-    }
-
-    public void rebuildCharacterPool(Optional<StartConfiguration> startConfig) {
+    protected CharacterPool() {
         characterPool = new HashMap<>();
-        debugChars.clear();
+        debugChars = new HashSet<>();
+    }
 
+    /**
+     * Creates a CharacterPool at the start of a new game.
+     * @param startConfig The config of the new game.
+     */
+    public CharacterPool(Optional<StartConfiguration> startConfig) {
+        this();
         Optional<NpcConfiguration> commonConfig = startConfig.map(startConfiguration -> startConfiguration.npcCommon);
 
         try (InputStreamReader reader = new InputStreamReader(
@@ -83,7 +45,8 @@ public class CharacterPool {
                 try {
                     NPCData data = JsonSourceNPCDataLoader
                                     .load(ResourceLoader.getFileResourceAsStream("characters/" + name));
-                    Optional<NpcConfiguration> npcConfig = findNpcConfig(CustomNPC.TYPE_PREFIX + data.getName(), startConfig);
+                    Optional<NpcConfiguration> npcConfig =
+                                    findNpcConfig(CustomNPC.TYPE_PREFIX + data.getName(), startConfig);
                     Personality npc = new CustomNPC(data, npcConfig, commonConfig);
                     characterPool.put(npc.getCharacter().getType(), npc.getCharacter());
                     System.out.println("Loaded " + name);
@@ -93,7 +56,7 @@ public class CharacterPool {
                 }
             }
         } catch (JsonParseException | IOException e1) {
-            System.err.println("Failed to load character set");
+            System.err.println("Failed to load custom character set");
             e1.printStackTrace();
         }
 
@@ -118,7 +81,72 @@ public class CharacterPool {
         characterPool.put(eve.getCharacter().getType(), eve.getCharacter());
         characterPool.put(maya.getCharacter().getType(), maya.getCharacter());
         characterPool.put(yui.getCharacter().getType(), yui.getCharacter());
-        debugChars.add(reyka.getCharacter());
+    }
+
+    /**
+     * Creates a CharacterPool from a list of instantiated npcs, such as when loading a save.
+     * @param player The Player.
+     * @param npcs The available NPCs.
+     */
+    public CharacterPool(Player player, Collection<NPC> npcs) {
+        this(player, npcs, new HashSet<>());
+    }
+
+    public CharacterPool(Player player, Collection<NPC> npcs, Collection<NPC> debugNpcs) {
+        human = player;
+        characterPool = npcs.stream().collect(Collectors.toMap(NPC::getType, npc -> npc));
+        debugChars = new HashSet<>();
+        debugChars = new HashSet<>(debugNpcs);
+    }
+
+    public Set<NPC> availableNpcs() {
+        return characterPool.values().stream().filter(npc -> npc.available).collect(Collectors.toSet());
+    }
+
+    private Optional<NpcConfiguration> findNpcConfig(String type, Optional<StartConfiguration> startConfig) {
+        return startConfig.flatMap(config -> config.findNpcConfig(type));
+    }
+
+    public Set<Character> everyone() {
+        Set<Character> everyone = new HashSet<>(availableNpcs());
+        everyone.add(human);
+        return everyone;
+    }
+
+    public void newChallenger(NPC challenger) {
+        if (!availableNpcs().contains(challenger)) {
+            challenger.available = true;
+            int targetLevel = human.getLevel();
+            if (challenger.has(Trait.leveldrainer)) {
+                targetLevel -= 4;
+            }
+            while (challenger.getLevel() <= targetLevel) {
+                challenger.ding(null);
+            }
+        }
+    }
+
+    public NPC getNPC(String name) {
+        for (Character c : allNPCs()) {
+            if (c.getType().equalsIgnoreCase(name)) {
+                return (NPC) c;
+            }
+        }
+        System.err.println("NPC \"" + name + "\" is not loaded.");
+        return null;
+    }
+
+    public boolean characterTypeInGame(String type) {
+        return availableNpcs().stream().anyMatch(c -> type.equals(c.getType()));
+    }
+
+    public Collection<NPC> allNPCs() {
+        return characterPool.values();
+    }
+
+    public Character getParticipantByName(String name) {
+        return availableNpcs().stream().filter(c -> c.getTrueName().equals(name)).findAny()
+                        .orElseThrow(() -> new NoSuchElementException("Could not find particpant " + name));
     }
 
     public Character getCharacterByType(String type) {
@@ -145,9 +173,18 @@ public class CharacterPool {
     /**
      * WARNING DO NOT USE THIS IN ANY COMBAT RELATED CODE.
      * IT DOES NOT TAKE INTO ACCOUNT THAT THE PLAYER GETS CLONED. WARNING. WARNING.
+     *
      * @return
      */
     public Player getPlayer() {
         return human;
+    }
+
+    public void updateNPCs(Set<NPC> npcs) {
+        npcs.forEach(npc -> characterPool.put(npc.getType(), npc));
+    }
+
+    public void updatePlayer(Player player) {
+        human = player;
     }
 }

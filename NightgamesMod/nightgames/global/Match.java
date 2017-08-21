@@ -96,11 +96,11 @@ public class Match {
             withEffect.ifPresent(s -> GameState.gameState.characterPool.getPlayer().addNonCombat(s));
         });
         startMatchGui(GUI.gui);
-        match.round();
+        round();
     }
 
     public static HashSet<Character> getParticipants() {
-        return new HashSet<>(GameState.gameState.characterPool.players);
+        return new HashSet<>(GameState.gameState.characterPool.availableNpcs());
     }
 
     public static List<Character> getMatchParticipantsInAffectionOrder() {

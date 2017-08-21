@@ -1,5 +1,6 @@
 package nightgames.characters;
 
+import com.google.gson.JsonObject;
 import nightgames.actions.Action;
 import nightgames.actions.Leap;
 import nightgames.actions.Move;
@@ -39,6 +40,10 @@ public class Player extends Character {
     public int traitPoints;
     private int levelsToGain;
 
+    private Player() {
+        this("Dummy");
+    }
+
     public Player(String name) {
         this(name, CharacterSex.male, Optional.empty(), new ArrayList<>(), new HashMap<>());
     }
@@ -56,6 +61,11 @@ public class Player extends Character {
 
         config.ifPresent(this::applyConfigStats);
         finishCharacter(pickedTraits, selectedAttributes);
+    }
+
+    public Player(JsonObject playerJson) {
+        this();
+        this.load(playerJson);
     }
 
     public static void ding(GUI gui) {

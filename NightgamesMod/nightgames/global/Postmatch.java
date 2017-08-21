@@ -6,6 +6,7 @@ import nightgames.gui.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class Postmatch {
@@ -50,30 +51,32 @@ public class Postmatch {
         double level = 0;
         int maxLevelTracker = 0;
 
-        for (Character player : GameState.gameState.characterPool.players) {
-            player.getStamina().fill();
-            player.getArousal().empty();
-            player.getMojo().empty();
-            player.change();
-            level += player.getLevel();
-            if (!player.has(Trait.unnaturalgrowth) && !player.has(Trait.naturalgrowth)) {
-                maxLevelTracker = Math.max(player.getLevel(), maxLevelTracker);
+        Set<Character> everyone = GameState.gameState.characterPool.everyone();
+        for (Character character : everyone) {
+            character.getStamina().fill();
+            character.getArousal().empty();
+            character.getMojo().empty();
+            character.change();
+            level += character.getLevel();
+            if (!character.has(Trait.unnaturalgrowth) && !character.has(Trait.naturalgrowth)) {
+                maxLevelTracker = Math.max(character.getLevel(), maxLevelTracker);
             }
         }
-        final int maxLevel = maxLevelTracker / GameState.gameState.characterPool.players.size();
-        GameState.gameState.characterPool.players.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2).forEach(c -> {
-            while (c.getLevel() < maxLevel + 2) {
-                c.ding(null);
-            }
-        });
-        GameState.gameState.characterPool.players.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
+        final int maxLevel = maxLevelTracker / everyone.size();
+        everyone.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2)
+                        .forEach(c -> {
+                            while (c.getLevel() < maxLevel + 2) {
+                                c.ding(null);
+                            }
+                        });
+        everyone.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
                         .forEach(c -> {
                             while (c.getLevel() < maxLevel + 5) {
                                 c.ding(null);
                             }
                         });
 
-        level /= GameState.gameState.characterPool.players.size();
+        level /= everyone.size();
 
         for (Character rested : Match.resting) {
             rested.gainXP(100 + Math.max(0, (int) Math.round(10 * (level - rested.getLevel()))));

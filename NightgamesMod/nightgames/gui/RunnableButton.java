@@ -1,7 +1,5 @@
 package nightgames.gui;
 
-import java.awt.*;
-
 public class RunnableButton extends KeyableButton {
     private static final long serialVersionUID = 5435929681634872672L;
     private String text;
@@ -11,14 +9,6 @@ public class RunnableButton extends KeyableButton {
         resetFontSize();
 
         getButton().addActionListener((evt) -> runnable.run());
-    }
-
-    private void resetFontSize() {
-        if (getButton().getText().contains("<br/>")) {
-            getButton().setFont(new Font("Baskerville Old Face", 0, 14));
-        } else {
-            getButton().setFont(new Font("Baskerville Old Face", 0, 18));            
-        }
     }
 
     @Override

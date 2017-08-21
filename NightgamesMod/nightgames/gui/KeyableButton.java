@@ -29,6 +29,14 @@ public abstract class KeyableButton extends JPanel {
         return String.format("<html><center>%s%s</center></html>", out, hotkeyExtra);
     }
 
+    protected void resetFontSize() {
+        if (getButton().getText().contains("<br/>")) {
+            getButton().setFont(new Font("Baskerville Old Face", 0, 14));
+        } else {
+            getButton().setFont(new Font("Baskerville Old Face", 0, 18));
+        }
+    }
+
     public abstract String getText();
 
     public void setHotkeyTextTo(String string) {

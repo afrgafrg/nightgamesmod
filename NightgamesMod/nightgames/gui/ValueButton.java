@@ -1,8 +1,5 @@
 package nightgames.gui;
 
-import com.sun.istack.internal.Nullable;
-
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -20,6 +17,7 @@ public class ValueButton<T> extends KeyableButton {
         this.value = value.getValue();
         this.future = future;
         getButton().addActionListener(evt -> complete());
+        resetFontSize();
     }
 
     public ValueButton(T value, String label, CompletableFuture<T> future) {

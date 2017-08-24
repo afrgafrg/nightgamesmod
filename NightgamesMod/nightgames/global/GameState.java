@@ -26,7 +26,6 @@ public class GameState {
     public CharacterPool characterPool;
     private volatile Thread loopThread;
 
-    // TODO: Make new GameStates start in a usable condition. Currently needs a separate reset() or newGame() call.
     public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                     CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
         characterPool = new CharacterPool(config);

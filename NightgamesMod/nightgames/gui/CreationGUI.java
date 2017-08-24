@@ -65,6 +65,8 @@ public class CreationGUI extends JPanel {
     private JComboBox<StartConfiguration> configs;
     private JButton btnStart;
     private JButton btnAdvStart;
+    private JComboBox<String> expBox;
+    private Map<String, Double> expRateMap = new LinkedHashMap<>();
 
     public CreationGUI() {
         setLayout(new BorderLayout(0, 0));
@@ -391,39 +393,28 @@ public class CreationGUI extends JPanel {
         expLbl.setBackground(new Color(0, 10, 30));
         expLbl.setForeground(new Color(240, 240, 255));
 
+        expRateMap.put("Slow", 0.5);
+        expRateMap.put("Normal", 1.0);
+        expRateMap.put("Fast", 1.5);
+        expRateMap.put("Very Fast", 3.0);
+
         verticalBox.add(new JLabel("Exp Rate"));
-        JComboBox<String> ExpBox = new JComboBox<>();
-        ExpBox.setBackground(new Color(0, 10, 30));
-        ExpBox.setForeground(new Color(200, 200, 0));
-        ExpBox.addItem("Slow");
-        ExpBox.addItem("Normal");
-        ExpBox.addItem("Fast");
-        ExpBox.addItem("Very Fast");
-        ExpBox.setSelectedItem("Normal");
-        verticalBox.add(ExpBox);
+        expBox = new JComboBox<>();
+        expBox.setBackground(new Color(0, 10, 30));
+        expBox.setForeground(new Color(200, 200, 0));
+        expRateMap.keySet().forEach(expBox::addItem);
+        expBox.setSelectedItem("Normal");
+        verticalBox.add(expBox);
 
         JTextPane ExpDescription = new JTextPane();
         ExpDescription.setBackground(new Color(18, 30, 49));
         ExpDescription.setForeground(new Color(240, 240, 255));
         ExpDescription.setPreferredSize(new Dimension(100, 100));
         ExpDescription.setEditable(false);
-        ExpDescription.setText((String) ExpBox.getSelectedItem());
+        ExpDescription.setText((String) expBox.getSelectedItem());
 
-        ExpBox.addActionListener(arg0 -> {
-            String rate = (String) ExpBox.getSelectedItem();
-            ExpDescription.setText(rate);
-            if ("Slow".equals(rate)) {
-                GameState.gameState.xpRate = .5;
-            }
-            if ("Normal".equals(rate)) {
-                GameState.gameState.xpRate = 1;
-            }
-            if ("Fast".equals(rate)) {
-                GameState.gameState.xpRate = 1.5;
-            }
-            if ("Very Fast".equals(rate)) {
-                GameState.gameState.xpRate = 3;
-            }
+        expBox.addActionListener(arg0 -> {
+            ExpDescription.setText((String) expBox.getSelectedItem());
         });
         verticalBox.add(ExpDescription);
         separator_1 = new JSeparator();
@@ -505,7 +496,8 @@ public class CreationGUI extends JPanel {
             selectedAttributes.put(Attribute.Power, power);
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
-            GameState state = new GameState(name, startConfig, traits, sex, selectedAttributes);
+            String rate = (String) expBox.getSelectedItem();
+            GameState state = new GameState(name, startConfig, traits, sex, selectedAttributes, expRateMap.get(rate));
             try {
                 GUI.gui.currentState.clear();
                 GUI.gui.currentState.put(state);

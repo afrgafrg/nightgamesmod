@@ -20,16 +20,16 @@ public class GameState {
     static final double DEFAULT_MONEY_RATE = 1.0;
     public volatile static GameState gameState;
     public double moneyRate;
-    public double xpRate = DEFAULT_XP_RATE;
+    public double xpRate;
     private static boolean ingame = false;
     private volatile boolean run;
     public CharacterPool characterPool;
     private volatile Thread loopThread;
 
     public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
-                    CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
+                    CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes, double xpRate) {
         characterPool = new CharacterPool(config);
-        xpRate = DEFAULT_XP_RATE;
+        this.xpRate = xpRate;
         moneyRate = DEFAULT_MONEY_RATE;
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());

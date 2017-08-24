@@ -41,10 +41,6 @@ import static org.junit.Assert.assertThat;
 public class JsonSourceNPCDataLoaderTest {
     JsonObject npcJSON;
 
-    @BeforeClass public static void setUpJSONSourceNPCDataLoaderTest() throws Exception {
-        ClothingTable.buildClothingTable();
-    }
-
     @Before public void setUp() throws Exception {
         Path file = new File("NightgamesTests/nightgames/characters/custom/test_custom_npc.json").toPath();
         npcJSON = JsonUtils.rootJson(file).getAsJsonObject();

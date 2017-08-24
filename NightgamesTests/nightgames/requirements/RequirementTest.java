@@ -42,10 +42,6 @@ public class RequirementTest {
     private NPC other;
     private Combat combat;
 
-    @BeforeClass public static void setUpClass() throws Exception {
-        new TestGUI();
-    }
-
     @Before public void setUp() throws Exception {
         self = new BlankPersonality("SelfTestNPC").character;
         other = new BlankPersonality("OtherTestNPC").character;

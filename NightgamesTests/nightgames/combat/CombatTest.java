@@ -27,10 +27,6 @@ public class CombatTest {
     private NPC other;
     private Combat combat;
 
-    @BeforeClass public static void setUpCombatTest() throws Exception {
-        new TestGUI();
-    }
-
     @Before public void setUp() throws Exception {
         self = new BlankPersonality("SelfTestNPC").character;
         other = new BlankPersonality("OtherTestNPC").character;

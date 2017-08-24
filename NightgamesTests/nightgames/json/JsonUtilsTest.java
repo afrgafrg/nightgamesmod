@@ -26,10 +26,6 @@ import static org.junit.Assert.assertThat;
  * Tests for JsonUtils behavior.
  */
 public class JsonUtilsTest {
-    @BeforeClass public static void setUpClass() throws Exception {
-        ClothingTable.buildClothingTable();
-    }
-
     @Rule public ExpectedException thrown = ExpectedException.none();
 
     private JsonObject sampleJSON;

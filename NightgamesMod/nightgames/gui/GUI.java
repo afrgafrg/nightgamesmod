@@ -159,7 +159,7 @@ public class GUI extends JFrame implements Observer {
 
         mntmNewgame.addActionListener(arg0 -> {
             if (GameState.inGame()) {
-                int result = JOptionPane.showConfirmDialog(GUI.this,
+                int result = JOptionPane.showConfirmDialog(this,
                                 "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
@@ -420,7 +420,7 @@ public class GUI extends JFrame implements Observer {
                 rdPronounBody.setSelected(true);
             }
             malePrefSlider.setValue(Math.round(Flag.getValue(Flag.malePref)));
-            int result = JOptionPane.showConfirmDialog(GUI.this, optionsPanel, "Options", JOptionPane.OK_CANCEL_OPTION,
+            int result = JOptionPane.showConfirmDialog(this, optionsPanel, "Options", JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
                 Flag.setFlag(Flag.systemMessages, rdMsgOn.isSelected());
@@ -460,7 +460,7 @@ public class GUI extends JFrame implements Observer {
         //mntmQuitMatch.setForeground(Color.WHITE);
         //mntmQuitMatch.setBackground(GUIColors.bgGrey);
         mntmQuitMatch.addActionListener(arg0 -> {
-            int result = JOptionPane.showConfirmDialog(GUI.this,
+            int result = JOptionPane.showConfirmDialog(this,
                             "Do you want to quit for the night? Your opponents will continue to fight and gain exp.",
                             "Retire early?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
@@ -483,14 +483,14 @@ public class GUI extends JFrame implements Observer {
                             + "A ton of testing by Bronzechair</html>"));
             Object[] options = {"OK", "DEBUG"};
             Object[] okOnly = {"OK"};
-            int results = JOptionPane.showOptionDialog(GUI.this, panel, "Credits", JOptionPane.DEFAULT_OPTION,
+            int results = JOptionPane.showOptionDialog(this, panel, "Credits", JOptionPane.DEFAULT_OPTION,
                             JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (results == 1 && GameState.inGame()) {
                 JPanel debugPanel = new DebugGUIPanel();
-                JOptionPane.showOptionDialog(GUI.this, debugPanel, "Debug", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.INFORMATION_MESSAGE, null, okOnly, okOnly[0]);
+                JOptionPane.showOptionDialog(this, debugPanel, "Debug", JOptionPane.DEFAULT_OPTION,
+                                JOptionPane.PLAIN_MESSAGE, null, okOnly, okOnly[0]);
             } else if (results == 1) {
-                JOptionPane.showOptionDialog(GUI.this, "Not in game", "Debug", JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.showOptionDialog(this, "Not in game", "Debug", JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.INFORMATION_MESSAGE, null, okOnly, okOnly[0]);
             }
         });

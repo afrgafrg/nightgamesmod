@@ -481,10 +481,16 @@ public class GUI extends JFrame implements Observer {
                             + "Footfetish expansion scenes by Sakruff<br/>"
                             + "Mod by Nergantre<br/>"
                             + "A ton of testing by Bronzechair</html>"));
-            Object[] options = {"OK", "DEBUG"};
+            Object[] debugOptions = {"OK", "DEBUG"};
             Object[] okOnly = {"OK"};
+            Object[] creditsOptions;
+            if (GameState.inGame()) {
+                creditsOptions = debugOptions;
+            } else {
+                creditsOptions = okOnly;
+            }
             int results = JOptionPane.showOptionDialog(this, panel, "Credits", JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                            JOptionPane.INFORMATION_MESSAGE, null, creditsOptions, creditsOptions[0]);
             if (results == 1 && GameState.inGame()) {
                 JPanel debugPanel = new DebugGUIPanel();
                 JOptionPane.showOptionDialog(this, debugPanel, "Debug", JOptionPane.DEFAULT_OPTION,

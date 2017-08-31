@@ -288,7 +288,7 @@ public class Match {
     }
 
     public void score(Character character, int points) {
-        score.put(character, Integer.valueOf(score.get(character).intValue() + points));
+        score.put(character, score.get(character) + points);
     }
 
     public void manageConditions(Character player) {
@@ -299,12 +299,8 @@ public class Match {
         player.getAddictions().forEach(Addiction::refreshWithdrawal);
     }
 
-    public int meanLvl() {
-        int mean = 0;
-        for (Character player : combatants) {
-            mean += player.getLevel();
-        }
-        return mean / combatants.size();
+    private int meanLvl() {
+        return (int) combatants.stream().map(Character::getLevel).mapToInt(Integer::new).average().orElse(0);
     }
 
     public void dropPackage() {

@@ -36,7 +36,7 @@ public class Postmatch {
         }
     }
 
-    public void EndMatchGui() {
+    public void endMatchGui() {
         GUI.gui.combat = null;
         GUI.gui.clearCommand();
         GUI.gui.showNone();

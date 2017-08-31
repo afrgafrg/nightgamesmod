@@ -133,7 +133,7 @@ public class GameState {
                     // set time to next day
                     Time.date++;
                     Time.time = Time.DAY;
-                    postmatch.EndMatchGui();
+                    postmatch.endMatchGui();
                     postmatch.readyForBed.await();
                     // autosave
                     SaveFile.autoSave();

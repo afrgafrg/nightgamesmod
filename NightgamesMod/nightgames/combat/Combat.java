@@ -1311,9 +1311,6 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    /**
-     * @return true if it should end the fight, false if there are still more scenes
-     */
     public void end() {
         p1.state = State.ready;
         p2.state = State.ready;

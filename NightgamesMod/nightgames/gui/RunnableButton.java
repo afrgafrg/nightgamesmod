@@ -16,7 +16,7 @@ public class RunnableButton extends KeyableButton {
         return text;
     }
 
-    public void setHotkeyTextTo(String string) {
+    @Override public void setHotkeyTextTo(String string) {
         getButton().setText(formatHTMLMultiline(text, String.format(" [%s]", string)));
         resetFontSize();
     }

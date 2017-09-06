@@ -13,10 +13,10 @@ public class Postmatch {
     public final CountDownLatch readyForBed;
 
     private Character player;
-    private ArrayList<Character> combatants;
+    private List<Character> combatants;
     private boolean normal;
 
-    public Postmatch(Character player, ArrayList<Character> combatants) {
+    public Postmatch(Character player, List<Character> combatants) {
         readyForBed = new CountDownLatch(1);
         this.player = player;
         this.combatants = combatants;

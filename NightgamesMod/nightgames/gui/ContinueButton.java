@@ -5,7 +5,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * TODO: Write class-level documentation.
+ * Valueless blocking button.
  */
 public class ContinueButton extends ValueButton<String> {
     private static final long serialVersionUID = -7842752203787391615L;

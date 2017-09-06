@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -589,9 +590,6 @@ public class GUI extends JFrame implements Observer {
         clothesPanel.setLayout(new GridLayout(0, 1));
         clothesPanel.setBackground(new Color(25, 25, 50));
         centerPanel.add(clothesPanel, USE_CLOSET_UI);
-
-        JButton debug = new JButton("Debug");
-        debug.addActionListener(arg0 -> Match.getMatch().resume());
 
         // commandPanel - visible, contains the player's command buttons
         groupBox = Box.createHorizontalBox();

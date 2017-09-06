@@ -24,15 +24,6 @@ public class ValueButton<T> extends KeyableButton {
         this(new LabeledValue<>(value, label), future);
     }
 
-    public Optional<T> get() throws InterruptedException {
-        try {
-            return Optional.ofNullable(future.get());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return Optional.empty();
-        }
-    }
-
     private void complete() {
         future.complete(value);
     }

@@ -1036,7 +1036,6 @@ public class GUI extends JFrame implements Observer {
                 commandPanel.add(button);
             }
         }
-        Match.getMatch().pause();
         commandPanel.refresh();
     }
 

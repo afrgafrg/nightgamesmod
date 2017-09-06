@@ -1,8 +1,7 @@
 package nightgames.gui;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Valueless blocking button.
@@ -18,7 +17,11 @@ public class ContinueButton extends ValueButton<String> {
     }
 
     public void await() throws InterruptedException {
-        get();
+        try {
+            future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override public String getText() {

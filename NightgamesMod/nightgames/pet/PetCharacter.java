@@ -1,13 +1,9 @@
 package nightgames.pet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import nightgames.actions.Action;
 import nightgames.characters.Character;
 import nightgames.characters.Decider;
 import nightgames.characters.Emotion;
@@ -27,6 +23,7 @@ import nightgames.skills.Tactics;
 import nightgames.status.Slimed;
 import nightgames.status.Status;
 import nightgames.trap.Trap;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class PetCharacter extends Character {
     
@@ -155,6 +152,11 @@ public class PetCharacter extends Character {
     @Override
     public void detect() {}
 
+    @Override public void doAction(Action action) {
+        System.err.println(String.format("Pet character %s with owner type %s should not exist outside of combat.", this.getName(), this.ownerType));
+        throw new NotImplementedException();
+    }
+
     @Override
     public void faceOff(Character opponent, IEncounter enc) {}
 
@@ -242,7 +244,9 @@ public class PetCharacter extends Character {
     }
 
     @Override
-    public void move() {}
+    public Optional<Action> move() {
+        return null;
+    }
 
     @Override
     public void draw(Combat c, Result flag) {}

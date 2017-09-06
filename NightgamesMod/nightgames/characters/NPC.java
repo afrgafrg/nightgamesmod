@@ -456,7 +456,8 @@ public class NPC extends Character {
     }
 
     @Override
-    public void move() {
+    public Optional<Action> move() {
+        Action move = null;
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println(getTrueName() + " is moving with state " + state);
         }
@@ -478,8 +479,7 @@ public class NPC extends Character {
             master = ((Enthralled) getStatus(Stsflag.enthralled)).master;
             Move compelled = findPath(master.location);
             if (compelled != null) {
-                compelled.execute(this);
-                return;
+                move = compelled;
             }
         } else if (state == State.shower || state == State.lostclothes) {
             bathe();
@@ -513,7 +513,6 @@ public class NPC extends Character {
                         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_FTC))
                             System.out.println(getTrueName() + " delivering flag (hunter)");
                         new Resupply().execute(this);
-                        return;
                     }
                 }
                 if (!has(Trait.immobile) && moves.isEmpty()) {
@@ -534,12 +533,30 @@ public class NPC extends Character {
                         }
                     }
                 }
-                
-                pickAndDoAction(allowedActions(), moves, radar);
+
+                move = pickAction(allowedActions(), moves, radar);
             }
         }
+        return Optional.ofNullable(move);
     }
-    
+
+    private Action pickAction(Collection<Action> available, Collection<Action> moves, Collection<Movement> radar) {
+        if (available.isEmpty()) {
+            available.addAll(Action.getActions());
+            available.addAll(moves);
+        }
+        available.removeIf(a -> a == null || !a.usable(this));
+        return ai.move(available, radar);
+    }
+
+    @Override public void doAction(Action action) {
+        if (location.humanPresent()) {
+            GUI.gui.message("You notice " + getName() + action.execute(this).describe());
+        } else {
+            action.execute(this);
+        }
+    }
+
     private void pickAndDoAction(Collection<Action> available, Collection<Action> moves, Collection<Movement> radar) {
         if (available.isEmpty()) {
             available.addAll(Action.getActions());

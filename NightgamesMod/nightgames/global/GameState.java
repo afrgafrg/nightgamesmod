@@ -113,7 +113,8 @@ public class GameState {
         loopThread = Thread.currentThread();
         ingame = true;
         run = true;
-        while (run) {
+        // TODO: Get rid of run flag. Thread.interrupted should be enough.
+        while (run && !loopThread.isInterrupted()) {
             try {
                 if (Time.getTime() == Time.NIGHT) {
                     // do nighttime stuff
@@ -126,7 +127,10 @@ public class GameState {
                     // start match
                     CountDownLatch matchComplete = match.matchComplete;
                     match.startMatch();
+                    // 36 * 5 mins = 180 mins = 3 hours for a standard game
+                    match.matchLoop(36);
                     // end match
+                    match.end();
                     matchComplete.await();
                     Postmatch postmatch = new Postmatch(GameState.gameState.characterPool.getPlayer(), match.combatants);
                     postmatch.endMatch();

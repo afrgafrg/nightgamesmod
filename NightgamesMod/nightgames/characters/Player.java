@@ -293,24 +293,12 @@ public class Player extends Character {
         enc.promptAmbush(opponent, gui);
     }
 
-    /**
-     * Adds action button to GUI.
-     * @param action The action performed by the player on click.
-     */
-    private void addAction(Action action) {
-        gui.addButtonWithPause(new ActionButton(action, this));
-    }
-
     @Override
-    public void move() {
+    public Optional<Action> move() throws InterruptedException {
         gui.clearCommand();
-
-        if (state == State.combat) {
-            if (!location.fight.battle()) {
-                Match.getMatch()
-                      .resume();
-            }
-        } else if (busy > 0) {
+        List<Action> actionChoices = new ArrayList<>();
+        assert (state != State.combat);
+        if (busy > 0) {
             busy--;
         } else if (this.is(Stsflag.enthralled)) {
             Character master;
@@ -319,7 +307,7 @@ public class Player extends Character {
                 Move compelled = findPath(master.location());
                 gui.message("You feel an irresistible compulsion to head to the <b>" + master.location().name + "</b>");
                 if (compelled != null) {
-                    addAction(compelled);
+                    actionChoices.add(compelled);
                 }
             }
         } else if (state == State.shower || state == State.lostclothes) {
@@ -359,7 +347,7 @@ public class Player extends Character {
             detect();
             if (!location.encounter(this)) {
                 if (!allowedActions().isEmpty()) {
-                    allowedActions().forEach(a -> addAction(a));
+                    actionChoices.addAll(allowedActions());
                 } else {
                     List<Action> possibleActions = new ArrayList<>();
                     for (Area path : location.adjacent) {
@@ -380,14 +368,24 @@ public class Player extends Character {
                     for (Action act : possibleActions) {
                         if (act.usable(this) 
                                         && Match.getMatch().condition.allowAction(act, this, Match.getMatch())) {
-                            addAction(act);
+                            actionChoices.add(act);
                         }
                     }
                 }
             }
         }
+        CompletableFuture<Action> moveFuture = gui.promptFuture(actionChoices, Action::toString);
+        try {
+            return Optional.of(moveFuture.get());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 
+    @Override public void doAction(Action action) {
+        gui.clearText();
+        action.execute(this);
     }
 
     @Override

@@ -100,11 +100,4 @@ public abstract class Action implements Serializable {
         return true;
     }
 
-    public void choose(String choice, Character self, GUI gui) {
-        RunnableButton button = new RunnableButton(choice, () -> {
-            ((Locate) this).handleEvent(self, choice);
-        });
-        gui.commandPanel.add(button);
-        gui.commandPanel.refresh();
-    }
 }

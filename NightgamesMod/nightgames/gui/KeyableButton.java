@@ -5,7 +5,6 @@ import org.apache.commons.lang3.text.WordUtils;
 import javax.swing.*;
 import java.awt.*;
 
-// TODO: make a button class that completes a future
 public abstract class KeyableButton extends JPanel {
     private static final long serialVersionUID = -2379908542190189603L;
     private final JButton button;

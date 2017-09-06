@@ -7,6 +7,7 @@ import java.util.List;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.gui.GUI;
+import nightgames.gui.RunnableButton;
 import nightgames.requirements.Requirement;
 
 public class CombatScene {
@@ -27,7 +28,16 @@ public class CombatScene {
         c.write("<br/>");
         c.write(message.provide(c, npc, c.getOpponent(npc)));
         c.updateAndClearMessage();
-        choices.forEach(choice -> c.choose(npc, choice.getChoice(), choice, GUI.gui));
+        choices.forEach(choice -> {
+            RunnableButton button = new RunnableButton(choice.getChoice(), () -> {
+                c.write("<br/>");
+                choice.choose(c, npc);
+                c.updateMessage();
+                c.promptNext(GUI.gui);
+            });
+            GUI.gui.commandPanel.add(button);
+            GUI.gui.commandPanel.refresh();
+        });
     }
 
     public boolean meetsRequirements(Combat c, NPC npc) {

@@ -10,7 +10,9 @@ import nightgames.characters.body.mods.*;
 import nightgames.global.*;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
+import nightgames.gui.ContinueButton;
 import nightgames.gui.GUI;
+import nightgames.gui.KeyableButton;
 import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -88,7 +90,6 @@ public class Combat extends Observable implements Cloneable {
         getCombatantData(p2).setManager(Match.getMatch().getMatchData().getDataFor(p2).getArmManager());
         location = loc;
         message = "";
-        paused = false;
         processedEnding = false;
         timer = 0;
         images = new HashMap<String, String>();
@@ -190,8 +191,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private void resumeNoClearFlag() {
-        paused = false;
-        while(!paused && !turn()) {}
+        while(!turn()) {}
         if (beingObserved) {
             if (phase != CombatPhase.ENDED) {
                 updateAndClearMessage();
@@ -833,7 +833,6 @@ public class Combat extends Observable implements Cloneable {
                     new PussyWorship(null), new Anilingus(null));
     public static final String TEMPT_WORSHIP_BONUS = "TEMPT_WORSHIP_BONUS";
     public boolean combatMessageChanged;
-    private boolean paused;
     private boolean processedEnding;
 
     public Optional<Skill> getRandomWorshipSkill(Character self, Character other) {
@@ -1266,9 +1265,7 @@ public class Combat extends Observable implements Cloneable {
                             && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
                 return false;
             } else {
-                if (!paused) {
-                    this.promptNext(GUI.gui);
-                }
+                this.promptNext(GUI.gui);
                 return true;
             }
         } else {
@@ -1703,16 +1700,17 @@ public class Combat extends Observable implements Cloneable {
         return phase == CombatPhase.FINISHED_SCENE || phase == CombatPhase.ENDED;
     }
 
-    public void pause() {
-        this.paused = true;
-    }
-
     public void promptNext(GUI gui) {
         gui.clearCommand();
-        gui.addButtonWithPause(new RunnableButton("Next", () -> {
+        ContinueButton next = new ContinueButton("Next");
+        gui.addButton(next);
+        try {
+            next.await();
             gui.clearCommand();
-            resume();
-        }));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
     }
 
     public void endCombat(GUI gui) {
@@ -1723,18 +1721,6 @@ public class Combat extends Observable implements Cloneable {
         gui.clearText();
         gui.clearImage();
         gui.showMap();
-        Match.getMatch().resume();
-    }
-
-    public void choose(Character npc, String message, CombatSceneChoice choice, GUI gui) {
-        RunnableButton button = new RunnableButton(message, () -> {
-            write("<br/>");
-            choice.choose(this, npc);
-            updateMessage();
-            this.promptNext(GUI.gui);
-        });
-        gui.commandPanel.add(button);
-        gui.commandPanel.refresh();
     }
 
     // Combat spectate ???

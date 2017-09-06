@@ -70,7 +70,7 @@ class PlayerLevelUp {
             List<ValueButton<Trait>> featButtons =
                             traitChoices.map(feat -> new ValueButton<>(feat, feat.toString(), chosenTrait))
                                             .collect(Collectors.toList());
-            featButtons.forEach(button -> button.setToolTipText(button.value.getDesc()));
+            featButtons.forEach(button -> button.setToolTipText(button.getValue().getDesc()));
             CancelButton skipButton = new CancelButton("Skip", chosenTrait);
             skipButton.setToolTipText("Save perk points for next level-up");
             gui.addButton(skipButton);

@@ -8,11 +8,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class ContinueButton extends ValueButton<String> {
     private static final long serialVersionUID = -7842752203787391615L;
-    private final String label;
 
     public ContinueButton(String label) {
         super(null, label, new CompletableFuture<>());
-        this.label = label;
 
     }
 
@@ -22,9 +20,5 @@ public class ContinueButton extends ValueButton<String> {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override public String getText() {
-        return label;
     }
 }

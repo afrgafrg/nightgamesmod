@@ -1057,7 +1057,7 @@ public class GUI extends JFrame implements Observer {
     }
 
     public <T> void prompt(List<LabeledValue<T>> choices, CompletableFuture<T> future) {
-        List<KeyableButton> buttons = choices.stream().map(choice -> new ValueButton<T>(choice, future)).collect(
+        List<KeyableButton> buttons = choices.stream().map(choice -> new ValueButton<>(choice, future)).collect(
                         Collectors.toList());
         prompt(buttons);
     }

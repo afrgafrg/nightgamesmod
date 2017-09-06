@@ -7,28 +7,23 @@ import java.util.concurrent.ExecutionException;
 /**
  * A button that completes a future on click.
  */
-public class ValueButton<T> extends KeyableButton {
+public class ValueButton<T> extends RunnableButton {
     private static final long serialVersionUID = -2698381865901846194L;
-    public final T value;
-    public final CompletableFuture<T> future;
+    private final T value;
+    protected final CompletableFuture<T> future;
+
 
     public ValueButton(LabeledValue<T> value, CompletableFuture<T> future) {
-        super(formatHTMLMultiline(value.getLabel(), ""));
-        this.value = value.getValue();
-        this.future = future;
-        getButton().addActionListener(evt -> complete());
-        resetFontSize();
+        this(value.getValue(), value.getLabel(), future);
     }
 
     public ValueButton(T value, String label, CompletableFuture<T> future) {
-        this(new LabeledValue<>(value, label), future);
+        super(label, () -> future.complete(value));
+        this.value = value;
+        this.future = future;
     }
 
-    private void complete() {
-        future.complete(value);
-    }
-
-    @Override public String getText() {
-        return getButton().getText();
+    public T getValue() {
+        return value;
     }
 }

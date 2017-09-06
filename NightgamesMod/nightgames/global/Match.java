@@ -1,5 +1,6 @@
 package nightgames.global;
 
+import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.areas.Cache;
@@ -23,12 +24,12 @@ public class Match {
     public final CountDownLatch matchComplete; // Counts down when match is over
     public static Set<Character> resting = new HashSet<>();
     public static Match match;
-    static HashMap<String, MatchAction> matchActions = null;
+    static Map<String, MatchAction> matchActions = null;
     protected int time;
     protected int dropOffTime;
-    protected HashMap<String, Area> map;
-    public ArrayList<Character> combatants;
-    protected HashMap<Character, Integer> score;
+    protected Map<String, Area> map;
+    public List<Character> combatants;
+    protected Map<Character, Integer> score;
     protected int index;
     protected boolean pause;
     public Modifier condition;
@@ -36,12 +37,10 @@ public class Match {
 
     public Match(Collection<Character> combatants, Modifier condition) {
         matchComplete = new CountDownLatch(1);
-        this.combatants = new ArrayList<Character>();
-        for (Character c : combatants) {
-            this.combatants.add(c);
-        }
+        this.combatants = new ArrayList<>();
+        this.combatants.addAll(combatants);
         matchData = new MatchData();
-        score = new HashMap<Character, Integer>();
+        score = new HashMap<>();
         this.condition = condition;
         map = MapSchool.buildMap();
         for (Character combatant : combatants) {
@@ -96,7 +95,6 @@ public class Match {
             withEffect.ifPresent(s -> GameState.gameState.characterPool.getPlayer().addNonCombat(s));
         });
         startMatchGui(GUI.gui);
-        round();
     }
 
     public static HashSet<Character> getParticipants() {
@@ -118,41 +116,36 @@ public class Match {
         return MatchType.NORMAL;
     }
 
-    public void round() {
-        while (time < 36) {
-            if (index >= combatants.size()) {
-                index = 0;
-                if (meanLvl() > 3 && Random.random(10) + dropOffTime >= 12) {
-                    dropPackage();
-                    dropOffTime = 0;
-                }
-                if (Flag.checkFlag(Flag.challengeAccepted) && (time == 6 || time == 12 || time == 18 || time == 24)) {
-                    dropChallenge();
-                }
-                time++;
-                dropOffTime++;
-            }
+    public void matchLoop(int endTime) throws InterruptedException {
+        assert (combatants.size() > 0);
+        while (time < endTime) {
             getAreas().forEach(area -> area.setPinged(false));
-            while (index < combatants.size()) {
-                GUI.gui.refresh();
-                if (combatants.get(index).state != State.quit) {
-                    Character self = combatants.get(index);
-                    self.upkeep();
-                    manageConditions(self);
-                    self.move();
-                    if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE) && index < combatants.size()) {
-                        System.out.println(self.getTrueName() + (self.is(Stsflag.disguised) ? "(Disguised)" : "") + " is in "
-                                        + self.location().name);
-                    }
+            for (Character combatant : combatants) {
+                if (combatant.state == State.quit) {
+                    break;
                 }
-                index++;
-                if (pause) {
-                    return;
+                combatant.upkeep();
+                manageConditions(combatant);
+                Optional<Action> move;
+                do {
+                    move = combatant.move();
+                    move.ifPresent(combatant::doAction);
+                } while (move.map(Action::freeAction).orElse(false));
+                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                    System.out.println(combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
+                                    + " is in " + combatant.location().name);
                 }
             }
+            if (meanLvl() > 3 && Random.random(10) + dropOffTime >= 12) {
+                dropPackage();
+                dropOffTime = 0;
+            }
+            if (Flag.checkFlag(Flag.challengeAccepted) && (time == 6 || time == 12 || time == 18 || time == 24)) {
+                dropChallenge();
+            }
+            time++;
+            dropOffTime++;
         }
-        end();
-    }
 
     public void pause() {
         pause = true;
@@ -335,7 +328,6 @@ public class Match {
         }
         human.travel(new Area("Retirement", "", Movement.retire));
         human.state = State.quit;
-        resume();
     }
 
     public Collection<Movement> getResupplyAreas(Character ch) {

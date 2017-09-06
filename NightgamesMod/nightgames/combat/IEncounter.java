@@ -1,18 +1,18 @@
 package nightgames.combat;
 
 import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.global.Encs;
 import nightgames.global.GameState;
-import nightgames.global.Match;
 import nightgames.gui.GUI;
-import nightgames.gui.KeyableButton;
-import nightgames.gui.RunnableButton;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 import nightgames.trap.Trap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static nightgames.requirements.RequirementShortcuts.item;
 
@@ -40,64 +40,154 @@ public interface IEncounter {
 
     void watch();
 
+    // TODO: Refactor these prompts into a single method.
     default void promptIntervene(Character p1, Character p2, GUI gui) {
-        List<KeyableButton> choices = Arrays.asList(
-                        new RunnableButton("Help " + p1.getName(), () -> {
-                            intrude(GameState.gameState.characterPool.getPlayer(), p1);
-                        }),
-                        new RunnableButton("Help " + p2.getName(), () -> {
-                            intrude(GameState.gameState.characterPool.getPlayer(), p2);
-                        }),
-                        new RunnableButton("Watch them fight", () -> {
-                            watch();
-                        }));
-        gui.prompt(choices);
-        Match.getMatch().pause();
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = Arrays.asList(new LabeledValue<>("p1", "Help " + p1.getName()),
+                        new LabeledValue<>("p2", "Help " + p2.getName()),
+                        new LabeledValue<>("Watch", "Watch them fight"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "p1":
+                    intrude(player, p1);
+                    break;
+                case "p2":
+                    intrude(player, p2);
+                    break;
+                case "Watch":
+                    watch();
+                    break;
+                default:
+                    throw new AssertionError("Unknown Intervene choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     default void promptShower(Character target, GUI gui) {
-        List<KeyableButton> choices = new ArrayList<>();
-        choices.add(EncounterButton.encounterButton("Suprise Her", this, target, Encs.showerattack));
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Surprise", "Surprise Her"));
         if (!target.mostlyNude()) {
-            choices.add(EncounterButton.encounterButton("Steal Clothes", this, target, Encs.stealclothes));
+            choices.add(new LabeledValue<>("Steal", "Steal Clothes"));
         }
-        if (GameState.gameState.characterPool.human.has(Item.Aphrodisiac)) {
-            choices.add(EncounterButton.encounterButton("Use Aphrodisiac", this, target,
-                            Encs.aphrodisiactrick));
+        if (player.has(Item.Aphrodisiac)) {
+            choices.add(new LabeledValue<>("Aphrodisiac", "Use Aphrodisiac"));
         }
-        choices.add(EncounterButton.encounterButton("Do Nothing", this, target, Encs.wait));
-        gui.prompt(choices);
-        Match.getMatch().pause();
+        choices.add(new LabeledValue<>("Wait", "Do Nothing"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Surprise":
+                    parse(Encs.showerattack, player, target);
+                    break;
+                case "Steal":
+                    parse(Encs.stealclothes, player, target);
+                    break;
+                case "Aphrodisiac":
+                    parse(Encs.aphrodisiactrick, player, target);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Shower choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     default void promptOpportunity(Character target, Trap trap, GUI gui) {
-        List<KeyableButton> choices = Arrays.asList(
-        new RunnableButton("Attack " + target.getName(), () -> {
-            parse(Encs.capitalize, GameState.gameState.characterPool.getPlayer(), target, trap);
-            Match.getMatch().resume();
-        }),
-        EncounterButton.encounterButton("Wait", this, target, Encs.wait));
-        gui.prompt(choices);
-        Match.getMatch().pause();
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Attack", "Attack" + target.getName()));
+        choices.add(new LabeledValue<>("Wait", "Wait"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Attack":
+                    parse(Encs.capitalize, player, target, trap);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Opportunity choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     default void promptFF(Character target, GUI gui) {
-        List<KeyableButton> choices = new ArrayList<>();
-        choices.add(EncounterButton.encounterButton("Fight", this, target, Encs.fight));
-        choices.add(EncounterButton.encounterButton("Flee", this, target, Encs.flee));
-        if (item(Item.SmokeBomb, 1).meets(null, GameState.gameState.characterPool.human, null)) {
-            choices.add(EncounterButton.encounterButton("Smoke Bomb", this, target, Encs.smoke));
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Fight", "Fight"));
+        choices.add(new LabeledValue<>("Flee", "Flee"));
+        if (item(Item.SmokeBomb, 1).meets(null, player, null)) {
+            choices.add(new LabeledValue<>("Smoke", "Smoke Bomb"));
         }
-        gui.prompt(choices);
-        Match.getMatch().pause();
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Fight":
+                    parse(Encs.fight, player, target);
+                    break;
+                case "Flee":
+                    parse(Encs.flee, player, target);
+                    break;
+                case "Smoke":
+                    parse(Encs.smoke, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Fight/Flight choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     default void promptAmbush(Character target, GUI gui) {
-        List<KeyableButton> choices = new ArrayList<>();
-        choices.add(EncounterButton.encounterButton("Attack " + target.getName(), this, target, Encs.ambush));
-        choices.add(EncounterButton.encounterButton("Wait", this, target, Encs.wait));
-        choices.add(EncounterButton.encounterButton("Flee", this, target, Encs.fleehidden));
-        gui.prompt(choices);
-        Match.getMatch().pause();
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Attack", "Attack " + target.getName()));
+        choices.add(new LabeledValue<>("Wait", "Wait"));
+        choices.add(new LabeledValue<>("Flee", "Flee"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Attack":
+                    parse(Encs.ambush, player, target);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                case "Flee":
+                    parse(Encs.fleehidden, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Ambush choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

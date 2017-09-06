@@ -519,7 +519,7 @@ public enum Trait {
 
     public static List<Trait> getFeats(Character c) {
         List<Trait> a = traitRequirements.availTraits(c);
-        a.sort((first, second) -> first.toString().compareTo(second.toString()));
+        a.sort(Comparator.comparing(Trait::toString));
         return a;
     }
 

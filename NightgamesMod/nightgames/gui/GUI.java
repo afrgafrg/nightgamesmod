@@ -1042,11 +1042,6 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void addButtonWithPause(KeyableButton button) {
-        addButton(button);
-        Match.getMatch().pause();
-    }
-
     public void addButton(KeyableButton button) {
         commandPanel.add(button);
         commandPanel.refresh();
@@ -1074,6 +1069,11 @@ public class GUI extends JFrame implements Observer {
         CompletableFuture<T> future = new CompletableFuture<>();
         prompt(choices, future);
         return future;
+    }
+
+    public <T> CompletableFuture<T> promptFuture(List<T> choices, Function<T, String> nameFunc) {
+        return promptFuture(choices.stream().map(choice -> new LabeledValue<>(choice, nameFunc.apply(choice)))
+                        .collect(Collectors.toList()));
     }
 
     public ContinueButton next(String label) {

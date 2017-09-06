@@ -12,14 +12,11 @@ import nightgames.characters.body.mods.GooeyMod;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
 import nightgames.combat.Result;
-import nightgames.daytime.Daytime;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
-import nightgames.gui.ActionButton;
-import nightgames.gui.GUI;
-import nightgames.gui.RunnableButton;
+import nightgames.gui.*;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Stage;
@@ -33,6 +30,7 @@ import nightgames.status.*;
 import nightgames.trap.Trap;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Player extends Character {
@@ -66,75 +64,6 @@ public class Player extends Character {
     public Player(JsonObject playerJson) {
         this();
         this.load(playerJson);
-    }
-
-    public static void ding(GUI gui) {
-        if (gui.combat != null) {
-            gui.combat.pause();
-        }
-        Player player = GameState.gameState.characterPool.human;
-        if (player.availableAttributePoints > 0) {
-            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, player.availableAttributePoints + " Attribute Points remain.\n");
-            gui.clearCommand();
-            for (Attribute att : player.att.keySet()) {
-                if (Attribute.isTrainable(player, att) && player.getPure(att) > 0) {
-                    gui.commandPanel.add(AttributeButton.attributeButton(gui, att));
-                }
-            }
-            gui.commandPanel.add(AttributeButton.attributeButton(gui, Attribute.Willpower));
-            if (Match.getMatch() != null) {
-                Match.getMatch().pause();
-            }
-            gui.commandPanel.refresh();
-        } else if (player.traitPoints > 0 && !gui.skippedFeat) {
-            gui.clearCommand();
-            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, "You've earned a new perk. Select one below.");
-            for (Trait feat : Trait.getFeats(player)) {
-                if (!player.has(feat)) {
-                    RunnableButton button = new RunnableButton(feat.toString(), () -> {
-                        gui.clearTextIfNeeded();
-                        GUI.gui.message("Gained feat: " + feat.toString());
-                        GameState.gameState.characterPool.getPlayer().add(feat);
-                        GameState.gameState.characterPool.getPlayer().adjustTraits();
-                        GameState.gameState.characterPool.getPlayer().traitPoints -= 1;
-                        gui.refresh();
-                        ding(gui);
-                    });
-                    button.getButton().setToolTipText(feat.getDesc());
-                    gui.commandPanel.add(button);
-                }
-                gui.commandPanel.refresh();
-            }
-            RunnableButton button = new RunnableButton("Skip", () -> {
-                gui.skippedFeat = true;
-                gui.clearTextIfNeeded();
-                ding(gui);
-            });
-            button.getButton().setToolTipText("Save the trait point for later.");
-            gui.commandPanel.add(button);
-            gui.commandPanel.refresh();
-        } else {
-            gui.skippedFeat = false;
-            gui.clearCommand();
-            player.adjustTraits();
-            Formatter.writeIfCombatUpdateImmediately(gui.combat, player, "");
-            player.finishDing();
-            if (player.getLevelsToGain() > 0) {
-                player.actuallyDing(gui.combat);
-                ding(gui);
-            } else {
-                if (gui.combat != null) {
-                    gui.combat.resume();
-                } else if (Match.getMatch() != null) {
-                    gui.clearPortrait();
-                    gui.clearImage();
-                    gui.showMap();
-                    Match.getMatch().resume();
-                } else if (Daytime.day != null) {
-                    Daytime.getDay().plan();
-                }
-            }
-        }
     }
 
     @Override
@@ -191,8 +120,7 @@ public class Player extends Character {
             b.append("<br/>Traits:<br/>");
             List<Trait> traits = new ArrayList<>(getTraits());
             traits.removeIf(t -> t.isOverridden(this));
-            traits.sort((first, second) -> first.toString()
-                                                .compareTo(second.toString()));
+            traits.sort(Comparator.comparing(Trait::toString));
             b.append(traits.stream()
                            .map(Object::toString)
                            .collect(Collectors.joining(", ")));
@@ -460,26 +388,52 @@ public class Player extends Character {
         }
     }
 
-    @Override
-    public void ding(Combat c) {
-        levelsToGain += 1;
-        if (levelsToGain == 1) {
-            actuallyDing(c);
-            if (cloned == 0) {
-                ding(gui);
-            }
-        }
     }
 
-    public void actuallyDing(Combat c) {
+    @Override
+    public void ding(Combat c) {
         level += 1;
+        levelsToGain += 1;
         getStamina().gain(getGrowth().stamina);
         getArousal().gain(getGrowth().arousal);
-        availableAttributePoints += getGrowth().attributes[Math.min(rank, getGrowth().attributes.length-1)];
-        Formatter.writeIfCombatUpdateImmediately(c, this, "You've gained a Level!<br/>Select which attributes to increase.");
+        availableAttributePoints += getGrowth().attributes[Math.min(rank, getGrowth().attributes.length - 1)];
         if (getLevel() % 3 == 0 && level < 10 || (getLevel() + 1) % 2 == 0 && level > 10) {
             traitPoints += 1;
         }
+    }
+
+    @Override public void addLevels(Combat c, int levelsToGain) {
+        super.addLevels(c, levelsToGain);
+        spendLevels(c);
+    }
+
+    private void spendLevels(Combat c) {
+        assert (cloned == 0);
+        Formatter.writeIfCombatUpdateImmediately(c, this,
+                        String.format("You've leveled up %d times!<br/>Select which attributes to increase.", levelsToGain));
+        PlayerLevelUp levelUp = new PlayerLevelUp(this, this.availableAttributePoints, this.traitPoints);
+        try {
+            levelUp.getHumanChoices(gui);
+            this.applyLevelUp(levelUp);
+            levelsToGain = 0;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void applyLevelUp(PlayerLevelUp levelUp) {
+        for (Attribute att : levelUp.attributeIncreases) {
+            this.mod(att, 1);
+        }
+        this.availableAttributePoints = levelUp.remainingAttributePoints();
+        for (Trait feat : levelUp.newTraits) {
+            this.add(feat);
+        }
+        this.traitPoints = levelUp.remainingTraitPoints();
     }
 
     @Override
@@ -953,11 +907,4 @@ public class Player extends Character {
         }
     }
 
-    public int getLevelsToGain() {
-        return levelsToGain;
-    }
-
-    public void finishDing() {
-        levelsToGain -= 1;
-    }
 }

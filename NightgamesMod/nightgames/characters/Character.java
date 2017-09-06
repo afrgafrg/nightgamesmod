@@ -162,6 +162,7 @@ public abstract class Character extends Observable implements Cloneable {
         }
     }
 
+    // TODO: Java's clone() method is pretty fiddly. For a class as mutable and reference-laden as Character(), it is probably preferable to use a copy constructor.
     @Override
     public Character clone() throws CloneNotSupportedException {
         Character c = (Character) super.clone();
@@ -1138,8 +1139,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public LevelUpData getLevelUpFor(int level) {
-        levelPlan.putIfAbsent(level, new LevelUpData());
-        return levelPlan.get(level);
+        return levelPlan.computeIfAbsent(level, k -> new LevelUpData());
     }
 
     public void modAttributeDontSaveData(Attribute a, int i) {
@@ -1540,6 +1540,8 @@ public abstract class Character extends Observable implements Cloneable {
 
     public abstract void detect();
 
+    public abstract void doAction(Action action);
+
     public abstract void faceOff(Character opponent, IEncounter enc);
 
     public abstract void spy(Character opponent, IEncounter enc);
@@ -1562,7 +1564,7 @@ public abstract class Character extends Observable implements Cloneable {
      */
     public abstract boolean act(Combat c);
 
-    public abstract void move();
+    public abstract Optional<Action> move() throws InterruptedException;
 
     public abstract void draw(Combat c, Result flag);
 
@@ -3691,6 +3693,12 @@ public abstract class Character extends Observable implements Cloneable {
                         + ", outfit=" + outfit + ", traits=" + traits + ", inventory=" + inventory + ", flags=" + flags
                         + ", trophy=" + trophy + ", closet=" + closet + ", body=" + body + ", availableAttributePoints="
                         + availableAttributePoints + '}';
+    }
+
+    public void addLevels(Combat c, int levelsToGain) {
+        for(int i = 0; i < levelsToGain; i++) {
+            ding(c);
+        }
     }
 
     public int getMaxWillpowerPossible() {

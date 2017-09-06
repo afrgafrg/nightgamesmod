@@ -1,7 +1,9 @@
 package nightgames.characters;
 
 import java.util.Arrays;
+import java.util.Optional;
 
+import nightgames.actions.Action;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.IEncounter;
@@ -24,6 +26,10 @@ public class DummyCharacter extends Character {
 
     @Override
     public void detect() {}
+
+    @Override public void doAction(Action action) {
+
+    }
 
     @Override
     public void faceOff(Character opponent, IEncounter enc) {}
@@ -59,7 +65,9 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void move() {}
+    public Optional<Action> move() {
+        return null;
+    }
 
     @Override
     public void draw(Combat c, Result flag) {}

@@ -47,7 +47,7 @@ class PlayerLevelUp {
 
             CompletableFuture<Attribute> chosenAttribute = gui.promptFuture(attributeChoices, Attribute::name);
             CancelButton skipButton = new CancelButton("Skip", chosenAttribute);
-            skipButton.setHotkeyTextTo("Save attribute points for next level-up.");
+            skipButton.setToolTipText("Save attribute points for next level-up.");
             gui.addButton(skipButton);
 
             try {
@@ -70,9 +70,9 @@ class PlayerLevelUp {
             List<ValueButton<Trait>> featButtons =
                             traitChoices.map(feat -> new ValueButton<>(feat, feat.toString(), chosenTrait))
                                             .collect(Collectors.toList());
-            featButtons.forEach(button -> button.setHotkeyTextTo(button.value.getDesc()));
+            featButtons.forEach(button -> button.setToolTipText(button.value.getDesc()));
             CancelButton skipButton = new CancelButton("Skip", chosenTrait);
-            skipButton.setHotkeyTextTo("Save perk points for next level-up");
+            skipButton.setToolTipText("Save perk points for next level-up");
             gui.addButton(skipButton);
             try {
                 Trait trait = chosenTrait.get();

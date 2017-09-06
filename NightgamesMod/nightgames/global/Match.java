@@ -146,14 +146,6 @@ public class Match {
             time++;
             dropOffTime++;
         }
-
-    public void pause() {
-        pause = true;
-    }
-
-    public void resume() {
-        pause = false;
-        round();
     }
 
     public void end() {

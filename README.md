@@ -20,7 +20,15 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
 1. **[STATIC DISCHARGE]** Reduce reliance on static fields and methods. Static members make testing harder and can introduce spooky action at a distance.
 
-1. Concurrency is hard! Build infrastructure to make it easy to do things like wait for user input.
+1. **IT'S BETTER NOW AT LEAST** Concurrency is hard! Build infrastructure to make it easy to do things like wait for user input.
+
+1. **DONE** Make the night-time match loop explicit.
+
+1. Make the combat loop explicit.
+
+1. Make the daytime loop explicit.
+
+1. Fix everything I broke in the previous steps.
 
 1. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
 

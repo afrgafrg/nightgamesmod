@@ -24,7 +24,7 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
 1. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
 
-1. Migrate combat to an event-based system, or at least some sort of system. Will enable step 8.
+1. Migrate combat to an event-based system, or at least some sort of system. Will enable the next step.
 
 1. Make the effects of a trait or status viewable in a single location.
 

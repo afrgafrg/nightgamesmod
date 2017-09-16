@@ -112,10 +112,14 @@ public class Match {
         return match;
     }
 
+    // FIXME: Wrong NPCs in match after game load!
+    // FIXME: GUI redraws like crazy during match.
     public void matchLoop(int endTime) throws InterruptedException {
         assert (combatants.size() > 0);
         while (time < endTime) {
             getAreas().forEach(area -> area.setPinged(false));
+            GUI.gui.refresh();
+            // select move
             for (Character combatant : combatants) {
                 if (combatant.state == State.quit) {
                     break;
@@ -131,6 +135,15 @@ public class Match {
                     System.out.println(combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
                                     + " is in " + combatant.location().name);
                 }
+            }
+            // Find encounters
+            List<Encounter> encounters = combatants.stream().map(Character::location).distinct()
+                            .map(Area::encounter).filter(Optional::isPresent).map(Optional::get)
+                            .collect(Collectors.toList());
+            // respond to encounters
+            for (Encounter encounter : encounters) {
+                // handle encounter
+                encounter.resolve();
             }
             if (meanLvl() > 3 && Random.random(10) + dropOffTime >= 12) {
                 dropPackage();
@@ -309,8 +322,8 @@ public class Match {
     public void quit() {
         Character human = GameState.gameState.characterPool.getPlayer();
         if (human.state == State.combat) {
-            if (human.location().fight.getCombat() != null) {
-                human.location().fight.getCombat().forfeit(human);
+            if (human.location().activeEncounter.getCombat().isPresent()) {
+                human.location().activeEncounter.getCombat().get().forfeit(human);
             }
             human.location().endEncounter();
         }

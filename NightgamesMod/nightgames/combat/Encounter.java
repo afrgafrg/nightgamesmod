@@ -2,28 +2,36 @@ package nightgames.combat;
 
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
-import nightgames.characters.Attribute;
+import nightgames.characters.*;
 import nightgames.characters.Character;
-import nightgames.characters.State;
-import nightgames.characters.Trait;
 import nightgames.global.*;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 import nightgames.status.*;
 import nightgames.trap.Spiderweb;
 import nightgames.trap.Trap;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 
 import static nightgames.combat.Combat.Initiation.ambushRegular;
 import static nightgames.combat.Combat.Initiation.ambushStrip;
+import static nightgames.requirements.RequirementShortcuts.item;
 
-public class Encounter implements Serializable, IEncounter {
+/**
+ * An Encounter is a meeting between two or more characters in one area during a match.
+ */
+public class Encounter implements Serializable {
 
     private static final long serialVersionUID = 3122246133619156539L;
-    protected Character p1;
-    protected Character p2;
+
+    List<Character> participants;
     protected boolean p1ff;
     protected boolean p2ff;
     protected transient Optional<String> p1Guaranteed;
@@ -32,17 +40,44 @@ public class Encounter implements Serializable, IEncounter {
     protected transient Combat fight;
     protected int checkin;
     protected int fightTime;
+    protected CountDownLatch waitForFinish;
 
-    public Encounter(Character first, Character second, Area location) {
+    public Encounter(Area location, Character first, Character second) {
+        this(location, Arrays.asList(first, second));
+    }
+
+    // TODO: Figure out what to do with encounters involving more than three characters.
+    public Encounter(Area location, List<Character> characters) {
         this.location = location;
-        p1 = first;
-        p2 = second;
+        participants = new ArrayList<>(characters);
+        assert participants.size() >= 2;
         checkin = 0;
         fight = null;
         p1Guaranteed = Optional.empty();
         p2Guaranteed = Optional.empty();
-        checkEnthrall(p1, p2);
-        checkEnthrall(p2, p1);
+        checkEnthrall(getP1(), getP2());
+        checkEnthrall(getP2(), getP1());
+        waitForFinish = new CountDownLatch(1);
+    }
+
+    public Character getP1() {
+        return participants.get(0);
+    }
+
+    public Character getP2() {
+        return participants.get(1);
+    }
+
+    public Optional<Character> getIntervener() {
+        if (participants.size() > 2) {
+            return Optional.of(participants.get(2));
+        }
+        return Optional.empty();
+    }
+
+    public void intervene(Character intervener) {
+        assert participants.size() == 2;
+        participants.add(intervener);
     }
 
     protected void checkEnthrall(Character p1, Character p2) {
@@ -73,6 +108,11 @@ public class Encounter implements Serializable, IEncounter {
     }
 
     public boolean spotCheck() {
+        final Character p1 = getP1();
+        final Character p2 = getP2();
+        // If both players are eligible, first check for various one-sided encounters. Second, see who's observant enough
+        // to spot the other. If both spot each other, both face off (decide fight or flight). If only one spots the other,
+        // the other starts flat-footed. If neither spot each other, they move on, no one the wiser.
         if (p1.eligible(p2) && p2.eligible(p1)) {
             if (p1.state == State.shower) {
                 p2.showerScene(p1, this);
@@ -158,7 +198,7 @@ public class Encounter implements Serializable, IEncounter {
     }
 
     protected void fightOrFlight(Character p, boolean fight, Optional<String> guaranteed) {
-        if (p == p1) {
+        if (p == getP1()) {
             p1ff = fight;
             p1Guaranteed = guaranteed;
             checkin++;
@@ -170,104 +210,104 @@ public class Encounter implements Serializable, IEncounter {
         if (checkin >= 2) {
             if (p1ff && p2ff) {
                 startFightTimer();
-                if (p1.human() || p2.human()) {
-                    this.fight = Combat.beginCombat(p1, p2, GUI.gui);
+                if (getP1().human() || getP2().human()) {
+                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                 } else {
-                    this.fight = new Combat(p1, p2, location);
+                    this.fight = new Combat(getP1(), getP2(), location);
                 }
             } else if (p1ff) {
                 if (p1Guaranteed.isPresent() && !p2Guaranteed.isPresent()) {
-                    if (p1.human() || p2.human())
+                    if (getP1().human() || getP2().human())
                         GUI.gui.message(p1Guaranteed.get());
                     startFightTimer();
-                    this.fight = Combat.beginCombat(p1, p2, GUI.gui);
+                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                 } else if (p2Guaranteed.isPresent()) {
-                    if (p1.human() || p2.human())
+                    if (getP1().human() || getP2().human())
                         GUI.gui.message(p2Guaranteed.get());
-                    p2.flee(location);
-                } else if (p2.check(Attribute.Speed, 10 + p1.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? 5 : 0)
-                                + (p2.has(Trait.sprinter) ? -5 : 0))) {
-                    if (p1.human()) {
+                    getP2().flee(location);
+                } else if (getP2().check(Attribute.Speed, 10 + getP1().get(Attribute.Speed) + (getP1().has(Trait.sprinter) ? 5 : 0)
+                                + (getP2().has(Trait.sprinter) ? -5 : 0))) {
+                    if (getP1().human()) {
                         GUI.gui
-                              .message(p2.getName() + " dashes away before you can move.");
+                              .message(getP2().getName() + " dashes away before you can move.");
                     }
-                    p2.flee(location);
+                    getP2().flee(location);
                 } else {
                     startFightTimer();
-                    if (p1.human() || p2.human()) {
-                        if (p1.human()) {
+                    if (getP1().human() || getP2().human()) {
+                        if (getP1().human()) {
                             GUI.gui
-                                  .message(p2.getName() + " tries to run, but you stay right on her heels and catch her.");
+                                  .message(getP2().getName() + " tries to run, but you stay right on her heels and catch her.");
                         } else {
                             GUI.gui
-                                  .message("You quickly try to escape, but " + p1.getName()
+                                  .message("You quickly try to escape, but " + getP1().getName()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Combat.beginCombat(p1, p2, GUI.gui);
+                        this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                     } else {
 
                         // this.fight=new NullGUI().beginCombat(p1,p2);
-                        this.fight = new Combat(p1, p2, location);
+                        this.fight = new Combat(getP1(), getP2(), location);
                     }
                 }
             } else if (p2ff) {
                 if (p2Guaranteed.isPresent() && !p1Guaranteed.isPresent()) {
-                    if (p1.human() || p2.human())
+                    if (getP1().human() || getP2().human())
                         GUI.gui.message(p2Guaranteed.get());
                     startFightTimer();
-                    this.fight = Combat.beginCombat(p1, p2, GUI.gui);
+                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                 } else if (p1Guaranteed.isPresent()) {
-                    if (p1.human() || p2.human())
+                    if (getP1().human() || getP2().human())
                         GUI.gui.message(p1Guaranteed.get());
-                    p1.flee(location);
-                } else if (p1.check(Attribute.Speed, 10 + p2.get(Attribute.Speed) + (p1.has(Trait.sprinter) ? -5 : 0)
-                                + (p2.has(Trait.sprinter) ? 5 : 0))) {
-                    if (p2.human()) {
+                    getP1().flee(location);
+                } else if (getP1().check(Attribute.Speed, 10 + getP2().get(Attribute.Speed) + (getP1().has(Trait.sprinter) ? -5 : 0)
+                                + (getP2().has(Trait.sprinter) ? 5 : 0))) {
+                    if (getP2().human()) {
                         GUI.gui
-                              .message(p1.getName() + " dashes away before you can move.");
+                              .message(getP1().getName() + " dashes away before you can move.");
                     }
-                    p1.flee(location);
+                    getP1().flee(location);
                 } else {
                     startFightTimer();
-                    if (p1.human() || p2.human()) {
-                        if (p2.human()) {
+                    if (getP1().human() || getP2().human()) {
+                        if (getP2().human()) {
                             GUI.gui
-                                  .message(p1.getName() + " tries to run, but you stay right on her heels and catch her.");
+                                  .message(getP1().getName() + " tries to run, but you stay right on her heels and catch her.");
                         } else {
                             GUI.gui
-                                  .message("You quickly try to escape, but " + p2.getName()
+                                  .message("You quickly try to escape, but " + getP2().getName()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Combat.beginCombat(p1, p2, GUI.gui);
+                        this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                     } else {
                         // this.fight=new NullGUI().beginCombat(p1,p2);
-                        this.fight = new Combat(p1, p2, location);
+                        this.fight = new Combat(getP1(), getP2(), location);
                     }
                 }
             } else {
-                boolean humanPresent = p1.human() || p2.human();
+                boolean humanPresent = getP1().human() || getP2().human();
                 if (p1Guaranteed.isPresent()) {
                     if (humanPresent) {
                         GUI.gui.message(p1Guaranteed.get());
                     }
-                    p1.flee(location);
+                    getP1().flee(location);
                 } else if (p2Guaranteed.isPresent()) {
                     if (humanPresent) {
                         GUI.gui.message(p2Guaranteed.get());
                     }
-                    p2.flee(location);
-                } else if (p1.get(Attribute.Speed) + Random.random(10) >= p2.get(Attribute.Speed) + Random.random(10)) {
-                    if (p2.human()) {
+                    getP2().flee(location);
+                } else if (getP1().get(Attribute.Speed) + Random.random(10) >= getP2().get(Attribute.Speed) + Random.random(10)) {
+                    if (getP2().human()) {
                         GUI.gui
-                              .message(p1.getName() + " dashes away before you can move.");
+                              .message(getP1().getName() + " dashes away before you can move.");
                     }
-                    p1.flee(location);
+                    getP1().flee(location);
                 } else {
-                    if (p1.human()) {
+                    if (getP1().human()) {
                         GUI.gui
-                              .message(p2.getName() + " dashes away before you can move.");
+                              .message(getP2().getName() + " dashes away before you can move.");
                     }
-                    p2.flee(location);
+                    getP2().flee(location);
                 }
             }
         }
@@ -280,7 +320,7 @@ public class Encounter implements Serializable, IEncounter {
     protected void ambush(Character attacker, Character target) {
         startFightTimer();
         target.addNonCombat(new Flatfooted(target, 3));
-        if (p1.human() || p2.human()) {
+        if (getP1().human() || getP2().human()) {
             fight = Combat.beginCombat(attacker, target, ambushRegular, GUI.gui);
             GUI.gui.message(Formatter.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
         } else {
@@ -316,11 +356,11 @@ public class Encounter implements Serializable, IEncounter {
                                       + "when she sees you. She scrambles out of the tub, but you easily catch her before she can get away.");
             }
         }
-        if (p1.human() || p2.human()) {
-            fight = Combat.beginCombat(p1, p2, ambushStrip, GUI.gui);
+        if (getP1().human() || getP2().human()) {
+            fight = Combat.beginCombat(getP1(), getP2(), ambushStrip, GUI.gui);
         } else {
             // this.fight=new NullGUI().beginCombat(p1,p2);
-            fight = new Combat(p1, p2, location, ambushStrip);
+            fight = new Combat(getP1(), getP2(), location, ambushStrip);
         }
     }
 
@@ -469,22 +509,22 @@ public class Encounter implements Serializable, IEncounter {
     public boolean battle() {
         fightTime--;
         if (fightTime <= 0 && !fight.isEnded()) {
-            fight.go();
+            fight.startScene();
             return true;
         } else {
             return false;
         }
     }
 
-    public Combat getCombat() {
-        return fight;
+    public Optional<Combat> getCombat() {
+        return Optional.ofNullable(fight);
     }
 
     public Character getPlayer(int i) {
         if (i == 1) {
-            return p1;
+            return getP1();
         } else {
-            return p2;
+            return getP2();
         }
     }
 
@@ -514,7 +554,7 @@ public class Encounter implements Serializable, IEncounter {
     public void engage(Combat fight) {
         this.fight = fight;
         if (fight.p1.human() || fight.p2.human()) {
-            fight.watchCombat(GUI.gui);
+            fight.runCombat(GUI.gui);
         }
     }
 
@@ -561,7 +601,7 @@ public class Encounter implements Serializable, IEncounter {
                 return;
         }
     }
-    
+
     private String smokeMessage(Character c) {
         return String.format("%s a smoke bomb and %s.", 
                         Formatter.capitalizeFirstLetter(c.subjectAction("drop", "drops"))
@@ -572,14 +612,188 @@ public class Encounter implements Serializable, IEncounter {
         return Formatter.format("{self:SUBJECT-ACTION:flee} before {other:subject-action:can} notice {self:direct-object}.", c, other);
     }
 
-    @Override
     public boolean checkIntrude(Character c) {
-        return fight != null && !c.equals(p1) && !c.equals(p2);
+        return fight != null && !c.equals(getP1()) && !c.equals(getP2());
     }
 
-    @Override
     public void watch() {
-        fight.watchCombat(GUI.gui);
-        fight.go();
+        watch(GUI.gui);
+    }
+
+    public void watch(GUI gui) {
+        fight.runCombat(gui);
+        fight.runCombat(gui);
+    }
+
+    public void await() throws InterruptedException {
+        waitForFinish.await();
+    }
+
+    public void finish() {
+        waitForFinish.countDown();
+    }
+
+    // TODO: Refactor these prompts into a single method.
+    public void promptIntervene(Character p1, Character p2, GUI gui) {
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = Arrays.asList(new LabeledValue<>("p1", "Help " + p1.getName()),
+                        new LabeledValue<>("p2", "Help " + p2.getName()),
+                        new LabeledValue<>("Watch", "Watch them fight"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "p1":
+                    intrude(player, p1);
+                    break;
+                case "p2":
+                    intrude(player, p2);
+                    break;
+                case "Watch":
+                    watch();
+                    break;
+                default:
+                    throw new AssertionError("Unknown Intervene choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void promptShower(Character target, GUI gui) {
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Surprise", "Surprise Her"));
+        if (!target.mostlyNude()) {
+            choices.add(new LabeledValue<>("Steal", "Steal Clothes"));
+        }
+        if (player.has(Item.Aphrodisiac)) {
+            choices.add(new LabeledValue<>("Aphrodisiac", "Use Aphrodisiac"));
+        }
+        choices.add(new LabeledValue<>("Wait", "Do Nothing"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Surprise":
+                    parse(Encs.showerattack, player, target);
+                    break;
+                case "Steal":
+                    parse(Encs.stealclothes, player, target);
+                    break;
+                case "Aphrodisiac":
+                    parse(Encs.aphrodisiactrick, player, target);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Shower choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void promptOpportunity(Character target, Trap trap, GUI gui) {
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Attack", "Attack" + target.getName()));
+        choices.add(new LabeledValue<>("Wait", "Wait"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Attack":
+                    parse(Encs.capitalize, player, target, trap);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Opportunity choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void promptFF(Character target, GUI gui) {
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Fight", "Fight"));
+        choices.add(new LabeledValue<>("Flee", "Flee"));
+        if (item(Item.SmokeBomb, 1).meets(null, player, null)) {
+            choices.add(new LabeledValue<>("Smoke", "Smoke Bomb"));
+        }
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Fight":
+                    parse(Encs.fight, player, target);
+                    break;
+                case "Flee":
+                    parse(Encs.flee, player, target);
+                    break;
+                case "Smoke":
+                    parse(Encs.smoke, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Fight/Flight choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void promptAmbush(Character target, GUI gui) {
+        Player player = GameState.gameState.characterPool.getPlayer();
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Attack", "Attack " + target.getName()));
+        choices.add(new LabeledValue<>("Wait", "Wait"));
+        choices.add(new LabeledValue<>("Flee", "Flee"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Attack":
+                    parse(Encs.ambush, player, target);
+                    break;
+                case "Wait":
+                    parse(Encs.wait, player, target);
+                    break;
+                case "Flee":
+                    parse(Encs.fleehidden, player, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Ambush choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Based on participant responses, determine whether this encounter results in combat.
+     */
+    public void resolve() throws InterruptedException {
+        // TODO: spotCheck() has a lot of side effects. Refactor them into something less innocuous.
+        boolean startCombat = spotCheck();
+        if (startCombat) {
+            if (fight.isBeingObserved()) {
+                fight.runCombat(GUI.gui);
+            }
+        }
     }
 }

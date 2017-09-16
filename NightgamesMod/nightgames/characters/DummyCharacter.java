@@ -1,15 +1,15 @@
 package nightgames.characters;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import nightgames.actions.Action;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.combat.Encounter;
 import nightgames.combat.Result;
 import nightgames.skills.Tactics;
 import nightgames.trap.Trap;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class DummyCharacter extends Character {
 
@@ -32,10 +32,10 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void faceOff(Character opponent, IEncounter enc) {}
+    public void faceOff(Character opponent, Encounter enc) {}
 
     @Override
-    public void spy(Character opponent, IEncounter enc) {}
+    public void spy(Character opponent, Encounter enc) {}
 
     @Override
     public String describe(int per, Combat c) {
@@ -98,10 +98,10 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void intervene(IEncounter fight, Character p1, Character p2) {}
+    public void intervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
-    public void showerScene(Character target, IEncounter encounter) {}
+    public void showerScene(Character target, Encounter encounter) {}
 
     @Override
     public String getType() {
@@ -120,7 +120,7 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void promptTrap(IEncounter fight, Character target, Trap trap) {
+    public void promptTrap(Encounter fight, Character target, Trap trap) {
     }
 
     @Override

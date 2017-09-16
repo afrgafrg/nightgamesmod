@@ -181,6 +181,7 @@ public class Area implements Serializable {
     }
 
     public void endEncounter() {
+        activeEncounter.finish();
         activeEncounter = null;
     }
 

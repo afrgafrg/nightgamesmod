@@ -65,13 +65,18 @@ public class Combat extends Observable implements Cloneable {
     public Character lastTalked;
     protected int timer;
     public Result state;
-    private HashMap<String, String> images;
+    private Map<String, String> images;
     boolean lastFailed = false;
     private CombatLog log;
     private boolean beingObserved;
     private int postCombatScenesSeen;
     private boolean wroteMessage;
     private boolean cloned;
+    public static List<Skill> WORSHIP_SKILLS = Arrays.asList(new BreastWorship(null), new CockWorship(null), new FootWorship(null),
+                    new PussyWorship(null), new Anilingus(null));
+    public static final String TEMPT_WORSHIP_BONUS = "TEMPT_WORSHIP_BONUS";
+    public boolean combatMessageChanged;
+    private boolean processedEnding;
 
     String imagePath = "";
 
@@ -92,7 +97,7 @@ public class Combat extends Observable implements Cloneable {
         message = "";
         processedEnding = false;
         timer = 0;
-        images = new HashMap<String, String>();
+        images = new HashMap<>();
         p1.state = State.combat;
         p2.state = State.combat;
         postCombatScenesSeen = 0;
@@ -829,12 +834,6 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public static List<Skill> WORSHIP_SKILLS = Arrays.asList(new BreastWorship(null), new CockWorship(null), new FootWorship(null),
-                    new PussyWorship(null), new Anilingus(null));
-    public static final String TEMPT_WORSHIP_BONUS = "TEMPT_WORSHIP_BONUS";
-    public boolean combatMessageChanged;
-    private boolean processedEnding;
-
     public Optional<Skill> getRandomWorshipSkill(Character self, Character other) {
         List<Skill> avail = new ArrayList<Skill>(WORSHIP_SKILLS);
         if (other.has(Trait.piety)) {
@@ -1303,8 +1302,8 @@ public class Combat extends Observable implements Cloneable {
         if (!(p1.human() || p2.human() || intruder.human())) {
             end();
         } else {
-            watchCombat(GUI.gui);
             resumeNoClearFlag();
+            runCombat(GUI.gui);
         }
     }
 
@@ -1723,30 +1722,20 @@ public class Combat extends Observable implements Cloneable {
         gui.showMap();
     }
 
-    // Combat spectate ???
-    public void watchCombat(GUI gui) {
-        gui.showPortrait();
-        gui.combat = this;
-        addObserver(gui);
-        setBeingObserved(true);
-        gui.loadPortrait(this, p1, p2);
-        gui.showPortrait();
-    }
-
     // Combat GUI
     public static Combat beginCombat(Character player, Character enemy, Initiation init, GUI gui) {
         Combat combat = new Combat(player, enemy, player.location(), init);
-        combat.beginCombat(gui);
+        combat.runCombat(gui);
         return combat;
     }
 
     public static Combat beginCombat(Character player, Character enemy, GUI gui) {
         Combat combat = new Combat(player, enemy, player.location());
-        combat.beginCombat(gui);
+        combat.runCombat(gui);
         return combat;
     }
 
-    private void beginCombat(GUI gui) {
+    public void runCombat(GUI gui) {
         addObserver(gui);
         setBeingObserved(true);
         gui.loadPortrait(this, this.p1, this.p2);

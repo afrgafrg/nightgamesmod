@@ -2,7 +2,7 @@ package nightgames.trap;
 
 import nightgames.areas.Deployable;
 import nightgames.characters.Character;
-import nightgames.combat.IEncounter;
+import nightgames.combat.Encounter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -83,7 +83,7 @@ public abstract class Trap implements Deployable {
         return obj != null && getName().equals(obj.toString());
     }
     
-    public void capitalize(Character attacker, Character victim, IEncounter enc) {
+    public void capitalize(Character attacker, Character victim, Encounter enc) {
         // NOP
     }
 

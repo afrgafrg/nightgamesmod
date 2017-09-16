@@ -61,13 +61,13 @@ public enum Movement {
     private String desc;
 
     /**
-     * @return the Item name
+     * @return the Movement description
      */
     public String describe() {
         return desc;
     }
 
-    private Movement(String desc) {
+    Movement(String desc) {
         this.desc = desc;
     }
 

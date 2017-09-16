@@ -3,7 +3,7 @@ package nightgames.trap;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.combat.Encounter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingSlot;
@@ -90,7 +90,7 @@ public class RemoteControl extends Trap {
     }
     
     @Override
-    public void capitalize(Character attacker, Character victim, IEncounter enc) {
+    public void capitalize(Character attacker, Character victim, Encounter enc) {
         enc.engage(new Combat(attacker, victim, attacker.location()));
         attacker.location().remove(this);
     }

@@ -24,6 +24,8 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
 1. **DONE** Make the night-time match loop explicit.
 
+   **DONE** Kludge combat into compatibility with the match loop so I can playtest.
+
 1. Make the combat loop explicit.
 
 1. Make the daytime loop explicit.

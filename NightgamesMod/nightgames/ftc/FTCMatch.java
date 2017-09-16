@@ -1,20 +1,18 @@
 package nightgames.ftc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nightgames.actions.Movement;
 import nightgames.areas.Area;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
-import nightgames.global.*;
+import nightgames.combat.Encounter;
+import nightgames.global.Flag;
+import nightgames.global.Formatter;
+import nightgames.global.Match;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.modifier.standard.FTCModifier;
+
+import java.util.*;
 
 public class FTCMatch extends Match {
     private Map<Character, Area> bases;
@@ -41,11 +39,6 @@ public class FTCMatch extends Match {
         bases.forEach(Character::place);
         flagInCenter = false;
         prey.gain(Item.Flag);
-    }
-
-    @Override
-    public MatchType getType() {
-        return MatchType.FTC;
     }
 
     public boolean isPrey(Character ch) {
@@ -246,5 +239,9 @@ public class FTCMatch extends Match {
     @Override
     public String genericRoomDescription() {
         return "area";
+    }
+
+    @Override public Encounter buildEncounter(Area location, List<Character> characters) {
+        return new FTCEncounter(location, characters);
     }
 }

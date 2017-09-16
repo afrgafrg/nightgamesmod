@@ -1,17 +1,18 @@
 package nightgames.areas;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import nightgames.actions.Movement;
 import nightgames.characters.Character;
-import nightgames.combat.IEncounter;
+import nightgames.combat.Encounter;
 import nightgames.global.DebugFlags;
 import nightgames.global.Match;
 import nightgames.status.Stsflag;
 import nightgames.trap.Trap;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 public class Area implements Serializable {
     /**
@@ -22,11 +23,11 @@ public class Area implements Serializable {
     public HashSet<Area> adjacent;
     public HashSet<Area> shortcut;
     public HashSet<Area> jump;
-    public ArrayList<Character> present;
+    public List<Character> present;
     public String description;
-    public IEncounter fight;
+    public Encounter activeEncounter;
     public boolean alarm;
-    public ArrayList<Deployable> env;
+    public List<Deployable> env;
     public transient MapDrawHint drawHint;
     private Movement enumerator;
     private boolean pinged;
@@ -39,13 +40,13 @@ public class Area implements Serializable {
         this.name = name;
         this.description = description;
         this.enumerator = enumerator;
-        adjacent = new HashSet<Area>();
-        shortcut = new HashSet<Area>();
-        jump = new HashSet<Area>();
-        present = new ArrayList<Character>();
-        env = new ArrayList<Deployable>();
+        adjacent = new HashSet<>();
+        shortcut = new HashSet<>();
+        jump = new HashSet<>();
+        present = new ArrayList<>();
+        env = new ArrayList<>();
         alarm = false;
-        fight = null;
+        activeEncounter = null;
         this.drawHint = drawHint;
     }
 
@@ -97,7 +98,7 @@ public class Area implements Serializable {
     }
 
     public boolean ping(int perception) {
-        if (fight != null) {
+        if (activeEncounter != null) {
             return true;
         }
         for (Character c : present) {
@@ -119,19 +120,27 @@ public class Area implements Serializable {
         }
     }
 
-    public boolean encounter(Character p) {
-        if (fight != null && fight.checkIntrude(p)) {
-            p.intervene(fight, fight.getPlayer(1), fight.getPlayer(2));
+    public Optional<Encounter> encounter(Character p) {
+        if (activeEncounter != null && activeEncounter.checkIntrude(p)) {
+            p.intervene(activeEncounter, activeEncounter.getPlayer(1), activeEncounter.getPlayer(2));
         } else if (present.size() > 1 && canFight(p)) {
             for (Character opponent : Match.getMatch().combatants) {
                 if (present.contains(opponent) && opponent != p
                                 && canFight(opponent)) {
-                    fight = Match.getMatch().getType().buildEncounter(p, opponent, this);
-                    return fight.spotCheck();
+                    activeEncounter = Match.getMatch().buildEncounter(this, p, opponent);
+                    return Optional.of(activeEncounter).filter(Encounter::spotCheck);
                 }
             }
         }
-        return false;
+        return Optional.empty();
+    }
+
+    public Optional<Encounter> encounter() {
+        if (present.size() < 2) {
+            return Optional.empty();
+        }
+        activeEncounter = Match.getMatch().buildEncounter(this, present);
+        return Optional.of(activeEncounter);
     }
 
     private boolean canFight(Character c) {
@@ -142,9 +151,9 @@ public class Area implements Serializable {
         if (present.size() > 1) {
             for (Character opponent : present) {
                 if (opponent != target) {
-                    if (target.eligible(opponent) && opponent.eligible(target) && fight == null) {
-                        fight = Match.getMatch().getType().buildEncounter(opponent, target, this);
-                        opponent.promptTrap(fight, target, trap);
+                    if (target.eligible(opponent) && opponent.eligible(target) && activeEncounter == null) {
+                        activeEncounter = Match.getMatch().buildEncounter(this, opponent, target);
+                        opponent.promptTrap(activeEncounter, target, trap);
                         return true;
                     }
                 }
@@ -172,7 +181,7 @@ public class Area implements Serializable {
     }
 
     public void endEncounter() {
-        fight = null;
+        activeEncounter = null;
     }
 
     public Movement id() {

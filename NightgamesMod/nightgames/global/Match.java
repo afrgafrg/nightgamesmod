@@ -9,6 +9,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.combat.Encounter;
 import nightgames.gui.GUI;
 import nightgames.modifier.Modifier;
 import nightgames.skills.SkillPool;
@@ -30,7 +31,6 @@ public class Match {
     protected Map<String, Area> map;
     public List<Character> combatants;
     protected Map<Character, Integer> score;
-    protected int index;
     protected boolean pause;
     public Modifier condition;
     public MatchData matchData;
@@ -110,10 +110,6 @@ public class Match {
 
     public static Match getMatch() {
         return match;
-    }
-
-    public MatchType getType() {
-        return MatchType.NORMAL;
     }
 
     public void matchLoop(int endTime) throws InterruptedException {
@@ -340,5 +336,13 @@ public class Match {
 
     interface MatchAction {
         String replace(Character self, String first, String second, String third);
+    }
+
+    public Encounter buildEncounter(Area location, List<Character> characters) {
+        return new Encounter(location, characters);
+    }
+
+    public Encounter buildEncounter(Area location, Character... characters) {
+        return buildEncounter(location, Arrays.asList(characters));
     }
 }

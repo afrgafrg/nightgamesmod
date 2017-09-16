@@ -31,6 +31,8 @@ public abstract class Prematch {
      */
     public static Prematch decideMatchType(CompletableFuture<Match> match) {
         return new PreMatchSchool(match);
+        // When the player first reaches level 15, make an FTCMatch.
+        // After the first FTC match, there's a one in ten chance that a match will be an FTC match.
         /*
          * TODO Lots of FTC bugs right now, will disable it for the time being.
          * Enable again once some of the bugs are sorted out.

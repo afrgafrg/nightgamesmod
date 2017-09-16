@@ -1,11 +1,5 @@
 package nightgames.characters;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
 import nightgames.actions.Action;
 import nightgames.actions.Movement;
 import nightgames.characters.body.BodyPart;
@@ -16,8 +10,14 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.skills.Skill;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
 public interface Personality extends Serializable {
-    Skill act(HashSet<Skill> available, Combat c);
+    Skill chooseSkill(HashSet<Skill> available, Combat c);
 
     Action move(Collection<Action> available, Collection<Movement> radar);
 

@@ -1562,7 +1562,7 @@ public abstract class Character extends Observable implements Cloneable {
      * @param c combat to act in
      * @return true if combat should be paused.
      */
-    public abstract boolean act(Combat c);
+    public abstract boolean chooseSkill(Combat c);
 
     public abstract Optional<Action> move() throws InterruptedException;
 
@@ -3023,7 +3023,7 @@ public abstract class Character extends Observable implements Cloneable {
         return Random.random(get(Attribute.Dark) / 4 + 5) >= 4;
     }
 
-    protected void pickSkillsWithGUI(Combat c, Character target) {
+    protected void showSkillChoices(Combat c, Character target) {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
             c.write(this, nameOrPossessivePronoun() + " turn...");
             c.updateAndClearMessage();

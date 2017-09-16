@@ -60,7 +60,7 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public boolean act(Combat c) {
+    public boolean chooseSkill(Combat c) {
         return false;
     }
 

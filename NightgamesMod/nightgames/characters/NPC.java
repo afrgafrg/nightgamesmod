@@ -254,13 +254,13 @@ public class NPC extends Character {
     }
 
     @Override
-    public boolean act(Combat c) {
-        return act(c, c.getOpponent(this));
+    public boolean chooseSkill(Combat c) {
+        return chooseSkill(c, c.getOpponent(this));
     }
 
-    private boolean act(Combat c, Character target) {
+    private boolean chooseSkill(Combat c, Character target) {
         if (target.human() && DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
-            pickSkillsWithGUI(c, target);
+            showSkillChoices(c, target);
             return true;
         } else {
             // if there's no strategy, try getting a new one.
@@ -300,7 +300,7 @@ public class NPC extends Character {
             if (available.size() == 0) {
                 available.add(new Nothing(this));
             }
-            c.act(this, ai.act(available, c), "");
+            c.chooseSkill(this, ai.chooseSkill(available, c));
             return false;
         }
     }
@@ -357,7 +357,7 @@ public class NPC extends Character {
         if (available.size() == 0) {
             available.add(new Nothing(this));
         }
-        return ai.act(available, c);
+        return ai.chooseSkill(available, c);
     }
 
     @Override

@@ -10,13 +10,13 @@ import nightgames.areas.Deployable;
 import nightgames.characters.body.*;
 import nightgames.characters.body.mods.GooeyMod;
 import nightgames.combat.Combat;
-import nightgames.combat.IEncounter;
+import nightgames.combat.Encounter;
 import nightgames.combat.Result;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
-import nightgames.gui.*;
+import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Stage;
@@ -176,15 +176,22 @@ public class Player extends Character {
     }
 
     @Override
-    public boolean act(Combat c) {
+    public boolean chooseSkill(Combat c) {
         Character target;
         if (c.p1 == this) {
             target = c.p2;
         } else {
             target = c.p1;
         }
-        pickSkillsWithGUI(c, target);
-        return true;
+        showSkillChoices(c, target);
+        try {
+            c.chooseSkill(this, GUI.gui.getChosenSkill());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+        // Already paused while completing skill choice future
+        return false;
     }
 
     @Override

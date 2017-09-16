@@ -122,7 +122,7 @@ public abstract class BasePersonality implements Personality {
     }
 
     @Override
-    public Skill act(HashSet<Skill> available, Combat c) {
+    public Skill chooseSkill(HashSet<Skill> available, Combat c) {
         HashSet<Skill> tactic;
         Skill chosen;
         ArrayList<WeightedSkill> priority = Decider.parseSkills(available, c, character);

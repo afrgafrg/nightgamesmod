@@ -12,8 +12,6 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.gui.ContinueButton;
 import nightgames.gui.GUI;
-import nightgames.gui.KeyableButton;
-import nightgames.gui.RunnableButton;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -72,11 +70,13 @@ public class Combat extends Observable implements Cloneable {
     private int postCombatScenesSeen;
     private boolean wroteMessage;
     private boolean cloned;
+    private boolean finished;
     public static List<Skill> WORSHIP_SKILLS = Arrays.asList(new BreastWorship(null), new CockWorship(null), new FootWorship(null),
                     new PussyWorship(null), new Anilingus(null));
     public static final String TEMPT_WORSHIP_BONUS = "TEMPT_WORSHIP_BONUS";
     public boolean combatMessageChanged;
     private boolean processedEnding;
+
 
     String imagePath = "";
 
@@ -109,6 +109,7 @@ public class Combat extends Observable implements Cloneable {
         if (doExtendedLog()) {
             log = new CombatLog(this);
         }
+        finished = false;
     }
 
     public enum Initiation {
@@ -178,7 +179,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public void go() {
+    public void startScene() {
         if (p1.mostlyNude() && !p2.mostlyNude()) {
             p1.emote(Emotion.nervous, 20);
         }
@@ -193,20 +194,6 @@ public class Combat extends Observable implements Cloneable {
             log.logHeader("\n");
         }
         next();
-    }
-
-    private void resumeNoClearFlag() {
-        while(!turn()) {}
-        if (beingObserved) {
-            if (phase != CombatPhase.ENDED) {
-                updateAndClearMessage();
-            }
-        }
-    }
-
-    public void resume() {
-        wroteMessage = false;
-        resumeNoClearFlag();
     }
 
     public CombatantData getCombatantData(Character character) {
@@ -670,7 +657,7 @@ public class Combat extends Observable implements Cloneable {
                     CombatPhase.UPKEEP,
                     CombatPhase.LEVEL_DRAIN);
 
-    private CombatPhase determinePostCombatPhase() {
+    private CombatPhase levelDrainPostCombat() {
         CombatPhase nextPhase = CombatPhase.RESULTS_SCENE;
         if (p1.has(Trait.leveldrainer) ^ p2.has(Trait.leveldrainer) && !p1.has(Trait.strapped) && !p2.has(Trait.strapped)) {
             Character drainer = p1.has(Trait.leveldrainer) ? p1 : p2;
@@ -721,6 +708,10 @@ public class Combat extends Observable implements Cloneable {
         return nextPhase;
     }
 
+    /**
+     * Handles a combat turn.
+     * @return returns true if combat should be paused (waiting for user input)
+     */
     private boolean turn() {
         if (!cloned && isBeingObserved()) {
             GUI.gui.loadPortrait(this, p1, p2);
@@ -728,9 +719,10 @@ public class Combat extends Observable implements Cloneable {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println("Current phase = " + phase);
         }
+        // Combat should end; do post-combat scenes
         if (phase != CombatPhase.FINISHED_SCENE && phase != CombatPhase.RESULTS_SCENE && checkLosses(false)) {
-            phase = determinePostCombatPhase();
-            return next();
+            phase = levelDrainPostCombat();
+            return true;
         }
         if ((p1.orgasmed || p2.orgasmed) && SKIPPABLE_PHASES.contains(phase)) {
             phase = CombatPhase.UPKEEP;
@@ -748,7 +740,7 @@ public class Combat extends Observable implements Cloneable {
                 return pickSkills();
             case PET_ACTIONS:
                 phase = doPetActions();
-                return next();
+                return true;
             case DETERMINE_SKILL_ORDER:
                 phase = determineSkillOrder();
                 return false;
@@ -758,34 +750,34 @@ public class Combat extends Observable implements Cloneable {
                 } else {
                     phase = CombatPhase.P2_ACT_SECOND;
                 }
-                return next();
+                return true;
             case P1_ACT_SECOND:
                 doAction(p1, p1act.getDefaultTarget(this), p1act);
                 phase = CombatPhase.UPKEEP;
-                return next();
+                return true;
             case P2_ACT_FIRST:
                 if (doAction(p2, p2act.getDefaultTarget(this), p2act)) {
                     phase = CombatPhase.UPKEEP;
                 } else {
                     phase = CombatPhase.P1_ACT_SECOND;
                 }
-                return next();
+                return true;
             case P2_ACT_SECOND:
                 doAction(p2, p2act.getDefaultTarget(this), p2act);
                 phase = CombatPhase.UPKEEP;
-                return next();
+                return true;
             case UPKEEP:
                 doEndOfTurnUpkeep();
                 phase = CombatPhase.PRETURN;
-                return next();
+                return true;
             case RESULTS_SCENE:
                 checkLosses(true);
                 phase = CombatPhase.FINISHED_SCENE;
-                return next();
+                return true;
             case FINISHED_SCENE:
                 phase = CombatPhase.ENDED;
             default:
-                return next();
+                return true;
         }
     }
 
@@ -794,11 +786,15 @@ public class Combat extends Observable implements Cloneable {
         message = "";
     }
 
+    /**
+     * Invokes character skill choice.
+     * @return true (should pause) if the character picking skills is human-controlled.
+     */
     private boolean pickSkills() {
         if (p1act == null) {
-            return p1.act(this);
+            return p1.chooseSkill(this);
         } else if (p2act == null) {
-            return p2.act(this);
+            return p2.chooseSkill(this);
         } else {
             phase = CombatPhase.PET_ACTIONS;
             return false;
@@ -924,14 +920,13 @@ public class Combat extends Observable implements Cloneable {
         return results;
     }
 
-    public void act(Character c, Skill action, String choice) {
+    public void chooseSkill(Character c, Skill skill) {
         if (c == p1) {
-            p1act = action;
+            p1act = skill;
         }
         if (c == p2) {
-            p2act = action;
+            p2act = skill;
         }
-        action.choice = choice;
     }
 
     private CombatPhase doPetActions() {
@@ -952,10 +947,10 @@ public class Combat extends Observable implements Cloneable {
 
             List<PetCharacter> actingPets = new ArrayList<>(otherCombatants);
             actingPets.stream().filter(pet -> !alreadyBattled.contains(pet)).forEach(pet -> {
-                pet.act(this);
+                pet.chooseSkill(this);
                 if (pet.getSelf().owner().has(Trait.devoteeFervor) && Random.random(2) == 0) {
                     write(pet, Formatter.format("{self:SUBJECT} seems to have gained a second wind from {self:possessive} religious fervor!", pet, pet.getSelf().owner()));
-                    pet.act(this);
+                    pet.chooseSkill(this);
                 }
             });
             write("<br/>");
@@ -1259,17 +1254,21 @@ public class Combat extends Observable implements Cloneable {
     }
 
     private boolean next() {
-        if (phase != CombatPhase.ENDED) {
-            if (!(wroteMessage || phase == CombatPhase.START) || !beingObserved || shouldAutoresolve() || (Flag.checkFlag(Flag.AutoNext)
-                            && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
+        if (phase == CombatPhase.ENDED) {
+            end();
+            return false;
+        } else {
+            if (
+                            !(wroteMessage || phase == CombatPhase.START)
+                            || !beingObserved
+                            || shouldAutoresolve()
+                            || (Flag.checkFlag(Flag.AutoNext) && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
+
                 return false;
             } else {
                 this.promptNext(GUI.gui);
                 return true;
             }
-        } else {
-            end();
-            return true;
         }
     }
 
@@ -1302,7 +1301,6 @@ public class Combat extends Observable implements Cloneable {
         if (!(p1.human() || p2.human() || intruder.human())) {
             end();
         } else {
-            resumeNoClearFlag();
             runCombat(GUI.gui);
         }
     }
@@ -1706,6 +1704,7 @@ public class Combat extends Observable implements Cloneable {
         try {
             next.await();
             gui.clearCommand();
+            wroteMessage = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
@@ -1720,6 +1719,7 @@ public class Combat extends Observable implements Cloneable {
         gui.clearText();
         gui.clearImage();
         gui.showMap();
+        finished = true;
     }
 
     // Combat GUI
@@ -1738,7 +1738,19 @@ public class Combat extends Observable implements Cloneable {
     public void runCombat(GUI gui) {
         addObserver(gui);
         setBeingObserved(true);
+        gui.combat = this;
         gui.loadPortrait(this, this.p1, this.p2);
         gui.showPortrait();
+        startScene();
+        boolean pause;
+        while (!finished) {
+            pause = turn();
+            if (phase != CombatPhase.ENDED) {
+                updateAndClearMessage();
+            }
+            while (pause) {
+                pause = next();
+            }
+        }
     }
 }

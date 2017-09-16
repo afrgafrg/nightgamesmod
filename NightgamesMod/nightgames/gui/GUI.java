@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class GUI extends JFrame implements Observer {
     public static GUI gui;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
+    private CompletableFuture<Skill> chosenSkill;
     private TacticGroup currentTactics;
     public CommandPanel commandPanel;
     private JTextPane textPane;
@@ -1005,14 +1007,24 @@ public class GUI extends JFrame implements Observer {
 
     public void clearCommand() {
         skills.clear();
+        chosenSkill = new CompletableFuture<>();
         Arrays.stream(TacticGroup.values()).forEach(tactic -> skills.put(tactic, new ArrayList<>()));
         groupBox.removeAll();
         commandPanel.reset();
     }
 
     public void addSkill(Combat com, Skill action, Character target) {
-        SkillButton btn = new SkillButton(com, action, target);
+        SkillButton btn = new SkillButton(com, action, target, chosenSkill);
         skills.get(action.type(com).getGroup()).add(btn);
+    }
+
+    public Skill getChosenSkill() throws InterruptedException {
+        try {
+            return chosenSkill.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public void showSkills() {

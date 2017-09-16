@@ -182,7 +182,7 @@ public class PetCharacter extends Character {
     }
 
     @Override
-    public boolean act(Combat c) {
+    public boolean chooseSkill(Combat c) {
         act(c, c.getOpponent(this));
         return false;
     }

@@ -41,7 +41,7 @@ public class Postmatch {
         GUI.gui.clearCommand();
         GUI.gui.showNone();
         GUI.gui.mntmQuitMatch.setEnabled(false);
-        RunnableButton button = new RunnableButton("Go to sleep", readyForBed::countDown);  // unblock main loop
+        RunnableButton button = RunnableButton.genericRunnableButton("Go to sleep", readyForBed::countDown);  // unblock main loop
         GUI.gui.commandPanel.add(button);
         GUI.gui.commandPanel.add(new SaveButton());
         GUI.gui.commandPanel.refresh();

@@ -93,11 +93,11 @@ public class CommandPanel {
                 hotkeyMapping.put(' ', button); 
             }
         } else if (effectiveIndex == -1) {
-            KeyableButton leftPage = new RunnableButton("<<<", () -> setPage(currentPage - 1));
+            KeyableButton leftPage = RunnableButton.genericRunnableButton("<<<", () -> setPage(currentPage - 1));
             rows[0].add(leftPage, 0);
             register('~', leftPage);
         } else if (effectiveIndex == POSSIBLE_HOTKEYS.size()){
-            KeyableButton rightPage = new RunnableButton(">>>", () -> setPage(currentPage + 1));
+            KeyableButton rightPage = RunnableButton.genericRunnableButton(">>>", () -> setPage(currentPage + 1));
             rows[0].add(rightPage);
             register('`', rightPage);
         }

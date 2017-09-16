@@ -1,14 +1,14 @@
 package nightgames.combat;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.gui.GUI;
 import nightgames.gui.RunnableButton;
 import nightgames.requirements.Requirement;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class CombatScene {
     public static interface StringProvider {
@@ -29,7 +29,7 @@ public class CombatScene {
         c.write(message.provide(c, npc, c.getOpponent(npc)));
         c.updateAndClearMessage();
         choices.forEach(choice -> {
-            RunnableButton button = new RunnableButton(choice.getChoice(), () -> {
+            RunnableButton button = RunnableButton.genericRunnableButton(choice.getChoice(), () -> {
                 c.write("<br/>");
                 choice.choose(c, npc);
                 c.updateMessage();

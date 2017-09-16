@@ -1,8 +1,6 @@
 package nightgames.gui;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A button that completes a future on click.
@@ -18,12 +16,16 @@ public class ValueButton<T> extends RunnableButton {
     }
 
     public ValueButton(T value, String label, CompletableFuture<T> future) {
-        super(label, () -> future.complete(value));
+        super(label);
         this.value = value;
         this.future = future;
     }
 
     public T getValue() {
         return value;
+    }
+
+    @Override protected void run() {
+        future.complete(value);
     }
 }

@@ -63,7 +63,7 @@ public abstract class Activity {
     }
 
     public void addActivity(GUI gui) {
-        RunnableButton button = new RunnableButton(toString(), () -> {
+        RunnableButton button = RunnableButton.genericRunnableButton(toString(), () -> {
             visit("Start");
         });
         gui.addButton(button);

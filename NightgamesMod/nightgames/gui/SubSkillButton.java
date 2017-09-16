@@ -1,27 +1,28 @@
 package nightgames.gui;
 
-import nightgames.combat.Combat;
 import nightgames.skills.Skill;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
-public class SubSkillButton extends KeyableButton {
+public class SubSkillButton extends ValueButton<Skill> {
     private static final long serialVersionUID = -3177604366435328960L;
-    protected Skill action;
+    protected Skill skill;
     private String choice;
 
-    public SubSkillButton(final Skill action, final String choice, Combat c) {
-        super(choice);
-        this.choice = choice;        
+    public SubSkillButton(final Skill skill, final String choice, CompletableFuture<Skill> chosenSkill) {
+        super(skill, choice, chosenSkill);
+        this.choice = choice;
+        this.skill = skill;
         getButton().setOpaque(true);
         getButton().setBorderPainted(false);
         getButton().setFont(new Font("Baskerville Old Face", Font.PLAIN, 18));
-        this.action = action;
         getButton().setBackground(new Color(200, 200, 200));
-        getButton().addActionListener(arg0 -> {
-            c.act(action.user(), action, choice);
-            c.resume();
-        });
+    }
+
+    @Override protected void run() {
+        skill.choice = this.choice;
+        super.run();
     }
 
     @Override

@@ -7,58 +7,47 @@ import nightgames.skills.Stage;
 
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
-public class SkillButton extends KeyableButton {
+public class SkillButton extends ValueButton<Skill> {
     private static final long serialVersionUID = -1253735466299929203L;
-    protected Skill action;
+    protected Skill skill;
     protected Combat combat;
 
-    public SkillButton(Combat c, final Skill action, Character target) {
-        super(action.getLabel(c));
+    public SkillButton(Combat combat, final Skill skill, Character target, CompletableFuture<Skill> chosenSkill) {
+        super(skill, skill.getLabel(combat), chosenSkill);
         getButton().setBorderPainted(false);
         getButton().setOpaque(true);
-        getButton().setFont(fontForStage(action.getStage()));
-        this.action = action;
-        int actualAccuracy = target.getChanceToHit(action.getSelf(), c, action.accuracy(c, target));
+        getButton().setFont(fontForStage(skill.getStage()));
+        this.skill = skill;
+        int actualAccuracy = target.getChanceToHit(skill.getSelf(), combat, skill.accuracy(combat, target));
         int clampedAccuracy = Math.min(100, Math.max(0, actualAccuracy));
-        String text = "<html>" + action.describe(c) + " <br/><br/>Accuracy: " + (actualAccuracy >=150 ? "---" : clampedAccuracy + "%") + "</p>";
-        Color bgColor = action.type(c).getColor();
+        String text = "<html>" + skill.describe(combat) + " <br/><br/>Accuracy: " + (actualAccuracy >=150 ? "---" : clampedAccuracy + "%") + "</p>";
+        Color bgColor = skill.type(combat).getColor();
         getButton().setBackground(bgColor);
         getButton().setForeground(foregroundColor(bgColor));
 
-        if (action.getMojoCost(c) > 0) {
+        if (skill.getMojoCost(combat) > 0) {
             setBorder(new LineBorder(Color.RED, 3));
-            text += "<br/>Mojo cost: " + action.getMojoCost(c);
-        } else if (action.getMojoBuilt(c) > 0) {
+            text += "<br/>Mojo cost: " + skill.getMojoCost(combat);
+        } else if (skill.getMojoBuilt(combat) > 0) {
             setBorder(new LineBorder(new Color(53, 201, 255), 3));
-            text += "<br/>Mojo generated: " + action.getMojoBuilt(c) + "%";
+            text += "<br/>Mojo generated: " + skill.getMojoBuilt(combat) + "%";
         } else {
             setBorder(new LineBorder(getButton().getBackground(), 3));
         }
-        if (!action.user()
-                   .cooldownAvailable(action)) {
+        if (!skill.user()
+                   .cooldownAvailable(skill)) {
             getButton().setEnabled(false);
-            text += String.format("<br/>Remaining Cooldown: %d turns", action.user()
-                                                                            .getCooldown(action));
+            text += String.format("<br/>Remaining Cooldown: %d turns", skill.user()
+                                                                            .getCooldown(skill));
             getButton().setForeground(Color.WHITE);
             getButton().setBackground(getBackground().darker());
         }
 
         text += "</html>";
         getButton().setToolTipText(text);
-        combat = c;
-        getButton().addActionListener(arg0 -> {
-            if (action.subChoices(c).size() == 0) {
-                combat.act(SkillButton.this.action.user(), SkillButton.this.action, "");
-                combat.resume();
-            } else {
-                GUI.gui.commandPanel.reset();
-                for (String choice : action.subChoices(c)) {
-                    GUI.gui.commandPanel.add(new SubSkillButton(action, choice, combat));
-                }
-                GUI.gui.commandPanel.refresh();
-            }
-        });
+        this.combat = combat;
         setLayout(new BorderLayout());
         setMaximumSize(new Dimension(500, 20));
         add(getButton());
@@ -86,8 +75,20 @@ public class SkillButton extends KeyableButton {
         }
     }
 
+    @Override protected void run() {
+        if (skill.subChoices(combat).size() != 0) {
+            GUI.gui.commandPanel.reset();
+            for (String choice : skill.subChoices(combat)) {
+                GUI.gui.commandPanel.add(new SubSkillButton(skill, choice, this.future));
+            }
+            GUI.gui.commandPanel.refresh();
+        } else {
+            super.run();
+        }
+    }
+
     @Override
     public String getText() {
-        return action.getLabel(combat);
+        return skill.getLabel(combat);
     }
 }

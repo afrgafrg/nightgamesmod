@@ -5,7 +5,7 @@ import nightgames.gui.RunnableButton;
 
 public class EventButton {
     public static KeyableButton eventButton(Activity activity, String choice, String tooltip) {
-        RunnableButton button = new RunnableButton(choice, () -> {
+        RunnableButton button = RunnableButton.genericRunnableButton(choice, () -> {
             activity.visit(choice);
         });
         if (tooltip != null) {

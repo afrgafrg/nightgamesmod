@@ -91,7 +91,7 @@ public class Meditation extends Activity {
             if (Random.random(100) >= 50) {
                 GUI.gui.message(
                                 "Suzume instructs you to sit in the middle of the dojo and close your eyes. <i>\"I'm going to count down from ten. With each number, you will feel your "
-                                                + "mind openning and you will be more receptive to my words. When I reach zero, imagine your mind as an empty vessel, ready to take in everything around you.\"</i> As she "
+                                                + "mind opening and you will be more receptive to my words. When I reach zero, imagine your mind as an empty vessel, ready to take in everything around you.\"</i> As she "
                                                 + "counts down, you can feel yourself slipping into a trance. You know you could pull back at any time, but that would defeat the entire purpose of this, so instead you "
                                                 + "let yourself go. <i>\"I want you to imagine a thick fog has surrounded you your entire life, shrouding the world and dulling your senses. When I snap my fingers now, the fog "
                                                 + "will clear and your senses will be sharper than ever before. You'll be able to see details you never would have been able to make out. You'll be able to hear a pin drop "

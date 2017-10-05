@@ -16,15 +16,20 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
    **ENOUGH** This looks like a good time to do some post-move cleanup.
 
-1. **DONE** Make the game loop explicit, or at least document it. (holy balls that was way easier than last time! amazing what focusing on one thing at a time will do)
+1. **DONE** Make the game loop explicit, or at least document it. (holy balls that was way easier than last time!
+    amazing what focusing on one thing at a time will do)
 
-1. **[STATIC DISCHARGE]** Reduce reliance on static fields and methods. Static members make testing harder and can introduce spooky action at a distance.
+1. **[STATIC DISCHARGE]** Reduce reliance on static fields and methods. Static members make testing harder and can
+    introduce spooky action at a distance.
 
 1. **IT'S BETTER NOW AT LEAST** Concurrency is hard! Build infrastructure to make it easy to do things like wait for user input.
 
 1. **DONE** Make the night-time match loop explicit.
 
    **DONE** Kludge combat into compatibility with the match loop so I can playtest.
+
+   I want to work out why the main text window is so stuttery/flickery now. I'd like to figure out a way to only paint
+   the text when the player is about to be presented with an interactable prompt.
 
 1. Make the combat loop explicit.
 

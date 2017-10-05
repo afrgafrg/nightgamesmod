@@ -7,8 +7,8 @@ import nightgames.gui.HeadlessGui;
 import nightgames.json.JsonUtils;
 import nightgames.requirements.TraitRequirement;
 
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Map;
@@ -65,36 +65,10 @@ public class Main {
         configurationFlags.forEach(Flag::setFlag);
     }
 
-    private static class CloseListener implements WindowListener {
-
-        @Override public void windowOpened(WindowEvent e) {
-
-        }
-
+    private static class CloseListener extends WindowAdapter {
         @Override public void windowClosing(WindowEvent e) {
             exit = true;
         }
-
-        @Override public void windowClosed(WindowEvent e) {
-
-        }
-
-        @Override public void windowIconified(WindowEvent e) {
-
-        }
-
-        @Override public void windowDeiconified(WindowEvent e) {
-
-        }
-
-        @Override public void windowActivated(WindowEvent e) {
-
-        }
-
-        @Override public void windowDeactivated(WindowEvent e) {
-
-        }
     }
-
 }
 

@@ -112,7 +112,6 @@ public class Match {
         return match;
     }
 
-    // FIXME: Wrong NPCs in match after game load!
     // FIXME: GUI redraws like crazy during match.
     public void matchLoop(int endTime) throws InterruptedException {
         assert (combatants.size() > 0);

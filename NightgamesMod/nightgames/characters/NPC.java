@@ -890,11 +890,12 @@ public class NPC extends Character {
     @Override public void load(JsonObject object) {
         super.load(object);
         // Prior to adding the available field, characters appearing in save files were assumed to be unlocked.
-        if (object.has("available"))
+        if (object.has("available")) {
             available = object.get("available").getAsBoolean();
-        else
+        } else {
             Flag.flag(Flag.LegacyCharAvailableSave);
             available = true;
+        }
     }
 
     public RecruitmentData getRecruitmentData() {

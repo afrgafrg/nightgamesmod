@@ -28,7 +28,7 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
    **DONE** Kludge combat into compatibility with the match loop so I can playtest.
 
-   I want to work out why the main text window is so stuttery/flickery now. I'd like to figure out a way to only paint
+   **BETTER** I want to work out why the main text window is so stuttery/flickery now. I'd like to figure out a way to only paint
    the text when the player is about to be presented with an interactable prompt.
 
 1. Make the combat loop explicit.

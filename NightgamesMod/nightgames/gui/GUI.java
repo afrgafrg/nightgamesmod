@@ -112,6 +112,7 @@ public class GUI extends JFrame implements Observer {
     private static final String USE_MAIN_TEXT_UI = "MAIN_TEXT";
     private static final String USE_CLOSET_UI = "CLOSET";
     volatile BlockingQueue<GameState> currentState = new ArrayBlockingQueue<>(1);
+    private volatile boolean refreshRequested = false;
 
     public GUI() {
         try {
@@ -1092,6 +1093,13 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void refresh() {
+        if (!this.refreshRequested) {
+            this.refreshRequested = true;
+            SwingUtilities.invokeLater(this::refreshInternal);
+        }
+    }
+
+    private void refreshInternal() {
         Player player = GameState.gameState.characterPool.human;
         stamina.setText("Stamina: " + getLabelString(player.getStamina()));
         arousal.setText("Arousal: " + getLabelString(player.getArousal()));
@@ -1159,6 +1167,7 @@ public class GUI extends JFrame implements Observer {
 	    inventoryFrame.getContentPane().removeAll();
         inventoryFrame.getContentPane().add(BorderLayout.CENTER, inventoryPane);
         inventoryFrame.pack();
+        refreshRequested = false;
     }
 
     private void toggleInventory() {

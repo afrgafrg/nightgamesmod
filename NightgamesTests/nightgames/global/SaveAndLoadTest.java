@@ -60,6 +60,16 @@ public class SaveAndLoadTest {
         assertThat(afterNPC.character.getAffections(), equalTo(beforeNPC.character.getAffections()));
     }
 
+    @Test public void testNPCAvailability() throws Exception {
+        File saveFile = new File("NightGamesTests/nightgames/global/test_save.ngs");
+        SaveData data = SaveFile.load(saveFile);
+        for (NPC npc : data.npcs) {
+            if ("Reyka".equals(npc.getType())) {
+                assertThat("Reyka should not be available", npc.available, equalTo(false));
+            }
+        }
+    }
+
     /**
      * Makes sure older save files are properly updated on load.
      */

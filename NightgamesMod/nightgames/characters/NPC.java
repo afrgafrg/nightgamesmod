@@ -86,7 +86,7 @@ public class NPC extends Character {
         for (Status s : status) {
             String statusDesc = s.describe(c);
             if (!statusDesc.isEmpty()) {
-                description = description + statusDesc + "<br/>";
+                description = description + statusDesc;
                 wroteStatus = true;
             }
         }
@@ -494,6 +494,10 @@ public class NPC extends Character {
         } else if (state == State.masturbating) {
             masturbate();
         } else {
+            // location.encounter() side effects:
+            // checks for intrusion
+            // activates intervention if available
+            // otherwise creates new encounter, sets area active encounter, and returns optional
             if (!location.encounter(this).isPresent()) {
                 
                 HashSet<Action> moves = new HashSet<>();

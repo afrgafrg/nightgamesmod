@@ -54,7 +54,7 @@ public class Combat extends Observable implements Cloneable {
     public List<PetCharacter> otherCombatants;
     public Map<String, CombatantData> combatantData;
     public Optional<Character> winner;
-    public CombatPhase phase;
+    private CombatPhase phase;
     protected Skill p1act;
     protected Skill p2act;
     public Area location;
@@ -68,13 +68,14 @@ public class Combat extends Observable implements Cloneable {
     private CombatLog log;
     private boolean beingObserved;
     private int postCombatScenesSeen;
-    private boolean wroteMessage;
+    private boolean wroteMessageSinceLastClear;
     private boolean cloned;
     private boolean finished;
     public static List<Skill> WORSHIP_SKILLS = Arrays.asList(new BreastWorship(null), new CockWorship(null), new FootWorship(null),
                     new PussyWorship(null), new Anilingus(null));
     public static final String TEMPT_WORSHIP_BONUS = "TEMPT_WORSHIP_BONUS";
-    public boolean combatMessageChanged;
+    public volatile boolean combatMessageChanged = false;   // Signals to the GUI that it should update its view of the combat message.
+    public volatile boolean clearText = false;  // Signals to the GUI that it should clear the main text window before updating its view of the combat message.
     private boolean processedEnding;
 
 
@@ -102,7 +103,7 @@ public class Combat extends Observable implements Cloneable {
         p2.state = State.combat;
         postCombatScenesSeen = 0;
         otherCombatants = new ArrayList<>();
-        wroteMessage = false;
+        wroteMessageSinceLastClear = false;
         winner = Optional.empty();
         phase = CombatPhase.START;
         cloned = false;
@@ -189,7 +190,7 @@ public class Combat extends Observable implements Cloneable {
         applyCombatStatuses(p1, p2);
         applyCombatStatuses(p2, p1);
 
-        updateMessage();
+        updateGUI();
         if (doExtendedLog()) {
             log.logHeader("\n");
         }
@@ -383,7 +384,7 @@ public class Combat extends Observable implements Cloneable {
             player = p2;
             other = p1;
         }
-        message = describe(player, other);
+        write(describe(player, other));
         if (!shouldAutoresolve() && !Flag.checkFlag(Flag.noimage)) {
             GUI.gui
                   .clearImage();
@@ -781,9 +782,10 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private void clear() {
-        wroteMessage = false;
+    private void clearMessage() {
+        wroteMessageSinceLastClear = false;
         message = "";
+        clearText = true;
     }
 
     /**
@@ -910,7 +912,13 @@ public class Combat extends Observable implements Cloneable {
         return def;
     }
 
-    public boolean doAction(Character self, Character target, Skill action) {
+    /**
+     * @param self
+     * @param target
+     * @param action
+     * @return
+     */
+    private boolean doAction(Character self, Character target, Skill action) {
         action = checkWorship(self, target, action);
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
             System.out.println(self.getTrueName() + " uses " + action.getLabel(this));
@@ -929,7 +937,11 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private CombatPhase doPetActions() {
+    /**
+     * Performs pet actions.
+     * @return Whether a pet action was performed.
+     */
+    private boolean doPetActions() {
         Set<PetCharacter> alreadyBattled = new HashSet<>();
         if (otherCombatants.size() > 0) {
             ArrayList<PetCharacter> pets = new ArrayList<>(otherCombatants);
@@ -955,7 +967,7 @@ public class Combat extends Observable implements Cloneable {
             });
             write("<br/>");
         }
-        return CombatPhase.DETERMINE_SKILL_ORDER;
+        return !alreadyBattled.isEmpty();
     }
 
     private void doStanceTick(Character self) {
@@ -1051,6 +1063,11 @@ public class Combat extends Observable implements Cloneable {
         return false;
     }
 
+    /**
+     * @param skill
+     * @param target
+     * @return true if either combatant orgasmed
+     */
     boolean resolveSkill(Skill skill, Character target) {
         boolean orgasmed = false;
         boolean madeContact = false;
@@ -1108,7 +1125,7 @@ public class Combat extends Observable implements Cloneable {
             }
             checkStamina(target);
             checkStamina(skill.user());
-            orgasmed = checkOrgasm(skill.user(), target, skill);
+            orgasmed = target.orgasmed || skill.user().orgasmed;
             lastFailed = false;
         } else {
             write(skill.user()
@@ -1133,10 +1150,6 @@ public class Combat extends Observable implements Cloneable {
 		}
 	}
 
-	private boolean checkOrgasm(Character user, Character target, Skill skill) {
-        return target.orgasmed || user.orgasmed;
-    }
-
     protected CombatPhase determineSkillOrder() {
         if (p1.init() + p1act.speed() >= p2.init() + p2act.speed()) {
             return CombatPhase.P1_ACT_FIRST;
@@ -1145,47 +1158,70 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public void write(String text) {
-        text = Formatter.capitalizeFirstLetter(text);
-        if (text.isEmpty()) {
-            return;
-        }
-        String added = message + "<br/>" + text;
-        message = added;
-        wroteMessage = true;
-        lastTalked = null;
+    public void updateGUI() {
+        setChanged();
+        notifyObservers();
     }
 
-    public void updateMessage() {
-        combatMessageChanged = true;
-        setChanged();
-        this.notifyObservers();
+    public void resetMessageAfterGUIUpdate() {
+        message = "";
+        combatMessageChanged = false;
+        clearText = false;
     }
 
     public void updateAndClearMessage() {
-        GUI.gui.clearText();
-        updateMessage();
+        clearMessage();
+        updateGUI();
+    }
+
+    public void write(String text) {
+        write(null, text);
     }
 
     public void write(Character user, String text) {
         text = Formatter.capitalizeFirstLetter(text);
-        if (text.length() > 0) {
-            if (user.human()) {
-                message = message + "<br/><font color='rgb(200,200,255)'>" + text + "<font color='white'>";
-            } else if (user.isPet() && user.isPetOf(GameState.gameState.characterPool.getPlayer())) {
-                message = message + "<br/><font color='rgb(130,225,200)'>" + text + "<font color='white'>";
-            } else if (user.isPet()) {
-                message = message + "<br/><font color='rgb(210,130,255)'>" + text + "<font color='white'>";
-            } else {
-                message = message + "<br/><font color='rgb(255,200,200)'>" + text + "<font color='white'>";
-            }
-            lastTalked = user;
+        if (text.isEmpty()) {
+            return;
         }
-        wroteMessage = true;
+        // Unless this is the first message since the last clear, prepend a newline.
+        if (wroteMessageSinceLastClear) {
+            text = "<br/>" + text;
+        }
+        if (user != null) {
+            text = formatMessage(user, text);
+        }
+        setMessage(text);
+        wroteMessageSinceLastClear = true;
+        combatMessageChanged = true;
+        lastTalked = user;
+    }
+
+    private String formatMessage(Character user, String text) {
+        if (user.human()) {
+            text = "<font color='rgb(200,200,255)'>" + text + "<font color='white'>";
+        } else if (user.isPet() && user.isPetOf(GameState.gameState.characterPool.getPlayer())) {
+            text = "<font color='rgb(130,225,200)'>" + text + "<font color='white'>";
+        } else if (user.isPet()) {
+            text = "<font color='rgb(210,130,255)'>" + text + "<font color='white'>";
+        } else {
+            text = "<font color='rgb(255,200,200)'>" + text + "<font color='white'>";
+        }
+        return text;
     }
 
     public String getMessage() {
         return message;
+    }
+
+    private void setMessage(String text) {
+        if (combatMessageChanged) {
+            // The GUI hasn't written the latest changes, append
+            message = message + text;
+        } else {
+            // send a new message
+            message = text;
+        }
+        combatMessageChanged = true;
     }
 
     public String debugMessage() {
@@ -1305,6 +1341,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
+    // TODO: There's some questionable logic going on here. Go through and document it.
     public void end() {
         p1.state = State.ready;
         p2.state = State.ready;
@@ -1629,7 +1666,7 @@ public class Combat extends Observable implements Cloneable {
     }
     
     public boolean shouldAutoresolve() {
-        return !(p1.human() || p2.human()) && !beingObserved;
+        return !beingObserved && !p1.human() && !p2.human();
     }
 
     public String bothDirectObject(Character target) {
@@ -1704,7 +1741,6 @@ public class Combat extends Observable implements Cloneable {
         try {
             next.await();
             gui.clearCommand();
-            wroteMessage = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
@@ -1729,6 +1765,7 @@ public class Combat extends Observable implements Cloneable {
         return combat;
     }
 
+    // TODO: Combat should begin only after all players' actions have resolved
     public static Combat beginCombat(Character player, Character enemy, GUI gui) {
         Combat combat = new Combat(player, enemy, player.location());
         combat.runCombat(gui);

@@ -992,10 +992,12 @@ public class GUI extends JFrame implements Observer {
         refresh();
     }
 
-    public void combatMessage(String text) {
-
+    public void combatMessage(String text, boolean clearText) {
         HTMLDocument doc = (HTMLDocument) textPane.getDocument();
         HTMLEditorKit editorKit = (HTMLEditorKit) textPane.getEditorKit();
+        if (clearText) {
+            clearText();
+        }
         try {
             editorKit.insertHTML(doc, doc.getLength(),
                             "<font face='Georgia' color='white' size='" + fontsize + "'>" + text + "</font><br/>",
@@ -1057,6 +1059,7 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
+    // TODO: Make sure all instances of waiting for user input have a common, monitorable path.
     public void prompt(KeyableButton... choices) {
         clearCommand();
         for (KeyableButton button : choices) {
@@ -1289,8 +1292,8 @@ public class GUI extends JFrame implements Observer {
         if (arg0 instanceof Combat) {
             Combat combat = (Combat) arg0;
             if (combat.combatMessageChanged) {
-                combatMessage(combat.getMessage());
-                combat.combatMessageChanged = false;
+                combatMessage(combat.getMessage(), combat.clearText);
+                combat.resetMessageAfterGUIUpdate();
             }
         }
     }

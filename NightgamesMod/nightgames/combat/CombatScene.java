@@ -32,7 +32,7 @@ public class CombatScene {
             RunnableButton button = RunnableButton.genericRunnableButton(choice.getChoice(), () -> {
                 c.write("<br/>");
                 choice.choose(c, npc);
-                c.updateMessage();
+                c.updateGUI();
                 c.promptNext(GUI.gui);
             });
             GUI.gui.commandPanel.add(button);

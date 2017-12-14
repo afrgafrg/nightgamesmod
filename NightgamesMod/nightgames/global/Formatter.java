@@ -268,7 +268,7 @@ public class Formatter {
     public static void writeIfCombatUpdateImmediately(Combat c, Character self, String string) {
         writeIfCombat(c, self, string);
         if (c != null) {
-            c.updateMessage();
+            c.updateGUI();
         }
     }
 

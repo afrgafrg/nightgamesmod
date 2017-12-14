@@ -18,7 +18,7 @@ public class CombatSceneButton extends JButton {
         addActionListener(arg0 -> {
             c.write("<br/>");
             choice.choose(c, npc);
-            c.updateMessage();
+            c.updateGUI();
             c.promptNext(GUI.gui);
         });
     }

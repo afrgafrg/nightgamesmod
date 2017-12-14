@@ -127,20 +127,26 @@ public class Area implements Serializable {
             for (Character opponent : Match.getMatch().combatants) {
                 if (present.contains(opponent) && opponent != p
                                 && canFight(opponent)) {
-                    activeEncounter = Match.getMatch().buildEncounter(this, p, opponent);
-                    return Optional.of(activeEncounter).filter(Encounter::spotCheck);
+                    Encounter newEncounter = Match.getMatch().buildEncounter(this, p, opponent);
+                    if (newEncounter.spotCheck()) {
+                        activeEncounter = newEncounter;
+                    }
                 }
             }
         }
-        return Optional.empty();
+        return Optional.ofNullable(activeEncounter);
     }
 
     public Optional<Encounter> encounter() {
-        if (present.size() < 2) {
-            return Optional.empty();
+        if (activeEncounter == null && present.size() > 1) {
+            activeEncounter = Match.getMatch().buildEncounter(this, present);
+        } else if (present.size() > 2) {
+            Character intruder = present.get(2);
+            if (activeEncounter.checkIntrude(intruder)) {
+                intruder.intervene(activeEncounter, activeEncounter.getP1(), activeEncounter.getP2());
+            }
         }
-        activeEncounter = Match.getMatch().buildEncounter(this, present);
-        return Optional.of(activeEncounter);
+        return Optional.ofNullable(activeEncounter);
     }
 
     private boolean canFight(Character c) {
@@ -181,8 +187,10 @@ public class Area implements Serializable {
     }
 
     public void endEncounter() {
-        activeEncounter.finish();
-        activeEncounter = null;
+        if (activeEncounter != null) {
+            activeEncounter.finish();
+            activeEncounter = null;
+        }
     }
 
     public Movement id() {

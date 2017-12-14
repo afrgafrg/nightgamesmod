@@ -20,16 +20,25 @@ import java.util.concurrent.ExecutionException;
 public class Main {
     public static volatile boolean exit = false;
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    public static void main(String[] args) {
         new Logwriter();
         Logwriter.makeLogger(new Date());
         parseDebugFlags(args);
         initialize();
         makeGUI();
-        run();
+        // TODO: Make sure this works like I want it to. I don't think it captures anything useful on interrupts or errors.
+        try {
+            run();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.out.println("Interrupted!");
+            e.printStackTrace();
+        }
     }
 
     private static void run() throws ExecutionException, InterruptedException {
+        // TODO: test loading while waiting for a pause prompt
         while (!exit) {
             GameState state = GUI.gui.getGameState();
             state.gameLoop();

@@ -31,16 +31,16 @@ public class Encounter implements Serializable {
 
     private static final long serialVersionUID = 3122246133619156539L;
 
-    List<Character> participants;
-    protected boolean p1ff;
-    protected boolean p2ff;
-    protected transient Optional<String> p1Guaranteed;
-    protected transient Optional<String> p2Guaranteed;
+    private List<Character> participants;
+    private boolean p1ff;
+    private boolean p2ff;
+    private transient Optional<String> p1Guaranteed;
+    private transient Optional<String> p2Guaranteed;
     protected Area location;
     protected transient Combat fight;
-    protected int checkin;
+    private int checkin;
     protected int fightTime;
-    protected CountDownLatch waitForFinish;
+    private CountDownLatch waitForFinish;
 
     public Encounter(Area location, Character first, Character second) {
         this(location, Arrays.asList(first, second));
@@ -211,12 +211,14 @@ public class Encounter implements Serializable {
             if (p1ff && p2ff) {
                 startFightTimer();
                 if (getP1().human() || getP2().human()) {
+                    // FIXME: Should not run combat from in here!
                     this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
                 } else {
                     this.fight = new Combat(getP1(), getP2(), location);
                 }
             } else if (p1ff) {
                 if (p1Guaranteed.isPresent() && !p2Guaranteed.isPresent()) {
+                    // TODO: Should check whether encounter is observed instead of whether a character is human
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p1Guaranteed.get());
                     startFightTimer();
@@ -252,6 +254,7 @@ public class Encounter implements Serializable {
                 }
             } else if (p2ff) {
                 if (p2Guaranteed.isPresent() && !p1Guaranteed.isPresent()) {
+                    // TODO: Should check whether encounter is observed instead of whether a character is human
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p2Guaranteed.get());
                     startFightTimer();
@@ -509,6 +512,7 @@ public class Encounter implements Serializable {
     public boolean battle() {
         fightTime--;
         if (fightTime <= 0 && !fight.isEnded()) {
+            // Was fight.go() or something
             fight.startScene();
             return true;
         } else {
@@ -616,12 +620,7 @@ public class Encounter implements Serializable {
         return fight != null && !c.equals(getP1()) && !c.equals(getP2());
     }
 
-    public void watch() {
-        watch(GUI.gui);
-    }
-
     public void watch(GUI gui) {
-        fight.runCombat(gui);
         fight.runCombat(gui);
     }
 
@@ -634,6 +633,7 @@ public class Encounter implements Serializable {
     }
 
     // TODO: Refactor these prompts into a single method.
+    // FIXME: Intervene prompts do not show up!
     public void promptIntervene(Character p1, Character p2, GUI gui) {
         Player player = GameState.gameState.characterPool.getPlayer();
         List<LabeledValue<String>> choices = Arrays.asList(new LabeledValue<>("p1", "Help " + p1.getName()),
@@ -649,7 +649,7 @@ public class Encounter implements Serializable {
                     intrude(player, p2);
                     break;
                 case "Watch":
-                    watch();
+                    watch(gui);
                     break;
                 default:
                     throw new AssertionError("Unknown Intervene choice: " + choice);
@@ -787,10 +787,12 @@ public class Encounter implements Serializable {
     /**
      * Based on participant responses, determine whether this encounter results in combat.
      */
+    // FIXME: Does not handle ongoing NPC combat and intervention.
     public void resolve() throws InterruptedException {
         // TODO: spotCheck() has a lot of side effects. Refactor them into something less innocuous.
-        boolean startCombat = spotCheck();
-        if (startCombat) {
+        // Ongoing sexfights are loud and obvious
+        spotCheck();
+        if (fight != null) {
             if (fight.isBeingObserved()) {
                 fight.runCombat(GUI.gui);
             }

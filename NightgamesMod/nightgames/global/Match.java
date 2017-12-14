@@ -136,6 +136,7 @@ public class Match {
                 }
             }
             // Find encounters
+            // FIXME: need to handle in-progress encounters
             List<Encounter> encounters = combatants.stream().map(Character::location).distinct()
                             .map(Area::encounter).filter(Optional::isPresent).map(Optional::get)
                             .collect(Collectors.toList());

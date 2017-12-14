@@ -194,7 +194,14 @@ public class Combat extends Observable implements Cloneable {
         if (doExtendedLog()) {
             log.logHeader("\n");
         }
-        next();
+        this.promptNext(GUI.gui);
+        //        if (
+        //                        (wroteMessageSinceLastClear || phase != CombatPhase.START)
+        //                                        && beingObserved && !shouldAutoresolve() && (!Flag.checkFlag(Flag.AutoNext)
+        //                                        || !FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
+        //                        } else {
+        //            // do nothing
+        //        }
     }
 
     public CombatantData getCombatantData(Character character) {
@@ -709,79 +716,6 @@ public class Combat extends Observable implements Cloneable {
         return nextPhase;
     }
 
-    /**
-     * Handles a combat turn.
-     * @return returns true if combat should be paused (waiting for user input)
-     */
-    private boolean turn() {
-        if (!cloned && isBeingObserved()) {
-            GUI.gui.loadPortrait(this, p1, p2);
-        }
-        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
-            System.out.println("Current phase = " + phase);
-        }
-        // Combat should end; do post-combat scenes
-        if (phase != CombatPhase.FINISHED_SCENE && phase != CombatPhase.RESULTS_SCENE && checkLosses(false)) {
-            phase = levelDrainPostCombat();
-            return true;
-        }
-        if ((p1.orgasmed || p2.orgasmed) && SKIPPABLE_PHASES.contains(phase)) {
-            phase = CombatPhase.UPKEEP;
-        }
-        switch (phase) {
-            case START:
-                phase = CombatPhase.PRETURN;
-                return false;
-            case PRETURN:
-                clear();
-                doPreturnUpkeep();
-                phase = CombatPhase.SKILL_SELECTION;
-                return false;
-            case SKILL_SELECTION:
-                return pickSkills();
-            case PET_ACTIONS:
-                phase = doPetActions();
-                return true;
-            case DETERMINE_SKILL_ORDER:
-                phase = determineSkillOrder();
-                return false;
-            case P1_ACT_FIRST:
-                if (doAction(p1, p1act.getDefaultTarget(this), p1act)) {
-                    phase = CombatPhase.UPKEEP;
-                } else {
-                    phase = CombatPhase.P2_ACT_SECOND;
-                }
-                return true;
-            case P1_ACT_SECOND:
-                doAction(p1, p1act.getDefaultTarget(this), p1act);
-                phase = CombatPhase.UPKEEP;
-                return true;
-            case P2_ACT_FIRST:
-                if (doAction(p2, p2act.getDefaultTarget(this), p2act)) {
-                    phase = CombatPhase.UPKEEP;
-                } else {
-                    phase = CombatPhase.P1_ACT_SECOND;
-                }
-                return true;
-            case P2_ACT_SECOND:
-                doAction(p2, p2act.getDefaultTarget(this), p2act);
-                phase = CombatPhase.UPKEEP;
-                return true;
-            case UPKEEP:
-                doEndOfTurnUpkeep();
-                phase = CombatPhase.PRETURN;
-                return true;
-            case RESULTS_SCENE:
-                checkLosses(true);
-                phase = CombatPhase.FINISHED_SCENE;
-                return true;
-            case FINISHED_SCENE:
-                phase = CombatPhase.ENDED;
-            default:
-                return true;
-        }
-    }
-
     private void clearMessage() {
         wroteMessageSinceLastClear = false;
         message = "";
@@ -1289,23 +1223,23 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private boolean next() {
-        if (phase == CombatPhase.ENDED) {
-            end();
-            return false;
-        } else {
-            if (
-                            !(wroteMessage || phase == CombatPhase.START)
-                            || !beingObserved
-                            || shouldAutoresolve()
-                            || (Flag.checkFlag(Flag.AutoNext) && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
-
-                return false;
-            } else {
-                this.promptNext(GUI.gui);
-                return true;
-            }
+    private void next() {
+        // TODO: ensure we only bother updating the GUI when we need input from the user. Then we can probably get rid of a lot of this stuff.
+        // FIXME: backport dndw's combat autoresolution from commit b54e8d37652f7681ee85c523b4fefc2acff44ccb or else NPCS will fight forever
+        // Fast combat display
+        if (Flag.checkFlag(Flag.AutoNext) && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase)) {
+            return;
         }
+        if (phase == CombatPhase.START) {
+            return;
+        }
+        if (!wroteMessageSinceLastClear) {
+            return;
+        }
+        if (shouldAutoresolve()) {
+            return;
+        }
+        this.promptNext(GUI.gui);
     }
 
     public void intervene(Character intruder, Character assist) {
@@ -1779,15 +1713,105 @@ public class Combat extends Observable implements Cloneable {
         gui.loadPortrait(this, this.p1, this.p2);
         gui.showPortrait();
         startScene();
-        boolean pause;
         while (!finished) {
-            pause = turn();
+            boolean pause = false;
+            if (!cloned && isBeingObserved()) {
+                GUI.gui.loadPortrait(this, p1, p2);
+            }
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                System.out.println("Current phase = " + phase);
+            }
+            // Combat should end; do post-combat scenes
+            if (phase != CombatPhase.FINISHED_SCENE && phase != CombatPhase.RESULTS_SCENE && checkLosses(false)) {
+                phase = levelDrainPostCombat();
+                pause = true;
+            }
+            if ((p1.orgasmed || p2.orgasmed) && SKIPPABLE_PHASES.contains(phase)) {
+                phase = CombatPhase.UPKEEP;
+            }
+            switch (phase) {
+                case START:
+                    phase = CombatPhase.PRETURN;
+                    pause = false;
+                    break;
+                case PRETURN:
+                    clearMessage();
+                    doPreturnUpkeep();
+                    phase = CombatPhase.SKILL_SELECTION;
+                    pause = false;
+                    break;
+                case SKILL_SELECTION:
+                    pause = pickSkills();
+                    break;
+                case PET_ACTIONS:
+                    phase = CombatPhase.DETERMINE_SKILL_ORDER;
+                    // Pause to let the player read, if any pets took actions.
+                    pause = doPetActions();
+                    break;
+                case DETERMINE_SKILL_ORDER:
+                    phase = determineSkillOrder();
+                    pause = false;
+                    break;
+                case P1_ACT_FIRST:
+                    if (doAction(p1, p1act.getDefaultTarget(this), p1act)) {
+                        phase = CombatPhase.UPKEEP;
+                    } else {
+                        phase = CombatPhase.P2_ACT_SECOND;
+                    }
+                    pause = true;
+                    break;
+                case P1_ACT_SECOND:
+                    doAction(p1, p1act.getDefaultTarget(this), p1act);
+                    phase = CombatPhase.UPKEEP;
+                    pause = true;
+                    break;
+                case P2_ACT_FIRST:
+                    if (doAction(p2, p2act.getDefaultTarget(this), p2act)) {
+                        phase = CombatPhase.UPKEEP;
+                    } else {
+                        phase = CombatPhase.P1_ACT_SECOND;
+                    }
+                    pause = true;
+                    break;
+                case P2_ACT_SECOND:
+                    doAction(p2, p2act.getDefaultTarget(this), p2act);
+                    phase = CombatPhase.UPKEEP;
+                    pause = true;
+                    break;
+                case UPKEEP:
+                    doEndOfTurnUpkeep();
+                    phase = CombatPhase.PRETURN;
+                    pause = true;
+                    break;
+                case RESULTS_SCENE:
+                    checkLosses(true);
+                    phase = CombatPhase.FINISHED_SCENE;
+                    pause = true;
+                    break;
+                case FINISHED_SCENE:
+                    phase = CombatPhase.ENDED;
+                    break;
+                default:
+                    pause = true;
+            }
             if (phase != CombatPhase.ENDED) {
-                updateAndClearMessage();
+                updateGUI();
+            } else {
+                end();
+                break;
             }
-            while (pause) {
-                pause = next();
+            if (pause) {
+                next();
             }
+            // TODO: move somewhere more sensible
+            //this.promptNext(GUI.gui);
+            //        if (
+            //                        (wroteMessageSinceLastClear || phase != CombatPhase.START)
+            //                                        && beingObserved && !shouldAutoresolve() && (!Flag.checkFlag(Flag.AutoNext)
+            //                                        || !FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
+            //                        } else {
+            //            // do nothing
+            //        }
         }
     }
 }

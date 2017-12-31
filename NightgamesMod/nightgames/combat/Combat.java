@@ -79,6 +79,7 @@ public class Combat extends Observable implements Cloneable {
     public volatile boolean combatMessageChanged = false;   // Signals to the GUI that it should update its view of the combat message.
     public volatile boolean clearText = false;  // Signals to the GUI that it should clear the main text window before updating its view of the combat message.
     private boolean processedEnding;
+    private int delayCounter;   // In unobserved combats, delays combat a few rounds to give a nearby player a chance to intervene.
 
 
     String imagePath = "";
@@ -94,6 +95,8 @@ public class Combat extends Observable implements Cloneable {
         this.p2 = p2;
         p1.startBattle(this);
         p2.startBattle(this);
+        // If we're reaching this deep into another object to get some data, it's probably in the wrong place.
+        // TODO: Move ArmManager access to somewhere else
         getCombatantData(p1).setManager(Match.getMatch().getMatchData().getDataFor(p1).getArmManager());
         getCombatantData(p2).setManager(Match.getMatch().getMatchData().getDataFor(p2).getArmManager());
         location = loc;
@@ -117,8 +120,6 @@ public class Combat extends Observable implements Cloneable {
 
     public Combat(Character p1, Character p2, Area loc, Encounter.Initiation init) {
         this(p1, p2, loc);
-        message = "";
-        timer = 0;
         switch (init) {
             case ambushStrip:
                 p2.undress(this);
@@ -188,22 +189,13 @@ public class Combat extends Observable implements Cloneable {
         applyCombatStatuses(p1, p2);
         applyCombatStatuses(p2, p1);
 
-        updateGUI();
-        if (doExtendedLog()) {
-            log.logHeader("\n");
+        if (isBeingObserved()) {
+            updateGUI();
+            if (doExtendedLog()) {
+                log.logHeader("\n");
+            }
+            this.promptNext(GUI.gui);
         }
-        // if (shouldAutoresolve()) {
-        //     autoresolve();
-        //     return;
-        // }
-        this.promptNext(GUI.gui);
-        //        if (
-        //                        (wroteMessageSinceLastClear || phase != CombatPhase.START)
-        //                                        && beingObserved && !shouldAutoresolve() && (!Flag.checkFlag(Flag.AutoNext)
-        //                                        || !FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
-        //                        } else {
-        //            // do nothing
-        //        }
     }
 
     public CombatantData getCombatantData(Character character) {
@@ -1227,44 +1219,27 @@ public class Combat extends Observable implements Cloneable {
 
     private void next() {
         // TODO: ensure we only bother updating the GUI when we need input from the user. Then we can probably get rid of a lot of this stuff.
-        // FIXME: backport dndw's combat autoresolution from commit b54e8d37652f7681ee85c523b4fefc2acff44ccb or else NPCS will fight forever
+        boolean prompt = true;
+        // NPCs only
+        if (shouldAutoresolve()) {
+            prompt = false;
+        }
         // Fast combat display
         if (Flag.checkFlag(Flag.AutoNext) && FAST_COMBAT_SKIPPABLE_PHASES.contains(phase)) {
-            return;
+            prompt = false;
         }
-        if (phase == CombatPhase.START) {
-            return;
+        // Don't pause on blank screens
+        if (!wroteMessageSinceLastClear || phase == CombatPhase.START) {
+            prompt = false;
         }
-        if (!wroteMessageSinceLastClear) {
-            return;
+        if (prompt) {
+            this.promptNext(GUI.gui);
         }
-        if (shouldAutoresolve()) {
-            return;
-        }
-        this.promptNext(GUI.gui);
-    }
-
-    private void autoresolve() {
-        assert !p1.human() && !p2.human() && !beingObserved;
-        assert timer == 0;
-        while (timer < NPC_TURN_LIMIT && !winner.isPresent()) {
-            // TODO: make this work with explicit combat loop
-            // turn();
-        }
-        if (timer < NPC_TURN_LIMIT) {
-            double fitness1 = p1.getFitness(this);
-            double fitness2 = p2.getFitness(this);
-            double diff = Math.abs(fitness1 / fitness2 - 1.0);
-            if (diff > NPC_DRAW_ERROR_MARGIN) {
-                winner = Optional.of(fitness1 > fitness2 ? p1 : p2);
-            } else {
-                winner = Optional.of(NPC.noneCharacter());
-            }
-        }
-        end();
     }
 
     public void intervene(Character intruder, Character assist) {
+        // Start the fight on next combat phase
+        delayCounter = 0;
         Character target;
         if (p1 == assist) {
             target = p2;
@@ -1274,6 +1249,7 @@ public class Combat extends Observable implements Cloneable {
         if (target.resist3p(this, intruder, assist)) {
             target.gainXP(20 + target.lvlBonus(intruder));
             intruder.gainXP(10 + intruder.lvlBonus(target));
+            // TODO: This represents an orgasm and should be handled appropriately by a generic method
             intruder.getArousal()
                     .empty();
             if (intruder.has(Trait.insatiable)) {
@@ -1290,10 +1266,8 @@ public class Combat extends Observable implements Cloneable {
             assist.victory3p(this, target, intruder);
         }
         phase = CombatPhase.RESULTS_SCENE;
-        if (!(p1.human() || p2.human() || intruder.human())) {
-            end();
-        } else {
-            runCombat(GUI.gui);
+        if (p1.human() || p2.human() || intruder.human()) {
+            loadCombatGUI(GUI.gui);
         }
     }
 
@@ -1305,7 +1279,7 @@ public class Combat extends Observable implements Cloneable {
             p1.state = State.ready;
             p2.state = State.ready;
             if (beingObserved) {
-                endCombat(GUI.gui);
+                removeCombatGUI(GUI.gui);
             }
             return;
         }
@@ -1332,6 +1306,7 @@ public class Combat extends Observable implements Cloneable {
         getCombatantData(p2).getRemovedItems().forEach(p2::gain);
         location.endEncounter();
         // it's a little ugly, but we must be mindful of lazy evaluation
+        // TODO: rework to not rely on lazy evaluation side effects
         boolean ding = p1.levelUpIfPossible(this) && p1.human();
         ding = (p2.levelUpIfPossible(this) && p2.human()) || ding;
         if (doExtendedLog()) {
@@ -1344,7 +1319,7 @@ public class Combat extends Observable implements Cloneable {
             Match.getMatch().getMatchData().getDataFor(p2).setArmManager(getCombatantData(p2).getManager());
         }
         if (!ding && beingObserved) {
-            endCombat(GUI.gui);
+            removeCombatGUI(GUI.gui);
         }
     }
 
@@ -1367,6 +1342,7 @@ public class Combat extends Observable implements Cloneable {
     public void petbattle(Pet one, Pet two) {
         int roll1 = Random.random(20) + one.power();
         int roll2 = Random.random(20) + two.power();
+        // pussies have an advantage?
         if (one.hasPussy() && two.hasDick()) {
             roll1 += 3;
         } else if (one.hasDick() && two.hasPussy()) {
@@ -1658,7 +1634,7 @@ public class Combat extends Observable implements Cloneable {
 
     public void addPet(Character master, PetCharacter self) {
         if (self == null) {
-            System.err.println("Something fucked up happened");
+            System.err.println("Tried to add null pet!");
             Thread.dumpStack();
             return;
         }
@@ -1703,7 +1679,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public void endCombat(GUI gui) {
+    private void removeCombatGUI(GUI gui) {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("End Combat");
         }
@@ -1711,30 +1687,25 @@ public class Combat extends Observable implements Cloneable {
         gui.clearText();
         gui.clearImage();
         gui.showMap();
-        finished = true;
     }
 
-    // Combat GUI
-    public static Combat beginCombat(Character player, Character enemy, Initiation init, GUI gui) {
-        Combat combat = new Combat(player, enemy, player.location(), init);
-        combat.runCombat(gui);
-        return combat;
-    }
-
-    // TODO: Combat should begin only after all players' actions have resolved
-    public static Combat beginCombat(Character player, Character enemy, GUI gui) {
-        Combat combat = new Combat(player, enemy, player.location());
-        combat.runCombat(gui);
-        return combat;
-    }
-
-    public void runCombat(GUI gui) {
+    public void loadCombatGUI(GUI gui) {
         addObserver(gui);
         setBeingObserved(true);
         gui.combat = this;
         gui.loadPortrait(this, this.p1, this.p2);
         gui.showPortrait();
-        startScene();
+    }
+
+    public void runCombat() {
+        // delayCounter only applies to combats not involving a human
+        if (!isBeingObserved() && delayCounter > 0) {
+            delayCounter--;
+            return;
+        }
+        if (phase == CombatPhase.START) {
+            startScene();
+        }
         while (!finished) {
             boolean pause = false;
             if (!cloned && isBeingObserved()) {
@@ -1816,24 +1787,28 @@ public class Combat extends Observable implements Cloneable {
                 default:
                     pause = true;
             }
-            if (phase != CombatPhase.ENDED) {
+            if (isBeingObserved()) {
                 updateGUI();
             } else {
-                end();
-                break;
+                // Check for NPC vs NPC win
+                double fitness1 = p1.getFitness(this);
+                double fitness2 = p2.getFitness(this);
+                double diff = Math.abs(fitness1 / fitness2 - 1.0);
+                if (diff > NPC_DRAW_ERROR_MARGIN) {
+                    winner = Optional.of(fitness1 > fitness2 ? p1 : p2);
+                } else if (timer > NPC_TURN_LIMIT) {
+                    winner = Optional.of(NPC.noneCharacter());
+                }
+                if (winner.isPresent()) {
+                    phase = CombatPhase.ENDED;
+                }
             }
-            if (pause) {
+            if (phase == CombatPhase.ENDED) {
+                end();
+                finished = true;
+            } else if (pause) {
                 next();
             }
-            // TODO: move somewhere more sensible
-            //this.promptNext(GUI.gui);
-            //        if (
-            //                        (wroteMessageSinceLastClear || phase != CombatPhase.START)
-            //                                        && beingObserved && !shouldAutoresolve() && (!Flag.checkFlag(Flag.AutoNext)
-            //                                        || !FAST_COMBAT_SKIPPABLE_PHASES.contains(phase))) {
-            //                        } else {
-            //            // do nothing
-            //        }
         }
     }
 }

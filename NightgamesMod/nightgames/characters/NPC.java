@@ -494,11 +494,7 @@ public class NPC extends Character {
         } else if (state == State.masturbating) {
             masturbate();
         } else {
-            // location.encounter() side effects:
-            // checks for intrusion
-            // activates intervention if available
-            // otherwise creates new encounter, sets area active encounter, and returns optional
-            if (!location.encounter(this).isPresent()) {
+            if (!location.hasEncounter()) {
                 
                 HashSet<Action> moves = new HashSet<>();
                 HashSet<Movement> radar = new HashSet<>();

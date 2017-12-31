@@ -9,6 +9,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
 import nightgames.gui.GUI;
 import nightgames.modifier.Modifier;
@@ -63,24 +64,22 @@ public class Match {
         areaList.add(map.get("Tunnel"));
         areaList.add(map.get("Workshop"));
         areaList.add(map.get("Pool"));
-        combatants.forEach(character -> {
-            if (character.has(Trait.immobile)) {
-                character.place(map.get("Courtyard"));
+        combatants.forEach(combatant -> {
+            if (combatant.has(Trait.immobile)) {
+                combatant.place(map.get("Courtyard"));
             } else {
-                character.place(areaList.pop());
+                combatant.place(areaList.pop());
             }
+            combatant.getStamina().fill();
+            combatant.getArousal().empty();
+            combatant.getMojo().empty();
+            combatant.getWillpower().fill();
+            if (combatant.getPure(Attribute.Science) > 0) {
+                combatant.chargeBattery();
+            }
+            manageConditions(combatant);
         });
 
-        for (Character player : combatants) {
-            player.getStamina().fill();
-            player.getArousal().empty();
-            player.getMojo().empty();
-            player.getWillpower().fill();
-            if (player.getPure(Attribute.Science) > 0) {
-                player.chargeBattery();
-            }
-            manageConditions(player);
-        }
         match = this;
     }
 
@@ -112,7 +111,6 @@ public class Match {
         return match;
     }
 
-    // FIXME: GUI redraws like crazy during match.
     public void matchLoop(int endTime) throws InterruptedException {
         assert (combatants.size() > 0);
         while (time < endTime) {

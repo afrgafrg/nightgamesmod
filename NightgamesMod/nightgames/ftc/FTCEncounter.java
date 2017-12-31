@@ -17,22 +17,20 @@ import nightgames.status.Bound;
 import nightgames.status.Flatfooted;
 import nightgames.trap.Trap;
 
-import java.util.List;
-
-import static nightgames.combat.Combat.Initiation.ambushRegular;
+import static nightgames.combat.Encounter.Initiation.ambushRegular;
 
 public class FTCEncounter extends Encounter {
 
     private static final long serialVersionUID = 5190164935968044626L;
 
-    FTCEncounter(Area location, List<Character> characters) {
-        super(location, characters);
+    FTCEncounter(Area location) {
+        super(location);
     }
 
     @Override
-    public boolean spotCheck() {
+    public void spotCheck() {
         if (!(getP1().eligible(getP2()) && getP2().eligible(getP1())))
-            return super.spotCheck();
+            super.spotCheck();
         if (getP1().state == State.inTree) {
             treeAmbush(getP1(), getP2());
         } else if (getP2().state == State.inTree) {
@@ -46,13 +44,11 @@ public class FTCEncounter extends Encounter {
         } else if (getP2().state == State.inPass) {
             passAmbush(getP2(), getP1());
         } else {
-            return super.spotCheck();
+            super.spotCheck();
         }
-        return true;
     }
 
     private void treeAmbush(Character attacker, Character victim) {
-        fightTime = 2;
         victim.addNonCombat(new Flatfooted(victim, 3));
         if (attacker.has(Item.Handcuffs))
             victim.addNonCombat(new Bound(victim, 75, "handcuffs"));
@@ -96,7 +92,6 @@ public class FTCEncounter extends Encounter {
     }
 
     private void bushAmbush(Character attacker, Character victim) {
-        fightTime = 2;
         victim.addNonCombat(new Flatfooted(victim, 3));
         if (attacker.has(Item.Handcuffs))
             victim.addNonCombat(new Bound(victim, 75, "handcuffs"));

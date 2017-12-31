@@ -37,7 +37,6 @@ public class Encounter implements Serializable {
     protected Area location;
     protected transient Combat fight;
     private int checkin;
-    protected int fightTime;
     private CountDownLatch waitForFinish;
 
     public Encounter(Area location, Character first, Character second) {
@@ -110,7 +109,10 @@ public class Encounter implements Serializable {
         }
     }
 
-    public boolean spotCheck() {
+    /**
+     * Prompts characters for responses to the encounter, depending on the state of other present characters. Creates an active Combat if applicable.
+     */
+    protected void spotCheck() {
         final Character p1 = getP1();
         final Character p2 = getP2();
         // If both players are eligible, first check for various one-sided encounters. Second, see who's observant enough
@@ -119,33 +121,20 @@ public class Encounter implements Serializable {
         if (p1.eligible(p2) && p2.eligible(p1)) {
             if (p1.state == State.shower) {
                 p2.showerScene(p1, this);
-                return true;
             } else if (p2.state == State.shower) {
                 p1.showerScene(p2, this);
-                return true;
             } else if (p1.state == State.webbed) {
                 spider(p2, p1);
             } else if (p2.state == State.webbed) {
                 spider(p1, p2);
             } else if (p1.state == State.crafting || p1.state == State.searching) {
                 p2.spy(p1, this);
-                return true;
             } else if (p2.state == State.crafting || p2.state == State.searching) {
                 p1.spy(p2, this);
-                return true;
-            }
-            if (p1.state == State.shower) {
-                p2.showerScene(p1, this);
-                return true;
-            } else if (p2.state == State.shower) {
-                p1.showerScene(p2, this);
-                return true;
             } else if (p1.state == State.masturbating) {
                 caught(p2, p1);
-                return true;
             } else if (p2.state == State.masturbating) {
                 caught(p1, p2);
-                return true;
             } else if (p2.spotCheck(p1)) {
                 if (p1.spotCheck(p2)) {
                     p1.faceOff(p2, this);
@@ -160,7 +149,6 @@ public class Encounter implements Serializable {
                     location.endEncounter();
                 }
             }
-            return true;
         } else {
             if (p1.state == State.masturbating) {
                 if (p1.human()) {
@@ -196,7 +184,6 @@ public class Encounter implements Serializable {
                                       + " still naked from your last encounter, but she's not fair game again until she replaces her clothes.");
             }
             location.endEncounter();
-            return false;
         }
     }
 
@@ -212,20 +199,18 @@ public class Encounter implements Serializable {
         }
         if (checkin >= 2) {
             if (p1ff && p2ff) {
-                startFightTimer();
                 if (getP1().human() || getP2().human()) {
-                    // FIXME: Should not run combat from in here!
-                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
+                    Character player = getP1();
+                    this.fight = new Combat(player, getP2(), player.location());
                 } else {
                     this.fight = new Combat(getP1(), getP2(), location);
                 }
             } else if (p1ff) {
                 if (p1Guaranteed.isPresent() && !p2Guaranteed.isPresent()) {
-                    // TODO: Should check whether encounter is observed instead of whether a character is human
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p1Guaranteed.get());
-                    startFightTimer();
-                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
+                    Character player = getP1();
+                    this.fight = new Combat(player, getP2(), player.location());
                 } else if (p2Guaranteed.isPresent()) {
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p2Guaranteed.get());
@@ -238,7 +223,6 @@ public class Encounter implements Serializable {
                     }
                     getP2().flee(location);
                 } else {
-                    startFightTimer();
                     if (getP1().human() || getP2().human()) {
                         if (getP1().human()) {
                             GUI.gui
@@ -248,7 +232,8 @@ public class Encounter implements Serializable {
                                   .message("You quickly try to escape, but " + getP1().getName()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
+                        Character player = getP1();
+                        this.fight = new Combat(player, getP2(), player.location());
                     } else {
 
                         // this.fight=new NullGUI().beginCombat(p1,p2);
@@ -257,11 +242,10 @@ public class Encounter implements Serializable {
                 }
             } else if (p2ff) {
                 if (p2Guaranteed.isPresent() && !p1Guaranteed.isPresent()) {
-                    // TODO: Should check whether encounter is observed instead of whether a character is human
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p2Guaranteed.get());
-                    startFightTimer();
-                    this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
+                    Character player = getP1();
+                    this.fight = new Combat(player, getP2(), player.location());
                 } else if (p1Guaranteed.isPresent()) {
                     if (getP1().human() || getP2().human())
                         GUI.gui.message(p1Guaranteed.get());
@@ -274,7 +258,6 @@ public class Encounter implements Serializable {
                     }
                     getP1().flee(location);
                 } else {
-                    startFightTimer();
                     if (getP1().human() || getP2().human()) {
                         if (getP2().human()) {
                             GUI.gui
@@ -284,7 +267,8 @@ public class Encounter implements Serializable {
                                   .message("You quickly try to escape, but " + getP2().getName()
                                                   + " is quicker. She corners you and attacks.");
                         }
-                        this.fight = Combat.beginCombat(getP1(), getP2(), GUI.gui);
+                        Character player = getP1();
+                        this.fight = new Combat(player, getP2(), player.location());
                     } else {
                         // this.fight=new NullGUI().beginCombat(p1,p2);
                         this.fight = new Combat(getP1(), getP2(), location);
@@ -319,12 +303,7 @@ public class Encounter implements Serializable {
         }
     }
 
-    private void startFightTimer() {
-        fightTime = 2;
-    }
-
     protected void ambush(Character attacker, Character target) {
-        startFightTimer();
         target.addNonCombat(new Flatfooted(target, 3));
         if (getP1().human() || getP2().human()) {
             fight = new Combat(attacker, target, attacker.location(), Initiation.ambushRegular);
@@ -335,7 +314,6 @@ public class Encounter implements Serializable {
     }
 
     protected void showerambush(Character attacker, Character target) {
-        startFightTimer();
         if (target.human()) {
             if (location.id() == Movement.shower) {
                 GUI.gui
@@ -513,15 +491,11 @@ public class Encounter implements Serializable {
         fight.intervene(intruder, assist);
     }
 
-    public boolean battle() {
-        fightTime--;
-        if (fightTime <= 0 && !fight.isEnded()) {
-            // Was fight.go() or something
-            fight.startScene();
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * NPC combat lasts for a few turns before resolving.
+     */
+    public void battle() {
+        // Handled by combat's delayCounter during match loop combat phase.
     }
 
     public Optional<Combat> getCombat() {
@@ -562,7 +536,7 @@ public class Encounter implements Serializable {
     public void engage(Combat fight) {
         this.fight = fight;
         if (fight.p1.human() || fight.p2.human()) {
-            fight.runCombat(GUI.gui);
+            fight.loadCombatGUI(GUI.gui);
         }
     }
 
@@ -625,7 +599,7 @@ public class Encounter implements Serializable {
     }
 
     public void watch(GUI gui) {
-        fight.runCombat(gui);
+        fight.loadCombatGUI(gui);
     }
 
     public void await() throws InterruptedException {
@@ -633,6 +607,9 @@ public class Encounter implements Serializable {
     }
 
     public void finish() {
+        if (fight != null) {
+            fight = null;
+        }
         waitForFinish.countDown();
     }
 
@@ -791,15 +768,20 @@ public class Encounter implements Serializable {
     /**
      * Based on participant responses, determine whether this encounter results in combat.
      */
-    // FIXME: Does not handle ongoing NPC combat and intervention.
-    public void resolve() throws InterruptedException {
+    public Optional<Combat> resolve() {
         // TODO: spotCheck() has a lot of side effects. Refactor them into something less innocuous.
-        // Ongoing sexfights are loud and obvious
-        spotCheck();
+        if (fight == null) {
+            spotCheck();
+        }
         if (fight != null) {
-            if (fight.isBeingObserved()) {
-                fight.runCombat(GUI.gui);
+            Optional<Character> intervener = getIntervener();
+            if (intervener.isPresent() && checkIntrude(intervener.get())) {
+                intervener.get().intervene(this, getP1(), getP2());
+            }
+            if (!fight.isEnded()) {
+                return Optional.of(fight);
             }
         }
+        return Optional.empty();
     }
 }

@@ -2536,6 +2536,11 @@ public abstract class Character extends Observable implements Cloneable {
         Match.getMatch().score(this, score);
     }
 
+    /**
+     * This character(p1) is eligible to fight another character(p2) if p1 is not resupplying and p2 is not on p1's mercy list.
+     * @param p2 The character to fight.
+     * @return Whether p1 is eligible to fight p2.
+     */
     public boolean eligible(Character p2) {
         boolean ftc = true;
         if (Flag.checkFlag(Flag.FTC)) {

@@ -20,8 +20,6 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
-import static nightgames.combat.Combat.Initiation.ambushRegular;
-import static nightgames.combat.Combat.Initiation.ambushStrip;
 import static nightgames.requirements.RequirementShortcuts.item;
 
 /**
@@ -78,6 +76,11 @@ public class Encounter implements Serializable {
     public void intervene(Character intervener) {
         assert participants.size() == 2;
         participants.add(intervener);
+    }
+
+    public enum Initiation {
+        ambushStrip,
+        ambushRegular
     }
 
     protected void checkEnthrall(Character p1, Character p2) {
@@ -324,10 +327,10 @@ public class Encounter implements Serializable {
         startFightTimer();
         target.addNonCombat(new Flatfooted(target, 3));
         if (getP1().human() || getP2().human()) {
-            fight = Combat.beginCombat(attacker, target, ambushRegular, GUI.gui);
+            fight = new Combat(attacker, target, attacker.location(), Initiation.ambushRegular);
             GUI.gui.message(Formatter.format("{self:SUBJECT-ACTION:catch|catches} {other:name-do} by surprise and {self:action:attack|attacks}!", attacker, target));
         } else {
-            fight = new Combat(attacker, target, location, ambushRegular);
+            fight = new Combat(attacker, target, location, Initiation.ambushRegular);
         }
     }
 
@@ -360,10 +363,11 @@ public class Encounter implements Serializable {
             }
         }
         if (getP1().human() || getP2().human()) {
-            fight = Combat.beginCombat(getP1(), getP2(), ambushStrip, GUI.gui);
+            Character player = getP1();
+            fight = new Combat(player, getP2(), player.location(), Initiation.ambushStrip);
         } else {
             // this.fight=new NullGUI().beginCombat(p1,p2);
-            fight = new Combat(getP1(), getP2(), location, ambushStrip);
+            fight = new Combat(getP1(), getP2(), location, Initiation.ambushStrip);
         }
     }
 

@@ -115,11 +115,7 @@ public class Combat extends Observable implements Cloneable {
         finished = false;
     }
 
-    public enum Initiation {
-        ambushStrip,
-        ambushRegular
-    }
-    public Combat(Character p1, Character p2, Area loc, Initiation init) {
+    public Combat(Character p1, Character p2, Area loc, Encounter.Initiation init) {
         this(p1, p2, loc);
         message = "";
         timer = 0;

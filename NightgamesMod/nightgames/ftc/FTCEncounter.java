@@ -59,7 +59,7 @@ public class FTCEncounter extends Encounter {
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));
         if (getP1().human() || getP2().human()) {
-            fight = Combat.beginCombat(attacker, victim, ambushRegular, GUI.gui);
+            fight = new Combat(attacker, victim, attacker.location(), (Initiation) ambushRegular);
             fight.setStance(new Pin(attacker, victim));
             String message = "";
             if (victim.human()) {
@@ -103,7 +103,7 @@ public class FTCEncounter extends Encounter {
         else
             victim.addNonCombat(new Bound(victim, 50, "zip-tie"));
         if (getP1().human() || getP2().human()) {
-            fight = Combat.beginCombat(attacker, victim, ambushRegular, GUI.gui);
+            fight = new Combat(attacker, victim, attacker.location(), (Initiation) ambushRegular);
             fight.setStance(new Mount(attacker, victim));
             String message = "";
             if (victim.human()) {
@@ -150,7 +150,7 @@ public class FTCEncounter extends Encounter {
                                 + " other side. The impact knocks the wind out of you, putting you"
                                 + " at a disadvantage.";
             }
-            fight = Combat.beginCombat(attacker, victim, GUI.gui);
+            fight = new Combat(attacker, victim, attacker.location());
             victim.addNonCombat(new Flatfooted(victim, 3));
         } else {
             if (attacker.human()) {
@@ -170,7 +170,7 @@ public class FTCEncounter extends Encounter {
                                 + " Then, you throw {self:direct-object} to the side, causing"
                                 + " {self:direct-object} to fall to the ground.";
             }
-            fight = Combat.beginCombat(attacker, victim, GUI.gui);
+            fight = new Combat(attacker, victim, attacker.location());
             attacker.addNonCombat(new Flatfooted(attacker, 3));
         }
         if (attacker.human() || victim.human()) {

@@ -28,10 +28,12 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
    **DONE** Kludge combat into compatibility with the match loop so I can playtest.
 
-   **BETTER** I want to work out why the main text window is so stuttery/flickery now. I'd like to figure out a way to only paint
+   **DONE** I want to work out why the main text window is so stuttery/flickery now. I'd like to figure out a way to only paint
    the text when the player is about to be presented with an interactable prompt.
 
-1. Make the combat loop explicit.
+1. **DONE** Make the combat loop explicit.
+
+    **CODER BONUS** Providing an save game file as an argument to the main function will now launch that game directly. No more clicking through dialog boxes while debugging! (If we already had a way to do that, I'm gonna feel silly)
 
 1. Make the daytime loop explicit.
 

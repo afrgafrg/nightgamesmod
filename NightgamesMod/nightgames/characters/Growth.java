@@ -188,6 +188,7 @@ public class Growth implements Cloneable {
     
     public Object clone() throws CloneNotSupportedException {
         // TODO, growth should NEVER be modified as a cloned version. if this is true, we need to revisit this.
+        // FIXME: The CombatStats test modifies growth of clones and errors out.
         Growth clone = (Growth) super.clone();
         clone.traits = Collections.unmodifiableMap(clone.traits);
         clone.bodyParts = Collections.unmodifiableMap(clone.bodyParts);

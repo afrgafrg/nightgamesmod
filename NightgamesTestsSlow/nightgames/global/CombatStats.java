@@ -1,20 +1,20 @@
-package nightgames.tests;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+package nightgames.global;
 
 import nightgames.areas.Area;
 import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
-import nightgames.global.DebugFlags;
-import nightgames.global.Global;
 import nightgames.modifier.standard.NoModifier;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class CombatStats {
     private static final Area NULL_AREA = new Area("", "", null);
@@ -27,16 +27,16 @@ public class CombatStats {
     private final AtomicInteger counter = new AtomicInteger();
     private final Object recordLock = new Object();
 
-    public CombatStats(Setup setup) {
+    public void setupTestRun(Setup setup) {
         this.setup = setup;
         records = new HashMap<>();
         combatants = setup.execute();
         combatants.forEach(c -> records.put(c.getTrueName(), new Record(c)));
         //Global.save(true);
-        Global.debug = new boolean[DebugFlags.values().length];
+        DebugFlags.debug = new boolean[DebugFlags.values().length];
     }
 
-    private void test() {
+    private void doTestRun() {
         for (int i = 0; i < combatants.size(); i++) {
             for (int j = 0; j < i; j++) {
                 fightMany(combatants.get(i), combatants.get(j), MATCH_COUNT);
@@ -84,12 +84,12 @@ public class CombatStats {
         ((BasePersonality) ((NPC) c1).ai).character = (NPC) c1;
         ((BasePersonality) ((NPC) c2).ai).character = (NPC) c2;
         Combat cbt = new Combat(c1, c2, NULL_AREA);
-        cbt.go();
+        cbt.runCombat();
         counter.incrementAndGet();
         synchronized (recordLock) {
             if (!cbt.winner.isPresent()) {
                 System.err.println("Error - winner is empty");
-            } else if (cbt.winner.get().equals(Global.noneCharacter())) {
+            } else if (cbt.winner.get().equals(NPC.noneCharacter())) {
                 recordOf(c1).draw(c2);
                 recordOf(c2).draw(c1);
             } else if (cbt.winner.get().equals(c1)) {
@@ -108,17 +108,18 @@ public class CombatStats {
         return records.get(c.getTrueName());
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        Global.init(true);
-        Global.newGame("TestPlayer", Optional.empty(), new ArrayList<>(), CharacterSex.asexual, new HashMap<>());
-        Global.setUpMatch(new NoModifier());
-        Thread.sleep(10000);
+    @Test
+    public void combatStats() throws Exception {
+        GameState gameState = new TestGameState();
+        Prematch prematch = new PreMatchSchool(new CompletableFuture<>());
+        prematch.setUpMatch(new NoModifier());
+
+        // Thread.sleep(10000);
         for (int i = 5; i < 75; i += 5) {
             Setup s3 = new Setup(i, new Reyka(), new Kat(), new Eve());
-            new CombatStats(s3).test();
+            setupTestRun(s3);
+            doTestRun();
         }
-
-        System.exit(0);
     }
 
     private class Record {
@@ -182,22 +183,23 @@ public class CombatStats {
         }
 
         public List<Character> execute() {
-            extraChars.forEach(Global::newChallenger);
-            List<Character> combatants = new ArrayList<>(Global.getParticipants());
+            extraChars.forEach(
+                            personality -> GameState.gameState.characterPool.newChallenger(personality.getCharacter()));
+            List<Character> combatants = new ArrayList<>(Match.getParticipants());
             combatants.removeIf(Character::human);
             combatants.forEach(c -> {
                 while (c.getLevel() < level) {
                     c.ding(null);
                     Character partner;
                     do {
-                        partner = (Character) Global.pickRandom(combatants.toArray()).get();
+                        partner = (Character) Random.pickRandom(combatants.toArray()).get();
                     } while (c == partner);
-                    Daytime.train(partner, c, (Attribute) Global.pickRandom(c.att.keySet().toArray()).get());
+                    Daytime.train(partner, c, (Attribute) Random.pickRandom(c.att.keySet().toArray()).get());
                 }
                 c.modMoney(level * 500);
-                Global.day = new Daytime(new Player("<player>"));
-                Global.day.advance(999);
-                Global.day.plan();
+                Daytime.day = new Daytime(new Player("<player>"));
+                Daytime.day.advance(999);
+                Daytime.day.plan();
             });
 
             return combatants;

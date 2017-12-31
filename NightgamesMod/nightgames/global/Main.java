@@ -9,10 +9,14 @@ import nightgames.requirements.TraitRequirement;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +32,7 @@ public class Main {
                         Stream.of(args).collect(Collectors.partitioningBy(arg -> arg.startsWith("DEBUG_")));
         List<String> debugArgs = splitArgs.get(true);
         List<String> otherArgs = splitArgs.get(false);
+        Optional<Path> saveFile = parseArgs(otherArgs);
         new Logwriter();
         Logwriter.makeLogger(new Date());
         try {
@@ -35,26 +40,63 @@ public class Main {
         } catch (DebugFlags.UnknownDebugFlagException e) {
             // bad debug flags may be user error, not programmer error, so don't crash
             System.err.println(e.getMessage());
+            displayHelp();
         }
         initialize();
         makeGUI();
-        // TODO: Make sure this works like I want it to. I don't think it captures anything useful on interrupts or errors.
-        try {
-            run();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            System.out.println("Interrupted!");
-            e.printStackTrace();
+        if (saveFile.isPresent()) {
+            try {
+                GameState loadedGame = new GameState(SaveFile.load(saveFile.get().toFile()));
+                GUI.gui.load(loadedGame);
+            } catch (SaveData.SaveDataException | IOException e) {
+                e.printStackTrace();
+            }
         }
+        while (!exit) {
+            // TODO: Make sure this captures and logs useful information on interrupts and errors
+            // probably need to run the game logic on its own thread, then get the exit status of that thread
+            try {
+                run();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                System.out.println("Interrupted!");
+                e.printStackTrace();
+            }
+            if (!exit) {
+                GUI.gui.showGameCreation();
+            }
+        }
+    }
+
+    private static void displayHelp() {
+        String message = "Nightgamesmod is a text-based battlefuck game. User discretion is advised.\n"
+                        + "Usage:\n"
+                        + "\t$ nightgamesmod -help\n"
+                        + "\t\tShow this help message.\n\n"
+                        + "\t$ nightgamesmod [DEBUG_VAR1 [DEBUG_VAR2 ...]] [FILENAME]\n"
+                        + "\t\tRun nightgamesmod with optional debug flags and save file.\n"
+                        + "\t\tDebug flags are listed in the DebugFlags class. Providing a save file will\n"
+                        + "\t\tlaunch directly into that game, skipping the game creation screen.\n";
+        System.err.print(message);
+    }
+
+    private static Optional<Path> parseArgs(List<String> otherArgs) {
+        if (otherArgs.size() > 0) {
+            if (otherArgs.stream().anyMatch(arg -> arg.matches("-{1,2}help"))) {
+                displayHelp();
+            } else {
+                return Optional.of(Paths.get(otherArgs.get(0)));
+            }
+        }
+        return Optional.empty();
     }
 
     private static void run() throws ExecutionException, InterruptedException {
         // TODO: test loading while waiting for a pause prompt
-        while (!exit) {
-            GameState state = GUI.gui.getGameState();
-            state.gameLoop();
-        }
+        // Blocks until a game state is loaded into the GUI
+        GameState state = GUI.gui.getGameState();
+        state.gameLoop();
     }
 
     private static void makeGUI() {

@@ -168,7 +168,7 @@ public class GUI extends JFrame implements Observer {
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     purgeGameState();
-                    createCharacter();
+                    showGameCreation();
                 }
             }
         });
@@ -186,16 +186,7 @@ public class GUI extends JFrame implements Observer {
 
         mntmLoad.addActionListener(arg0 -> {
             Optional<GameState> gameState = SaveFile.loadWithDialog();
-            if (gameState.isPresent()) {
-                purgeGameState();
-                try {
-                    currentState.put(gameState.get());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                populatePlayer(gameState.get().characterPool.human);
-
-            }
+            gameState.ifPresent(this::load);
         });
 
         menuBar.add(mntmLoad);
@@ -611,7 +602,7 @@ public class GUI extends JFrame implements Observer {
         skills = new HashMap<>();
         clearCommand();
         currentTactics = TacticGroup.all;
-        createCharacter();
+        showGameCreation();
         setVisible(true);
         pack();
         JPanel panel = (JPanel) getContentPane();
@@ -639,6 +630,16 @@ public class GUI extends JFrame implements Observer {
         saveFileChooser = new NgsChooser(this);
 
         gui = this;
+    }
+
+    public void load(GameState gameState) {
+        purgeGameState();
+        try {
+            currentState.put(gameState);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        populatePlayer(gameState.characterPool.human);
     }
 
     public Optional<File> askForSaveFile() {
@@ -923,7 +924,7 @@ public class GUI extends JFrame implements Observer {
         showNone();
     }
 
-    public void createCharacter() {
+    public void showGameCreation() {
         mntmOptions.setEnabled(false);
         getContentPane().remove(gamePanel);
         creation = new CreationGUI();

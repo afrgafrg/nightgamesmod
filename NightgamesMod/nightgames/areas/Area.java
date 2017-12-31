@@ -120,26 +120,13 @@ public class Area implements Serializable {
         }
     }
 
-    public Optional<Encounter> encounter(Character p) {
-        if (activeEncounter != null && activeEncounter.checkIntrude(p)) {
-            p.intervene(activeEncounter, activeEncounter.getPlayer(1), activeEncounter.getPlayer(2));
-        } else if (present.size() > 1 && canFight(p)) {
-            for (Character opponent : Match.getMatch().combatants) {
-                if (present.contains(opponent) && opponent != p
-                                && canFight(opponent)) {
-                    Encounter newEncounter = Match.getMatch().buildEncounter(this, p, opponent);
-                    if (newEncounter.spotCheck()) {
-                        activeEncounter = newEncounter;
-                    }
-                }
-            }
-        }
-        return Optional.ofNullable(activeEncounter);
+    public boolean hasEncounter() {
+        return activeEncounter != null;
     }
 
     public Optional<Encounter> encounter() {
         if (activeEncounter == null && present.size() > 1) {
-            activeEncounter = Match.getMatch().buildEncounter(this, present);
+            activeEncounter = Match.getMatch().buildEncounter(this);
         } else if (present.size() > 2) {
             Character intruder = present.get(2);
             if (activeEncounter.checkIntrude(intruder)) {
@@ -149,16 +136,12 @@ public class Area implements Serializable {
         return Optional.ofNullable(activeEncounter);
     }
 
-    private boolean canFight(Character c) {
-        return !c.human() || !DebugFlags.isDebugOn(DebugFlags.DEBUG_SPECTATE);
-    }
-    
     public boolean opportunity(Character target, Trap trap) {
         if (present.size() > 1) {
             for (Character opponent : present) {
                 if (opponent != target) {
                     if (target.eligible(opponent) && opponent.eligible(target) && activeEncounter == null) {
-                        activeEncounter = Match.getMatch().buildEncounter(this, opponent, target);
+                        activeEncounter = Match.getMatch().buildEncounter(this);
                         opponent.promptTrap(activeEncounter, target, trap);
                         return true;
                     }

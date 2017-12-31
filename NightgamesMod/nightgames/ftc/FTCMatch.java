@@ -241,7 +241,7 @@ public class FTCMatch extends Match {
         return "area";
     }
 
-    @Override public Encounter buildEncounter(Area location, List<Character> characters) {
-        return new FTCEncounter(location, characters);
+    @Override public Encounter buildEncounter(Area location) {
+        return new FTCEncounter(location);
     }
 }

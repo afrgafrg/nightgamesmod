@@ -39,14 +39,10 @@ public class Encounter implements Serializable {
     private int checkin;
     private CountDownLatch waitForFinish;
 
-    public Encounter(Area location, Character first, Character second) {
-        this(location, Arrays.asList(first, second));
-    }
-
     // TODO: Figure out what to do with encounters involving more than three characters.
-    public Encounter(Area location, List<Character> characters) {
+    public Encounter(Area location) {
         this.location = location;
-        participants = new ArrayList<>(characters);
+        participants = new ArrayList<>(location.present);
         assert participants.size() >= 2;
         checkin = 0;
         fight = null;
@@ -70,6 +66,14 @@ public class Encounter implements Serializable {
             return Optional.of(participants.get(2));
         }
         return Optional.empty();
+    }
+
+    public List<Character> getExtras() {
+        List<Character> extras = new ArrayList<>();
+        if (participants.size() > 3) {
+            extras.addAll(participants.subList(3, participants.size()));
+        }
+        return extras;
     }
 
     public void intervene(Character intervener) {

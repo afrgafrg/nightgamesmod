@@ -134,7 +134,6 @@ public class Match {
                 }
             }
             // Find encounters
-            // FIXME: need to handle in-progress encounters
             List<Encounter> encounters = combatants.stream().map(Character::location).distinct()
                             .map(Area::encounter).filter(Optional::isPresent).map(Optional::get)
                             .collect(Collectors.toList());
@@ -320,9 +319,7 @@ public class Match {
     public void quit() {
         Character human = GameState.gameState.characterPool.getPlayer();
         if (human.state == State.combat) {
-            if (human.location().activeEncounter.getCombat().isPresent()) {
-                human.location().activeEncounter.getCombat().get().forfeit(human);
-            }
+            human.location().activeEncounter.getCombat().ifPresent(combat -> combat.forfeit(human));
             human.location().endEncounter();
         }
         human.travel(new Area("Retirement", "", Movement.retire));
@@ -349,11 +346,7 @@ public class Match {
         String replace(Character self, String first, String second, String third);
     }
 
-    public Encounter buildEncounter(Area location, List<Character> characters) {
-        return new Encounter(location, characters);
-    }
-
-    public Encounter buildEncounter(Area location, Character... characters) {
-        return buildEncounter(location, Arrays.asList(characters));
+    public Encounter buildEncounter(Area location) {
+        return new Encounter(location);
     }
 }

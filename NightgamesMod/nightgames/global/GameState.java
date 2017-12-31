@@ -16,21 +16,26 @@ import java.util.concurrent.ExecutionException;
  * Creates, destroys, and maintains the state of a running game.
  */
 public class GameState {
-    static final double DEFAULT_XP_RATE = 1.0;
-    static final double DEFAULT_MONEY_RATE = 1.0;
+    public static final double DEFAULT_XP_RATE = 1.0;
+    public static final double DEFAULT_MONEY_RATE = 1.0;
     public volatile static GameState gameState;
     public double moneyRate;
     public double xpRate;
     private static boolean ingame = false;
-    private volatile boolean run;
+    protected volatile boolean run;
     public CharacterPool characterPool;
     private volatile Thread loopThread;
 
     public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
-                    CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes, double xpRate) {
+                CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
+        this(playerName, config, pickedTraits, pickedGender, selectedAttributes, DEFAULT_XP_RATE, DEFAULT_MONEY_RATE);
+    }
+
+    public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
+                    CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes, double xpRate, double moneyRate) {
         characterPool = new CharacterPool(config);
         this.xpRate = xpRate;
-        moneyRate = DEFAULT_MONEY_RATE;
+        this.moneyRate = moneyRate;
         Optional<PlayerConfiguration> playerConfig = config.map(c -> c.player);
         Collection<String> cfgFlags = config.map(StartConfiguration::getFlags).orElse(new ArrayList<>());
         characterPool.human = new Player(playerName, pickedGender, playerConfig, pickedTraits, selectedAttributes);

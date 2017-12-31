@@ -497,7 +497,8 @@ public class CreationGUI extends JPanel {
             selectedAttributes.put(Attribute.Seduction, seduction);
             selectedAttributes.put(Attribute.Cunning, cunning);
             String rate = (String) expBox.getSelectedItem();
-            GameState state = new GameState(name, startConfig, traits, sex, selectedAttributes, expRateMap.get(rate));
+            GameState state = new GameState(name, startConfig, traits, sex, selectedAttributes, expRateMap.get(rate),
+                            GameState.DEFAULT_MONEY_RATE);
             try {
                 GUI.gui.currentState.clear();
                 GUI.gui.currentState.put(state);

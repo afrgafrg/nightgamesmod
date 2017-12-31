@@ -22,6 +22,7 @@ public enum DebugFlags {
     DEBUG_GUI,
     DEBUG_ADDICTION,
     DEBUG_SPECTATE,
+    DEBUG_INITIATIVE,
     DEBUG_TURN_OFF_GUI;
     public static boolean[] debug = new boolean[values().length];
     public static int debugSimulation = 0;

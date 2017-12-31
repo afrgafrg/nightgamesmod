@@ -96,6 +96,7 @@ public abstract class Character extends Observable implements Cloneable {
     public int cloned;
     private Map<Integer, LevelUpData> levelPlan;
     private Growth growth;
+    public transient int lastInitRoll;
     
     public Character(String name, int level) {
         this.name = name;
@@ -4070,5 +4071,16 @@ public abstract class Character extends Observable implements Cloneable {
     
     public boolean checkAddiction(AddictionType type, Character cause) {
         return getAddiction(type).map(addiction -> addiction.isActive() && addiction.wasCausedBy(cause)).orElse(false);
+    }
+
+    /**
+     * Initiative determines turn order.
+     *
+     * Characters with higher initiative move first.
+     * @return The character's initiative roll.
+     */
+    public int rollInitiative() {
+        lastInitRoll = get(Attribute.Speed) + Random.random(20);
+        return lastInitRoll;
     }
 }

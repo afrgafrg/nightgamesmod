@@ -111,18 +111,41 @@ public class Match {
         return match;
     }
 
+    /**
+     * Runs a match, cycling until the end time is reached.
+     *
+     * Every match cycle, each combatant gets a turn. Combatants act in initiative order, calculated at the start of each cycle.
+     *
+     * A turn consists of:
+     * 1) Selecting a move
+     * 2)
+     * @param endTime The number of match cycles.
+     * @throws InterruptedException If an interrupt was received during a player prompt.
+     */
     public void matchLoop(int endTime) throws InterruptedException {
         assert (combatants.size() > 0);
         while (time < endTime) {
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                System.out.println("Starting round " + time);
+            }
             getAreas().forEach(area -> area.setPinged(false));
             GUI.gui.refresh();
-            // select move
+
+            // Sorting by initiative. Raw speed stat breaks ties.
+            combatants.sort(Comparator.comparingInt(Character::rollInitiative)
+                            .thenComparingInt(c -> c.get(Attribute.Speed)));
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_INITIATIVE)) {
+                System.out.println("Initiative rolls:");
+                combatants.forEach(c -> System.out.println(c.getName() + c.lastInitRoll));
+            }
+
             for (Character combatant : combatants) {
                 if (combatant.state == State.quit) {
                     break;
                 }
                 combatant.upkeep();
                 manageConditions(combatant);
+                // Select and perform move
                 Optional<Action> move;
                 do {
                     move = combatant.move();
@@ -132,16 +155,20 @@ public class Match {
                     System.out.println(combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
                                     + " is in " + combatant.location().name);
                 }
+                // Find whether move resulted in an encounter
+                Optional<Encounter> maybeEncounter = combatant.location().encounter();
+                // Respond to encounter
+                Optional<Combat> maybeCombat = maybeEncounter.flatMap(Encounter::resolve);
+                // Run combat
+                if (maybeCombat.isPresent()) {
+                    Combat combat = maybeCombat.get();
+                    if (!combat.shouldAutoresolve()) {
+                        combat.loadCombatGUI(GUI.gui);
+                    }
+                    combat.runCombat();
+                }
             }
-            // Find encounters
-            List<Encounter> encounters = combatants.stream().map(Character::location).distinct()
-                            .map(Area::encounter).filter(Optional::isPresent).map(Optional::get)
-                            .collect(Collectors.toList());
-            // respond to encounters
-            for (Encounter encounter : encounters) {
-                // handle encounter
-                encounter.resolve();
-            }
+
             if (meanLvl() > 3 && Random.random(10) + dropOffTime >= 12) {
                 dropPackage();
                 dropOffTime = 0;

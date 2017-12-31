@@ -131,12 +131,13 @@ public class Match {
             getAreas().forEach(area -> area.setPinged(false));
             GUI.gui.refresh();
 
-            // Sorting by initiative. Raw speed stat breaks ties.
-            combatants.sort(Comparator.comparingInt(Character::rollInitiative)
-                            .thenComparingInt(c -> c.get(Attribute.Speed)));
+            // Sorting by initiative, descending. Raw speed stat breaks ties.
+            combatants.forEach(Character::rollInitiative);
+            combatants.sort(Comparator.comparingInt((Character c) -> c.lastInitRoll)
+                            .thenComparingInt(c -> c.get(Attribute.Speed)).reversed());
             if (DebugFlags.isDebugOn(DebugFlags.DEBUG_INITIATIVE)) {
                 System.out.println("Initiative rolls:");
-                combatants.forEach(c -> System.out.println(c.getName() + c.lastInitRoll));
+                combatants.forEach(c -> System.out.println(String.format("%s rolls %d" , c.getName(), c.lastInitRoll)));
             }
 
             for (Character combatant : combatants) {

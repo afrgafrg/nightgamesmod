@@ -11,8 +11,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Program entry point
@@ -21,9 +24,18 @@ public class Main {
     public static volatile boolean exit = false;
 
     public static void main(String[] args) {
+        Map<Boolean, List<String>> splitArgs =
+                        Stream.of(args).collect(Collectors.partitioningBy(arg -> arg.startsWith("DEBUG_")));
+        List<String> debugArgs = splitArgs.get(true);
+        List<String> otherArgs = splitArgs.get(false);
         new Logwriter();
         Logwriter.makeLogger(new Date());
-        parseDebugFlags(args);
+        try {
+            DebugFlags.parseDebugFlags(debugArgs);
+        } catch (DebugFlags.UnknownDebugFlagException e) {
+            // bad debug flags may be user error, not programmer error, so don't crash
+            System.err.println(e.getMessage());
+        }
         initialize();
         makeGUI();
         // TODO: Make sure this works like I want it to. I don't think it captures anything useful on interrupts or errors.
@@ -47,23 +59,12 @@ public class Main {
 
     private static void makeGUI() {
         GUI gui;
-        if (DebugFlags.isDebugOn(DebugFlags.NO_GUI)) {
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_TURN_OFF_GUI)) {
             gui = new HeadlessGui();
         } else {
             gui = new GUI();
         }
         gui.addWindowListener(new CloseListener());
-    }
-
-    public static void parseDebugFlags(String[] args) {
-        for (String arg : args) {
-            try {
-                DebugFlags flag = DebugFlags.valueOf(arg);
-                DebugFlags.debug[flag.ordinal()] = true;
-            } catch (IllegalArgumentException e) {
-                // pass
-            }
-        }
     }
 
     public static void initialize() {

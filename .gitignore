@@ -10,7 +10,7 @@ build
 .classpath
 .project
 .settings
-CombatStats*
+CombatStats-*
 NightgamesMod/.settings
 combatlogs
 **/Thumbs.db

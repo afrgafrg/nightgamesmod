@@ -52,8 +52,7 @@ public abstract class Activity {
     }
 
     public void choose(String choice, GUI gui) {
-        gui.commandPanel.add(EventButton.eventButton(this, choice, null));
-        gui.commandPanel.refresh();
+        choose(choice, null, gui);
     }
 
     public void next(GUI gui) {

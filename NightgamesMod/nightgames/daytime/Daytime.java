@@ -20,7 +20,7 @@ public class Daytime {
     private ArrayList<Activity> activities;
     private Player player;
     int time;
-    private int daylength;
+    private int dayLength;
     private DaytimeEventManager eventMgr;
 
     public Daytime(Player player) {
@@ -46,9 +46,9 @@ public class Daytime {
         time = 10;
         // do NPC day length
         if (Time.getDate() % 7 == 6 || Time.getDate() % 7 == 0) {
-            daylength = 10;
+            dayLength = 10;
         } else {
-            daylength = 7;
+            dayLength = 7;
         }
     }
 
@@ -60,7 +60,7 @@ public class Daytime {
         GUI.gui
               .clearText();
         GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        GameState.gameState.characterPool.getPlayer().getAddictions().stream().map(a -> a.describeMorning()).forEach(
+        GameState.gameState.characterPool.getPlayer().getAddictions().stream().map(Addiction::describeMorning).forEach(
                         s -> GUI.gui.message(s));
         if (eventMgr.playMorningScene()) {
             time = 12;
@@ -98,7 +98,7 @@ public class Daytime {
                                   + "are no clues. Will you simply give up?\"</i><br/><br/>"
                                   + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
                                   + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
-                                  + "already justifying your new rank, which is what I am calling you about, incidently. Perhaps you can put your increased pay rate or the trust "
+                                  + "already justifying your new rank, which is what I am calling you about, incidentally. Perhaps you can put your increased pay rate or the trust "
                                   + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
             player.rankup();
             time = 15;
@@ -118,10 +118,8 @@ public class Daytime {
     }
 
     public void plan() {
-        boolean special = false;
         if (time == 10) {
-            special = morning();
-            if (special) {
+            if (morning()) {
                 return;
             }
         }
@@ -146,15 +144,15 @@ public class Daytime {
                     if (npc.getLevel() / 10 > npc.getRank()) {
                         npc.rankup();
                     }
-                    ((NPC) npc).daytime(daylength);
+                    ((NPC) npc).daytime(dayLength);
                 }
             }
             readyForNight.countDown();
         }
     }
 
-    public void buildActivities() {
-        activities = new ArrayList<Activity>();
+    private void buildActivities() {
+        activities = new ArrayList<>();
         activities.add(new Exercise(player));
         activities.add(new Porn(player));
         activities.add(new VideoGames(player));

@@ -66,14 +66,16 @@ public class Postmatch {
         everyone.stream().filter(c -> c.has(Trait.naturalgrowth)).filter(c -> c.getLevel() < maxLevel + 2)
                         .forEach(c -> {
                             while (c.getLevel() < maxLevel + 2) {
-                                c.ding(null);
+                                c.addLevels(1);
                             }
+                            c.spendLevels(null);
                         });
         everyone.stream().filter(c -> c.has(Trait.unnaturalgrowth)).filter(c -> c.getLevel() < maxLevel + 5)
                         .forEach(c -> {
                             while (c.getLevel() < maxLevel + 5) {
-                                c.ding(null);
+                                c.addLevels(1);
                             }
+                            c.spendLevels(null);
                         });
 
         level /= everyone.size();

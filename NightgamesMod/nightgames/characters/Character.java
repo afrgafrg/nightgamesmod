@@ -53,7 +53,6 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 public abstract class Character extends Observable implements Cloneable {
     private static final String APOSTLES_COUNT = "APOSTLES_COUNT";
-
     private String name;
     public CharacterSex initialGender;
     public int level;
@@ -95,6 +94,7 @@ public abstract class Character extends Observable implements Cloneable {
     public int orgasms;
     public int cloned;
     private Map<Integer, LevelUpData> levelPlan;
+    protected int levelsToGain;
     private Growth growth;
     public transient int lastInitRoll;
     
@@ -146,6 +146,7 @@ public abstract class Character extends Observable implements Cloneable {
         setRank(0);
 
         SkillPool.learnSkills(this);
+        levelsToGain = 0;
     }
 
     public void adjustTraits() {
@@ -230,8 +231,12 @@ public abstract class Character extends Observable implements Cloneable {
         return resistances;
     }
 
+    public int getXPReqToNextLevel(int level) {
+        return Math.min(45 + 5 * level, 100);
+    }
+
     public int getXPReqToNextLevel() {
-        return Math.min(45 + 5 * getLevel(), 100);
+        return getXPReqToNextLevel(getLevel());
     }
 
     public int get(Attribute a) {
@@ -2026,7 +2031,7 @@ public abstract class Character extends Observable implements Cloneable {
                 c.write(dong());
                 xp = Math.max(xp, Math.min(getXPReqToNextLevel() - 1, gained - xpStolen));
                 opponent.gainXPPure(gained);
-                opponent.levelUpIfPossible(c);
+                opponent.spendXP();
             } else {
                 c.write(opponent, String.format("<b>%s %s pulses, but fails to"
                                                 + " draw in %s experience.</b>", Formatter.capitalizeFirstLetter(opponent.nameOrPossessivePronoun()),
@@ -3701,8 +3706,17 @@ public abstract class Character extends Observable implements Cloneable {
                         + availableAttributePoints + '}';
     }
 
-    public void addLevels(Combat c, int levelsToGain) {
-        for(int i = 0; i < levelsToGain; i++) {
+    public void addLevels(int levelsToGain) {
+        this.levelsToGain += levelsToGain;
+    }
+
+    public void addLevelsImmediate(Combat c, int levelsToGain) {
+        addLevels(levelsToGain);
+        spendLevels(c);
+    }
+
+    public void spendLevels(Combat c) {
+        for (int i = 0; i < levelsToGain; i++) {
             ding(c);
         }
     }
@@ -3711,12 +3725,14 @@ public abstract class Character extends Observable implements Cloneable {
         return Integer.MAX_VALUE;
     }
 
-    public boolean levelUpIfPossible(Combat c) {
+    // TODO: move XP spending to ding() so we can't forget about it.
+    // or level spending to spendXP(), or something
+    public boolean spendXP() {
         int req;
         boolean dinged = false;
-        while (xp > (req = getXPReqToNextLevel())) {
+        while (xp - (req = getXPReqToNextLevel(level + levelsToGain)) >= 0) {
             xp -= req;
-            ding(c);
+            levelsToGain++;
             dinged = true;
         }
         return dinged;

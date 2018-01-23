@@ -1278,9 +1278,6 @@ public class Combat extends Observable implements Cloneable {
         if (processedEnding) {
             p1.state = State.ready;
             p2.state = State.ready;
-            if (beingObserved) {
-                removeCombatGUI(GUI.gui);
-            }
             return;
         }
         boolean hasScene = false;
@@ -1307,8 +1304,10 @@ public class Combat extends Observable implements Cloneable {
         location.endEncounter();
         // it's a little ugly, but we must be mindful of lazy evaluation
         // TODO: rework to not rely on lazy evaluation side effects
-        boolean ding = p1.levelUpIfPossible(this) && p1.human();
-        ding = (p2.levelUpIfPossible(this) && p2.human()) || ding;
+        p1.spendXP();
+        p1.spendLevels(this);
+        p2.spendXP();
+        p2.spendLevels(this);
         if (doExtendedLog()) {
             log.logEnd(winner);
         }
@@ -1317,9 +1316,6 @@ public class Combat extends Observable implements Cloneable {
         }
         if (!p2.has(Trait.Pseudopod)) {
             Match.getMatch().getMatchData().getDataFor(p2).setArmManager(getCombatantData(p2).getManager());
-        }
-        if (!ding && beingObserved) {
-            removeCombatGUI(GUI.gui);
         }
     }
 
@@ -1641,9 +1637,7 @@ public class Combat extends Observable implements Cloneable {
         if (master.has(Trait.leadership)) {
             int levelups = Math.max(5, master.getLevel() / 4);
             self.getSelf().setPower(self.getSelf().getPower() + levelups);
-            for (int i = 0; i < levelups; i++) {
-                self.ding(this);
-            }
+            self.addLevelsImmediate(this, levelups);
         }
         if (master.has(Trait.tactician)) {
             self.getSelf().setAc(self.getSelf().getAc() + 3);
@@ -1679,7 +1673,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private void removeCombatGUI(GUI gui) {
+    public void removeCombatGUI(GUI gui) {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("End Combat");
         }

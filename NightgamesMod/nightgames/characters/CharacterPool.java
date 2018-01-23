@@ -120,9 +120,7 @@ public class CharacterPool {
             if (challenger.has(Trait.leveldrainer)) {
                 targetLevel -= 4;
             }
-            while (challenger.getLevel() <= targetLevel) {
-                challenger.ding(null);
-            }
+            challenger.addLevelsImmediate(null, targetLevel - challenger.getLevel());
         }
     }
 

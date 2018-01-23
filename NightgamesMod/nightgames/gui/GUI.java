@@ -1069,7 +1069,7 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void prompt(List<KeyableButton> choices) {
+    public void prompt(List<? extends KeyableButton> choices) {
         prompt(choices.toArray(new KeyableButton[] {}));
     }
 

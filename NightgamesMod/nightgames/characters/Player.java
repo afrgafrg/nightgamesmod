@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 public class Player extends Character {
     public GUI gui;
     public int traitPoints;
-    private int levelsToGain;
 
     private Player() {
         this("Dummy");
@@ -52,7 +51,6 @@ public class Player extends Character {
                     Map<Attribute, Integer> selectedAttributes) {
         super(name, 1);
         initialGender = sex;
-        levelsToGain = 0;
         applyBasicStats(this);
         setGrowth();
 
@@ -396,7 +394,6 @@ public class Player extends Character {
     @Override
     public void ding(Combat c) {
         level += 1;
-        levelsToGain += 1;
         getStamina().gain(getGrowth().stamina);
         getArousal().gain(getGrowth().arousal);
         availableAttributePoints += getGrowth().attributes[Math.min(rank, getGrowth().attributes.length - 1)];
@@ -405,12 +402,11 @@ public class Player extends Character {
         }
     }
 
-    @Override public void addLevels(Combat c, int levelsToGain) {
-        super.addLevels(c, levelsToGain);
-        spendLevels(c);
-    }
-
-    private void spendLevels(Combat c) {
+    @Override public void spendLevels(Combat c) {
+        super.spendLevels(c);
+        if (levelsToGain < 1) {
+            return;
+        }
         assert (cloned == 0);
         Formatter.writeIfCombatUpdateImmediately(c, this,
                         String.format("You've leveled up %d times!<br/>Select which attributes to increase.", levelsToGain));

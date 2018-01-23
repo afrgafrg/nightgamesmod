@@ -190,6 +190,7 @@ public class NPC extends Character {
         target.gainAttraction(this, 2);
     }
 
+    // TODO: Having both winner and loser handled by one character's code is confusing. Move the common parts elsewhere (up a level?)
     @Override
     public void defeat(Combat c, Result flag) {
         Character target;

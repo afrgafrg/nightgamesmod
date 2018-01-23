@@ -117,9 +117,7 @@ public class JewelTime extends BaseNPCTime {
                 for (int i = 1; i < level; i++) {
                     GUI.gui.message(self.dong());
                 }
-                for (int i = 1; i < level; i++) {
-                    self.ding(c);
-                }
+                self.addLevelsImmediate(c, level);
                 return true;
             };
             options.add(retraining);

@@ -32,9 +32,7 @@ public class CustomNPC extends BasePersonality {
         for (String lineType : CharacterLine.ALL_LINES) {
             character.addLine(lineType, (c, self, other) -> data.getLine(lineType, c, self, other));
         }
-        for (int i = 1; i < data.getStats().level; i++) {
-            character.ding(null);
-        }
+        character.addLevelsImmediate(null, data.getStats().level);
     }
 
     public CustomNPC(NPCData data, JsonObject saveJson) {

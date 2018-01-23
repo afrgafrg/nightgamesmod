@@ -51,7 +51,7 @@ public class LevelDrain extends Drain {
         }
         target.loseXP(xpStolen);
         getSelf().gainXPPure(xpStolen);
-        getSelf().levelUpIfPossible(c);
+        getSelf().spendXP();
         return xpStolen;
     }
 
@@ -91,7 +91,7 @@ public class LevelDrain extends Drain {
                                     + " XP!\n");
                 }
                 getSelf().gainXPPure(xpStolen);
-                getSelf().levelUpIfPossible(c);
+                getSelf().spendXP();
                 target.arouse(target.getArousal().max(), c);
                 String levelDrainLine = getSelf().getRandomLineFor(CharacterLine.LEVEL_DRAIN_LINER, c, target);
                 if (!levelDrainLine.isEmpty()) {

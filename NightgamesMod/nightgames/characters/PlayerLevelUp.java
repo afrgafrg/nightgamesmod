@@ -40,6 +40,7 @@ class PlayerLevelUp {
     private void spendAttributePoints(GUI gui) throws InterruptedException {
         boolean wantsToSpendAttributePoints = true;
         while (wantsToSpendAttributePoints && remainingAttributePoints() > 0) {
+            gui.clearCommand();
             List<Attribute> attributeChoices = player.att.keySet().stream()
                             .filter(att -> Attribute.isTrainable(player, att) && player.getPure(att) > 0)
                             .collect(Collectors.toList());
@@ -47,7 +48,8 @@ class PlayerLevelUp {
 
             CompletableFuture<Attribute> chosenAttribute = gui.promptFuture(attributeChoices, Attribute::name);
             CancelButton skipButton = new CancelButton("Skip", chosenAttribute);
-            skipButton.setToolTipText("Save attribute points for next level-up.");
+            // TODO: Provide more convenient access to KeyableButton tooltip text
+            skipButton.getButton().setToolTipText("Save attribute points for next level-up.");
             gui.addButton(skipButton);
 
             try {
@@ -63,16 +65,20 @@ class PlayerLevelUp {
 
     private void spendTraitPoints(GUI gui) throws InterruptedException {
         boolean wantsToSpendTraitPoints = true;
-        Formatter.writeIfCombatUpdateImmediately(gui.combat, player, "You've earned %d new perk%s. Select below.");
+        Formatter.writeIfCombatUpdateImmediately(gui.combat, player,
+                        String.format("You've earned %d new perk%s. Select below.", remainingTraitPoints(),
+                                        remainingTraitPoints() == 1 ? "" : "s"));
         CompletableFuture<Trait> chosenTrait = new CompletableFuture<>();
         while (wantsToSpendTraitPoints && remainingTraitPoints() > 0) {
+            gui.clearCommand();
             Stream<Trait> traitChoices = Trait.getFeats(player).stream().filter(feat -> !player.has(feat));
             List<ValueButton<Trait>> featButtons =
                             traitChoices.map(feat -> new ValueButton<>(feat, feat.toString(), chosenTrait))
                                             .collect(Collectors.toList());
-            featButtons.forEach(button -> button.setToolTipText(button.getValue().getDesc()));
+            featButtons.forEach(button -> button.getButton().setToolTipText(button.getValue().getDesc()));
+            gui.prompt(featButtons);
             CancelButton skipButton = new CancelButton("Skip", chosenTrait);
-            skipButton.setToolTipText("Save perk points for next level-up");
+            skipButton.getButton().setToolTipText("Save perk points for next level-up");
             gui.addButton(skipButton);
             try {
                 Trait trait = chosenTrait.get();
@@ -95,8 +101,12 @@ class PlayerLevelUp {
     void getHumanChoices(GUI gui) throws InterruptedException, ExecutionException {
         boolean ready = false;
         while (!ready) {
-            spendAttributePoints(gui);
-            spendTraitPoints(gui);
+            if (initialAttributePoints > 0) {
+                spendAttributePoints(gui);
+            }
+            if (initialTraitPoints > 0) {
+                spendTraitPoints(gui);
+            }
             List<LabeledValue<String>> confirmPromptChoices = new ArrayList<>();
             confirmPromptChoices.add(new LabeledValue<>("Continue", "Continue"));
             confirmPromptChoices.add(new LabeledValue<>("Reset", "Reset points"));

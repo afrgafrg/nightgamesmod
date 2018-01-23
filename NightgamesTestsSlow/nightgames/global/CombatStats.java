@@ -189,7 +189,7 @@ public class CombatStats {
             combatants.removeIf(Character::human);
             combatants.forEach(c -> {
                 while (c.getLevel() < level) {
-                    c.ding(null);
+                    c.addLevelsImmediate(null, 1);
                     Character partner;
                     do {
                         partner = (Character) Random.pickRandom(combatants.toArray()).get();

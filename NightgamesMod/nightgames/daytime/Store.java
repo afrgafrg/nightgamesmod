@@ -108,7 +108,7 @@ public abstract class Store extends Activity {
         RunnableButton button = RunnableButton.genericRunnableButton(Formatter.capitalizeFirstLetter(i.getName()), () -> {
             visit(i.getName());
         });
-        button.getButton().setToolTipText(i.getDesc());
+        button.setToolTipText(i.getDesc());
         gui.commandPanel.add(button);
         gui.commandPanel.refresh();
     }

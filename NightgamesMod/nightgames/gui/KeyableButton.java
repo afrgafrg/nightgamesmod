@@ -50,4 +50,12 @@ public abstract class KeyableButton extends JPanel {
     public JButton getButton() {
         return button;
     }
+
+    @Override public void setToolTipText(String text) {
+        button.setToolTipText(text);
+    }
+
+    @Override public String getToolTipText() {
+        return button.getToolTipText();
+    }
 }

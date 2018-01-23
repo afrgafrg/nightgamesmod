@@ -46,7 +46,7 @@ public class SkillButton extends ValueButton<Skill> {
         }
 
         text += "</html>";
-        getButton().setToolTipText(text);
+        setToolTipText(text);
         this.combat = combat;
         setLayout(new BorderLayout());
         setMaximumSize(new Dimension(500, 20));

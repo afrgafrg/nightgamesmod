@@ -9,7 +9,7 @@ public class EventButton {
             activity.visit(choice);
         });
         if (tooltip != null) {
-            button.getButton().setToolTipText(tooltip);
+            button.setToolTipText(tooltip);
         }
         return button;
     }

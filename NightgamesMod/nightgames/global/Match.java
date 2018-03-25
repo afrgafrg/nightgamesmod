@@ -146,18 +146,24 @@ public class Match {
                 }
                 combatant.upkeep();
                 manageConditions(combatant);
-                // Select and perform move
-                Optional<Action> move;
-                do {
-                    move = combatant.move();
-                    move.ifPresent(combatant::doAction);
-                } while (move.map(Action::freeAction).orElse(false));
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
-                    System.out.println(combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
-                                    + " is in " + combatant.location().name);
-                }
-                // Find whether move resulted in an encounter
+                // TODO: See if this makes it easier for NPCs to fight each other
+                // Check for encounter before moving
                 Optional<Encounter> maybeEncounter = combatant.location().encounter();
+                if (!maybeEncounter.isPresent()) {
+                    // Select and perform move
+                    Optional<Action> move;
+                    do {
+                        move = combatant.move();
+                        move.ifPresent(combatant::doAction);
+                    } while (move.map(Action::freeAction).orElse(false));
+                    if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
+                        System.out.println(
+                                        combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
+                                                        + " is in " + combatant.location().name);
+                    }
+                    // Find whether move resulted in an encounter
+                    maybeEncounter = combatant.location().encounter();
+                }
                 // Respond to encounter
                 Optional<Combat> maybeCombat = maybeEncounter.flatMap(Encounter::resolve);
                 // Run combat
@@ -167,6 +173,9 @@ public class Match {
                         combat.loadCombatGUI(GUI.gui);
                     }
                     combat.runCombat();
+                    if (!combat.shouldAutoresolve()) {
+                        combat.removeCombatGUI(GUI.gui);
+                    }
                 }
             }
 

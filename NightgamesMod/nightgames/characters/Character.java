@@ -2521,7 +2521,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void place(Area loc) {
         location = loc;
-        loc.present.add(this);
+        loc.enter(this);
         if (loc.name.isEmpty()) {
             throw new RuntimeException("empty location");
         }

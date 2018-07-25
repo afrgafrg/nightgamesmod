@@ -1103,10 +1103,6 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(String text) {
-        write(null, text);
-    }
-
-    public void write(Character user, String text) {
         text = Formatter.capitalizeFirstLetter(text);
         if (text.isEmpty()) {
             return;
@@ -1115,12 +1111,14 @@ public class Combat extends Observable implements Cloneable {
         if (wroteMessageSinceLastClear) {
             text = "<br/>" + text;
         }
-        if (user != null) {
-            text = formatMessage(user, text);
-        }
         setMessage(text);
         wroteMessageSinceLastClear = true;
         combatMessageChanged = true;
+    }
+
+    public void write(Character user, String text) {
+        text = formatMessage(user, text);
+        write(text);
         lastTalked = user;
     }
 

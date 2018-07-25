@@ -13,6 +13,7 @@ import nightgames.items.Loot;
 public class Clothing implements Loot {
     public static final int N_LAYERS = 5;
 
+    // TODO: Make as many of these fields final as possible. Shouldn't need to change clothing attributes under most circumstances.
     String name;
     int dc;
     String prefix;
@@ -147,7 +148,7 @@ public class Clothing implements Loot {
     }
 
     @Override public boolean equals(Object o) {
-        return o != null && ((Clothing) o).id.equals(id);
+        return o instanceof Clothing && ((Clothing) o).id.equals(id);
     }
 
     @Override public int hashCode() {

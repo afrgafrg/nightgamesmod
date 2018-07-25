@@ -2548,6 +2548,7 @@ public abstract class Character extends Observable implements Cloneable {
      * @return Whether p1 is eligible to fight p2.
      */
     public boolean eligible(Character p2) {
+        // Whether FTC match eligibility conditions are met, if applicable
         boolean ftc = true;
         if (Flag.checkFlag(Flag.FTC)) {
             FTCMatch match = (FTCMatch) Match.getMatch();

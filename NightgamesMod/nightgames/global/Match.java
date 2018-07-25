@@ -172,6 +172,7 @@ public class Match {
                     if (!combat.shouldAutoresolve()) {
                         combat.loadCombatGUI(GUI.gui);
                     }
+                    // FIXME: unobserved NPC fights do not apply mercy, leading to endless battle
                     combat.runCombat();
                     if (!combat.shouldAutoresolve()) {
                         combat.removeCombatGUI(GUI.gui);

@@ -1276,6 +1276,7 @@ public class Combat extends Observable implements Cloneable {
         p1.state = State.ready;
         p2.state = State.ready;
         if (processedEnding) {
+            // TODO: probably shouldn't be calling this more than once. get rid of this branch
             p1.state = State.ready;
             p2.state = State.ready;
             return;

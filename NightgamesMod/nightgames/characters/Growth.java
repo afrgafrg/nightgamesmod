@@ -1,11 +1,7 @@
 package nightgames.characters;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.GenericBodyPart;
 import nightgames.characters.body.mods.PartMod;
@@ -40,8 +36,8 @@ public class Growth implements Cloneable {
     public float bonusWillpower;
     private Map<Integer, List<Trait>> traits;
     private Map<Integer, Integer> traitPoints;
-    public Map<Integer, List<BodyPart>> bodyParts;
-    public Map<Integer, List<PartModApplication>> bodyPartMods;
+    private Map<Integer, List<BodyPart>> bodyParts;
+    private Map<Integer, List<PartModApplication>> bodyPartMods;
     private Map<Integer, Clothing> clothing;
 
     public Growth() {
@@ -132,9 +128,9 @@ public class Growth implements Cloneable {
                 if (level <= character.getLevel()) {
                     BodyPart existingPart = character.body.getRandom(mod.getBodyPartType());
                     String existingPartDesc = existingPart == null ? "NO_EXISTING_PART" : existingPart.canonicalDescription();
-                    if (existingPart != null && existingPart instanceof GenericBodyPart) {
+                    if (existingPart instanceof GenericBodyPart) {
                         GenericBodyPart part = (GenericBodyPart) existingPart;
-                        GenericBodyPart newPart = (GenericBodyPart) part.applyMod(mod.getMod());
+                        GenericBodyPart newPart = part.applyMod(mod.getMod());
                         if (newPart.canonicalDescription().equals(existingPartDesc)) {
                             character.body.addReplace(newPart, 1);
                         }
@@ -170,11 +166,7 @@ public class Growth implements Cloneable {
         addOrRemoveTraits(character);
     }
 
-    /**
-     * Note: only affects meters, not traits.
-     *
-     * @param character
-     */
+    // Note: only affects meters, not traits.
     public void levelDown(Character character) {
         character.getStamina().gain(-stamina);
         character.getArousal().gain(-arousal);
@@ -198,6 +190,6 @@ public class Growth implements Cloneable {
     }
 
     public void removeNullTraits() {
-        traits.forEach((i, l) -> l.removeIf(t -> t == null));
+        traits.forEach((i, l) -> l.removeIf(Objects::isNull));
     }
 }

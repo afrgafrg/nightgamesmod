@@ -179,13 +179,15 @@ public class Growth implements Cloneable {
     }
     
     public Object clone() throws CloneNotSupportedException {
-        // TODO, growth should NEVER be modified as a cloned version. if this is true, we need to revisit this.
-        // FIXME: The CombatStats test modifies growth of clones and errors out.
         Growth clone = (Growth) super.clone();
-        clone.traits = Collections.unmodifiableMap(clone.traits);
-        clone.bodyParts = Collections.unmodifiableMap(clone.bodyParts);
-        clone.bodyPartMods = Collections.unmodifiableMap(clone.bodyPartMods);
-        clone.clothing = Collections.unmodifiableMap(clone.clothing);
+        // Deep-copying multi-entry maps makes combat sims easier.
+        clone.traits = new HashMap<>();
+        this.traits.forEach((k, v) -> clone.traits.put(k, new ArrayList<>(v)));
+        clone.bodyParts = new HashMap<>();
+        this.bodyParts.forEach((k, v) -> clone.bodyParts.put(k, new ArrayList<>(v)));
+        clone.bodyPartMods = new HashMap<>();
+        this.bodyPartMods.forEach((k, v) -> clone.bodyPartMods.put(k, new ArrayList<>(v)));
+        clone.clothing = new HashMap<>(clone.clothing);
         return clone;
     }
 

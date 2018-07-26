@@ -5,6 +5,8 @@ import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
+import nightgames.gui.GUI;
+import nightgames.gui.TestGUI;
 import nightgames.modifier.standard.NoModifier;
 import org.junit.Test;
 
@@ -43,7 +45,7 @@ public class CombatStats {
             }
         }
         StringBuilder results = new StringBuilder(setup.toString());
-        System.out.println(counter.get());
+        System.out.println("Fight counter: " + counter.get());
         System.out.println(setup);
         records.forEach((c, r) -> {
             String record = c + ": " + (double) r.totalWins / (double) r.totalPlayed + "\n" + r.toString();
@@ -73,6 +75,9 @@ public class CombatStats {
                 // threadPool.execute(() -> fight(clone1, clone2));
             } catch (CloneNotSupportedException e1) {
                 e1.printStackTrace();
+            } catch (Exception e) {
+                System.err.println(String.format("Exception during fight: %s vs %s on bout %d, total fight count %d", c1, c2, i, counter.get()));
+                throw e;
             }
         }
         /*

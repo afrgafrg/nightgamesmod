@@ -62,6 +62,7 @@ public class GenericBodyPart implements BodyPart {
     public GenericBodyPart(GenericBodyPart original) {
         this(original.desc, original.descLong, original.hotness, original.pleasure, original.sensitivity,
                         original.notable, original.type, original.prefix);
+        this.mods = new ArrayList<>(original.mods);
     }
 
     public GenericBodyPart() {

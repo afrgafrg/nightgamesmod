@@ -182,7 +182,6 @@ public abstract class Character extends Observable implements Cloneable {
         c.temporaryAddedTraits = new HashMap<>(temporaryAddedTraits);
         c.temporaryRemovedTraits = new HashMap<>(temporaryRemovedTraits);
 
-        // TODO! We should NEVER modify the growth in a combat sim. If this is not true, this needs to be revisited and deepcloned.
         c.growth = (Growth) growth.clone();
 
         c.removelist = new HashSet<>(removelist);

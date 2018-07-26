@@ -116,6 +116,7 @@ public class CombatStats {
     @Test
     public void combatStats() throws Exception {
         GameState gameState = new TestGameState();
+        GUI gui = new TestGUI();
         Prematch prematch = new PreMatchSchool(new CompletableFuture<>());
         prematch.setUpMatch(new NoModifier());
 

@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 public class Player extends Character {
     public GUI gui;
     public int traitPoints;
+    private String type;
 
     private Player() {
         this("Dummy");
@@ -58,6 +59,7 @@ public class Player extends Character {
 
         config.ifPresent(this::applyConfigStats);
         finishCharacter(pickedTraits, selectedAttributes);
+        this.type = getClass().getSimpleName();
     }
 
     public Player(JsonObject playerJson) {
@@ -837,7 +839,7 @@ public class Player extends Character {
 
     @Override
     public String getType() {
-        return getClass().getSimpleName();
+        return type;
     }
 
     @Override

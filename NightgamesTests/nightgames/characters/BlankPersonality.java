@@ -2,6 +2,7 @@ package nightgames.characters;
 
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.items.Item;
 import nightgames.skills.SkillPool;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ public class BlankPersonality extends BasePersonality {
     public BlankPersonality(String name) {
         super(name, Optional.empty(), Optional.empty(), false);
         SkillPool.learnSkills(this.character);
+        this.character.setTrophy(Item.MiscTrophy);
     }
 
     @Override public String victory(Combat c, Result flag) {

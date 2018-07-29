@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Combat extends Observable implements Cloneable {
-    private static final int NPC_TURN_LIMIT = 75;
+    public static final int NPC_TURN_LIMIT = 75;
     private static final double NPC_DRAW_ERROR_MARGIN = .15;
     private enum CombatPhase {
         START,
@@ -315,7 +315,6 @@ public class Combat extends Observable implements Cloneable {
         p1.evalChallenges(this, null);
         p2.evalChallenges(this, null);
         p2.draw(this, state);
-        winner = Optional.of(NPC.noneCharacter());
     }
 
     private void victory(Character won) {
@@ -324,36 +323,32 @@ public class Combat extends Observable implements Cloneable {
         p2.evalChallenges(this, won);
         won.victory(this, state);
         doVictory(won, getOpponent(won));
-        winner = Optional.of(won);
     }
 
-    private boolean checkLosses(boolean doLosses) {
-        if (cloned) {
-            return false;
-        }
-        if (p1.checkLoss(this) && p2.checkLoss(this)) {
-            if (doLosses) {
-                draw();
+    private Optional<Character> checkLosses() {
+        if (!isBeingObserved()) {
+            // Check for NPC vs NPC win
+            double fitness1 = p1.getFitness(this);
+            double fitness2 = p2.getFitness(this);
+            double diff = Math.abs(fitness1 / fitness2 - 1.0);
+            if (diff > NPC_DRAW_ERROR_MARGIN) {
+                return Optional.of(fitness1 > fitness2 ? p1 : p2);
+            } else if (timer > NPC_TURN_LIMIT) {
+                return Optional.of(NPC.noneCharacter());
             }
-            return true;
         }
-        if (p1.checkLoss(this)) {
-            if (doLosses) {
-                victory(p2);
-            } else {
-                winner = Optional.of(p2);
-            }
-            return true;
+
+        boolean p1Lost = p1.checkLoss(this);
+        boolean p2Lost = p2.checkLoss(this);
+
+        if (p1Lost && p2Lost) {
+            return Optional.of(NPC.noneCharacter());
+        } else if (p1Lost) {
+            return Optional.of(p2);
+        } else if (p2Lost) {
+            return Optional.of(p1);
         }
-        if (p2.checkLoss(this)) {
-            if (doLosses) {
-                victory(p1);
-            } else {
-                winner = Optional.of(p1);
-            }
-            return true;
-        }
-        return false;
+        return Optional.empty();
     }
 
     private void checkForCombatComment() {
@@ -1275,8 +1270,7 @@ public class Combat extends Observable implements Cloneable {
         p2.state = State.ready;
         if (processedEnding) {
             // TODO: probably shouldn't be calling this more than once. get rid of this branch
-            p1.state = State.ready;
-            p2.state = State.ready;
+            // we did this already
             return;
         }
         boolean hasScene = false;
@@ -1707,10 +1701,14 @@ public class Combat extends Observable implements Cloneable {
             if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println("Current phase = " + phase);
             }
-            // Combat should end; do post-combat scenes
-            if (phase != CombatPhase.FINISHED_SCENE && phase != CombatPhase.RESULTS_SCENE && checkLosses(false)) {
-                phase = levelDrainPostCombat();
-                pause = true;
+            if (winner.isPresent()) {
+                // Combat should end; do post-combat scenes
+                if (phase != CombatPhase.FINISHED_SCENE && phase != CombatPhase.RESULTS_SCENE) {
+                    phase = levelDrainPostCombat(); // Either RESULTS_SCENE or LEVEL_DRAIN
+                    pause = true;
+                }
+            } else {
+                winner = checkLosses();
             }
             if ((p1.orgasmed || p2.orgasmed) && SKIPPABLE_PHASES.contains(phase)) {
                 phase = CombatPhase.UPKEEP;
@@ -1770,7 +1768,13 @@ public class Combat extends Observable implements Cloneable {
                     pause = true;
                     break;
                 case RESULTS_SCENE:
-                    checkLosses(true);
+                    winner.ifPresent(victor -> {
+                        if (victor == NPC.noneCharacter()) {
+                            draw();
+                        } else {
+                            victory(victor);
+                        }
+                    });
                     phase = CombatPhase.FINISHED_SCENE;
                     pause = true;
                     break;
@@ -1782,19 +1786,6 @@ public class Combat extends Observable implements Cloneable {
             }
             if (isBeingObserved()) {
                 updateGUI();
-            } else {
-                // Check for NPC vs NPC win
-                double fitness1 = p1.getFitness(this);
-                double fitness2 = p2.getFitness(this);
-                double diff = Math.abs(fitness1 / fitness2 - 1.0);
-                if (diff > NPC_DRAW_ERROR_MARGIN) {
-                    winner = Optional.of(fitness1 > fitness2 ? p1 : p2);
-                } else if (timer > NPC_TURN_LIMIT) {
-                    winner = Optional.of(NPC.noneCharacter());
-                }
-                if (winner.isPresent()) {
-                    phase = CombatPhase.ENDED;
-                }
             }
             if (phase == CombatPhase.ENDED) {
                 end();

@@ -146,7 +146,6 @@ public class Match {
                 }
                 combatant.upkeep();
                 manageConditions(combatant);
-                // TODO: See if this makes it easier for NPCs to fight each other
                 // Check for encounter before moving
                 Optional<Encounter> maybeEncounter = combatant.location().encounter();
                 if (!maybeEncounter.isPresent()) {
@@ -172,7 +171,6 @@ public class Match {
                     if (!combat.shouldAutoresolve()) {
                         combat.loadCombatGUI(GUI.gui);
                     }
-                    // FIXME: unobserved NPC fights do not apply mercy, leading to endless battle
                     combat.runCombat();
                     if (!combat.shouldAutoresolve()) {
                         combat.removeCombatGUI(GUI.gui);

@@ -76,6 +76,7 @@ public abstract class Character extends Observable implements Cloneable {
     public Set<Status> removelist;
     public Set<Status> addlist;
     public Map<String, Integer> cooldowns;
+    // List of characters who will not fight this character until after this character resupplies.
     private CopyOnWriteArrayList<String> mercy;
     protected Map<Item, Integer> inventory;
     private Map<String, Integer> flags;

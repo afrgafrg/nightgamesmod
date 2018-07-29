@@ -68,4 +68,8 @@ public class BlankPersonality extends BasePersonality {
     public void applyStrategy(NPC self) {
         
     }
+
+    @Override public String getType() {
+        return "BLNK_" + this.character.getName();
+    }
 }

@@ -5,19 +5,24 @@ import nightgames.areas.Area;
 import nightgames.characters.BlankPersonality;
 import nightgames.characters.NPC;
 import nightgames.characters.Trait;
+import nightgames.global.GameState;
 import nightgames.global.Match;
-import nightgames.gui.TestGUI;
+import nightgames.global.TestGameState;
 import nightgames.modifier.standard.NoModifier;
 import nightgames.stance.Stance;
 import nightgames.stance.TestPosition;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.both;
+import static org.hamcrest.CoreMatchers.either;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO: Write class-level documentation.
@@ -28,6 +33,7 @@ public class CombatTest {
     private Combat combat;
 
     @Before public void setUp() throws Exception {
+        GameState testState = new TestGameState();
         self = new BlankPersonality("SelfTestNPC").character;
         other = new BlankPersonality("OtherTestNPC").character;
         Match.match = new Match(Arrays.asList(self, other), new NoModifier());
@@ -88,5 +94,35 @@ public class CombatTest {
         combat.setStance(new TestPosition(self, other, Stance.coiled, -5));
         assertThat(combat.getStance().getDominanceOfStance(self), equalTo(0));
         assertThat(combat.getStance().getDominanceOfStance(other), equalTo(0));
+    }
+
+    @Test public void mercyAfterCombatSelfLoses() throws Exception {
+        self.getWillpower().empty();
+        combat.runCombat();
+        assertTrue("There should be a winner of this combat", combat.winner.isPresent());
+        assertThat("The winner should be OtherTestNPC", combat.winner.get().getName(), equalTo(other.getName()));
+        assertFalse("SelfTestNPC lost to OtherTestNPC and should not be eligible for further combat.",
+                        self.eligible(other));
+    }
+
+    @Test public void mercyAfterCombatSelfWins() throws Exception {
+        other.getWillpower().empty();
+        combat.runCombat();
+        assertTrue("There should be a winner of this combat", combat.winner.isPresent());
+        assertThat("The winner should be SelfTestNPC", combat.winner.get().getName(), equalTo(self.getName()));
+        assertFalse("OtherTestNPC lost to SelfTestNPC and should not be eligible for further combat.",
+                        other.eligible(self));
+    }
+
+    @Test public void mercyAfterCombatDraw() {
+        self.getWillpower().empty();
+        other.getWillpower().empty();
+        combat.timer = Combat.NPC_TURN_LIMIT + 1;
+        combat.runCombat();
+        assertTrue("The fight should be over", combat.isEnded() && combat.winner.isPresent());
+        assertThat("The winner should be neither SelfTestNPC nor OtherTestNPC", combat.winner.get().getName(),
+                        both(not(self.getName())).and(not(other.getName())));
+        assertFalse("Both characters have lost and should be ineligible for further combat with each other",
+                        self.eligible(other) || other.eligible(self));
     }
 }

@@ -22,4 +22,8 @@ public class TestGUI extends GUI {
     @Override public Optional<File> askForSaveFile() {
         return Optional.empty();
     }
+
+    @Override public void refresh() {
+        // pass
+    }
 }

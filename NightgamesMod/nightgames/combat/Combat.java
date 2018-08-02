@@ -79,7 +79,7 @@ public class Combat extends Observable implements Cloneable {
     public volatile boolean combatMessageChanged = false;   // Signals to the GUI that it should update its view of the combat message.
     public volatile boolean clearText = false;  // Signals to the GUI that it should clear the main text window before updating its view of the combat message.
     private boolean processedEnding;
-    private int delayCounter;   // In unobserved combats, delays combat a few rounds to give a nearby player a chance to intervene.
+    private int delayCounter = 2;   // In unobserved combats, delays combat a few rounds to give a nearby player a chance to intervene.
 
 
     String imagePath = "";
@@ -1679,6 +1679,7 @@ public class Combat extends Observable implements Cloneable {
     public void loadCombatGUI(GUI gui) {
         addObserver(gui);
         setBeingObserved(true);
+        delayCounter = 0;
         gui.combat = this;
         gui.loadPortrait(this, this.p1, this.p2);
         gui.showPortrait();

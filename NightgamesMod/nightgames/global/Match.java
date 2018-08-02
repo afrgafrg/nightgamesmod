@@ -117,8 +117,9 @@ public class Match {
      * Every match cycle, each combatant gets a turn. Combatants act in initiative order, calculated at the start of each cycle.
      *
      * A turn consists of:
-     * 1) Selecting a move
-     * 2)
+     * 1) Checking for an encounter
+     * 2) Resolving the encounter if necessary
+     * 3) Combat if necessary/select and perform the next move otherwise
      * @param endTime The number of match cycles.
      * @throws InterruptedException If an interrupt was received during a player prompt.
      */
@@ -146,10 +147,24 @@ public class Match {
                 }
                 combatant.upkeep();
                 manageConditions(combatant);
+
                 // Check for encounter before moving
                 Optional<Encounter> maybeEncounter = combatant.location().encounter();
-                if (!maybeEncounter.isPresent()) {
-                    // Select and perform move
+
+                // Resolve encounter
+                Optional<Combat> maybeCombat = maybeEncounter.flatMap(Encounter::resolve);
+
+                // Run combat if necessary, select and perform next move otherwise
+                if (maybeCombat.isPresent()) {
+                    Combat combat = maybeCombat.get();
+                    if (!combat.shouldAutoresolve()) {
+                        combat.loadCombatGUI(GUI.gui);
+                    }
+                    combat.runCombat();
+                    if (!combat.shouldAutoresolve()) {
+                        combat.removeCombatGUI(GUI.gui);
+                    }
+                } else {
                     Optional<Action> move;
                     do {
                         move = combatant.move();
@@ -159,21 +174,6 @@ public class Match {
                         System.out.println(
                                         combatant.getTrueName() + (combatant.is(Stsflag.disguised) ? "(Disguised)" : "")
                                                         + " is in " + combatant.location().name);
-                    }
-                    // Find whether move resulted in an encounter
-                    maybeEncounter = combatant.location().encounter();
-                }
-                // Respond to encounter
-                Optional<Combat> maybeCombat = maybeEncounter.flatMap(Encounter::resolve);
-                // Run combat
-                if (maybeCombat.isPresent()) {
-                    Combat combat = maybeCombat.get();
-                    if (!combat.shouldAutoresolve()) {
-                        combat.loadCombatGUI(GUI.gui);
-                    }
-                    combat.runCombat();
-                    if (!combat.shouldAutoresolve()) {
-                        combat.removeCombatGUI(GUI.gui);
                     }
                 }
             }

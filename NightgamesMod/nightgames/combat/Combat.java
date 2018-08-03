@@ -1685,6 +1685,11 @@ public class Combat extends Observable implements Cloneable {
         gui.showPortrait();
     }
 
+    void runCombatNoDelay() {
+        delayCounter = 0;
+        runCombat();
+    }
+
     public void runCombat() {
         // delayCounter only applies to combats not involving a human
         if (!isBeingObserved() && delayCounter > 0) {

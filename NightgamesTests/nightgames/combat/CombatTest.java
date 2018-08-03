@@ -17,12 +17,9 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.both;
-import static org.hamcrest.CoreMatchers.either;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * TODO: Write class-level documentation.
@@ -98,7 +95,7 @@ public class CombatTest {
 
     @Test public void mercyAfterCombatSelfLoses() throws Exception {
         self.getWillpower().empty();
-        combat.runCombat();
+        combat.runCombatNoDelay();
         assertTrue("There should be a winner of this combat", combat.winner.isPresent());
         assertThat("The winner should be OtherTestNPC", combat.winner.get().getName(), equalTo(other.getName()));
         assertFalse("SelfTestNPC lost to OtherTestNPC and should not be eligible for further combat.",
@@ -107,7 +104,7 @@ public class CombatTest {
 
     @Test public void mercyAfterCombatSelfWins() throws Exception {
         other.getWillpower().empty();
-        combat.runCombat();
+        combat.runCombatNoDelay();
         assertTrue("There should be a winner of this combat", combat.winner.isPresent());
         assertThat("The winner should be SelfTestNPC", combat.winner.get().getName(), equalTo(self.getName()));
         assertFalse("OtherTestNPC lost to SelfTestNPC and should not be eligible for further combat.",
@@ -118,7 +115,7 @@ public class CombatTest {
         self.getWillpower().empty();
         other.getWillpower().empty();
         combat.timer = Combat.NPC_TURN_LIMIT + 1;
-        combat.runCombat();
+        combat.runCombatNoDelay();
         assertTrue("The fight should be over", combat.isEnded() && combat.winner.isPresent());
         assertThat("The winner should be neither SelfTestNPC nor OtherTestNPC", combat.winner.get().getName(),
                         both(not(self.getName())).and(not(other.getName())));

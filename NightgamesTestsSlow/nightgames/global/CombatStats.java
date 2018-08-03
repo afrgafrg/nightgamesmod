@@ -89,7 +89,7 @@ public class CombatStats {
         ((BasePersonality) ((NPC) c1).ai).character = (NPC) c1;
         ((BasePersonality) ((NPC) c2).ai).character = (NPC) c2;
         Combat cbt = new Combat(c1, c2, NULL_AREA);
-        cbt.runCombat();
+        cbt.runCombatNoDelay();
         counter.incrementAndGet();
         synchronized (recordLock) {
             if (!cbt.winner.isPresent()) {

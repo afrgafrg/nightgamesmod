@@ -1,10 +1,12 @@
-package nightgames.global;
+package nightgames.combat;
 
 import nightgames.areas.Area;
 import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.daytime.Daytime;
+import nightgames.global.*;
+import nightgames.global.Random;
 import nightgames.gui.GUI;
 import nightgames.gui.TestGUI;
 import nightgames.modifier.standard.NoModifier;
@@ -198,7 +200,7 @@ public class CombatStats {
                     c.addLevelsImmediate(null, 1);
                     Character partner;
                     do {
-                        partner = (Character) Random.pickRandom(combatants.toArray()).get();
+                        partner = (Character) nightgames.global.Random.pickRandom(combatants.toArray()).get();
                     } while (c == partner);
                     Daytime.train(partner, c, (Attribute) Random.pickRandom(c.att.keySet().toArray()).get());
                 }

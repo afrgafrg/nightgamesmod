@@ -168,7 +168,6 @@ public class GUI extends JFrame implements Observer {
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
                     purgeGameState();
-                    showGameCreation();
                 }
             }
         });

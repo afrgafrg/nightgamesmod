@@ -60,8 +60,11 @@ public class Main {
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
-                System.out.println("Interrupted!");
+                System.err.println("Interrupted!");
                 e.printStackTrace();
+            } catch (RuntimeException e) {
+                System.err.println("An error we didn't expect occurred:");
+                throw e;
             }
             if (!exit) {
                 GUI.gui.showGameCreation();

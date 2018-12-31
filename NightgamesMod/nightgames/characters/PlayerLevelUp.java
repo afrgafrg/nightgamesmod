@@ -67,8 +67,8 @@ class PlayerLevelUp {
         Formatter.writeIfCombatUpdateImmediately(gui.combat, player,
                         String.format("You've earned %d new perk%s. Select below.", remainingTraitPoints(),
                                         remainingTraitPoints() == 1 ? "" : "s"));
-        CompletableFuture<Trait> chosenTrait = new CompletableFuture<>();
         while (wantsToSpendTraitPoints && remainingTraitPoints() > 0) {
+            CompletableFuture<Trait> chosenTrait = new CompletableFuture<>();
             gui.clearCommand();
             Stream<Trait> traitChoices = Trait.getFeats(player).stream().filter(feat -> !player.has(feat));
             List<ValueButton<Trait>> featButtons =

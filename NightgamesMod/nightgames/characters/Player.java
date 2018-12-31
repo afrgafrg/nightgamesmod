@@ -405,18 +405,18 @@ public class Player extends Character {
     }
 
     @Override public void spendLevels(Combat c) {
-        super.spendLevels(c);
         if (levelsToGain < 1) {
             return;
         }
+        int levelsGained = levelsToGain;
+        super.spendLevels(c);
         assert (cloned == 0);
         Formatter.writeIfCombatUpdateImmediately(c, this,
-                        String.format("You've leveled up %d times!<br/>Select which attributes to increase.", levelsToGain));
+                        String.format("You've leveled up %d times!<br/>Select which attributes to increase.", levelsGained));
         PlayerLevelUp levelUp = new PlayerLevelUp(this, this.availableAttributePoints, this.traitPoints);
         try {
             levelUp.getHumanChoices(gui);
             this.applyLevelUp(levelUp);
-            levelsToGain = 0;
         } catch (InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();

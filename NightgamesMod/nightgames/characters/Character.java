@@ -3720,6 +3720,7 @@ public abstract class Character extends Observable implements Cloneable {
         for (int i = 0; i < levelsToGain; i++) {
             ding(c);
         }
+        levelsToGain = 0;
     }
 
     public int getMaxWillpowerPossible() {
@@ -3728,15 +3729,12 @@ public abstract class Character extends Observable implements Cloneable {
 
     // TODO: move XP spending to ding() so we can't forget about it.
     // or level spending to spendXP(), or something
-    public boolean spendXP() {
+    public void spendXP() {
         int req;
-        boolean dinged = false;
         while (xp - (req = getXPReqToNextLevel(level + levelsToGain)) >= 0) {
             xp -= req;
             levelsToGain++;
-            dinged = true;
         }
-        return dinged;
     }
 
     public void matchPrep(Match m) {

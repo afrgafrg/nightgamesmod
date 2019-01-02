@@ -72,4 +72,32 @@ public class Random {
         FROZEN_RNG = new java.util.Random();
         rng = FROZEN_RNG;
     }
+
+    public static class DieRoll {
+        public final int sides;
+        public final int roll;
+        public final int modifier;
+
+        public DieRoll(int sides, int modifier) {
+            this.sides = sides;
+            this.modifier = modifier;
+            this.roll = Random.random(sides);
+        }
+
+        public DieRoll(int modifier) {
+            this(20, modifier);
+        }
+
+        public int result() {
+            return roll + modifier;
+        }
+
+        public boolean criticalHit() {
+            return roll == 0;
+        }
+
+        public boolean criticalMiss() {
+            return roll == sides - 1;
+        }
+    }
 }

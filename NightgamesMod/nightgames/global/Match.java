@@ -26,7 +26,6 @@ public class Match {
     public final CountDownLatch matchComplete; // Counts down when match is over
     public static Set<Character> resting = new HashSet<>();
     public static Match match;
-    static Map<String, MatchAction> matchActions = null;
     protected int time;
     protected int dropOffTime;
     protected Map<String, Area> map;
@@ -376,10 +375,6 @@ public class Match {
     
     public MatchData getMatchData() {
         return matchData;
-    }
-
-    interface MatchAction {
-        String replace(Character self, String first, String second, String third);
     }
 
     public Encounter buildEncounter(Area location) {

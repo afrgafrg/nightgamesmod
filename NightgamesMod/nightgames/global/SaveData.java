@@ -33,6 +33,7 @@ public class SaveData {
     public final int date;
     public final int fontsize;
     public final double xpRate;
+    public final double moneyRate;
 
     private enum JSONKey {
         PLAYERS("characters"), FLAGS("flags"), COUNTERS("counters"), TIME("time"), DATE("date"), FONTSIZE("fontsize");
@@ -55,6 +56,7 @@ public class SaveData {
         date = Time.date;
         fontsize = GUI.gui.fontsize;
         xpRate = gameState.xpRate;
+        moneyRate = gameState.moneyRate;
     }
 
     SaveData(JsonObject rootJSON) throws SaveDataException {
@@ -64,6 +66,11 @@ public class SaveData {
             xpRate = rootJSON.get("xpRate").getAsDouble();
         } else {
             xpRate = GameState.DEFAULT_XP_RATE;
+        }
+        if (rootJSON.has("moneyRate")) {
+            moneyRate = rootJSON.get("moneyRate").getAsDouble();
+        } else {
+            moneyRate = GameState.DEFAULT_MONEY_RATE;
         }
 
         npcs = new HashSet<>();
@@ -131,6 +138,7 @@ public class SaveData {
     JsonObject toJson() {
         JsonObject rootJSON = new JsonObject();
         rootJSON.add("xpRate", new JsonPrimitive(xpRate));
+        rootJSON.add("moneyRate", new JsonPrimitive(moneyRate));
 
         JsonArray characterJSON = new JsonArray();
         characterJSON.add(player.save());
@@ -167,6 +175,8 @@ public class SaveData {
             return false;
         if (Double.compare(saveData.xpRate, xpRate) != 0)
             return false;
+        if (Double.compare(saveData.moneyRate, moneyRate) != 0)
+            return false;
         if (!npcs.equals(saveData.npcs))
             return false;
         if (!player.equals(saveData.player))
@@ -190,12 +200,15 @@ public class SaveData {
         result = 31 * result + fontsize;
         temp = Double.doubleToLongBits(xpRate);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(moneyRate);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 
     @Override public String toString() {
         return "SaveData{" + "npcs=" + npcs + ", player=" + player + ", flags=" + flags + ", counters=" + counters
-                        + ", time=" + time + ", date=" + date + ", fontsize=" + fontsize + ", xpRate=" + xpRate + '}';
+                        + ", time=" + time + ", date=" + date + ", fontsize=" + fontsize + ", xpRate=" + xpRate
+                        + ", moneyRate=" + moneyRate + '}';
     }
 
     public class SaveDataException extends Exception {

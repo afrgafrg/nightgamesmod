@@ -62,6 +62,7 @@ public class GameState {
      */
     protected GameState(SaveData data) {
         xpRate = data.xpRate;
+        moneyRate = data.moneyRate;
         // legacy support: previously we only saved unlocked NPCs.
         if (Flag.checkFlag(Flag.LegacyCharAvailableSave)) {
             characterPool = new CharacterPool(Optional.empty());

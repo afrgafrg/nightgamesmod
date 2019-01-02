@@ -25,7 +25,7 @@ public class SpringTrap extends Trap {
 
     @Override
     public void trigger(Character target) {
-        if (!target.check(Attribute.Perception, 24 - target.get(Attribute.Perception) + target.baseDisarm())) {
+        if (!target.checkVsDc(Attribute.Perception, 24 - target.get(Attribute.Perception) + target.baseDisarm())) {
             if (target.human()) {
                 GUI.gui.message(
                                 "As you're walking, your foot hits something and there's a sudden debilitating pain in your groin. Someone has set up a spring-loaded rope designed "

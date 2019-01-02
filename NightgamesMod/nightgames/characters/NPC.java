@@ -7,10 +7,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.characters.custom.CharacterLine;
 import nightgames.characters.custom.CommentSituation;
 import nightgames.characters.custom.RecruitmentData;
-import nightgames.combat.Combat;
-import nightgames.combat.CombatScene;
-import nightgames.combat.Encounter;
-import nightgames.combat.Result;
+import nightgames.combat.*;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.global.Formatter;
@@ -572,25 +569,22 @@ public class NPC extends Character {
     }
 
     @Override
-    public void faceOff(Character opponent, Encounter enc) {
-        Encs encType;
+    public FightIntent faceOff(Character opponent, Encounter enc) {
         if (ai.fightFlight(opponent)) {
-            encType = Encs.fight;
+            return FightIntent.fight;
         } else if (has(Item.SmokeBomb)) {
-            encType = Encs.smoke;
-            remove(Item.SmokeBomb);
+            return FightIntent.smoke;
         } else {
-            encType = Encs.flee;
+            return FightIntent.flee;
         }
-        enc.parse(encType, this, opponent);
     }
 
     @Override
-    public void spy(Character opponent, Encounter enc) {
+    public Encs spy(Character opponent, Encounter enc) {
         if (ai.attack(opponent)) {
-            enc.parse(Encs.ambush, this, opponent);
+            return Encs.ambush;
         } else {
-            location.endEncounter();
+            return Encs.wait;
         }
     }
 
@@ -605,7 +599,7 @@ public class NPC extends Character {
     }
 
     @Override
-    public void showerScene(Character target, Encounter encounter) {
+    public Encs showerSceneResponse(Character target, Encounter encounter) {
         Encs response;
         if (this.has(Item.Aphrodisiac)) {
             // encounter.aphrodisiactrick(this, target);
@@ -617,7 +611,7 @@ public class NPC extends Character {
             // encounter.showerambush(this, target);
             response = Encs.showerattack;
         }
-        encounter.parse(response, this, target);
+        return response;
     }
 
     @Override public JsonObject save() {

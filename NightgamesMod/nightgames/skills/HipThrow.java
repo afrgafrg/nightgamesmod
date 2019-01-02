@@ -40,7 +40,7 @@ public class HipThrow extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (getSelf().check(Attribute.Power, target.knockdownDC() - target.get(Attribute.Cunning) / 2)) {
+        if (getSelf().checkVsDc(Attribute.Power, target.knockdownDC() - target.get(Attribute.Cunning) / 2)) {
             writeOutput(c, Result.normal, target);
             target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Random.random(10, 16)));
             target.add(c, new Falling(target));

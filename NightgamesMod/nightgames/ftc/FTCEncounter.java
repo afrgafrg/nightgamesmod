@@ -6,7 +6,7 @@ import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
-import nightgames.global.Encs;
+import nightgames.combat.Encs;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
@@ -181,20 +181,20 @@ public class FTCEncounter extends Encounter {
     }
 
     @Override
-    public void parse(Encs choice, Character self, Character target, Trap trap) {
-        assert trap != null || choice != Encs.capitalize;
+    public void parse(Encs choice, Character attacker, Character target, Trap trap) {
+        assert trap != null || choice != Encs.capitalizeontrap;
         if (!isFTCSpecific(choice)) {
-            super.parse(choice, self, target, trap);
+            super.parse(choice, attacker, target, trap);
         } else {
             switch (choice) {
                 case treeAmbush:
-                    treeAmbush(self, target);
+                    treeAmbush(attacker, target);
                     break;
                 case bushAmbush:
-                    bushAmbush(self, target);
+                    bushAmbush(attacker, target);
                     break;
                 case passAmbush:
-                    passAmbush(self, target);
+                    passAmbush(attacker, target);
                     break;
                 default:
             }

@@ -104,7 +104,7 @@ public class StripMinor extends Skill {
                         - target.getArousal().percent()) / 5
                         - (!target.canAct() || c.getStance().sub(target) ? 20 : 0);
         difficulty -= 15;
-        if (getSelf().check(Attribute.Cunning, difficulty) || !target.canAct()) {
+        if (getSelf().checkVsDc(Attribute.Cunning, difficulty) || !target.canAct()) {
             c.write(getSelf(),
                             Formatter.format("{self:SUBJECT-ACTION:reach|reaches} for"
                                             + " {other:name-possessive} %s and {self:action:pull|pulls} "

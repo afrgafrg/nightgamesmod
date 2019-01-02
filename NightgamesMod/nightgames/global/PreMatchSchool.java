@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class PreMatchSchool extends Prematch {
     private Modifier type;
 
-    PreMatchSchool(CompletableFuture<Match> match) {
+    public PreMatchSchool(CompletableFuture<Match> match) {
         super(match);
     }
 

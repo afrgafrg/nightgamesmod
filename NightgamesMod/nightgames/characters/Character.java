@@ -13,10 +13,7 @@ import nightgames.characters.body.mods.DemonicMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.characters.custom.AiModifiers;
 import nightgames.characters.custom.CharacterLine;
-import nightgames.combat.Combat;
-import nightgames.combat.CombatantData;
-import nightgames.combat.Encounter;
-import nightgames.combat.Result;
+import nightgames.combat.*;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.global.Formatter;
@@ -347,20 +344,35 @@ public abstract class Character extends Observable implements Cloneable {
         return total;
     }
 
-    public boolean check(Attribute a, int dc) {
-        int rand = Random.random(20);
+    public boolean checkVsDc(Attribute a, int dc) {
+        return checkVsDc(a, 0, dc);
+    }
+
+    public boolean checkVsDc(Attribute a, int extra, int dc) {
+        Random.DieRoll roll = check(a, extra);
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
-            System.out.println("Checked " + a + " = " + get(a) + " against " + dc + ", rolled " + rand);
+            System.out.println("Checked roll of " + roll.result() + " against dc " + dc + "." +
+                            (roll.criticalHit() ? "Critical hit!" : "") + (roll.criticalMiss() ? "Critical miss!" : ""));
         }
-        if (rand == 0) {
-            // critical hit
+        if (roll.criticalHit()) {
             return true;
         }
-        if (rand == 19) {
-            // critical miss
+        if (roll.criticalMiss()) {
             return false;
         }
-        return get(a) != 0 && get(a) + rand >= dc;
+        return roll.result() >= dc;
+    }
+
+    public Random.DieRoll check(Attribute a) {
+        return check(a, 0);
+    }
+
+    public Random.DieRoll check(Attribute a, int extra) {
+        Random.DieRoll roll = new Random.DieRoll(20, get(a) + extra);
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_DAMAGE)) {
+            System.out.println("Rolled " + a + " = " + get(a) + " with extra " + extra + ", rolled " + roll.roll);
+        }
+        return roll;
     }
 
     public int getLevel() {
@@ -418,6 +430,9 @@ public abstract class Character extends Observable implements Cloneable {
         return xp;
     }
 
+    public boolean isVulnerable() {
+        return state.isVulnerable();
+    }
 
     public double modifyDamage(DamageType type, Character other, double baseDamage) {
         // so for each damage type, one level from the attacker should result in about 3% increased damage, while a point in defense should reduce damage by around 1.5% per level.
@@ -1548,9 +1563,19 @@ public abstract class Character extends Observable implements Cloneable {
 
     public abstract void doAction(Action action);
 
-    public abstract void faceOff(Character opponent, Encounter enc);
+    public int getTraitMod(Trait trait, int mod) {
+        return has(trait) ? mod : 0;
+    }
 
-    public abstract void spy(Character opponent, Encounter enc);
+    public enum FightIntent {
+        fight,
+        flee,
+        smoke;
+    }
+
+    public abstract FightIntent faceOff(Character opponent, Encounter enc);
+
+    public abstract Encs spy(Character opponent, Encounter enc);
 
     public abstract String describe(int per, Combat c);
 
@@ -1586,7 +1611,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public abstract void intervene(Encounter fight, Character p1, Character p2);
 
-    public abstract void showerScene(Character target, Encounter encounter);
+    public abstract Encs showerSceneResponse(Character target, Encounter encounter);
 
     public boolean humanControlled(Combat c) {
         return human() || DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES) && c.getOpponent(this).human();
@@ -2305,7 +2330,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean stealthCheck(int perception) {
-        return check(Attribute.Cunning, Random.random(20) + perception) || state == State.hidden;
+        return checkVsDc(Attribute.Cunning, Random.random(20) + perception) || state == State.hidden;
     }
 
     public boolean spotCheck(Character checked) {
@@ -2320,7 +2345,7 @@ public abstract class Character extends Observable implements Cloneable {
             dc += 20;
         }
         dc -= dc * 5 / Math.max(1, get(Attribute.Perception));
-        return check(Attribute.Cunning, dc);
+        return checkVsDc(Attribute.Cunning, dc);
     }
 
     public void travel(Area dest) {
@@ -2583,7 +2608,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void craft() {
         int roll = Random.random(15);
-        if (check(Attribute.Cunning, 25)) {
+        if (checkVsDc(Attribute.Cunning, 25)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
                 gain(Item.DisSol);
@@ -2593,7 +2618,7 @@ public abstract class Character extends Observable implements Cloneable {
                 gain(Item.Lubricant);
                 gain(Item.Sedative);
             }
-        } else if (check(Attribute.Cunning, 20)) {
+        } else if (checkVsDc(Attribute.Cunning, 20)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
             } else if (roll >= 7) {
@@ -2605,7 +2630,7 @@ public abstract class Character extends Observable implements Cloneable {
             } else {
                 gain(Item.EnergyDrink);
             }
-        } else if (check(Attribute.Cunning, 15)) {
+        } else if (checkVsDc(Attribute.Cunning, 15)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
             } else if (roll >= 8) {
@@ -4097,5 +4122,14 @@ public abstract class Character extends Observable implements Cloneable {
     public int rollInitiative() {
         lastInitRoll = get(Attribute.Speed) + Random.random(20);
         return lastInitRoll;
+    }
+
+    /**
+     * Bonus to checks on running away.
+     *
+     * @return The character's speed, plus relevant trait bonuses.
+     */
+    public int fleeModifier() {
+        return get(Attribute.Speed) + (has(Trait.sprinter) ? 5 : 0);
     }
 }

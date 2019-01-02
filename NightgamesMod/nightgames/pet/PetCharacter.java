@@ -8,6 +8,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
 import nightgames.combat.Result;
 import nightgames.global.DebugFlags;
+import nightgames.combat.Encs;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
@@ -154,10 +155,14 @@ public class PetCharacter extends Character {
     }
 
     @Override
-    public void faceOff(Character opponent, Encounter enc) {}
+    public FightIntent faceOff(Character opponent, Encounter enc) {
+        return FightIntent.flee;
+    }
 
     @Override
-    public void spy(Character opponent, Encounter enc) {}
+    public Encs spy(Character opponent, Encounter enc) {
+        return Encs.wait;
+    }
 
     @Override
     public String describe(int per, Combat c) {
@@ -303,10 +308,13 @@ public class PetCharacter extends Character {
     public void intervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
-    public void showerScene(Character target, Encounter encounter) {}
+    public Encs showerSceneResponse(Character target, Encounter encounter) {
+        return Encs.wait;
+    }
+
     @Override
     public void afterParty() {}
-    
+
     @Override
     public void emote(Emotion emo, int amt) {}
 
@@ -329,7 +337,7 @@ public class PetCharacter extends Character {
     public Pet getSelf() {
         return self;
     }
-    
+
     public double percentHealth() {
         return Math.min(getStamina().percent(), getArousal().percent());
     }

@@ -43,7 +43,7 @@ public class Tackle extends Skill {
             target.add(c, new Winded(target, 2));
         }
         if (target.roll(getSelf(), c, accuracy(c, target))
-                        && getSelf().check(Attribute.Power, target.knockdownDC() - getSelf().get(Attribute.Animism))) {
+                        && getSelf().checkVsDc(Attribute.Power, target.knockdownDC() - getSelf().get(Attribute.Animism))) {
             if (getSelf().get(Attribute.Animism) >= 1) {
                 writeOutput(c, Result.special, target);
                 target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Random.random(15, 30)));

@@ -91,7 +91,7 @@ public class Struggle extends Skill {
 
     private boolean struggleBound(Combat c, Character target) {
         Bound status = (Bound) target.getStatus(Stsflag.bound);
-        if (getSelf().check(Attribute.Power, -getSelf().getEscape(c, target))) {
+        if (getSelf().checkVsDc(Attribute.Power, -getSelf().getEscape(c, target))) {
             if (getSelf().human()) {
                 if (status != null) {
                     c.write(getSelf(), "You manage to break free from the " + status + ".");
@@ -132,7 +132,7 @@ public class Struggle extends Skill {
         int diffMod = knotted ? 50 : 0;
         if (target.has(Trait.grappler))
             diffMod += 15;
-        if (getSelf().check(Attribute.Power,
+        if (getSelf().checkVsDc(Attribute.Power,
                         target.getStamina().get() / 2 - getSelf().getStamina().get() / 2
                                         + target.get(Attribute.Power) - getSelf().get(Attribute.Power)
                                         - getSelf().getEscape(c, target) + diffMod)) {
@@ -190,7 +190,7 @@ public class Struggle extends Skill {
         if (target.has(Trait.grappler)) {
             diffMod += 15;
         }
-        if (getSelf().check(Attribute.Power,
+        if (getSelf().checkVsDc(Attribute.Power,
                         target.getStamina().get() / 2 - getSelf().getStamina().get() / 2
                                         + target.get(Attribute.Power) - getSelf().get(Attribute.Power)
                                         - getSelf().getEscape(c, target) + diffMod)) {
@@ -246,7 +246,7 @@ public class Struggle extends Skill {
         if (target.has(Trait.bewitchingbottom)) {
             difficulty += 5;
         }
-        if (getSelf().check(Attribute.Power, difficulty)
+        if (getSelf().checkVsDc(Attribute.Power, difficulty)
                         && (!target.has(Trait.grappler) || Random.random(10) >= 2)) {
             if (getSelf().human()) {
                 c.write(getSelf(), "You manage to scrabble out of " + target.getName() + "'s grip.");
@@ -290,7 +290,7 @@ public class Struggle extends Skill {
         
         // One MagLock, pretty easy to remove
         if (stat.getCount() == 1) {
-            if (!target.check(Attribute.Science, dc * 2)) {
+            if (!target.checkVsDc(Attribute.Science, dc * 2)) {
                 c.write(getSelf(), Formatter.format("Still having one hand completely free, it's not to"
                             + " difficult for {self:subject} to remove the lone MagLock"
                             + " {other:subject} had placed around {self:possessive} wrist.", getSelf(), target));
@@ -307,7 +307,7 @@ public class Struggle extends Skill {
                 return false;
             }
             // Two MagLocks, difficult to remove
-            if (!target.check(Attribute.Science, dc)) {
+            if (!target.checkVsDc(Attribute.Science, dc)) {
                 String msg = "{self:SUBJECT-ACTION:struggle|struggles} against the powerful"
                                 + " MagLocks locked around {self:possessive} wrists by ";
                 if (Arrays.asList(Attribute.Dark, Attribute.Arcane, Attribute.Temporal, Attribute.Divinity)

@@ -11,12 +11,14 @@ import nightgames.characters.body.*;
 import nightgames.characters.body.mods.GooeyMod;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
+import nightgames.combat.Encs;
 import nightgames.combat.Result;
 import nightgames.ftc.FTCMatch;
 import nightgames.global.*;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
 import nightgames.skills.Stage;
@@ -33,6 +35,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static nightgames.requirements.RequirementShortcuts.item;
 
 public class Player extends Character {
     public GUI gui;
@@ -243,12 +247,27 @@ public class Player extends Character {
     }
 
     @Override
-    public void faceOff(Character opponent, Encounter enc) {
+    public FightIntent faceOff(Character opponent, Encounter enc) {
         gui.message("You run into <b>" + opponent.nameDirectObject()
                         + "</b> and you both hesitate for a moment, deciding whether to attack or retreat.");
         assessOpponent(opponent);
         gui.message("<br/>");
-        enc.promptFF(opponent, gui);
+        List<LabeledValue<FightIntent>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>(FightIntent.fight, "Fight"));
+        choices.add(new LabeledValue<>(FightIntent.flee, "Flee"));
+        if (item(Item.SmokeBomb, 1).meets(null, this, null)) {
+            choices.add(new LabeledValue<>(FightIntent.smoke, "Smoke Bomb"));
+        }
+        FightIntent choice = FightIntent.fight;
+        try {
+            choice = gui.promptFuture(choices).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return choice;
     }
 
     private void assessOpponent(Character opponent) {
@@ -292,13 +311,26 @@ public class Player extends Character {
     }
 
     @Override
-    public void spy(Character opponent, Encounter enc) {
+    public Encs spy(Character opponent, Encounter enc) {
         gui.message("You spot <b>" + opponent.nameDirectObject()
                         + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
         assessOpponent(opponent);
         gui.message("<br/>");
 
-        enc.promptAmbush(opponent, gui);
+        List<LabeledValue<Encs>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>(Encs.ambush, "Attack " + opponent.getName()));
+        choices.add(new LabeledValue<>(Encs.wait, "Wait"));
+        choices.add(new LabeledValue<>(Encs.fleehidden, "Flee"));
+        Encs choice = Encs.wait;
+        try {
+            choice = gui.promptFuture(choices).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return choice;
     }
 
     @Override
@@ -471,7 +503,7 @@ public class Player extends Character {
     public void craft() {
         int roll = Random.random(10);
         GUI.gui.message("You spend some time crafting some potions with the equipment.");
-        if (check(Attribute.Cunning, 25)) {
+        if (checkVsDc(Attribute.Cunning, 25)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
                 gain(Item.DisSol);
@@ -481,7 +513,7 @@ public class Player extends Character {
                 gain(Item.Lubricant);
                 gain(Item.Sedative);
             }
-        } else if (check(Attribute.Cunning, 20)) {
+        } else if (checkVsDc(Attribute.Cunning, 20)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
             } else if (roll >= 7) {
@@ -493,7 +525,7 @@ public class Player extends Character {
             } else {
                 gain(Item.EnergyDrink);
             }
-        } else if (check(Attribute.Cunning, 15)) {
+        } else if (checkVsDc(Attribute.Cunning, 15)) {
             if (roll == 9) {
                 gain(Item.Aphrodisiac);
             } else if (roll >= 8) {
@@ -554,7 +586,7 @@ public class Player extends Character {
     }
 
     @Override
-    public void showerScene(Character target, Encounter encounter) {
+    public Encs showerSceneResponse(Character target, Encounter encounter) {
         if (target.location().name.equals("Showers")) {
             gui.message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
                             + "of your opponents. You peek inside and sure enough, <b>" + target.subject()
@@ -567,16 +599,57 @@ public class Player extends Character {
         assessOpponent(target);
         gui.message("<br/>");
 
-        encounter.promptShower(target, gui);
+        List<LabeledValue<Encs>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>(Encs.showerattack, "Surprise Her"));
+        if (!target.mostlyNude()) {
+            choices.add(new LabeledValue<>(Encs.stealclothes, "Steal Clothes"));
+        }
+        if (has(Item.Aphrodisiac)) {
+            choices.add(new LabeledValue<>(Encs.aphrodisiactrick, "Use Aphrodisiac"));
+        }
+        choices.add(new LabeledValue<>(Encs.wait, "Do Nothing"));
+        Encs choice = Encs.wait;
+        try {
+            choice = gui.promptFuture(choices).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        return choice;
     }
 
     @Override
-    public void intervene(Encounter enc, Character p1, Character p2) {
+    public void decideIntervene(Encounter enc, Character p1, Character p2) {
         gui.message("You find <b>" + p1.getName() + "</b> and <b>" + p2.getName()
                         + "</b> fighting too intensely to notice your arrival. If you intervene now, it'll essentially decide the winner.");
         gui.message("Then again, you could just wait and see which one of them comes out on top. It'd be entertaining,"
                         + " at the very least.");
-        enc.promptIntervene(p1, p2, gui);
+        List<LabeledValue<String>> choices = Arrays.asList(new LabeledValue<>("p1", "Help " + p1.getName()),
+                        new LabeledValue<>("p2", "Help " + p2.getName()),
+                        new LabeledValue<>("Watch", "Watch them fight"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "p1":
+                    enc.intrude(this, p1);
+                    break;
+                case "p2":
+                    enc.intrude(this, p2);
+                    break;
+                case "Watch":
+                    enc.watch(gui);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Intervene choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -652,7 +725,7 @@ public class Player extends Character {
         assessOpponent(target);
         gui.message("<br/>");
 
-        enc.promptOpportunity(target, trap, gui);
+        GameState.gameState.characterPool.getPlayer().promptOpportunity(target, trap, gui, enc);
     }
 
     @Override
@@ -908,4 +981,27 @@ public class Player extends Character {
         }
     }
 
+    public void promptOpportunity(Character target, Trap trap, GUI gui, Encounter encounter) {
+        List<LabeledValue<String>> choices = new ArrayList<>();
+        choices.add(new LabeledValue<>("Attack", "Attack" + target.getName()));
+        choices.add(new LabeledValue<>("Wait", "Wait"));
+        try {
+            String choice = gui.promptFuture(choices).get();
+            switch (choice) {
+                case "Attack":
+                    encounter.parse(Encs.capitalizeontrap, this, target, trap);
+                    break;
+                case "Wait":
+                    encounter.parse(Encs.wait, this, target);
+                    break;
+                default:
+                    throw new AssertionError("Unknown Opportunity choice: " + choice);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

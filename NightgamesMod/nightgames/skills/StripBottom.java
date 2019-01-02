@@ -39,11 +39,11 @@ public class StripBottom extends Skill {
         int difficulty = target.getOutfit().getTopOfSlot(ClothingSlot.bottom).dc() + target.getLevel()
                         + (target.getStamina().percent() / 4 - target.getArousal().percent()) / 5 - (
                         !target.canAct() || c.getStance().sub(target) ? 20 : 0);
-        if (getSelf().check(Attribute.Cunning, difficulty) || !target.canAct()) {
+        if (getSelf().checkVsDc(Attribute.Cunning, difficulty) || !target.canAct()) {
             stripped = target.strip(ClothingSlot.bottom, c);
             boolean doubled = false;
             if (getSelf().get(Attribute.Cunning) >= 30 && !target.crotchAvailable() && getSelf()
-                            .check(Attribute.Cunning, difficulty) || !target.canAct()) {
+                            .checkVsDc(Attribute.Cunning, difficulty) || !target.canAct()) {
                 extra = target.strip(ClothingSlot.bottom, c);
                 doubled = true;
                 writeOutput(c, Result.critical, target);

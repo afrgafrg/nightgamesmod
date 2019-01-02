@@ -1,5 +1,7 @@
 package nightgames.characters;
 
+import java.util.*;
+
 public enum State {
     ready,
     shower,
@@ -16,5 +18,11 @@ public enum State {
     // FTC-specific
     inTree,
     inBushes,
-    inPass,
+    inPass;
+
+    private static final List<State> vulnerable = Arrays.asList(shower, searching, crafting, webbed, masturbating);
+
+    boolean isVulnerable() {
+        return vulnerable.contains(this);
+    }
 }

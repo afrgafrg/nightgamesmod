@@ -5,6 +5,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
 import nightgames.combat.Result;
+import nightgames.combat.Encs;
 import nightgames.skills.Tactics;
 import nightgames.trap.Trap;
 
@@ -32,10 +33,14 @@ public class DummyCharacter extends Character {
     }
 
     @Override
-    public void faceOff(Character opponent, Encounter enc) {}
+    public FightIntent faceOff(Character opponent, Encounter enc) {
+        return FightIntent.flee;
+    }
 
     @Override
-    public void spy(Character opponent, Encounter enc) {}
+    public Encs spy(Character opponent, Encounter enc) {
+        return Encs.wait;
+    }
 
     @Override
     public String describe(int per, Combat c) {
@@ -101,7 +106,9 @@ public class DummyCharacter extends Character {
     public void intervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
-    public void showerScene(Character target, Encounter encounter) {}
+    public Encs showerSceneResponse(Character target, Encounter encounter) {
+        return Encs.wait;
+    }
 
     @Override
     public String getType() {

@@ -47,7 +47,7 @@ public class Tear extends Skill {
         if (c.getStance().reachTop(getSelf()) && !target.getOutfit().slotEmpty(ClothingSlot.top)) {
             Clothing article = target.getOutfit().getTopOfSlot(ClothingSlot.top);
             if (isMedical && !article.is(ClothingTrait.indestructible)
-                            && (((getSelf().check(Attribute.Power,
+                            && (((getSelf().checkVsDc(Attribute.Power,
                                             article.dc() + (target.getStamina().percent()
                                                             - (target.getArousal().percent()) / 4)
                                             + getSelf().get(Attribute.Medicine) * 4)) || !target.canAct()))) {
@@ -66,7 +66,7 @@ public class Tear extends Skill {
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
             } else if (!article.is(ClothingTrait.indestructible) && getSelf().get(Attribute.Animism) >= 12
-                            && (getSelf().check(Attribute.Power,
+                            && (getSelf().checkVsDc(Attribute.Power,
                                             article.dc() + (target.getStamina().percent()
                                                             - (target.getArousal().percent()) / 4)
                                             + getSelf().get(Attribute.Animism) * getSelf().getArousal().percent() / 100)
@@ -88,7 +88,7 @@ public class Tear extends Skill {
                     c.write(getSelf(), target.nakedLiner(c, target));
                 }
             } else if (!article.is(ClothingTrait.indestructible)
-                            && getSelf().check(Attribute.Power, article.dc()
+                            && getSelf().checkVsDc(Attribute.Power, article.dc()
                                             + (target.getStamina().percent() - target.getArousal().percent()) / 4)
                             || !target.canAct()) {
                 if (getSelf().human()) {
@@ -124,7 +124,7 @@ public class Tear extends Skill {
         } else if (!target.getOutfit().slotEmpty(ClothingSlot.bottom)) {
             Clothing article = target.getOutfit().getTopOfSlot(ClothingSlot.bottom);
             if (isMedical && !article.is(ClothingTrait.indestructible)
-                          && ((getSelf().check(Attribute.Power, article.dc() + (target.getStamina().percent() - (target.getArousal().percent()) / 4) + getSelf().get(Attribute.Medicine) * 4))
+                          && ((getSelf().checkVsDc(Attribute.Power, article.dc() + (target.getStamina().percent() - (target.getArousal().percent()) / 4) + getSelf().get(Attribute.Medicine) * 4))
                             || !target.canAct())) {
                 if (getSelf().human()) {
                     c.write(getSelf(),
@@ -141,7 +141,7 @@ public class Tear extends Skill {
                 }
                 getSelf().consume(Item.MedicalSupplies, 1);
             } else if (!article.is(ClothingTrait.indestructible) && getSelf().get(Attribute.Animism) >= 12
-                            && (getSelf().check(Attribute.Power,
+                            && (getSelf().checkVsDc(Attribute.Power,
                                             article.dc() + (target.getStamina().percent()
                                                             - (target.getArousal().percent()) / 4)
                                             + getSelf().get(Attribute.Animism) * getSelf().getArousal().percent() / 100)
@@ -173,7 +173,7 @@ public class Tear extends Skill {
                 }
                 target.emote(Emotion.nervous, 10);
             } else if (!article.is(ClothingTrait.indestructible)
-                            && getSelf().check(Attribute.Power, article.dc()
+                            && getSelf().checkVsDc(Attribute.Power, article.dc()
                                             + (target.getStamina().percent() - target.getArousal().percent()) / 4)
                             || !target.canAct()) {
                 if (getSelf().human()) {

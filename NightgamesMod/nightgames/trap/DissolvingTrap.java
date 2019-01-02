@@ -21,7 +21,7 @@ public class DissolvingTrap extends Trap {
 
     @Override
     public void trigger(Character target) {
-        if (!target.check(Attribute.Perception, 25 + target.baseDisarm())) {
+        if (!target.checkVsDc(Attribute.Perception, 25 + target.baseDisarm())) {
             if (target.human()) {
                 GUI.gui.message(
                                 "You spot a liquid spray trap in time to avoid setting it off. You carefully manage to disarm the trap and pocket the potion.");

@@ -76,7 +76,7 @@ public class PullOut extends Skill {
                 writeOutput(c, result, target);
                 c.setStance(c.getStance().insertRandom(c));
                 return true;
-            } else if (getSelf().check(Attribute.Power, 
+            } else if (getSelf().checkVsDc(Attribute.Power,
                             baseDifficulty - getSelf().getEscape(c, target) + powerMod)) {
                 if (isLocked) {
                     c.write(getSelf(), Formatter.format("Despite {other:name-possessive} inhumanly tight"
@@ -111,7 +111,7 @@ public class PullOut extends Skill {
             c.setStance(new StandingOver(getSelf(), target), getSelf(), true);
         } else {
             if (isLocked || target.has(Trait.tight) && c.getStance().inserted(getSelf())) {
-                boolean escaped = getSelf().check(Attribute.Power,
+                boolean escaped = getSelf().checkVsDc(Attribute.Power,
                                 10 - getSelf().getEscape(c, target) + target.get(Attribute.Power));
                 if (escaped) {
                     writeOutput(c, result, target);

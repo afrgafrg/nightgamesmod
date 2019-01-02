@@ -26,7 +26,7 @@ public class EnthrallingTrap extends Trap {
     @Override
     public void trigger(Character target) {
         if (target.human()) {
-            if (target.check(Attribute.Perception, 25 + target.baseDisarm())
+            if (target.checkVsDc(Attribute.Perception, 25 + target.baseDisarm())
                             || !target.eligible(owner) || !owner.eligible(target)) {
                 GUI.gui.message("As you step across the " + target.location().name
                                 + ", you notice a pentagram drawn on the floor,"
@@ -42,7 +42,7 @@ public class EnthrallingTrap extends Trap {
                                 + " large red irises staring at you suggest differently, though.");
                 target.addNonCombat(new Enthralled(target, owner, 5 + getStrength() / 20));
             }
-        } else if (target.check(Attribute.Perception, 25 + target.baseDisarm()) || !target.eligible(owner) || !owner.eligible(target)) {
+        } else if (target.checkVsDc(Attribute.Perception, 25 + target.baseDisarm()) || !target.eligible(owner) || !owner.eligible(target)) {
             if (target.location().humanPresent()) {
                 GUI.gui.message("You catch a bout of purple fire in your peripheral vision,"
                                 + "but once you have turned to look the flames are gone. All that is left"

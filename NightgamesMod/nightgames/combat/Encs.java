@@ -1,19 +1,23 @@
-package nightgames.global;
+package nightgames.combat;
 
 public enum Encs {
     ambush,
-    capitalize,
+    spidertrap,
+    capitalizeontrap,
+    caughtmasturbating,
     showerattack,
     aphrodisiactrick,
     stealclothes,
     fight,
     flee,
+    bothflee,
+    smoke,
     fleehidden,
     wait,
-    smoke,
+    missed,
 
     // FTC-specific
     treeAmbush,
     bushAmbush,
-    passAmbush,;
+    passAmbush,
 }

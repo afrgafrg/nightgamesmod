@@ -113,7 +113,7 @@ public class Enthralled extends DurationStatus {
 
     @Override
     public void tick(Combat c) {
-        if (affected.check(Attribute.Cunning, master.get(Attribute.Seduction) / 2 + master.get(Attribute.Arcane) / 2
+        if (affected.checkVsDc(Attribute.Cunning, master.get(Attribute.Seduction) / 2 + master.get(Attribute.Arcane) / 2
                         + master.get(Attribute.Dark) / 2 + 10 + 10 * (getDuration() - timesRefreshed))) {
             if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println("Escaped from Enthralled");

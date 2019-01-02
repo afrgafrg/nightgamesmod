@@ -60,7 +60,7 @@ public class Cache implements Deployable {
             if (active.has(Trait.treasureSeeker)) {
                 dc -= 5;
             }
-            if (active.check(test, dc)) {
+            if (active.checkVsDc(test, dc)) {
                 if (active.human()) {
                     switch (test) {
                         case Cunning:
@@ -94,7 +94,7 @@ public class Cache implements Deployable {
                     i.pickup(active);
                 }
                 active.modMoney(Random.random(500) + 500);
-            } else if (active.check(secondary, dc - 5)) {
+            } else if (active.checkVsDc(secondary, dc - 5)) {
                 if (active.human()) {
                     switch (test) {
                         case Cunning:

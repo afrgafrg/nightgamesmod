@@ -3,7 +3,6 @@ package nightgames.areas;
 import nightgames.actions.Movement;
 import nightgames.characters.Character;
 import nightgames.combat.Encounter;
-import nightgames.global.DebugFlags;
 import nightgames.global.Match;
 import nightgames.status.Stsflag;
 import nightgames.trap.Trap;
@@ -125,12 +124,12 @@ public class Area implements Serializable {
     }
 
     public Optional<Encounter> encounter() {
-        if (activeEncounter == null && present.size() > 1) {
+        if (!hasEncounter() && present.size() > 1) {
             activeEncounter = Match.getMatch().buildEncounter(this);
         } else if (present.size() > 2) {
             Character intruder = present.get(2);
-            if (activeEncounter.checkIntrude(intruder)) {
-                intruder.intervene(activeEncounter, activeEncounter.getP1(), activeEncounter.getP2());
+            if (activeEncounter.checkIntrudePossible(intruder)) {
+                intruder.decideIntervene(activeEncounter, activeEncounter.getP1(), activeEncounter.getP2());
             }
         }
         return Optional.ofNullable(activeEncounter);

@@ -98,7 +98,7 @@ public class TestCharacter extends Character {
         return null;
     }
 
-    @Override public void intervene(Encounter fight, Character p1, Character p2) {
+    @Override public void decideIntervene(Encounter fight, Character p1, Character p2) {
 
     }
 

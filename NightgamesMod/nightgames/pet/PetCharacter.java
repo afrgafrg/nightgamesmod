@@ -305,7 +305,7 @@ public class PetCharacter extends Character {
     }
 
     @Override
-    public void intervene(Encounter fight, Character p1, Character p2) {}
+    public void decideIntervene(Encounter fight, Character p1, Character p2) {}
 
     @Override
     public Encs showerSceneResponse(Character target, Encounter encounter) {

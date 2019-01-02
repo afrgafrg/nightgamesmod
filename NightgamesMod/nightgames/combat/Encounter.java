@@ -457,6 +457,7 @@ public class Encounter implements Serializable {
     }
 
     public void intrude(Character intruder, Character assist) {
+        participants.add(intruder);
         fight.intervene(intruder, assist);
     }
 
@@ -581,35 +582,6 @@ public class Encounter implements Serializable {
         waitForFinish.countDown();
     }
 
-    // TODO: Refactor these prompts into a single method.
-    // FIXME: Intervene prompts do not show up!
-    public void promptIntervene(Character p1, Character p2, GUI gui) {
-        Player player = GameState.gameState.characterPool.getPlayer();
-        List<LabeledValue<String>> choices = Arrays.asList(new LabeledValue<>("p1", "Help " + p1.getName()),
-                        new LabeledValue<>("p2", "Help " + p2.getName()),
-                        new LabeledValue<>("Watch", "Watch them fight"));
-        try {
-            String choice = gui.promptFuture(choices).get();
-            switch (choice) {
-                case "p1":
-                    intrude(player, p1);
-                    break;
-                case "p2":
-                    intrude(player, p2);
-                    break;
-                case "Watch":
-                    watch(gui);
-                    break;
-                default:
-                    throw new AssertionError("Unknown Intervene choice: " + choice);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
     /**
      * Based on participant responses, determine whether this encounter results in combat.
      */
@@ -619,10 +591,6 @@ public class Encounter implements Serializable {
             spotCheck();
         }
         if (fight != null) {
-            Optional<Character> intervener = getIntervener();
-            if (intervener.isPresent() && checkIntrude(intervener.get())) {
-                intervener.get().intervene(this, getP1(), getP2());
-            }
             if (!fight.isEnded()) {
                 return Optional.of(fight);
             }

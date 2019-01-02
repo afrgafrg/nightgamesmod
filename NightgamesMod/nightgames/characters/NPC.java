@@ -621,7 +621,7 @@ public class NPC extends Character {
     }
 
     @Override
-    public void intervene(Encounter enc, Character p1, Character p2) {
+    public void decideIntervene(Encounter enc, Character p1, Character p2) {
         if (Random.random(20) + getAffection(p1) + (p1.has(Trait.sympathetic) ? 10 : 0) >= Random.random(20)
                         + getAffection(p2) + (p2.has(Trait.sympathetic) ? 10 : 0)) {
             enc.intrude(this, p1);

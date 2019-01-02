@@ -38,10 +38,10 @@ public class SlimeMelt extends SimpleEnemySkill {
     @Override
     public boolean resolve(Combat c, Character target) {
         List<ClothingSlot> strippable = new ArrayList<>();
-        if (!target.crotchAvailable() && !target.outfit.slotUnshreddable(ClothingSlot.bottom)) {
+        if (!target.crotchAvailable() && target.outfit.slotShreddable(ClothingSlot.bottom)) {
             strippable.add(ClothingSlot.bottom);
         }
-        if (!target.breastsAvailable() && !target.outfit.slotUnshreddable(ClothingSlot.top)) {
+        if (!target.breastsAvailable() && target.outfit.slotShreddable(ClothingSlot.top)) {
             strippable.add(ClothingSlot.top);
         }
         ClothingSlot targetSlot = Random.pickRandom(strippable).get();

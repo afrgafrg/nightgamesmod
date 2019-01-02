@@ -39,9 +39,9 @@ public class Dissolve extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         ClothingSlot toShred = null;
-        if (!target.outfit.slotOpen(ClothingSlot.bottom) && !target.outfit.slotUnshreddable(ClothingSlot.bottom)) {
+        if (!target.outfit.slotOpen(ClothingSlot.bottom) && target.outfit.slotShreddable(ClothingSlot.bottom)) {
             toShred = ClothingSlot.bottom;
-        } else if (!target.outfit.slotOpen(ClothingSlot.top) && !target.outfit.slotUnshreddable(ClothingSlot.top)) {
+        } else if (!target.outfit.slotOpen(ClothingSlot.top) && target.outfit.slotShreddable(ClothingSlot.top)) {
             toShred = ClothingSlot.top;
         }
         if (getSelf().get(Attribute.Slime) > 0) {

@@ -1019,7 +1019,7 @@ public abstract class Character extends Observable implements Cloneable {
     public boolean nudify() {
         if (!breastsAvailable() || !crotchAvailable()) {
             // first time only strips down to what blocks fucking
-            outfit.forcedstrip();
+            outfit.forcedStrip();
         } else {
             // second time strips down everything
             outfit.undressOnly(c -> !c.is(ClothingTrait.indestructible));

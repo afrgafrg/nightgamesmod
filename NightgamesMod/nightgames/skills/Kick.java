@@ -45,7 +45,7 @@ public class Kick extends Skill {
 
     @Override
     public boolean resolve(Combat c, Character target) {
-        if (!target.getOutfit().slotUnshreddable(ClothingSlot.bottom) && getSelf().get(Attribute.Ki) >= 14
+        if (target.getOutfit().slotShreddable(ClothingSlot.bottom) && getSelf().get(Attribute.Ki) >= 14
                         && Random.random(3) == 2) {
             writeOutput(c, Result.special, target);
             target.shred(ClothingSlot.bottom);

@@ -40,7 +40,7 @@ public class Shove extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         boolean success = true;
-        if (getSelf().get(Attribute.Ki) >= 1 && !target.getOutfit().slotUnshreddable(ClothingSlot.top)
+        if (getSelf().get(Attribute.Ki) >= 1 && target.getOutfit().slotShreddable(ClothingSlot.top)
                         && getSelf().canSpend(5)) {
             writeOutput(c, Result.special, target);
             target.shred(ClothingSlot.top);

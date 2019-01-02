@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 
 public class Outfit {
     private Map<ClothingSlot, List<Clothing>> outfit;
-    private Set<Clothing> equipped;
+    private final Set<Clothing> equipped;
 
     public Outfit() {
         outfit = new EnumMap<>(ClothingSlot.class);
-        equipped = new HashSet<>();
+        equipped = Collections.synchronizedSet(new HashSet<>());
         Arrays.stream(ClothingSlot.values()).forEach(slot -> {
             List<Clothing> list = new ArrayList<>(Clothing.N_LAYERS);
             outfit.put(slot, list);
@@ -29,29 +29,29 @@ public class Outfit {
     public Outfit(Outfit other) {
         outfit = new EnumMap<>(ClothingSlot.class);
         Arrays.stream(ClothingSlot.values()).forEach(slot -> outfit.put(slot, new ArrayList<>(other.outfit.get(slot))));
-        equipped = new HashSet<>(other.equipped);
+        equipped = Collections.synchronizedSet(new HashSet<>(other.equipped));
     }
 
     /* public information api */
     public Collection<Clothing> getAll() {
-        return outfit.values().stream().flatMap(List::stream).filter(c -> c != null).collect(Collectors.toSet());
+        return outfit.values().stream().flatMap(List::stream).filter(Objects::nonNull).collect(Collectors.toSet());
     }
     
     public boolean slotOpen(ClothingSlot slot) {
-        return outfit.get(slot).isEmpty() || !outfit.get(slot).stream()
-                        .anyMatch(article -> article != null && !article.is(ClothingTrait.open));
+        return outfit.get(slot).isEmpty() || outfit.get(slot).stream()
+                        .noneMatch(article -> article != null && !article.is(ClothingTrait.open));
     }
 
     public boolean slotEmpty(ClothingSlot slot) {
-        return outfit.get(slot).isEmpty() || !outfit.get(slot).stream().anyMatch(article -> article != null);
+        return outfit.get(slot).isEmpty() || outfit.get(slot).stream().noneMatch(Objects::nonNull);
     }
 
-    public boolean slotUnshreddable(ClothingSlot slot) {
-        return slotEmpty(slot) || getTopOfSlot(slot).is(ClothingTrait.indestructible);
+    public boolean slotShreddable(ClothingSlot slot) {
+        return !slotEmpty(slot) && !getTopOfSlot(slot).is(ClothingTrait.indestructible);
     }
 
     public boolean slotEmptyOrMeetsCondition(ClothingSlot slot, Predicate<? super Clothing> condition) {
-        Stream<Clothing> clothes = outfit.get(slot).stream().filter(article -> article != null);
+        Stream<Clothing> clothes = outfit.get(slot).stream().filter(Objects::nonNull);
         List<Clothing> clothesList = clothes.collect(Collectors.toList());
         return clothesList.stream().allMatch(condition);
     }
@@ -74,7 +74,7 @@ public class Outfit {
     }
 
     public List<Clothing> getAllStrippable() {
-        return Arrays.stream(ClothingSlot.values()).map(this::getTopOfSlot).filter(article -> article != null)
+        return Arrays.stream(ClothingSlot.values()).map(this::getTopOfSlot).filter(Objects::nonNull)
                         .distinct().collect(Collectors.toList());
     }
 
@@ -106,7 +106,7 @@ public class Outfit {
     }
 
     public ClothingSlot getRandomShreddableSlot() {
-        List<ClothingSlot> slotsAvailable = Arrays.stream(ClothingSlot.values()).filter(slot -> !slotUnshreddable(slot))
+        List<ClothingSlot> slotsAvailable = Arrays.stream(ClothingSlot.values()).filter(this::slotShreddable)
                         .collect(Collectors.toList());
         if (slotsAvailable.isEmpty()) {
             return null;
@@ -126,15 +126,21 @@ public class Outfit {
     }
     
     public Collection<Clothing> getArticlesWithTrait(ClothingTrait attribute) {
-        return equipped.stream().filter(article -> article.is(attribute)).collect(Collectors.toSet());
+        synchronized (equipped) {
+            return equipped.stream().filter(article -> article.is(attribute)).collect(Collectors.toSet());
+        }
     }
 
     public boolean has(Trait t) {
-        return equipped.stream().anyMatch(article -> article.buffs(t));
+        synchronized (equipped) {
+            return equipped.stream().anyMatch(article -> article.buffs(t));
+        }
     }
 
     public boolean has(ClothingTrait attribute) {
-        return equipped.stream().anyMatch(article -> article.is(attribute));
+        synchronized (equipped) {
+            return equipped.stream().anyMatch(article -> article.is(attribute));
+        }
     }
 
     // mutator apis below
@@ -144,7 +150,10 @@ public class Outfit {
     }
 
     public List<Clothing> undress() {
-        List<Clothing> copy = new ArrayList<>(equipped);
+        List<Clothing> copy;
+        synchronized (equipped) {
+            copy = new ArrayList<>(equipped);
+        }
         return copy.stream().map(this::unequip).collect(Collectors.toList());
     }
 
@@ -157,7 +166,9 @@ public class Outfit {
         if (article == null) {
             return null;
         }
-        equipped.remove(article);
+        synchronized (equipped) {
+            equipped.remove(article);
+        }
         article.getSlots().forEach(slot -> outfit.get(slot).set(article.getLayer(), null));
         return article;
     }
@@ -168,10 +179,13 @@ public class Outfit {
      * @return A list of all unequipped Clothing.
      */
     public List<Clothing> equip(Clothing article) {
-        List<Clothing> unequipped = article.getSlots().stream().map(slot -> outfit.get(slot).get(article.getLayer()))
+        List<Clothing> unequipped;
+        unequipped = article.getSlots().stream().map(slot -> outfit.get(slot).get(article.getLayer()))
                         .filter(Objects::nonNull).map(this::unequip).collect(Collectors.toList());
         article.getSlots().forEach(slot -> outfit.get(slot).set(article.getLayer(), article));
-        equipped.add(article);
+        synchronized (equipped) {
+            equipped.add(article);
+        }
         return unequipped;
     }
 
@@ -195,9 +209,7 @@ public class Outfit {
                 continue;
             }
             exposure *= article.getExposure();
-            if (article.is(ClothingTrait.skimpy) || article.is(ClothingTrait.open)) {
-                continue;
-            } else {
+            if (!article.is(ClothingTrait.skimpy) && !article.is(ClothingTrait.open)) {
                 break;
             }
         }
@@ -217,11 +229,11 @@ public class Outfit {
 
     public double getFitness(Combat c, double bottomFitness, double topFitness) {
         double fitness = 0;
-        fitness += outfit.get(ClothingSlot.top).stream().filter(article -> article != null)
+        fitness += outfit.get(ClothingSlot.top).stream().filter(Objects::nonNull)
                         .filter(article -> !article.is(ClothingTrait.skimpy) && !article.is(ClothingTrait.flexible)
                                         && !article.is(ClothingTrait.open))
                         .mapToDouble(article -> topFitness * (1 + article.dc() * .1)).sum();
-        fitness += outfit.get(ClothingSlot.bottom).stream().filter(article -> article != null)
+        fitness += outfit.get(ClothingSlot.bottom).stream().filter(Objects::nonNull)
                         .filter(article -> !article.is(ClothingTrait.skimpy) && !article.is(ClothingTrait.flexible)
                                         && !article.is(ClothingTrait.open))
                         .mapToDouble(article -> bottomFitness * (1 + article.dc() * .1)).sum();
@@ -249,18 +261,17 @@ public class Outfit {
             others.add(feet);
         }
         if (over != null) {
-            sb.append("Under {self:possessive} " + over.getName() + ", ");
+            sb.append("Under {self:possessive} ").append(over.getName()).append(", ");
         }
         if (top == null && bottom == null && others.isEmpty()) {
             sb.append("{self:subject-action:are|is} completely naked.<br/>");
         } else {
             boolean addedTop = false;
-            if (top == null && bottom == null) {
-            } else {
+            if (top != null || bottom != null) {
                 if (top == null) {
                     sb.append("{self:subject-action:are|is} topless");
                 } else {
-                    sb.append("{self:subject-action:are|is} wearing " + top.pre() + top.getName() + "");
+                    sb.append("{self:subject-action:are|is} wearing ").append(top.pre()).append(top.getName());
                     addedTop = true;
                     described.add(top);
                 }
@@ -272,7 +283,7 @@ public class Outfit {
                         if (!addedTop) {
                             sb.append("wearing ");
                         }
-                        sb.append(bottom.pre() + bottom.getName() + ".<br/>");
+                        sb.append(bottom.pre()).append(bottom.getName()).append(".<br/>");
                         described.add(bottom);
                     } else {
                         sb.append(".<br/>");
@@ -293,7 +304,7 @@ public class Outfit {
                             sb.append(" and");
                         }
                     }
-                    sb.append(" " + article.pre() + article.getName());
+                    sb.append(" ").append(article.pre()).append(article.getName());
                     if (index < others.size() - 2 && others.size() > 2) {
                         sb.append(',');
                     }
@@ -327,10 +338,10 @@ public class Outfit {
     }
 
     // strips to fuck, but can't get rid of indestructables
-    public List<Clothing> forcedstrip() {
+    public List<Clothing> forcedStrip() {
         return undressOnly(article -> (!article.is(ClothingTrait.indestructible) || !article.is(ClothingTrait.open))
                         && (article.getSlots().contains(ClothingSlot.top)
-                                        || article.getSlots().contains(ClothingSlot.bottom)));
+                        || article.getSlots().contains(ClothingSlot.bottom)));
     }
 
     private void getHotness(ClothingSlot slot, Map<Clothing, Double> seen) {
@@ -364,7 +375,10 @@ public class Outfit {
         if (equipped == null) {
             return super.toString();
         }
-        String sb = "[" + equipped.stream().map(Clothing::getName).collect(Collectors.joining(", ")) + ']';
+        String sb;
+        synchronized (equipped) {
+            sb = "[" + equipped.stream().map(Clothing::getName).collect(Collectors.joining(", ")) + ']';
+        }
         return String.format("%s@%s", sb, Integer.toHexString(hashCode()));
     }
 
@@ -375,11 +389,11 @@ public class Outfit {
 
     public boolean canEquip(Clothing c) {
         return c.getSlots()
-                    .stream()
-                    .map(this::getTopOfSlot)
-                    .filter(Objects::nonNull)
-                    .mapToInt(Clothing::getLayer)
-                    .allMatch(i -> c.getLayer() < i);
+                        .stream()
+                        .map(this::getTopOfSlot)
+                        .filter(Objects::nonNull)
+                        .mapToInt(Clothing::getLayer)
+                        .allMatch(i -> c.getLayer() < i);
     }
 
     @Override public boolean equals(Object o) {

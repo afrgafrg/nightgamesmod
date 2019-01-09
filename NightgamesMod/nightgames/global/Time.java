@@ -45,4 +45,9 @@ public enum Time {
     public static int getDate() {
         return date;
     }
+
+    public static boolean isWeekend() {
+        int dayOfWeek = date % 7;
+        return dayOfWeek == 6 || dayOfWeek == 0;
+    }
 }

@@ -1,11 +1,16 @@
 package nightgames.daytime;
 
-import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class Closet extends Activity {
 
-    public Closet(Character player) {
+    Closet(Player player) {
         super("Change Clothes", player);
     }
 
@@ -15,18 +20,17 @@ public class Closet extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
-        GUI.gui.clearText();
-        GUI.gui.clearCommand();
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         if (choice.equals("Start")) {
-            GUI.gui.changeClothes(player, this, "Back");
-        } else {
-            done(false);
+            GUI.gui.clearText();
+            GUI.gui.clearCommand();
+            GUI.gui.changeClothes(player);
+            done(false, instance);
         }
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         // TODO Auto-generated method stub
 
     }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class Threesomes extends DaytimeEvent {
 
-    public Threesomes(Character player) {
+    Threesomes(Character player) {
         super(player);
         if (GameState.gameState.characterPool.getNPC("Cassie")
                   .getAffection(player) >= 20

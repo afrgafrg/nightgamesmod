@@ -1,14 +1,17 @@
 package nightgames.daytime;
 
+import java.util.List;
 import java.util.Map;
 
-import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 
 public class Bookstore extends Store {
-    public Bookstore(Character player) {
+    public Bookstore(Player player) {
         super("Bookstore", player);
         add(Item.EnergyDrink);
         add(Item.ZipTie);
@@ -21,17 +24,17 @@ public class Bookstore extends Store {
     }
 
     @Override
-    public void visit(String choice) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
         }
         if (choice.equals("Leave")) {
-            done(acted);
+            done(acted, instance);
             return;
         }
-        checkSale(choice);
+        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "In addition to textbooks, the campus bookstore sells assorted items for everyday use.");
@@ -46,13 +49,13 @@ public class Bookstore extends Store {
             }
             GUI.gui.message("You have : $" + player.money + " to spend.");
 
-            displayGoods();
-            choose("Leave", GUI.gui);
+            displayGoods(nextChoices);
+            choose("Leave", nextChoices);
         }
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         int remaining = budget;
         int bored = 0;
         while (remaining > 25 && bored < 5) {

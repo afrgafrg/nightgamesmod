@@ -1,19 +1,10 @@
 package nightgames.daytime;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
-import nightgames.characters.body.AssPart;
-import nightgames.characters.body.Body;
-import nightgames.characters.body.BodyPart;
-import nightgames.characters.body.BreastsPart;
-import nightgames.characters.body.CockPart;
-import nightgames.characters.body.EarPart;
-import nightgames.characters.body.GenericBodyPart;
-import nightgames.characters.body.PussyPart;
+import nightgames.characters.body.*;
 import nightgames.characters.body.mods.PartMod;
 import nightgames.characters.body.mods.SecondPussyMod;
 import nightgames.characters.body.mods.SizeMod;
@@ -21,13 +12,18 @@ import nightgames.global.DebugFlags;
 import nightgames.global.Flag;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class BodyShop extends Activity {
-    List<ShopSelection> selection;
+    private List<ShopSelection> selection;
 
-    public BodyShop(Character player) {
+    BodyShop(Player player) {
         super("Body Shop", player);
-        selection = new ArrayList<ShopSelection>();
+        selection = new ArrayList<>();
         populateSelection();
     }
 
@@ -491,7 +487,7 @@ public class BodyShop extends Activity {
             @Override
             boolean available(Character buyer) {
                 Optional<BodyPart> optTarget =
-                                buyer.body.get("cock").stream().filter(c -> !((CockPart) c).isGeneric(buyer)).findAny();
+                                buyer.body.get("cock").stream().filter(c -> !c.isGeneric(buyer)).findAny();
                 return optTarget.isPresent();
             }
 
@@ -548,25 +544,24 @@ public class BodyShop extends Activity {
         return Flag.checkFlag(Flag.bodyShop);
     }
 
-    private void displaySelection() {
+    private void displaySelection(List<LabeledValue<String>> nextChoices) {
         GUI.gui.message("You have :$" + player.money + " to spend.");
         for (ShopSelection s : selection) {
             if (s.available(player) && player.money >= s.price) {
-                choose(s.choice, "Price: $" + s.price, GUI.gui);
+                choose(s.choice, "Price: $" + s.price, nextChoices);
                 GUI.gui.message(s.choice + ": $" + s.price);
             }
         }
-        choose("Leave", GUI.gui);
+        choose("Leave", nextChoices);
     }
 
     @Override
-    public void visit(String choice) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         if (choice.equals("Start")) {
             GUI.gui.clearText();
             GUI.gui.clearCommand();
-            GUI.gui.message(
-                            "While wondering why you're even here, you walk into the rundown shack named \"The Body Shop\". The proprietor looks at you strangely then mutely points to the sign.");
-            displaySelection();
+            GUI.gui.message("While wondering why you're even here, you walk into the rundown shack named \"The Body Shop\". The proprietor looks at you strangely then mutely points to the sign.");
+            displaySelection(nextChoices);
             return;
         }
         for (ShopSelection s : selection) {
@@ -575,24 +570,23 @@ public class BodyShop extends Activity {
                                 + ". While wondering if this was such a great idea, you follow the proprietor into the back room...");
                 s.buy(player);
                 player.money -= s.price;
-                done(true);
+                done(true, instance);
                 return;
             }
         }
-        GUI.gui.message(
-                        "<br/>You have some second thoughts about letting some stranger play with your body. You think up some excuse and quickly leave the shack.");
-        done(false);
+        GUI.gui.message("<br/>You have some second thoughts about letting some stranger play with your body. You think up some excuse and quickly leave the shack.");
+        done(false, instance);
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         int chance = 100;
         while (budget > 0) {
             if (Random.random(100) > chance) {
                 break;
             }
             chance /= 3;
-            List<ShopSelection> avail = new ArrayList<ShopSelection>();
+            List<ShopSelection> avail = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 avail.add(new ShopSelection("none" + i, 0) {
                     @Override

@@ -138,7 +138,7 @@ public class GameState {
                     // end match
                     match.end();
                     matchComplete.await();
-                    Postmatch postmatch = new Postmatch(GameState.gameState.characterPool.getPlayer(), match.combatants);
+                    Postmatch postmatch = new Postmatch(characterPool.getPlayer(), match.combatants);
                     postmatch.endMatch();
                     // set time to next day
                     Time.date++;
@@ -153,8 +153,7 @@ public class GameState {
                     Match.match = null;
                     Daytime.day = new Daytime(characterPool.human);
                     // do daytime stuff
-                    Daytime.day.plan();
-                    Daytime.day.readyForNight.await();
+                    Daytime.day.dayLoop();
                     // set time to night
                     Daytime.day = null;
                     Time.time = Time.NIGHT;

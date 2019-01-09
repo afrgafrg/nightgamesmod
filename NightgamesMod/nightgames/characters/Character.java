@@ -82,7 +82,7 @@ public abstract class Character extends Observable implements Cloneable {
     protected int busy;
     protected Map<String, Integer> attractions;
     protected Map<String, Integer> affections;
-    public HashSet<Clothing> closet;
+    public Set<Clothing> closet;
     public List<Challenge> challenges;
     public Body body;
     public int availableAttributePoints;

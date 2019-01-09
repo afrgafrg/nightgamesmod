@@ -1,15 +1,19 @@
 package nightgames.daytime;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.global.Flag;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 
 public class HWStore extends Store {
-    public HWStore(Character player) {
+    HWStore(Player player) {
         super("Hardware Store", player);
         add(Item.Tripwire);
         add(Item.Rope);
@@ -24,17 +28,16 @@ public class HWStore extends Store {
     }
 
     @Override
-    public void visit(String choice) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
         }
         if (choice.equals("Leave")) {
-            done(acted);
-            return;
+            done(acted, instance);
         }
-        checkSale(choice);
+        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "Nothing at the hardware store is designed for the sort of activities you have in mind, but there are components you could use to make some "
@@ -49,22 +52,20 @@ public class HWStore extends Store {
                 }
             }
             GUI.gui.message("You have : $" + player.money + " to spend.");
-            displayGoods();
-            choose("Leave", GUI.gui);
+            displayGoods(nextChoices);
+            choose("Leave", nextChoices);
         }
     }
 
     @Override
-    protected void displayItems() {
-        for (Item i : stock.keySet()) {
-            if (i != Item.EmptyBottle || player.getRank() > 0) {
-                sale(i, GUI.gui);
-            }
-        }
+    protected List<LabeledValue<String>> displayItems() {
+        // Empty bottles are only purchaseable if the player's rank is at least 1.
+        return stock.keySet().stream().filter(item -> !(item == Item.EmptyBottle && player.getRank() < 1)).map(this::sale).collect(
+                        Collectors.toList());
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         int remaining = budget;
         int bored = 0;
         while (remaining > 10 && bored < 10) {

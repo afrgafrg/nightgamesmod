@@ -6,7 +6,6 @@ import nightgames.characters.Character;
 import nightgames.characters.Meter;
 import nightgames.characters.Player;
 import nightgames.combat.Combat;
-import nightgames.daytime.Activity;
 import nightgames.daytime.Daytime;
 import nightgames.debug.DebugGUIPanel;
 import nightgames.global.*;
@@ -921,6 +920,7 @@ public class GUI extends JFrame implements Observer {
         removeClosetGUI();
         topPanel.validate();
         showNone();
+        refresh();
     }
 
     public void showGameCreation() {
@@ -1298,14 +1298,25 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void changeClothes(Character player, Activity event, String backOption) {
+    public void changeClothes(Character character) {
+        CompletableFuture<Boolean> changeClothes = new CompletableFuture<>();
         clothesPanel.removeAll();
-        clothesPanel.add(new ClothesChangeGUI(player, event, backOption));
+        clothesPanel.add(new ClothesChangeGUI(character, changeClothes));
         CardLayout layout = (CardLayout) centerPanel.getLayout();
         layout.show(centerPanel, USE_CLOSET_UI);
+        try {
+            changeClothes.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } finally {
+            removeClosetGUI();
+        }
+        character.change();
     }
 
-    public void removeClosetGUI() {
+    private void removeClosetGUI() {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_GUI)) {
             System.out.println("remove closet gui");
         }

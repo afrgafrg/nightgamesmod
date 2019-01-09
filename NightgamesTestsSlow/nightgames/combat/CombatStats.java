@@ -207,7 +207,7 @@ public class CombatStats {
                 c.modMoney(level * 500);
                 Daytime.day = new Daytime(new Player("<player>"));
                 Daytime.day.advance(999);
-                Daytime.day.plan();
+                Daytime.day.npcDaytime((NPC) c);
             });
 
             return combatants;

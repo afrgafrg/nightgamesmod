@@ -1,32 +1,31 @@
 package nightgames.daytime;
 
-import nightgames.characters.Character;
-import nightgames.global.Formatter;
+import nightgames.characters.Player;
 import nightgames.gui.GUI;
-import nightgames.gui.RunnableButton;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
 import nightgames.items.Loot;
 import nightgames.items.clothing.Clothing;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public abstract class Store extends Activity {
-    protected HashMap<Item, Integer> stock;
-    protected HashMap<Clothing, Integer> clothingstock;
+    protected Map<Item, Integer> stock;
+    protected Map<Clothing, Integer> clothingstock;
     protected boolean acted;
 
-    public Store(String name, Character player) {
+    public Store(String name, Player player) {
         super(name, player);
-        stock = new HashMap<Item, Integer>();
-        clothingstock = new HashMap<Clothing, Integer>();
+        stock = new HashMap<>();
+        clothingstock = new HashMap<>();
         acted = false;
     }
 
     @Override
     public abstract boolean known();
-
-    @Override
-    public abstract void visit(String choice);
 
     public void add(Item item) {
         stock.put(item, item.getPrice());
@@ -36,47 +35,41 @@ public abstract class Store extends Activity {
         clothingstock.put(item, item.getPrice());
     }
 
-    public HashMap<Item, Integer> stock() {
+    public Map<Item, Integer> stock() {
         return stock;
     }
 
-    public HashMap<Clothing, Integer> clothing() {
+    public Map<Clothing, Integer> clothing() {
         return clothingstock;
     }
 
-    protected void displayClothes() {
-        for (Clothing i : clothingstock.keySet()) {
-            if (!player.has(i)) {
-                sale(i, GUI.gui);
-            }
-        }
+    List<LabeledValue<String>> displayClothes() {
+        return clothingstock.keySet().stream().filter(clothing -> !player.has(clothing)).map(this::sale).collect(Collectors.toList());
     }
 
-    protected void displayItems() {
-        for (Item i : stock.keySet()) {
-            sale(i, GUI.gui);
-        }
+    protected List<LabeledValue<String>> displayItems() {
+        return stock.keySet().stream().map(this::sale).collect(Collectors.toList());
     }
 
-    protected void displayGoods() {
-        displayClothes();
-        displayItems();
+    void displayGoods(List<LabeledValue<String>> nextChoices) {
+        nextChoices.addAll(displayClothes());
+        nextChoices.addAll(displayItems());
     }
 
-    protected boolean checkSale(String name) {
+    void attemptBuy(String name) {
         for (Item i : stock.keySet()) {
             if (name.equals(i.getName())) {
                 buy(i);
-                return true;
+                return;
             }
         }
         for (Clothing i : clothingstock.keySet()) {
             if (name.equals(i.getName())) {
                 buy(i);
-                return true;
+                return;
             }
         }
-        return false;
+        System.err.println(String.format("Could not find item %s in stock!", name));
     }
 
     public void buy(Item item) {
@@ -104,12 +97,7 @@ public abstract class Store extends Activity {
 
     }
 
-    public void sale(Loot i, GUI gui) {
-        RunnableButton button = RunnableButton.genericRunnableButton(Formatter.capitalizeFirstLetter(i.getName()), () -> {
-            visit(i.getName());
-        });
-        button.setToolTipText(i.getDesc());
-        gui.commandPanel.add(button);
-        gui.commandPanel.refresh();
+    LabeledValue<String> sale(Loot i) {
+        return new LabeledValue<>(i.getName(), i.getName(), i.getDesc());
     }
 }

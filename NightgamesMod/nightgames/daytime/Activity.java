@@ -1,42 +1,34 @@
 package nightgames.daytime;
 
-import nightgames.characters.Character;
-import nightgames.gui.GUI;
-import nightgames.gui.RunnableButton;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
+import nightgames.gui.LabeledValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Activity {
     protected String name;
     protected int time;
-    protected Character player;
-    protected int page;
+    protected Player player;
 
-    public Activity(String name, Character player) {
+    public Activity(String name, Player player) {
         this.name = name;
         time = 1;
         this.player = player;
-        page = 0;
     }
 
     public abstract boolean known();
 
-    public abstract void visit(String choice);
+    public abstract void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance);
 
     public int time() {
         return time;
     }
 
-    public void next() {
-        page++;
-    }
-
-    public void done(boolean acted) {
-        if (acted) {
-            Daytime.getDay().advance(time);
-        }
-        page = 0;
-        GUI.gui.clearImage();
-        GUI.gui.clearPortrait();
-        Daytime.getDay().plan();
+    public void done(boolean acted, ActivityInstance instance) {
+        instance.finished = true;
+        instance.acted = acted;
     }
 
     @Override
@@ -44,27 +36,35 @@ public abstract class Activity {
         return name;
     }
 
-    public abstract void shop(Character npc, int budget);
+    public abstract void shop(NPC npc, int budget);
 
-    public void choose(String choice, String tooltip, GUI gui) {
-        gui.commandPanel.add(EventButton.eventButton(this, choice, tooltip));
-        gui.commandPanel.refresh();
+    public void choose(String choice, String tooltip, List<LabeledValue<String>> choices) {
+        choices.add(new LabeledValue<>(choice, choice, tooltip));
     }
 
-    public void choose(String choice, GUI gui) {
-        choose(choice, null, gui);
+    public void choose(String choice, List<LabeledValue<String>> choices) {
+        choose(choice, null, choices);
     }
 
-    public void next(GUI gui) {
-        next();
-        gui.clearCommand();
-        gui.addButton(EventButton.eventButton(this,"Next", null));
-    }
+    public static class ActivityInstance {
+        public final Activity activity;
+        public boolean finished = false;
+        public boolean acted = false;
+        String currentChoice = "Start";
+        private int page = 0;
 
-    public void addActivity(GUI gui) {
-        RunnableButton button = RunnableButton.genericRunnableButton(toString(), () -> {
-            visit("Start");
-        });
-        gui.addButton(button);
+        ActivityInstance(Activity activity) {
+            this.activity = activity;
+        }
+
+        public void next() {
+            page++;
+        }
+
+        List<LabeledValue<String>> visit() {
+            List<LabeledValue<String>> nextChoices = new ArrayList<>();
+            activity.visit(currentChoice, page, nextChoices, this);
+            return nextChoices;
+        }
     }
 }

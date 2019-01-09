@@ -1,18 +1,22 @@
 package nightgames.daytime;
 
 import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.global.Configuration;
 import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Exercise extends Activity {
 
-    public Exercise(Character player) {
+    public Exercise(Player player) {
         super("Exercise", player);
     }
 
@@ -22,24 +26,23 @@ public class Exercise extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
         if (page == 0) {
-            next(GUI.gui);
             int gain = gainStamina(player);
             showScene(pickScene(gain));
             if (gain > 0) {
                 GUI.gui.message("<b>Your maximum stamina has increased by " + gain + ".</b>");
             }
         } else {
-            done(true);
+            done(true, instance);
         }
     }
     
     private int gainStamina(Character self) {
         int maximumStaminaForLevel = Configuration.getMaximumStaminaPossible(self);
         int gain = 1 + Random.random(2);
-        if (player.has(Trait.fitnessNut)) {
+        if (self.has(Trait.fitnessNut)) {
             gain = gain + Random.random(2);
         }
         gain = Math.max(0, (int) (Math.min(maximumStaminaForLevel, self.getStamina().trueMax() + gain) - self.getStamina().trueMax()));
@@ -48,7 +51,7 @@ public class Exercise extends Activity {
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         gainStamina(npc);
     }
 

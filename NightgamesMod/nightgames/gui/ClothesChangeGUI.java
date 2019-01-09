@@ -1,7 +1,6 @@
 package nightgames.gui;
 
 import nightgames.characters.Character;
-import nightgames.daytime.Activity;
 import nightgames.global.GameState;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSorter;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class ClothesChangeGUI extends JPanel {
     /**
@@ -20,7 +20,7 @@ public class ClothesChangeGUI extends JPanel {
      */
     private static final long serialVersionUID = -912778444912041408L;
     private Character character;
-    private Activity resume;
+    private CompletableFuture<Boolean> changeClothes;
     private JLabel appearanceLabel;
     private JLabel exposureLabel;
     DefaultListModel<Clothing> closetListModel;
@@ -106,9 +106,9 @@ public class ClothesChangeGUI extends JPanel {
         button.setBackground(Color.DARK_GRAY);
     }
 
-    public ClothesChangeGUI(Character character, Activity event, String doneOption) {
+    ClothesChangeGUI(Character character, CompletableFuture<Boolean> changeClothes) {
         this.character = character;
-        resume = event;
+        this.changeClothes = changeClothes;
         setBackground(GUIColors.bgDark);
         setForeground(GUIColors.textColorLight);
         setLayout(new BorderLayout());
@@ -167,11 +167,7 @@ public class ClothesChangeGUI extends JPanel {
         outfitBox.add(outfitListPane);
 
         JButton btnOk = new JButton("OK");
-        btnOk.addActionListener(arg0 -> {
-            ClothesChangeGUI.this.character.change();
-            GUI.gui.removeClosetGUI();
-            resume.visit(doneOption);
-        });
+        btnOk.addActionListener(arg0 -> changeClothes.complete(true));
         styleButton(btnOk);
         btnOk.setAlignmentX(CENTER_ALIGNMENT);
         addButton.addActionListener(aevent -> add(closetList.getSelectedValue()));

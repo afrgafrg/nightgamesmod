@@ -1,7 +1,7 @@
 package nightgames.daytime;
 
 import nightgames.characters.Attribute;
-import nightgames.characters.Character;
+import nightgames.characters.Player;
 import nightgames.characters.Trait;
 import nightgames.characters.body.CockMod;
 import nightgames.characters.body.CockPart;
@@ -12,20 +12,18 @@ import nightgames.characters.body.mods.SizeMod;
 import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.items.Item;
-import nightgames.requirements.BodyPartRequirement;
-import nightgames.requirements.NotRequirement;
-import nightgames.requirements.RequirementShortcuts;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.AddictionType;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static nightgames.requirements.RequirementShortcuts.bodypart;
-import static nightgames.requirements.RequirementShortcuts.not;
+import static nightgames.requirements.RequirementShortcuts.*;
 
 public class KatTime extends BaseNPCTime {
-    public KatTime(Character player) {
+    KatTime(Player player) {
         super(player, GameState.gameState.characterPool.getNPC("Kat"));
         knownFlag = "Kat";
         giftedString = "\"Awww thanks!\"";
@@ -43,7 +41,7 @@ public class KatTime extends BaseNPCTime {
         {
             TransformationOption growCock = new TransformationOption();
             growCock.ingredients.put(Item.PriapusDraft, 3);
-            growCock.addRequirement(RequirementShortcuts.rev(new NotRequirement(new BodyPartRequirement("cock"))), "Has no penis");
+            growCock.addRequirement(rev(not(bodypart("cock"))), "Has no penis");
             growCock.option = "Kat: Grow a cock";
             growCock.scene = "<br/><i>\"Mrrr... Y-you want me to w-what!?\"</i> Kat doesn't seem to be too amused at your suggestion for a little switch-up. "
                            + "She glows red like a tomato, and starts stammering like she just learned how to talk. "
@@ -91,7 +89,7 @@ public class KatTime extends BaseNPCTime {
         {
             TransformationOption removeCock = new TransformationOption();
             removeCock.ingredients.put(Item.FemDraft, 3);
-            removeCock.addRequirement(RequirementShortcuts.rev(new BodyPartRequirement("cock")), "Has a penis");
+            removeCock.addRequirement(rev(bodypart("cock")), "Has a penis");
             removeCock.option = "Kat: Remove her cock";
             removeCock.scene = "<br/>Kat gladly drinks the three femdrafts one after another and her penis shrinks back into her normal clitoris. "
                             + "Kat shyly whispers, <i>\"Mrrowwww, t-that was embarassing... but it did feel pretty good when I had it...\"</i>";
@@ -133,9 +131,7 @@ public class KatTime extends BaseNPCTime {
         TransformationOption catEars = new TransformationOption();
         catEars.ingredients.put(Item.Rope, 10);
         catEars.ingredients.put(Item.Aphrodisiac, 25);
-        catEars.addRequirement((c, self, other) -> {
-            return self.body.get("ears").stream().anyMatch(part -> part != EarPart.cat) || !self.body.has("ears");
-        }, "No cat ears");
+        catEars.addRequirement(noPartmod("ears", EarPart.cat), "No cat ears");
         catEars.option = "Cat Ears";
         catEars.scene = "[Placeholder]<br/>Kat uses her totemic magic to grow you cat ears.";
         catEars.effect = (c, self, other) -> {
@@ -146,10 +142,9 @@ public class KatTime extends BaseNPCTime {
     }
 
     @Override
-    public void subVisitIntro(String choice) {
+    public void subVisitIntro(String choice, List<LabeledValue<String>> nextChoices) {
         if (npc.getAffection(player) > 0) {
-            GUI.gui.message(
-                            "You send Kat a text to see if she's free. Since exchanging numbers with her, you've discovered that she's much more outgoing "
+            GUI.gui.message("You send Kat a text to see if she's free. Since exchanging numbers with her, you've discovered that she's much more outgoing "
                                             + "when texting than she is in person. The two of you have chatted quite a bit, you just hope she'll eventually get more used to talking with you in "
                                             + "person.<br/>You quickly receive a reply from Kat. 'i'm free right now. :) do you want to meet up?' You text her back, asking if there's a place you "
                                             + "can meet without her friends coming after you. 'i'm not with Mel and Emma right now. you can come here' About ten seconds later, she sends you a followup. "
@@ -157,15 +152,15 @@ public class KatTime extends BaseNPCTime {
                                             + "fair, she does inspire inspire that sort of protective attitude, even from her opponents. For Kat's sake, you'll do your best to get along with them, but "
                                             + "they may not be as agreeable, especially if they find out you're having sex with their protegée.<br/><br/>On your way to Kat's room, you get another text. "
                                             + "'i think i'm too excited waiting for you to get here. what are you planning?'");
-            choose("Games", GUI.gui);
-            choose("Sparring", GUI.gui);
-            choose("Sex", GUI.gui);
+            choose("Games", nextChoices);
+            choose("Sparring", nextChoices);
+            choose("Sex", nextChoices);
             if (Flag.checkFlag(Flag.metAisha) && !Flag.checkFlag(Flag.catspirit)
-                            && GameState.gameState.characterPool.getNPC("Kat").getAffection(player) >= 5) {
-                choose("Ask about Animal Spirit", GUI.gui);
+                            && npc.getAffection(player) >= 5) {
+                choose("Ask about Animal Spirit", nextChoices);
             }
             if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
-                choose("Must... Fuck...", GUI.gui);
+                choose("Must... Fuck...", nextChoices);
             }
         } else if (GameState.gameState.characterPool.getPlayer().checkAddiction(AddictionType.BREEDER)) {
             GUI.gui
@@ -176,14 +171,13 @@ public class KatTime extends BaseNPCTime {
             } else {
                 npc.gainAffection(player, 1);
                 player.gainAffection(npc, 1);
-                choose("Games", GUI.gui);
-                choose("Sparring", GUI.gui);
-                choose("Sex", GUI.gui);
+                choose("Games", nextChoices);
+                choose("Sparring", nextChoices);
+                choose("Sex", nextChoices);
             }
-            choose("Must... Fuck...", GUI.gui);
+            choose("Must... Fuck...", nextChoices);
         } else if (npc.getAttraction(player) < 10) {
-            GUI.gui.message(
-                            "You decide to look for Kat and see if she's interested in spending some time together. You don't have any way to contact her directly, "
+            GUI.gui.message("You decide to look for Kat and see if she's interested in spending some time together. You don't have any way to contact her directly, "
                                             + "but she apparently spends a lot of time in the campus gardens. That's probably your best hope for running into her.<br/><br/>You eventually spot Kat walking "
                                             + "through the gardens, but you almost don't recognize her. Instead of the light, casual clothes she usually wears during a match, she's currently dressed "
                                             + "in an excessively baggy outfit. She's still pretty cute, but those clothes make her look like she's trying to hide her small frame. She's probably trying "
@@ -201,8 +195,7 @@ public class KatTime extends BaseNPCTime {
             npc.gainAttraction(player, 2);
             player.gainAttraction(npc, 2);
         } else {
-            GUI.gui.message(
-                            "You head out to the campus gardens, hoping to find Kat so you can spend some time together. You aren't searching long before you find her reading "
+            GUI.gui.message("You head out to the campus gardens, hoping to find Kat so you can spend some time together. You aren't searching long before you find her reading "
                                             + "a book in the shade of a tree. She seems pretty absorbed in the book, so you're hesitant to disturb her. Instead of calling out to her, you just sit next to her "
                                             + "quietly. You don't recognize the book she's reading, but judging by the cover, it appears to be an urban fantasy romance novel. It must pretty engaging, because "
                                             + "Kat still hasn't noticed that you've been sitting with her for several minutes.<br/><br/>When Kat finally perceives your presence, she lets out a startled yelp and jumps "
@@ -211,8 +204,7 @@ public class KatTime extends BaseNPCTime {
                                             + "also stands between you and Kat. This is bad. You quickly explain that you weren't trying to scare Kat, you just wanted to talk to her. <br/><br/><i>\"Our Kat is pretty delicate. "
                                             + "Maybe you should learn how to approach a girl without scaring her before you try to pick her up.\"</i> The brunette speaks in a reasonable tone, but there's a definite "
                                             + "edge to her voice. The redhead snorts and starts to lead Kat away. <br/><i>\"I don't want this creep talking to Kat at all.\"</i> Kat tugs on the girl's sleeve to stop her and "
-                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + GameState.gameState.characterPool
-                                            .getPlayer().guyOrGirl() + "? Are you kidding me?\"</i> The brunette joins the two of them and they enter a brief huddle. "
+                                            + "whispers something in her ear. The girl looks back at you shocked. <i>\"This " + player.guyOrGirl() + "? Are you kidding me?\"</i> The brunette joins the two of them and they enter a brief huddle. "
                                             + "You stand there awkwardly, unable to hear their conversation. There are more than a few glances in your direction, and Kat's face is gradually turning red. <br/>Eventually, "
                                             + "Kat leaves the huddle to stand behind you, as if hiding from her friends. The calmer of the two girls gives you an awkward smile. <i>\"We'll give you two some space.\"</i> "
                                             + "She has to practically drag away the other girl, who is glaring daggers at you."
@@ -227,7 +219,7 @@ public class KatTime extends BaseNPCTime {
                                             + "leave her horny and unsatisfied? She squirms noticeably as she sits up on the bed. <i>\"It's really frustrating to stop nyow, but I need to be patient. I'm counting on "
                                             + "you to reward me when we're done.\"</i> She settles into a comfortable seated position on the bed, apparently not bothered that her naked lower half is visible. <i>\"We've "
                                             + "fought together a bunch, but since you're myaking an effort to get to know me, I wanted to explain how my animal spirit works. The Girl was too flustered about being "
-                                            + "alone with a " + GameState.gameState.characterPool.getPlayer().boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
+                                            + "alone with a " + player.boyOrGirl() + " to talk properly, so I needed your help to bring out the Cat to do the talking.\"</i><br/><br/>"
                                             + "By arousing Kat, you brought out her animal side. So that's who "
                                             + "you're talking to now? <i>\"The urge to mate is a very primal thing. The more I feel it, the stronger the cat spirit gets, which improves my instinct and my reflexes. It's "
                                             + "nyat like a Jekyll and Hyde thing though. The Girl and the Cat have the same memories, same intelligence, same personality, and same interests. I'm still Kat, just "
@@ -249,11 +241,11 @@ public class KatTime extends BaseNPCTime {
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         }
-        choose("Leave", GUI.gui);
+        choose("Leave", nextChoices);
     }
 
     @Override
-    public void subVisit(String choice) {
+    public void subVisit(String choice, List<LabeledValue<String>> nextChoices) {
         if (choice.equals("Must... Fuck...")) {
             if (npc.getAffection(player) == 0) {
                 GUI.gui.message("Kat teases you, but eventually you end up fucking like, well, animals. No"
@@ -315,154 +307,150 @@ public class KatTime extends BaseNPCTime {
                                 + "If you're not really careful, you're going to get addicted to this for sure. But with sex like"
                                 + " that, is that a bad thing?");
             }
-            choose("Leave", GUI.gui);
-            GameState.gameState.characterPool.getPlayer().addict(null, AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
-            GameState.gameState.characterPool.getPlayer().getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
+            choose("Leave", nextChoices);
+            player.addict(null, AddictionType.BREEDER, npc, Addiction.MED_INCREASE);
+            player.getAddiction(AddictionType.BREEDER).ifPresent(Addiction::flagDaytime);
         }
         if (choice.equals("Sex")) {
-            GUI.gui.message(
-                            "Kat sits on her bed and looks at you hesitantly, with red cheeks. <i>\"Are we going to... you know?\"</i> Despite her shy appearance, there's definitely "
-                                            + "an eagerness to her voice. You both want the same thing. You give her a quick kiss on the lips and help her remove her shirt. She shyly crosses her arms over her bra "
-                                            + "and smiles weakly. <i>\"It's embarrassing if I'm the only one who is naked. Take off your shirt too.\"</i> You obligingly strip of your own top and she helps you remove "
-                                            + "her bra. Her breasts are quite big and soft looking, considering her petite build. If she didn't cover up her body with baggy clothing during the day, her friends would "
-                                            + "surely need to beat " + GameState.gameState.characterPool.getPlayer().guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
-                                            + "your turn to undress.\"</i> Of course, she deserves a little eye candy too. You kick off your pants, leaving only your boxers. Kat hesitantly takes her hands off her chest "
-                                            + "so she can remove her pants. <br/><br/>"
-                                            + "You're both down to your underwear and Kat stares at your boxers in anticipation. She's obviously ready for some passionate sex, but you "
-                                            + "can't resist teasing her some more. You sit down on the bed next to her and push her gently onto her back. She looks confused about this sudden change in plan. You explain "
-                                            + "that you came here for sexual training, not simply to have sex. Therefore there's no reason to take your boxers off right now. In one smooth motion, you pull down her panties "
-                                            + "and expose her wet flower. She yelps in surprise and embarrassment and covers herself with her hands. You're going to start by training her self control. Kat gets taken over "
-                                            + "by her animal spirit too easily when she's aroused. You're going to help her learn to contain it by fingering her while she tries to maintain her control. <br/><br/>"
-                                            + "She looks a bit "
-                                            + "dubious, but accepts your idea. She closes her eyes, takes a deep breath, and moves her hands away from her groin. You lightly move your finger up and down her slit, eliciting a soft whimper. "
-                                            + "If you're going to do this properly, you need better access to her girl parts. She flushes in shame, but obediently spreads her legs at your prompting. You reposition yourself "
-                                            + "to sit between her spread legs and start to slowly rub her lower lips. Kat squirms a bit, but focuses on controlling her breathing. You intensify your fingerwork a bit, but "
-                                            + "she manages to maintain her composure, showing no sign of catliness. You notice that her hands are balled into fists, gripping the bedsheets tightly. Her earnestness in this "
-                                            + "silly exercise you made up is charming. You lean down and lightly lick her inner thigh. She jerks as if shocked and lets out a moan. <i>\"Tongue is unfair! I can barely handle "
-                                            + "the fingers!\"</i> She really is taking this seriously. You were planning to eat her out as a reward, but you decide instead to continue the exercise until she wants to stop. "
-                                            + "<br/><br/>She's doing a very good job keeping her arousal in check. You've been fingering her long enough that your wrist is getting sore. You give her a brief respite while you move "
-                                            + "to sit behind her. She's a bit startled when you pull her into your lap to lean against your chest. From this new position, you slip your hand between her legs and resume "
-                                            + "fingering her. She lets out breathy moans and shivers in your arms. Within a handful of seconds, you feel her tail twitching against you leg and her moans have a clear mewing "
-                                            + "quality. <br/><br/>"
-                                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + GameState.gameState.characterPool
-                                            .getPlayer().boyOrGirl() + "... and the "
-                                            + "warmth... and the breath on my neck! How is a girl suppose to handle that?\"</i> She squirms out of your arms and turns to face you. <i>\"I know this 'training' was just an "
-                                            + "excuse to tease me. I didn't complain because I liked what you were doing, but it's your turn nyow. Either get those boxers off, or they're gonnya be shredded.\"</i> You "
-                                            + "quickly strip off your underwear. These are your good boxers, not like the cheap throwaway pairs that you wear during a match. Kat gives an approving purr as she looks over"
-                                            + "your throbbing erection. She straddles your waist and lowers herself onto your member. She was talking about teasing you before, but apparently she's too impatient. She "
-                                            + "rocks her hips, sliding her slick folds up and down your cock. You kiss her passionately and pull her body against yours. You're both extremely horny since you've been fooling "
-                                            + "around for quite awhile. Kat moves her hips energetically as you thrust into her from below. Her tail whips back and forth with excitement and she moans softly into "
-                                            + "your mouth. She has to break the kiss to breathe and buries her face in your neck. <i>\"It feels really good! Nya! I'm gonnya cum!\"</i> Her timing is pretty good; you're "
-                                            + "about to cum too. She clings to you and digs her nails into your back as she shudders in orgasm. Her pussy clenches your cock and you erupt inside her. <br/><br/>"
-                                            + "She slumps completely "
-                                            + "limp into your arms, eyes closed. You hold her and gently stroke her head. You pet her for a little while before she opens her eyes with a sleepy smile. <i>\"You're still inside "
-                                            + "me.... It's a nice feeling.\"</i> You lay her gently onto the bed and she hugs you tightly to make you aren't going anywhere. She quickly falls asleep, cuddling up against you. "
-                                            + "You pull a blanket over your naked bodies and close your eyes. You were supposed to be training, but a quick nap suddenly seems very inviting.");
+            GUI.gui.message("Kat sits on her bed and looks at you hesitantly, with red cheeks. <i>\"Are we going to... you know?\"</i> Despite her shy appearance, there's definitely "
+                            + "an eagerness to her voice. You both want the same thing. You give her a quick kiss on the lips and help her remove her shirt. She shyly crosses her arms over her bra "
+                            + "and smiles weakly. <i>\"It's embarrassing if I'm the only one who is naked. Take off your shirt too.\"</i> You obligingly strip of your own top and she helps you remove "
+                            + "her bra. Her breasts are quite big and soft looking, considering her petite build. If she didn't cover up her body with baggy clothing during the day, her friends would "
+                            + "surely need to beat " + player.guyOrGirl() + "s off of her left and right. Kat turns even redder when she catches you staring and covers her breasts. <i>\"D-don't stare at my boobs so much. It's "
+                            + "your turn to undress.\"</i> Of course, she deserves a little eye candy too. You kick off your pants, leaving only your boxers. Kat hesitantly takes her hands off her chest "
+                            + "so she can remove her pants. <br/><br/>"
+                            + "You're both down to your underwear and Kat stares at your boxers in anticipation. She's obviously ready for some passionate sex, but you "
+                            + "can't resist teasing her some more. You sit down on the bed next to her and push her gently onto her back. She looks confused about this sudden change in plan. You explain "
+                            + "that you came here for sexual training, not simply to have sex. Therefore there's no reason to take your boxers off right now. In one smooth motion, you pull down her panties "
+                            + "and expose her wet flower. She yelps in surprise and embarrassment and covers herself with her hands. You're going to start by training her self control. Kat gets taken over "
+                            + "by her animal spirit too easily when she's aroused. You're going to help her learn to contain it by fingering her while she tries to maintain her control. <br/><br/>"
+                            + "She looks a bit "
+                            + "dubious, but accepts your idea. She closes her eyes, takes a deep breath, and moves her hands away from her groin. You lightly move your finger up and down her slit, eliciting a soft whimper. "
+                            + "If you're going to do this properly, you need better access to her girl parts. She flushes in shame, but obediently spreads her legs at your prompting. You reposition yourself "
+                            + "to sit between her spread legs and start to slowly rub her lower lips. Kat squirms a bit, but focuses on controlling her breathing. You intensify your fingerwork a bit, but "
+                            + "she manages to maintain her composure, showing no sign of catliness. You notice that her hands are balled into fists, gripping the bedsheets tightly. Her earnestness in this "
+                            + "silly exercise you made up is charming. You lean down and lightly lick her inner thigh. She jerks as if shocked and lets out a moan. <i>\"Tongue is unfair! I can barely handle "
+                            + "the fingers!\"</i> She really is taking this seriously. You were planning to eat her out as a reward, but you decide instead to continue the exercise until she wants to stop. "
+                            + "<br/><br/>She's doing a very good job keeping her arousal in check. You've been fingering her long enough that your wrist is getting sore. You give her a brief respite while you move "
+                            + "to sit behind her. She's a bit startled when you pull her into your lap to lean against your chest. From this new position, you slip your hand between her legs and resume "
+                            + "fingering her. She lets out breathy moans and shivers in your arms. Within a handful of seconds, you feel her tail twitching against you leg and her moans have a clear mewing "
+                            + "quality. <br/><br/>"
+                            + "She was doing pretty well up until now. <i>\"I've been in the games long enyough to endure being fingered if I focus, but being held by a " + player.boyOrGirl() + "... and the "
+                            + "warmth... and the breath on my neck! How is a girl suppose to handle that?\"</i> She squirms out of your arms and turns to face you. <i>\"I know this 'training' was just an "
+                            + "excuse to tease me. I didn't complain because I liked what you were doing, but it's your turn nyow. Either get those boxers off, or they're gonnya be shredded.\"</i> You "
+                            + "quickly strip off your underwear. These are your good boxers, not like the cheap throwaway pairs that you wear during a match. Kat gives an approving purr as she looks over"
+                            + "your throbbing erection. She straddles your waist and lowers herself onto your member. She was talking about teasing you before, but apparently she's too impatient. She "
+                            + "rocks her hips, sliding her slick folds up and down your cock. You kiss her passionately and pull her body against yours. You're both extremely horny since you've been fooling "
+                            + "around for quite awhile. Kat moves her hips energetically as you thrust into her from below. Her tail whips back and forth with excitement and she moans softly into "
+                            + "your mouth. She has to break the kiss to breathe and buries her face in your neck. <i>\"It feels really good! Nya! I'm gonnya cum!\"</i> Her timing is pretty good; you're "
+                            + "about to cum too. She clings to you and digs her nails into your back as she shudders in orgasm. Her pussy clenches your cock and you erupt inside her. <br/><br/>"
+                            + "She slumps completely "
+                            + "limp into your arms, eyes closed. You hold her and gently stroke her head. You pet her for a little while before she opens her eyes with a sleepy smile. <i>\"You're still inside "
+                            + "me.... It's a nice feeling.\"</i> You lay her gently onto the bed and she hugs you tightly to make you aren't going anywhere. She quickly falls asleep, cuddling up against you. "
+                            + "You pull a blanket over your naked bodies and close your eyes. You were supposed to be training, but a quick nap suddenly seems very inviting.");
             if (!player.has(Trait.affectionate)) {
                 GUI.gui.message("<br/><br/><b>You've gotten so much better at slow sex and cuddling that you start to score extra affection with your partners.</b>");
                 player.add(Trait.affectionate);
                 npc.getGrowth().addTrait(0, Trait.affectionate);
             }
-            choose("Leave", GUI.gui);
+            choose("Leave", nextChoices);
             Daytime.train(player, npc, Attribute.Seduction);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Games")) {
-            GUI.gui.message(
-                            "Despite your shared intimacy, Kat still has trouble speaking normally when you're alone together. You've turned to games as, not just a form of "
-                                            + "strategy training, but also a means of getting her to relax. As you get deep into the game, it seems to be working. It probably helps that she seems to have a "
-                                            + "knack for this game. She's practically bouncing in her seat and shadowboxing each time she crashes a gem. <br/><br/>"
-                                            + "<i>\"You have no chance against my kitty cat attacks.\"</i> "
-                                            + "You probably shouldn't point out that her character is suppose to have a fox motif, rather than a cat. Her cute antics are helping you overlook how badly you're "
-                                            + "losing. You've had to focus most of your efforts on defense, so you've been falling behind on buying good chips. On Kat's turn she plays 'Speed of the Fox' (which "
-                                            + "she continues to call 'Speed of the Cat') and several 'Combines', creating a pair of level 4 gems out of the level 2 gems she's been holding onto. That puts an "
-                                            + "end to your defensive strategy, level 4 gems can't be countered.<br/><br/>"
-                                            + "Kat sends the entire eight stack of gems crashing towards you and shoots her fist into the air in an enthusiastic pose. <i>\"Super Cat Punch!\"</i> Oh God, she's "
-                                            + "just too damn cute! You can't resist tackling Kat and hugging her tightly, the game completely forgotten. She doesn't protest or try to resist, but you do notice "
-                                            + "a distinctively dissatisfied look on her face. Does she not like being held like this? <i>\"I don't mind this sort of thing. It happens to me a lot. Aisha glomps me like this "
-                                            + "almost every time I see her. It feels especially nice being held by you, but... I was winning....\"</i> Oh right, the game. The odds of you surviving another turn "
-                                            + "after her Super Cat Punch is pretty low. Even if you did recover, she still has a significant advantage. It seems fair to concede defeat now and skip to some more "
-                                            + "intimate fun. Kat pouts, clearly displeased at your lack of motivation. If she has her heart set on finishing the game instead of sexy times, you'll try to be "
-                                            + "patient. She blushes and squirms a bit in your arms. <i>\"I'm not turning down down sexy times. Just remember that I won, so you should obey me today. You're not "
-                                            + "allowed to tease me.\"</i> You don't really tease her that much, do you? Well, fair enough. She calls the shots this time. Kat looks you over and smiles. <i>\"First, take off "
-                                            + "your clothes. Today, you get to be naked and embarrassed instead of me.\"</i> You obediently strip naked, but you aren't actually that embarrassed to be naked in front "
-                                            + "of Kat. She cuddles up against you and starts to fondle your dick with both hands. She's pretty good at this, probably due to her experience in the games. She strokes "
-                                            + "and pleasures you until your precum starts to leak out onto her fingers.<br/><br/>"
-                                            + "<i>\"That's all for now,\"</i> Kat says, as she abruptly takes her hands off your penis. <i>\"The rest will be a reward if you service me properly.\"</i> You groan in "
-                                            + "frustration at Kat's uncharacteristic cocktease. Well, you did agree to listen to her for now. You'll surely earn more than a handjob with your expert cunnilingus skills. "
-                                            + "You reach down to remove Kat's pants, but she suddenly covers your eyes with her hands. <br/>"
-                                            + "<i>\"I know it's silly after all this time, but I still get embarrassed when a someone stares at my privates. No peeking, OK?\"</i> This has become slightly inconvenient. "
-                                            + "You'll have to rely on your sense of touch. You clumsily remove her pants and underwear and quickly locate her vulva with your tongue. Kat shivers as you start to eat her "
-                                            + "out and seems to be having trouble keeping her hands over your eyes. <i>\"Keep-Nya!~ Keep your eyes closed. You're doiNya!~ just fine without looking.\"</i><br/><br/>"
-                                            + "You're glad she's enjoying your efforts, but you do wish you could look at her. It's not just so you can see what you're doing, but also to watch her reactions. She said "
-                                            + "'no peeking', so you'll just have to harden your resolve and resist temptation. At least you can enjoy her moans, which are gradually becoming more and more feline. <br/><i>\"You're "
-                                            + "still nyat peeking?\"</i> You assure her that your eyes are still tightly shut. To your surprise, she lets out a low sound of annoyance and pushes your head away. <i>Why are you "
-                                            + "being so obedient?! You're gonnya make me cum too fast!\"</i> You open your eyes (she's obviously too cat-like to care about being seen) and look at her in confusion.<br/><br/>"
-                                            + "<i>\"Can't you take a hint? I obviously only told you nyat to tease me so you'd want to do it more. I even teased you and gave you that dumb 'no peeking' rule to put the "
-                                            + "idea in your head. You shouldn't just blindly do whatever I say.\"</i> She's pouting, but it just looks ridiculous with no pants on. <br/><br/>"
-                                            + "If she's giving you the green light to tease her, you're definitely getting the urge to do so right now. You mercilessly tickle her naked inner thighs, paralyzing her with "
-                                            + "squeals of laughter. No matter how cute she is, you're still going to punish her for being so unreasonable. How can she expect you to pick up on reverse psychology when she's "
-                                            + "giving you orders? She can't demand that you obey her as a prize for winning and then demand the opposite of what she wants. You stop tickling her long enough for her to "
-                                            + "answer you. <i>\"I couldn't just tell you that I like it when you tease and deny me. Who would freely admit that? I can only tell you now because I don't have any shame at "
-                                            + "the moment. I'm going to be totally mortified when I turn back to normal.\"</i><br/><br/>"
-                                            + "If she's really a masochist, she probably will enjoy being embarrassed. Well, if she wants you to deny her an orgasm, that's easy enough. She'll just have to wait until you "
-                                            + "leave to handle her arousal. <i>\"Nya?! That's going too far! I just want you to play with me a bit, not leave before we're finished!\"</i> She looks pretty desperate. You're "
-                                            + "still horny too, so maybe you'll reconsider her punishment if she begs convincingly enough. Kat shouldn't have any shame right now, but she still flushes at  your demand. "
-                                            + "<i>\"Please! You can do whatever you want to me, just help me cum!\"</i><br/><br/>"
-                                            + "You make her get on her hands and knees while you move behind her. You pull her tail out of the way, revealing her soaked pussy. Just as you thought, she's even more drenched "
-                                            + "then when you were eating her out. You lightly stroke her lower lips, making her moan and shiver. When you slide a finger into her, her arms give out and her upper body drops to "
-                                            + "the floor. <i>\"NYA! Nyat just your fingers! Aren't you horny too? Do it for real!\"</i><br/>"
-                                            + "You seem to recall her begging you to make her cum, doing whatever you wanted to her. Now she's saying your fingers aren't good enough for her? She should be more clear about "
-                                            + "what she wants. She squirms in embarrassment and looks hesitant to speak. She's in full cat mode, so she can't actually be feeling shame. The blushing innocent bit must be part "
-                                            + "of her libido. <i>\"I want... your... d-dick.... I want you to f-fuck me.\"</i> She can barely get the words out, but you feel an fresh flood of moisture from her entrance.<br/><br/>"
-                                            + "She's earned a reward, and so has your unsatisfied cock. You line your rod up with her wet hole and thrust into her before she realizes what you're doing. She moans in pleasure "
-                                            + "at the sensation of being completely filled. She's way beyond teasing, you might as well fuck her properly. You get a good grip on her waist and settle into a steady rhythm thrusting "
-                                            + "in and out of her. Her tail thrashes wildly as she meows with complete abandon. You feel your ejaculation building quickly, but you're sure Kat's about to cum too, if she isn't "
-                                            + "already mid-orgasm. A wave of pleasure washes over you as you shoot your load into her womb.<br/><br/>"
-                                            + "As you recover from your orgasm, you notice that Kat is fast asleep, or possibly pretending to be asleep to avoid an embarrassing conversation. You're exhausted, but neither of "
-                                            + "you are going to be comfortable napping on the floor. You pick up Kat's petite body and carry her over to the bed.");
+            GUI.gui.message("Despite your shared intimacy, Kat still has trouble speaking normally when you're alone together. You've turned to games as, not just a form of "
+                            + "strategy training, but also a means of getting her to relax. As you get deep into the game, it seems to be working. It probably helps that she seems to have a "
+                            + "knack for this game. She's practically bouncing in her seat and shadowboxing each time she crashes a gem. <br/><br/>"
+                            + "<i>\"You have no chance against my kitty cat attacks.\"</i> "
+                            + "You probably shouldn't point out that her character is suppose to have a fox motif, rather than a cat. Her cute antics are helping you overlook how badly you're "
+                            + "losing. You've had to focus most of your efforts on defense, so you've been falling behind on buying good chips. On Kat's turn she plays 'Speed of the Fox' (which "
+                            + "she continues to call 'Speed of the Cat') and several 'Combines', creating a pair of level 4 gems out of the level 2 gems she's been holding onto. That puts an "
+                            + "end to your defensive strategy, level 4 gems can't be countered.<br/><br/>"
+                            + "Kat sends the entire eight stack of gems crashing towards you and shoots her fist into the air in an enthusiastic pose. <i>\"Super Cat Punch!\"</i> Oh God, she's "
+                            + "just too damn cute! You can't resist tackling Kat and hugging her tightly, the game completely forgotten. She doesn't protest or try to resist, but you do notice "
+                            + "a distinctively dissatisfied look on her face. Does she not like being held like this? <i>\"I don't mind this sort of thing. It happens to me a lot. Aisha glomps me like this "
+                            + "almost every time I see her. It feels especially nice being held by you, but... I was winning....\"</i> Oh right, the game. The odds of you surviving another turn "
+                            + "after her Super Cat Punch is pretty low. Even if you did recover, she still has a significant advantage. It seems fair to concede defeat now and skip to some more "
+                            + "intimate fun. Kat pouts, clearly displeased at your lack of motivation. If she has her heart set on finishing the game instead of sexy times, you'll try to be "
+                            + "patient. She blushes and squirms a bit in your arms. <i>\"I'm not turning down down sexy times. Just remember that I won, so you should obey me today. You're not "
+                            + "allowed to tease me.\"</i> You don't really tease her that much, do you? Well, fair enough. She calls the shots this time. Kat looks you over and smiles. <i>\"First, take off "
+                            + "your clothes. Today, you get to be naked and embarrassed instead of me.\"</i> You obediently strip naked, but you aren't actually that embarrassed to be naked in front "
+                            + "of Kat. She cuddles up against you and starts to fondle your dick with both hands. She's pretty good at this, probably due to her experience in the games. She strokes "
+                            + "and pleasures you until your precum starts to leak out onto her fingers.<br/><br/>"
+                            + "<i>\"That's all for now,\"</i> Kat says, as she abruptly takes her hands off your penis. <i>\"The rest will be a reward if you service me properly.\"</i> You groan in "
+                            + "frustration at Kat's uncharacteristic cocktease. Well, you did agree to listen to her for now. You'll surely earn more than a handjob with your expert cunnilingus skills. "
+                            + "You reach down to remove Kat's pants, but she suddenly covers your eyes with her hands. <br/>"
+                            + "<i>\"I know it's silly after all this time, but I still get embarrassed when a someone stares at my privates. No peeking, OK?\"</i> This has become slightly inconvenient. "
+                            + "You'll have to rely on your sense of touch. You clumsily remove her pants and underwear and quickly locate her vulva with your tongue. Kat shivers as you start to eat her "
+                            + "out and seems to be having trouble keeping her hands over your eyes. <i>\"Keep-Nya!~ Keep your eyes closed. You're doiNya!~ just fine without looking.\"</i><br/><br/>"
+                            + "You're glad she's enjoying your efforts, but you do wish you could look at her. It's not just so you can see what you're doing, but also to watch her reactions. She said "
+                            + "'no peeking', so you'll just have to harden your resolve and resist temptation. At least you can enjoy her moans, which are gradually becoming more and more feline. <br/><i>\"You're "
+                            + "still nyat peeking?\"</i> You assure her that your eyes are still tightly shut. To your surprise, she lets out a low sound of annoyance and pushes your head away. <i>Why are you "
+                            + "being so obedient?! You're gonnya make me cum too fast!\"</i> You open your eyes (she's obviously too cat-like to care about being seen) and look at her in confusion.<br/><br/>"
+                            + "<i>\"Can't you take a hint? I obviously only told you nyat to tease me so you'd want to do it more. I even teased you and gave you that dumb 'no peeking' rule to put the "
+                            + "idea in your head. You shouldn't just blindly do whatever I say.\"</i> She's pouting, but it just looks ridiculous with no pants on. <br/><br/>"
+                            + "If she's giving you the green light to tease her, you're definitely getting the urge to do so right now. You mercilessly tickle her naked inner thighs, paralyzing her with "
+                            + "squeals of laughter. No matter how cute she is, you're still going to punish her for being so unreasonable. How can she expect you to pick up on reverse psychology when she's "
+                            + "giving you orders? She can't demand that you obey her as a prize for winning and then demand the opposite of what she wants. You stop tickling her long enough for her to "
+                            + "answer you. <i>\"I couldn't just tell you that I like it when you tease and deny me. Who would freely admit that? I can only tell you now because I don't have any shame at "
+                            + "the moment. I'm going to be totally mortified when I turn back to normal.\"</i><br/><br/>"
+                            + "If she's really a masochist, she probably will enjoy being embarrassed. Well, if she wants you to deny her an orgasm, that's easy enough. She'll just have to wait until you "
+                            + "leave to handle her arousal. <i>\"Nya?! That's going too far! I just want you to play with me a bit, not leave before we're finished!\"</i> She looks pretty desperate. You're "
+                            + "still horny too, so maybe you'll reconsider her punishment if she begs convincingly enough. Kat shouldn't have any shame right now, but she still flushes at  your demand. "
+                            + "<i>\"Please! You can do whatever you want to me, just help me cum!\"</i><br/><br/>"
+                            + "You make her get on her hands and knees while you move behind her. You pull her tail out of the way, revealing her soaked pussy. Just as you thought, she's even more drenched "
+                            + "then when you were eating her out. You lightly stroke her lower lips, making her moan and shiver. When you slide a finger into her, her arms give out and her upper body drops to "
+                            + "the floor. <i>\"NYA! Nyat just your fingers! Aren't you horny too? Do it for real!\"</i><br/>"
+                            + "You seem to recall her begging you to make her cum, doing whatever you wanted to her. Now she's saying your fingers aren't good enough for her? She should be more clear about "
+                            + "what she wants. She squirms in embarrassment and looks hesitant to speak. She's in full cat mode, so she can't actually be feeling shame. The blushing innocent bit must be part "
+                            + "of her libido. <i>\"I want... your... d-dick.... I want you to f-fuck me.\"</i> She can barely get the words out, but you feel an fresh flood of moisture from her entrance.<br/><br/>"
+                            + "She's earned a reward, and so has your unsatisfied cock. You line your rod up with her wet hole and thrust into her before she realizes what you're doing. She moans in pleasure "
+                            + "at the sensation of being completely filled. She's way beyond teasing, you might as well fuck her properly. You get a good grip on her waist and settle into a steady rhythm thrusting "
+                            + "in and out of her. Her tail thrashes wildly as she meows with complete abandon. You feel your ejaculation building quickly, but you're sure Kat's about to cum too, if she isn't "
+                            + "already mid-orgasm. A wave of pleasure washes over you as you shoot your load into her womb.<br/><br/>"
+                            + "As you recover from your orgasm, you notice that Kat is fast asleep, or possibly pretending to be asleep to avoid an embarrassing conversation. You're exhausted, but neither of "
+                            + "you are going to be comfortable napping on the floor. You pick up Kat's petite body and carry her over to the bed.");
             if (!player.has(Trait.tease)) {
                 GUI.gui.message("<br/><br/><b>You've learned to take pride in your teasing.</b>");
                 player.add(Trait.tease);
                 npc.getGrowth().addTrait(0, Trait.tease);
             }
-            choose("Leave", GUI.gui);
+            choose("Leave", nextChoices);
             Daytime.train(player, npc, Attribute.Cunning);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
         } else if (choice.equals("Sparring")) {
-            GUI.gui.message(
-                            "You and Kat are able to find a private room with a wrestling mat so you can do some sparring without covering up her cat parts. You spend some time stretching and warming up together, "
-                                            + "before you have to figure out how you're going to actually train. You're a lot taller and heavier than her, so an actual sparring match would be problematic. "
-                                            + "Instead you offer to show her some simple wrestling takedowns. Kat looks visibly indignant, which is an expression you're not used to on her. <i>\"I have "
-                                            + "been doing this for a year now. I should be teaching you techniques.\"</i><br/><br/>"
-                                            + "Kat demonstrates a simple tackle to take your opponent off her feet. It's not "
-                                            + "quite as smooth as when she's in her cat form, but it seems fairly effective. However, Kat is strong for her size and very quick. A big tackle is probably "
-                                            + "not the most efficient technique against her. On the other hand.... Kat lets out a confused yelp as you grab her under the armpits and lift her off the floor. With her "
-                                            + "small size and light frame, this is probably the simplest method to incapacitate her. She flails in humiliation at being treated like a kid. You forgot that "
-                                            + "she's actually much stronger than she looks. Her thrashing manages to knock you off balance and you both fall to the mat, her landing heavily on top of you. "
-                                            + "You get the wind knocked out of you, but you're more worried about Kat, who has her face buried in your chest and isn't moving. Is she ok? Did she land wrong? "
-                                            + "As you're starting to panic, you see her tail wag lazily and hear a low meow.<br/><br/>"
-                                            + "Wait, did she go full feline? You haven't done anything to arouse her. Can that "
-                                            + "be triggered by physical trauma? Kat raises her head and looks at you with flushed cheeks. She certainly doesn't look traumatized. <i>\"Nya, sorry.... You "
-                                            + "smell and feel really masculine. An innyocent girl like me can't help getting a little turned on from lying on top of you.\"</i> She purrs happily, hops "
-                                            + "to her feet, and starts to strip. Why is she undressing? It's a good thing you've got a private room, otherwise you'd have a serious situation. <i>\"Nya! I'm "
-                                            + "nyot stupid. Even if I accidentally get aroused in public, I wouldn't expose myself to just anyone. I may nyot get embarrassed, but I have enough common sense "
-                                            + "to stay out of trouble.\"</i> She tosses her clothes aside and hops around energetically, making her breasts bounce attractively. <i>\"I thought of a fun way "
-                                            + "to spar and get me back to nyormal at the same time. You just have to try to catch me and myake me cum, which won't be that easy with my cat instincts.\"</i> That "
-                                            + "does sound more fun than just showing each other takedowns, though probably less practical. However, Kat is overestimating her ability to avoid you. She may "
-                                            + "be quick, but this will be over soon. <br/><br/>"
-                                            + "You take the initiative and lunge at Kat. She nimbly twists out of the way and jumps back to put some space between you. "
-                                            + "That hop put her back to the wall, cutting off her escape vectors. You quickly corner her and rush in to finish her off. She kicks off from the wall and "
-                                            + "manages to hop completely over your head. She's more agile than you realized, but it won't make a difference in the end. Kat dances away to the opposite corner, "
-                                            + "but you take your time and approach her carefully. You slowly advance while she's still waiting for another rush. Soon she's backed away as far as she can and "
-                                            + "can't stall any longer. She dashes past you, coming just slightly too close. You finally spring forward and manage to get an arm around her waist, pulling her "
-                                            + "towards you as you both fall to the mat. Kat squirms in your arms, but you easily manage to mount her and finger her pussy. She's already wet and receptive to "
-                                            + "your touch. This is why she couldn't get away. She wanted to be caught just as much as you wanted to catch her. She moans frantically, but doesn't really try "
-                                            + "convincingly to escape. You quickly locate her clitoris and start rapidly rubbing it with your fingertips. Her back arches and she yowls in ecstasy as she orgasms. "
-                                            + "You lightly caress her body as she's recovering from her climax. She giggles softly at the ticklish sensation and looks up at you with a flushed smile. <i>\"You're "
-                                            + "good at this kind of sparring. Can I put my clothes on before we continue? This feels nice, but it's really embarrassing.\"</i>");
-            choose("Leave", GUI.gui);
+            GUI.gui.message("You and Kat are able to find a private room with a wrestling mat so you can do some sparring without covering up her cat parts. You spend some time stretching and warming up together, "
+                            + "before you have to figure out how you're going to actually train. You're a lot taller and heavier than her, so an actual sparring match would be problematic. "
+                            + "Instead you offer to show her some simple wrestling takedowns. Kat looks visibly indignant, which is an expression you're not used to on her. <i>\"I have "
+                            + "been doing this for a year now. I should be teaching you techniques.\"</i><br/><br/>"
+                            + "Kat demonstrates a simple tackle to take your opponent off her feet. It's not "
+                            + "quite as smooth as when she's in her cat form, but it seems fairly effective. However, Kat is strong for her size and very quick. A big tackle is probably "
+                            + "not the most efficient technique against her. On the other hand.... Kat lets out a confused yelp as you grab her under the armpits and lift her off the floor. With her "
+                            + "small size and light frame, this is probably the simplest method to incapacitate her. She flails in humiliation at being treated like a kid. You forgot that "
+                            + "she's actually much stronger than she looks. Her thrashing manages to knock you off balance and you both fall to the mat, her landing heavily on top of you. "
+                            + "You get the wind knocked out of you, but you're more worried about Kat, who has her face buried in your chest and isn't moving. Is she ok? Did she land wrong? "
+                            + "As you're starting to panic, you see her tail wag lazily and hear a low meow.<br/><br/>"
+                            + "Wait, did she go full feline? You haven't done anything to arouse her. Can that "
+                            + "be triggered by physical trauma? Kat raises her head and looks at you with flushed cheeks. She certainly doesn't look traumatized. <i>\"Nya, sorry.... You "
+                            + "smell and feel really masculine. An innyocent girl like me can't help getting a little turned on from lying on top of you.\"</i> She purrs happily, hops "
+                            + "to her feet, and starts to strip. Why is she undressing? It's a good thing you've got a private room, otherwise you'd have a serious situation. <i>\"Nya! I'm "
+                            + "nyot stupid. Even if I accidentally get aroused in public, I wouldn't expose myself to just anyone. I may nyot get embarrassed, but I have enough common sense "
+                            + "to stay out of trouble.\"</i> She tosses her clothes aside and hops around energetically, making her breasts bounce attractively. <i>\"I thought of a fun way "
+                            + "to spar and get me back to nyormal at the same time. You just have to try to catch me and myake me cum, which won't be that easy with my cat instincts.\"</i> That "
+                            + "does sound more fun than just showing each other takedowns, though probably less practical. However, Kat is overestimating her ability to avoid you. She may "
+                            + "be quick, but this will be over soon. <br/><br/>"
+                            + "You take the initiative and lunge at Kat. She nimbly twists out of the way and jumps back to put some space between you. "
+                            + "That hop put her back to the wall, cutting off her escape vectors. You quickly corner her and rush in to finish her off. She kicks off from the wall and "
+                            + "manages to hop completely over your head. She's more agile than you realized, but it won't make a difference in the end. Kat dances away to the opposite corner, "
+                            + "but you take your time and approach her carefully. You slowly advance while she's still waiting for another rush. Soon she's backed away as far as she can and "
+                            + "can't stall any longer. She dashes past you, coming just slightly too close. You finally spring forward and manage to get an arm around her waist, pulling her "
+                            + "towards you as you both fall to the mat. Kat squirms in your arms, but you easily manage to mount her and finger her pussy. She's already wet and receptive to "
+                            + "your touch. This is why she couldn't get away. She wanted to be caught just as much as you wanted to catch her. She moans frantically, but doesn't really try "
+                            + "convincingly to escape. You quickly locate her clitoris and start rapidly rubbing it with your fingertips. Her back arches and she yowls in ecstasy as she orgasms. "
+                            + "You lightly caress her body as she's recovering from her climax. She giggles softly at the ticklish sensation and looks up at you with a flushed smile. <i>\"You're "
+                            + "good at this kind of sparring. Can I put my clothes on before we continue? This feels nice, but it's really embarrassing.\"</i>");
+            choose("Leave", nextChoices);
             Daytime.train(player, npc, Attribute.Power);
             npc.gainAffection(player, 1);
             player.gainAffection(npc, 1);
@@ -493,9 +481,7 @@ public class KatTime extends BaseNPCTime {
                             + "<i>\"I think Aisha may feel bad about how the ritual turned out, "
                             + "even though I keep telling her I don't regret it. If she refuses"
                             + " to give you a spirit, I'll try to  help you talk her into it.\"</i>");
-            choose("Leave", GUI.gui);
-        } else if (choice.equals("Leave")) {
-            done(true);
+            choose("Leave", nextChoices);
         }
     }
 }

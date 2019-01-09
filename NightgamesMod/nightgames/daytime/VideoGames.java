@@ -1,17 +1,20 @@
 package nightgames.daytime;
 
-import nightgames.characters.Character;
+import nightgames.characters.NPC;
+import nightgames.characters.Player;
 import nightgames.global.Flag;
 import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VideoGames extends Activity {
     private boolean paid;
 
-    public VideoGames(Character player) {
+    VideoGames(Player player) {
         super("Play Video Games", player);
     }
 
@@ -21,21 +24,20 @@ public class VideoGames extends Activity {
     }
 
     @Override
-    public void visit(String choice) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             if (player.money >= 50) {
                 GUI.gui.message(
                                 "Do you want to purchase a new game? Your old games are still good, but you're unlikely to learn as much from replaying them.");
-                choose("Yes: $50", GUI.gui);
-                choose("No", GUI.gui);
+                choose("Yes: $50", nextChoices);
+                choose("No", nextChoices);
             } else {
-                visit("No");
+                visit("No", page, nextChoices, instance);
             }
         } else if (choice.equals("Leave")) {
-            done(true);
-            return;
+            done(true, instance);
         } else {
             if (choice.startsWith("Yes")) {
                 player.money -= 50;
@@ -44,6 +46,7 @@ public class VideoGames extends Activity {
                 paid = false;
             }
             showScene(pickScene());
+            choose("Leave", nextChoices);
             if (paid) {
                 if (Random.random(3) == 0) {
                     GUI.gui.message("<br/><br/><b>You feel like your experiences have grown from playing the game.</b>");
@@ -56,7 +59,7 @@ public class VideoGames extends Activity {
     }
 
     @Override
-    public void shop(Character npc, int budget) {
+    public void shop(NPC npc, int budget) {
         if (Random.random(5) == 0) {
             npc.availableAttributePoints += 1;
         }
@@ -141,12 +144,10 @@ public class VideoGames extends Activity {
 
                 Flag.modCounter(Flag.CarolineAffection, 1.0F);
         }
-
-        choose("Leave", GUI.gui);
     }
 
     private Scene pickScene() {
-        ArrayList<Scene> available = new ArrayList<Scene>();
+        ArrayList<Scene> available = new ArrayList<>();
         available.add(Scene.basic1);
         available.add(Scene.basic2);
         available.add(Scene.basic3);
@@ -179,7 +180,7 @@ public class VideoGames extends Activity {
         return available.get(Random.random(available.size()));
     }
 
-    private static enum Scene {
+    private enum Scene {
         basic1,
         basic2,
         basic3,
@@ -191,6 +192,6 @@ public class VideoGames extends Activity {
         caroline1,
         caroline2,
         caroline3,
-        cassiemara;
+        cassiemara
     }
 }

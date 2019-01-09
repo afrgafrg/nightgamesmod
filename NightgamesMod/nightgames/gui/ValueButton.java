@@ -13,6 +13,9 @@ public class ValueButton<T> extends RunnableButton {
 
     public ValueButton(LabeledValue<T> value, CompletableFuture<T> future) {
         this(value.getValue(), value.getLabel(), future);
+        if (value.getToolTipText() != null) {
+            this.setToolTipText(value.getToolTipText());
+        }
     }
 
     public ValueButton(T value, String label, CompletableFuture<T> future) {

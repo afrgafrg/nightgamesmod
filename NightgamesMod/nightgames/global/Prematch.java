@@ -4,6 +4,7 @@ import nightgames.characters.*;
 import nightgames.characters.Character;
 import nightgames.daytime.Daytime;
 import nightgames.ftc.FTCMatch;
+import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.modifier.Modifier;
 import nightgames.modifier.standard.FTCModifier;
@@ -153,6 +154,7 @@ public abstract class Prematch {
         } else {
             buildMatch(participants, matchmod);
         }
+        GUI.gui.clearText();
     }
 
     public abstract void prompt(Player player) throws InterruptedException, ExecutionException;

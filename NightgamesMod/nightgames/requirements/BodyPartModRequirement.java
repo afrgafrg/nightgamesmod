@@ -1,7 +1,7 @@
 package nightgames.requirements;
 
 import nightgames.characters.Character;
-import nightgames.characters.body.mods.PartMod;
+import nightgames.characters.body.BodyPartMod;
 import nightgames.combat.Combat;
 
 /**
@@ -9,9 +9,9 @@ import nightgames.combat.Combat;
  */
 public class BodyPartModRequirement extends BaseRequirement {
     private final String type;
-    private final PartMod mod;
+    private final BodyPartMod mod;
 
-    public BodyPartModRequirement(String type, PartMod mod) {
+    public BodyPartModRequirement(String type, BodyPartMod mod) {
         this.type = type;
         this.mod = mod;
     }

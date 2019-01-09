@@ -10,8 +10,8 @@ import nightgames.characters.body.mods.PartMod;
 import nightgames.characters.body.mods.SizeMod;
 import nightgames.requirements.RequirementShortcuts;
 
-public class ApplyPartModOption extends TransformationOption {
-    public static Function<Character, Integer> createCostForNumberOfMods(String type) {
+class ApplyPartModOption extends TransformationOption {
+    private static Function<Character, Integer> createCostForNumberOfMods(String type) {
         return (c) -> {
             BodyPart part = c.body.getRandom(type);
             long nMods = 0;
@@ -25,7 +25,7 @@ public class ApplyPartModOption extends TransformationOption {
         };
     }
 
-    public ApplyPartModOption(String type, PartMod mod) {
+    ApplyPartModOption(String type, PartMod mod) {
         super();
         moneyCost = createCostForNumberOfMods(type);
         addRequirement(RequirementShortcuts.bodypart(type), "Have " + Body.partArticle(type) + " " + type);

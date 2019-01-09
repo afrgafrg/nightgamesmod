@@ -9,14 +9,22 @@ import nightgames.global.GameState;
 import nightgames.global.Random;
 import nightgames.global.Time;
 import nightgames.gui.GUI;
+import nightgames.gui.LabeledValue;
 import nightgames.status.addiction.Addiction;
 
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class Daytime {
+    private final int MORNING_TIME = 10;
+    private final int NEXT_MATCH_TIME = 22;
+    private final int LONG_DAY_LENGTH = 10;
+    private final int SHORT_DAY_LENGTH = 7;
+    private final int NOON = 12;
+    private final int AFTER_CLASS = 15;
     public static Daytime day;
-    public final CountDownLatch readyForNight;
     private ArrayList<Activity> activities;
     private Player player;
     int time;
@@ -24,7 +32,6 @@ public class Daytime {
     private DaytimeEventManager eventMgr;
 
     public Daytime(Player player) {
-        readyForNight = new CountDownLatch(1);
         this.player = player;
         this.eventMgr = new DaytimeEventManager(player);
         buildActivities();
@@ -43,12 +50,12 @@ public class Daytime {
         }
         
         Flag.unflag(Flag.threesome);
-        time = 10;
+        time = MORNING_TIME;
         // do NPC day length
-        if (Time.getDate() % 7 == 6 || Time.getDate() % 7 == 0) {
-            dayLength = 10;
+        if (Time.isWeekend()) {
+            dayLength = LONG_DAY_LENGTH;
         } else {
-            dayLength = 7;
+            dayLength = SHORT_DAY_LENGTH;
         }
     }
 
@@ -56,99 +63,121 @@ public class Daytime {
         return day;
     }
 
-    private boolean morning() {
-        GUI.gui
-              .clearText();
+    private void morning() {
+        GUI.gui.clearText();
         GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
         GameState.gameState.characterPool.getPlayer().getAddictions().stream().map(Addiction::describeMorning).forEach(
                         s -> GUI.gui.message(s));
         if (eventMgr.playMorningScene()) {
-            time = 12;
-            return true;
+            time = NOON;
         } else if (player.getLevel() >= 10 && player.getRank() == 0) {
-            GUI.gui
-                  .message("The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
-                                  + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
-                                  + player.getTrueName() + ", and "
-                                  + "congratulations. Your performance in your most recent matches has convinced me you're ready for a higher level of play. You're promoted to "
-                                  + "ranked status, effective immediately. This new status earns you a major increase in monetary rewards and many new opportunities. I'll leave "
-                                  + "the details to others. I just wanted to congratulate you personally.\"</i> Wait, wait. That's not the end of the call. This guy is clearly "
-                                  + "someone overseeing the Game, but he hasn't even given you his name. Why all the secrecy? <i>\"If you're looking for more information, you "
-                                  + "know someone who sells it.\"</i> There's a click and the call ends.");
+            GUI.gui.message("The next day, just after getting out of class you receive call from a restricted number. Normally you'd just ignore it, "
+                            + "but for some reason you feel compelled to answer this one. You're greeted by a man with a clear deep voice. <i>\"Hello "
+                            + player.getTrueName() + ", and "
+                            + "congratulations. Your performance in your most recent matches has convinced me you're ready for a higher level of play. You're promoted to "
+                            + "ranked status, effective immediately. This new status earns you a major increase in monetary rewards and many new opportunities. I'll leave "
+                            + "the details to others. I just wanted to congratulate you personally.\"</i> Wait, wait. That's not the end of the call. This guy is clearly "
+                            + "someone overseeing the Game, but he hasn't even given you his name. Why all the secrecy? <i>\"If you're looking for more information, you "
+                            + "know someone who sells it.\"</i> There's a click and the call ends.");
             player.rankup();
+            time = AFTER_CLASS;
         } else if (player.getLevel() >= 20 && player.getRank() == 1) {
-            GUI.gui
-                  .message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
-                                  + player.getTrueName()
-                                  + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
-                                  + "all quickly adapting to what most people would consider an extraordinary situation. If you are taking advantage of the people and services available "
-                                  + "to you, you could probably use more money. Therefore, I am authorizing another pay increase. Congratulations.\"</i> This is the mysterious Benefactor "
-                                  + "everyone keeps referring to, right? Is he ever planning to show himself in person? What is he getting out of all this? <i>\"Your curiosity is admirable. "
-                                  + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>");
+            GUI.gui.message("In the morning, you receive a call from a restricted number. You have a pretty decent guess who it might be. Hopefully it is good news. <i>\"Hello again "
+                            + player.getTrueName()
+                            + ".\"</i> You were right, that voice is pretty hard to forget. <i>\"I am impressed. You and your opponents are "
+                            + "all quickly adapting to what most people would consider an extraordinary situation. If you are taking advantage of the people and services available "
+                            + "to you, you could probably use more money. Therefore, I am authorizing another pay increase. Congratulations.\"</i> This is the mysterious Benefactor "
+                            + "everyone keeps referring to, right? Is he ever planning to show himself in person? What is he getting out of all this? <i>\"Your curiosity is admirable. "
+                            + "Keep searching. If you have as much potential as I think you do, we'll meet soon enough.\"</i>");
             player.rankup();
-            time = 15;
+            time = AFTER_CLASS;
         } else if (player.getLevel() >= 30 && player.getRank() == 2) {
-            GUI.gui
-                  .message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
-                                  + player.getTrueName() + ". Have you been keeping busy? You've been putting "
-                                  + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
-                                  + "That's an odd question since it depends on whether or not he has become more willing to talk. Who else is going to fill you in about this "
-                                  + "apparently clandestine organization. <i>\"Oh don't become lazy now. I chose you for this Game, in part, for your drive and initiative. Are "
-                                  + "you limited to just the information that has been handed to you? Just because Aesop does not have the answers for sale does not mean there "
-                                  + "are no clues. Will you simply give up?\"</i><br/><br/>"
-                                  + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
-                                  + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
-                                  + "already justifying your new rank, which is what I am calling you about, incidentally. Perhaps you can put your increased pay rate or the trust "
-                                  + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
+            GUI.gui.message("In the morning, you receive a call from a restricted number. You are not at all surprised to hear the voice of your anonymous Benefactor again. It did seem about time for him to call again. <i>\"Hello "
+                            + player.getTrueName() + ". Have you been keeping busy? You've been putting "
+                            + "on a good show in your matches, but when we last spoke, you had many questions. Are you any closer to finding your answers?\"</i><br/><br/>"
+                            + "That's an odd question since it depends on whether or not he has become more willing to talk. Who else is going to fill you in about this "
+                            + "apparently clandestine organization. <i>\"Oh don't become lazy now. I chose you for this Game, in part, for your drive and initiative. Are "
+                            + "you limited to just the information that has been handed to you? Just because Aesop does not have the answers for sale does not mean there "
+                            + "are no clues. Will you simply give up?\"</i><br/><br/>"
+                            + "You know he's trying to provoke you, but it's working anyway. If he's offering a challenge, you'll show him you can track him down. The next "
+                            + "time you speak to this Benefactor, it will be in person. <i>\"Excellent!\"</i> His voice has only a trace of mockery in it. <i>\"You are "
+                            + "already justifying your new rank, which is what I am calling you about, incidentally. Perhaps you can put your increased pay rate or the trust "
+                            + "you've built with your opponents to good use. Well then, I shall wait to hear from you this time.\"</i> There's a click and the call ends.");
             player.rankup();
-            time = 15;
+            time = AFTER_CLASS;
         } else if (player.getLevel() / 10 > player.getRank()) {
             GUI.gui.message("You have advanced to rank " + ++player.rank + "!");
-            time = 15;
-        } else if (Time.getDate() % 7 == 6 || Time.getDate() % 7 == 0) {
-            GUI.gui
-                  .message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
-            time = 12;
+            player.rankup();
+            time = AFTER_CLASS;
+        } else if (Time.isWeekend()) {
+            GUI.gui.message("You don't have any classes today, but you try to get up at a reasonable hour so you can make full use of your weekend.");
+            time = NOON;
         } else {
-            GUI.gui
-                  .message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
-            time = 15;
+            GUI.gui.message("You try to get as much sleep as you can before your morning classes.<br/><br/>You're done with classes by mid-afternoon and have the rest of the day free.");
+            time = AFTER_CLASS;
         }
-        return false;
     }
 
-    public void plan() {
-        if (time == 10) {
-            if (morning()) {
-                return;
+    public void dayLoop() {
+        morning();
+        while (time < NEXT_MATCH_TIME) {
+            GUI.gui.message(String.format("It is currently %s. Your next match starts at %s.", displayTime(), displayTime(NEXT_MATCH_TIME)));
+            if (eventMgr.playRegularScene()) {
+                break;
             }
-        }
-        if (time < 22) {
-            GUI.gui
-                  .message("It is currently " + displayTime() + ". Your next match starts at 10:00pm.");
-            GUI.gui
-                  .refresh();
-            GUI.gui
-                  .clearCommand();
-            if (eventMgr.playRegularScene())
-                return;
-            for (Activity act : activities) {
-                if (act.known() && act.time() + time <= 22) {
-
-                    act.addActivity(GUI.gui);
-                }
+            List<LabeledValue<Activity>> activityButtonLabels = activities.stream().filter(Activity::known)
+                            .filter(activity -> activity.time() + time <= NEXT_MATCH_TIME)
+                            .map(activity -> new LabeledValue<>(activity, activity.name)).collect(Collectors.toList());
+            Activity activity = null;
+            try {
+                activity = GUI.gui.promptFuture(activityButtonLabels).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-        } else {
-            for (Character npc : GameState.gameState.characterPool.everyone()) {
-                if (!npc.human() && npc instanceof NPC) {
-                    if (npc.getLevel() / 10 > npc.getRank()) {
-                        npc.rankup();
+            if (activity != null) {
+                Activity.ActivityInstance activityInstance = new Activity.ActivityInstance(activity);
+                while (!activityInstance.finished) {
+                    List<LabeledValue<String>> availableChoices = activityInstance.visit();
+                    if (activityInstance.finished) {
+                        break;
+                    } else if (availableChoices.isEmpty()) {
+                        throw new RuntimeException("No scene choices available for daytime activity!");
+                    } else {
+                        try {
+                            activityInstance.currentChoice = GUI.gui.promptFuture(availableChoices).get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Thread.currentThread().interrupt();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
+                        activityInstance.next();
                     }
-                    ((NPC) npc).daytime(dayLength);
                 }
+                if (activityInstance.acted) {
+                    advance(activityInstance.activity.time());
+                }
+                GUI.gui.clearImage();
+                GUI.gui.clearPortrait();
+            } else {
+                System.err.println("No activity selected!");
+                time++;
             }
-            readyForNight.countDown();
         }
+        for (NPC npc : GameState.gameState.characterPool.allNPCs()) {
+            npcDaytime(npc);
+        }
+    }
+
+    public void npcDaytime(NPC npc) {
+        if (npc.getLevel() > npc.getRank() * 10) {
+            npc.rankup();
+        }
+        npc.daytime(dayLength);
     }
 
     private void buildActivities() {
@@ -186,11 +215,7 @@ public class Daytime {
     }
 
     public String getTime() {
-        if (time > 12) {
-            return (time % 12) + ":00 pm";            
-        } else {
-            return time + ":00 am";
-        }
+        return displayTime();
     }
 
     public void advance(int t) {
@@ -227,10 +252,9 @@ public class Daytime {
         }
     }
 
-    public void visit(String name, Character npc, int budget) {
+    public void visit(String name, NPC npc, int budget) {
         for (Activity a : activities) {
-            if (a.toString()
-                 .equalsIgnoreCase(name)) {
+            if (a.toString().equalsIgnoreCase(name)) {
                 a.shop(npc, budget);
                 break;
             }
@@ -238,13 +262,19 @@ public class Daytime {
     }
 
     private String displayTime() {
-        if (time < 12) {
-            return time + ":00am";
-        }
-        if (time == 12) {
-            return "noon";
-        }
-
-        return time - 12 + ":00pm";
+        return displayTime(this.time);
     }
+
+    private String displayTime(int time) {
+        if (time == 0) {
+            return "12:00am";
+        } else if (time < 12) {
+            return time + ":00am";
+        } else if (time == 12) {
+            return time + ":00pm";
+        } else {
+            return time - 12 + ":00pm";
+        }
+    }
+
 }

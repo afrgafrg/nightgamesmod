@@ -22,6 +22,8 @@ import nightgames.status.Stsflag;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static nightgames.requirements.RequirementShortcuts.*;
+
 public class Kat extends BasePersonality {
     /**
      *
@@ -129,29 +131,26 @@ public class Kat extends BasePersonality {
         character.getGrowth().arousal = 7;
         character.getGrowth().bonusStamina = 1;
         character.getGrowth().bonusArousal = 2;
-        character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 13 && !Flag.checkFlag(KAT_POWER_FOCUS) && !Flag.checkFlag(KAT_SPEED_FOCUS);
-        }, (c, self, player) -> Formatter.format("Exhilarated after the fight, Kat pounces on you once again. "
-                        + "She doesn't seem too keen on having more sex, so you just hold her in your lap and pet her cute cat ears. "
-                        + "Kat narrows her eyes and purrs, <i>\"So what do you think nya? I've gotten better right?\"</i> "
-                        + "You grin and continue scratching her fluffy ears, letting her know that she has. "
-                        + "Unfortunately Kat seems to think you're just teasing her, and puffs up her cheeks cutely. "
-                        + "<i>\"Mrrrr! You're not taking me seriously! I'm actually older than you, you know?\"</i>"
-                        + "<br/><br/>"
-                        + "Face with a pouting Kat, you need to say something to appease her. Maybe some flattery would do?", self, player),
-                Arrays.asList(
-                        new CombatSceneChoice("You're fast like a cheetah!", (c, self, other) -> {
+        character.addCombatScene(new CombatScene(and(level(13), not(flag(KAT_POWER_FOCUS)), not(flag(KAT_SPEED_FOCUS))),
+                        (c, self, player) -> Formatter.format("Exhilarated after the fight, Kat pounces on you once again. "
+                                        + "She doesn't seem too keen on having more sex, so you just hold her in your lap and pet her cute cat ears. "
+                                        + "Kat narrows her eyes and purrs, <i>\"So what do you think nya? I've gotten better right?\"</i> "
+                                        + "You grin and continue scratching her fluffy ears, letting her know that she has. "
+                                        + "Unfortunately Kat seems to think you're just teasing her, and puffs up her cheeks cutely. "
+                                        + "<i>\"Mrrrr! You're not taking me seriously! I'm actually older than you, you know?\"</i>"
+                                        + "<br/><br/>"
+                                        + "Face with a pouting Kat, you need to say something to appease her. Maybe some flattery would do?", self, player),
+                        Arrays.asList(new CombatSceneChoice("You're fast like a cheetah!", (c, self, other) -> {
                             c.write("Kat grins and jumps to her feet, <i>\"Nya! Am I? I am right? I can go even faster you know? Meowrr!\"</i> "
                                             + "Indeed, she seems even faster than before, dancing around the room with a feline grace. "
                                             + "You can hardly even track her with your eyes! Suddenly you feel two small mounds press "
-                                            + "against your back and a voice in your ear, <i>\"Thanks " + other.getName() + ", nya! "
-                                            + "Next time we fight, you will nyat catch me!\"</i>."
-                                            + "<br/><br/>"
+                                            + "against your back and a voice in your ear, <i>\"Thanks " + other
+                                            .getName() + ", nya! "
+                                            + "Next time we fight, you will nyat catch me!\"</i>." + "<br/><br/>"
                                             + "Looks like you've got your work cut out for you.");
                             useSpeed();
                             return true;
-                        }),
-                        new CombatSceneChoice("You're strong like a tiger!", (c, self, other) -> {
+                        }), new CombatSceneChoice("You're strong like a tiger!", (c, self, other) -> {
                             c.write("<i>\"A tigerrr? Nyahahaha you can nyat be serious!\"</i> Kat laughs after hearing your response, "
                                             + "<i>\"But thanks! I am a bit stronger than before. The cat spirit helps me out nya!\"</i> "
                                             + "She flexes her thin looking arms and looks at you expectantly. You were going to give her "
@@ -161,107 +160,109 @@ public class Kat extends BasePersonality {
                                             + "She stalks off in an angry but cute way, leaving you wondering if that was the right thing to say.");
                             usePower();
                             return true;
-                        }),
-                        new CombatSceneChoice("You're cute like a housecat! You can be my pet! [Hard Mode]", (c, self, other) -> {
-                            c.write("<i>\"MRRrr!\"</i> Kat grows at you, <i>\"You're still underestimating me, nya! "
-                                            + "I'll show you I can be just as fast and strong as everyone else!\"</i> "
-                                            + "She gets up angrily and stomps away. Okay you <b>PROBABLY</b> shouldn't have done that. "
-                                            + "Her new resolve could be... <i>troubling</i>.");
-                            useSpeed();
-                            usePower();
-                            character.getGrowth().extraAttributes += 1;
-                            GameState.gameState.characterPool
-                                            .getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, GameState.gameState.characterPool
-                                            .getPlayer());
-                            return true;
-                        })
-                    )
-                ));
-        character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 22 && !Flag.checkFlag(KAT_FRENZY_FOCUS) && !Flag.checkFlag(KAT_PHEROMONE_FOCUS)
-                            && (Flag.checkFlag(KAT_POWER_FOCUS) || Flag.checkFlag(KAT_SPEED_FOCUS));
-        }, (c, self, player) -> "Kat smells like an animal in heat, and her scent is driving you wild. "
-                        + "You're not sure if she notices this herself, but you can definitely tell that "
-                        + "you're not going to calm down any time soon. Against your better judgement, "
-                        + "you naturally gravitate towards her again, seeking to inhale more of that "
-                        + "delightful tangy air. Kat seems a bit wary as you start sniffing her neck and arms "
-                        + "but her lust from you indulging in your perversity quickly overwhelms her."
-                        + "<br/>"
-                        + "Kat begs you pitifully, <i>\"Meowr... don't just sniff me! That's nyat enough! Fuck me! Give it to me, myaa!\"</i>"
-                        + "She splays her legs invitingly, and offers you a chance to continue.",
-                Arrays.asList(
-                        new CombatSceneChoice("Continue sniffing her", (c, self, other) -> {
-                            c.write("You ignore Kat's invitation, causing her to huff angrily. It hardly bothers you though, when your head is full of "
-                                            + "Kat's enticing pheromones. You lift Kat's arm above her head and plunge your nose into her armpit. "
-                                            + "She smells wonderful! The complex aroma is difficult to describe, containing hints of musk, cinnamon "
-                                            + "and good old fashioned female arousal. "
-                                            + "<br/><br/>"
-                                            + "You continue to hump her legs while moaning into her armpit, making her blush bright crimson. "
-                                            + "She probably thinks you're a complete pervert at this point, but it's pretty difficult to give that thought the time of day "
-                                            + "when she smells so good. Finally, Kat seems to have had enough of your unintended teasing and shoves you off her and pounces on you."
-                                            + "<i>\"T-that was myean " + other.getName() + "! You can't just get off by yourself nya! "
-                                            + "If you want to s-sniff, do it w-while... d-don't myake me say it!\"</i> "
-                                            + "Even though her words are rather demure, her actions certainly aren't. She sits herself right on your face, "
-                                            + "shoving her soaked pussy onto your lips. You don't really mind though, "
-                                            + "her feral cunt is the source of her where her laviscious smell, and you dig right in. "
-                                            + "You're not sure how much timed passed or how many screeching climaxes you brought her to, "
-                                            + "but after Kat finally peels you off her muff, you can only sit there in a daze."
-                                            + "<br/><br/>"
-                                            + "Kat dusts herself off and gives you a big kiss on the lips. <i>I did nyat know you had a smell fetish... "
-                                            + "Don't worry, I wont tell anyone-nyaa. J-just... next time you feel the nyeed, come see me won't you?</i>");
-                            usePheromones();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Fuck her like she asked", (c, self, other) -> {
-                            c.write(Formatter.format("Well you're not one to refuse a lady. Holding Kat's lovely legs above your shoulders, you slam into her drenched snatch. "
-                                            + "She screeches at your sudden intrusion, but soon her voice mellows out to sweet moans as you pound her with reckless abandon. "
-                                            + "The two of you spend a while just enjoying the sensations of your bodys meeting again and again; her velvety wetness against your rockhard pole. "
-                                            + "Alas all good things have to come to an end. With a final few pumps, you ejaculate your thick cum into the petite girl, eliciting a pleasant purr from her. "
-                                            + "<br/><br/>"
-                                            + "Whew, after a job well done, you try to disentangle yourself from the strawberry blonde. Kat seems to have different ideas though. "
-                                            + "She hooks her legs behind your back and grabs onto your neck, not letting go. One look at her flushed face and you know she's not going to let you go easily. "
-                                            + "Rolling you onto your back, she mounts you again. Since you just came, your penis is still completely flaccid. However that doesn't even seem to register in Kat's mind. "
-                                            + "Unable to feed your cock inside herself, the sex-kitten gives up and starts dry humping your leg while licking at your nipples. "
-                                            + "You didn't think you had another shot in you, but a combination of Kat's desperate assault and the sex pheromones she's been releasing all this time gives you a final boost. "
-                                            + "Finally noticing your dick poking into her stomach again, Kat gives you a happy little growl, <i>\"Give it to myoew, fuck mee fuck fuck fuck!\"</i> "
-                                            + "Your dick still feels super sensitive from all the activity you've been putting it through tonight, but Kat doesn't really give you a choice. "
-                                            + "Slipping your meat rod inside her, she rides you wildly, buckling her hips and slamming her ass into your body with each motion. "
-                                            + "<br/><br/>"
-                                            + "By the time you cum for the last time tonight, Kat probably had innumerable tiny climaxes. Not that any of that stopped her frenzied mating. "
-                                            + "You finally get the chance to pull her off you and let her calm down a bit. She looks still dazed at first, but after a few minutes in the night air, "
-                                            + "reason returns to her eyes. Realizing what she did, Kat stammers, <i>\"I-it's nyat like that! S-sorry... I d-didn't m-mean to... "
-                                            + "S-sometimes the animal spirit gets restless and I go into h-h-heat. I can't really control myself, meowrr\"</i> You calm the little kittycat down "
-                                            + "and reassure her that you're not angry. In fact, you found her frantic self adorable - not to mention hot as hell. It took a bit of time and she is "
-                                            + "still red as a tomato when she whispers, <i>\"T-thanks " + other.getName() + ", that myeans a lot to m-meowrr. If you l-liked it, I'll see if I can control it nya-ext time!\"</i> "
-                                            + "You smile wryly as Kat leaves. You feel that she'll be a force to be reckoned with the next time you see her.",
-                                            self, other));
-                            useFrenzy();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Sex, but continue indulging in her scent [Hard Mode]", (c, self, other) -> {
-                            c.write(Formatter.format("Sex with Kat sounds like a good idea, but you can't bring yourself to stop inhaling her sexy odor. "
-                                            + "The pheromones must be getting to your head, since it took a good ten seconds of indecision before the proverbial lightbulb lit up. "
-                                            + "Why not just do both? Not even separating your nose from her skin for a split second, you hug her body close to you and "
-                                            + "plung into her tightness in a seated position."
-                                            + "<br/><br/>"
-                                            + "That was the best idea ever! On one hand, you have her heavenly scent right next to your face. "
-                                            + "On the other, you have a fiery catgirl squriming on your cock. You can't help but moan at the intense stimulation, "
-                                            + "both physical and olfactory. The two of you keep at the act, oblvious of the situation around you for a good length of time. "
-                                            + "Only when you're so spent that you can't continue does Kat let up her frenzied buckling."
-                                            + "<br/><br/>"
-                                            + "Kat grins with a flushed face, <i>\"T-that was amazing! Y-you know, if that's what it takes to get you going, I'll do whatever I can-nya!\"</i> "
-                                            + "You show a trouble face when she leaves. Having sex with a hungry sex kitten while high on pheromones did feel great, but you're not sure if you can last the night again.", self, other));
-                            usePheromones();
-                            useFrenzy();
-                            character.getGrowth().extraAttributes += 1;
-                            // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            GameState.gameState.characterPool
-                                            .getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, GameState.gameState.characterPool
-                                            .getPlayer());
-                            return true;
-                        })
-                    )
-                ));
+                        }), new CombatSceneChoice("You're cute like a housecat! You can be my pet! [Hard Mode]",
+                                        (c, self, other) -> {
+                                            c.write("<i>\"MRRrr!\"</i> Kat grows at you, <i>\"You're still underestimating me, nya! "
+                                                            + "I'll show you I can be just as fast and strong as everyone else!\"</i> "
+                                                            + "She gets up angrily and stomps away. Okay you <b>PROBABLY</b> shouldn't have done that. "
+                                                            + "Her new resolve could be... <i>troubling</i>.");
+                                            useSpeed();
+                                            usePower();
+                                            character.getGrowth().extraAttributes += 1;
+                                            GameState.gameState.characterPool.getPlayer().getGrowth()
+                                                            .addTraitPoints(new int[] {12, 39},
+                                                                            GameState.gameState.characterPool
+                                                                                            .getPlayer());
+                                            return true;
+                                        }))));
+        character.addCombatScene(
+                        new CombatScene(and(level(22), not(flag(KAT_FRENZY_FOCUS)), not(flag(KAT_PHEROMONE_FOCUS)),
+                                        or(flag(KAT_POWER_FOCUS), flag(KAT_SPEED_FOCUS))), (c, self, player) ->
+                                        "Kat smells like an animal in heat, and her scent is driving you wild. "
+                                                        + "You're not sure if she notices this herself, but you can definitely tell that "
+                                                        + "you're not going to calm down any time soon. Against your better judgement, "
+                                                        + "you naturally gravitate towards her again, seeking to inhale more of that "
+                                                        + "delightful tangy air. Kat seems a bit wary as you start sniffing her neck and arms "
+                                                        + "but her lust from you indulging in your perversity quickly overwhelms her."
+                                                        + "<br/>"
+                                                        + "Kat begs you pitifully, <i>\"Meowr... don't just sniff me! That's nyat enough! Fuck me! Give it to me, myaa!\"</i>"
+                                                        + "She splays her legs invitingly, and offers you a chance to continue.",
+                                        Arrays.asList(new CombatSceneChoice("Continue sniffing her",
+                                                        (c, self, other) -> {
+                                                            c.write("You ignore Kat's invitation, causing her to huff angrily. It hardly bothers you though, when your head is full of "
+                                                                            + "Kat's enticing pheromones. You lift Kat's arm above her head and plunge your nose into her armpit. "
+                                                                            + "She smells wonderful! The complex aroma is difficult to describe, containing hints of musk, cinnamon "
+                                                                            + "and good old fashioned female arousal. "
+                                                                            + "<br/><br/>"
+                                                                            + "You continue to hump her legs while moaning into her armpit, making her blush bright crimson. "
+                                                                            + "She probably thinks you're a complete pervert at this point, but it's pretty difficult to give that thought the time of day "
+                                                                            + "when she smells so good. Finally, Kat seems to have had enough of your unintended teasing and shoves you off her and pounces on you."
+                                                                            + "<i>\"T-that was myean " + other.getName()
+                                                                            + "! You can't just get off by yourself nya! "
+                                                                            + "If you want to s-sniff, do it w-while... d-don't myake me say it!\"</i> "
+                                                                            + "Even though her words are rather demure, her actions certainly aren't. She sits herself right on your face, "
+                                                                            + "shoving her soaked pussy onto your lips. You don't really mind though, "
+                                                                            + "her feral cunt is the source of her where her laviscious smell, and you dig right in. "
+                                                                            + "You're not sure how much timed passed or how many screeching climaxes you brought her to, "
+                                                                            + "but after Kat finally peels you off her muff, you can only sit there in a daze."
+                                                                            + "<br/><br/>"
+                                                                            + "Kat dusts herself off and gives you a big kiss on the lips. <i>I did nyat know you had a smell fetish... "
+                                                                            + "Don't worry, I wont tell anyone-nyaa. J-just... next time you feel the nyeed, come see me won't you?</i>");
+                                                            usePheromones();
+                                                            return true;
+                                                        }), new CombatSceneChoice("Fuck her like she asked",
+                                                        (c, self, other) -> {
+                                                            c.write(Formatter.format("Well you're not one to refuse a lady. Holding Kat's lovely legs above your shoulders, you slam into her drenched snatch. "
+                                                                                            + "She screeches at your sudden intrusion, but soon her voice mellows out to sweet moans as you pound her with reckless abandon. "
+                                                                                            + "The two of you spend a while just enjoying the sensations of your bodys meeting again and again; her velvety wetness against your rockhard pole. "
+                                                                                            + "Alas all good things have to come to an end. With a final few pumps, you ejaculate your thick cum into the petite girl, eliciting a pleasant purr from her. "
+                                                                                            + "<br/><br/>"
+                                                                                            + "Whew, after a job well done, you try to disentangle yourself from the strawberry blonde. Kat seems to have different ideas though. "
+                                                                                            + "She hooks her legs behind your back and grabs onto your neck, not letting go. One look at her flushed face and you know she's not going to let you go easily. "
+                                                                                            + "Rolling you onto your back, she mounts you again. Since you just came, your penis is still completely flaccid. However that doesn't even seem to register in Kat's mind. "
+                                                                                            + "Unable to feed your cock inside herself, the sex-kitten gives up and starts dry humping your leg while licking at your nipples. "
+                                                                                            + "You didn't think you had another shot in you, but a combination of Kat's desperate assault and the sex pheromones she's been releasing all this time gives you a final boost. "
+                                                                                            + "Finally noticing your dick poking into her stomach again, Kat gives you a happy little growl, <i>\"Give it to myoew, fuck mee fuck fuck fuck!\"</i> "
+                                                                                            + "Your dick still feels super sensitive from all the activity you've been putting it through tonight, but Kat doesn't really give you a choice. "
+                                                                                            + "Slipping your meat rod inside her, she rides you wildly, buckling her hips and slamming her ass into your body with each motion. "
+                                                                                            + "<br/><br/>"
+                                                                                            + "By the time you cum for the last time tonight, Kat probably had innumerable tiny climaxes. Not that any of that stopped her frenzied mating. "
+                                                                                            + "You finally get the chance to pull her off you and let her calm down a bit. She looks still dazed at first, but after a few minutes in the night air, "
+                                                                                            + "reason returns to her eyes. Realizing what she did, Kat stammers, <i>\"I-it's nyat like that! S-sorry... I d-didn't m-mean to... "
+                                                                                            + "S-sometimes the animal spirit gets restless and I go into h-h-heat. I can't really control myself, meowrr\"</i> You calm the little kittycat down "
+                                                                                            + "and reassure her that you're not angry. In fact, you found her frantic self adorable - not to mention hot as hell. It took a bit of time and she is "
+                                                                                            + "still red as a tomato when she whispers, <i>\"T-thanks "
+                                                                                            + other.getName()
+                                                                                            + ", that myeans a lot to m-meowrr. If you l-liked it, I'll see if I can control it nya-ext time!\"</i> "
+                                                                                            + "You smile wryly as Kat leaves. You feel that she'll be a force to be reckoned with the next time you see her.",
+                                                                            self, other));
+                                                            useFrenzy();
+                                                            return true;
+                                                        }), new CombatSceneChoice(
+                                                        "Sex, but continue indulging in her scent [Hard Mode]",
+                                                        (c, self, other) -> {
+                                                            c.write(Formatter.format("Sex with Kat sounds like a good idea, but you can't bring yourself to stop inhaling her sexy odor. "
+                                                                            + "The pheromones must be getting to your head, since it took a good ten seconds of indecision before the proverbial lightbulb lit up. "
+                                                                            + "Why not just do both? Not even separating your nose from her skin for a split second, you hug her body close to you and "
+                                                                            + "plung into her tightness in a seated position."
+                                                                            + "<br/><br/>"
+                                                                            + "That was the best idea ever! On one hand, you have her heavenly scent right next to your face. "
+                                                                            + "On the other, you have a fiery catgirl squriming on your cock. You can't help but moan at the intense stimulation, "
+                                                                            + "both physical and olfactory. The two of you keep at the act, oblvious of the situation around you for a good length of time. "
+                                                                            + "Only when you're so spent that you can't continue does Kat let up her frenzied buckling."
+                                                                            + "<br/><br/>"
+                                                                            + "Kat grins with a flushed face, <i>\"T-that was amazing! Y-you know, if that's what it takes to get you going, I'll do whatever I can-nya!\"</i> "
+                                                                            + "You show a trouble face when she leaves. Having sex with a hungry sex kitten while high on pheromones did feel great, but you're not sure if you can last the night again.", self, other));
+                                                            usePheromones();
+                                                            useFrenzy();
+                                                            character.getGrowth().extraAttributes += 1;
+                                                            // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
+                                                            GameState.gameState.characterPool.getPlayer().getGrowth()
+                                                                            .addTraitPoints(new int[] {21, 48},
+                                                                                            GameState.gameState.characterPool
+                                                                                                            .getPlayer());
+                                                            return true;
+                                                        }))));
         preferredAttributes.add(c -> Optional.of(Attribute.Animism));
         character.getGrowth().addTrait(0, Trait.dexterous);
         character.getGrowth().addTrait(0, Trait.pheromones);

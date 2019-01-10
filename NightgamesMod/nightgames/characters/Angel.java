@@ -21,6 +21,8 @@ import nightgames.start.NpcConfiguration;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static nightgames.requirements.RequirementShortcuts.*;
+
 public class Angel extends BasePersonality {
     private static final long serialVersionUID = -8169646189131720872L;
     private static final String ANGEL_SEX_FOCUS = "AngelSexFocus";
@@ -61,7 +63,7 @@ public class Angel extends BasePersonality {
     }
 
     @Override public void applyStrategy(NPC self) {
-        NPC npcSelf = (NPC) self;
+        NPC npcSelf = self;
         npcSelf.plan = Plan.hunting;
         npcSelf.mood = Emotion.confident;
     }
@@ -73,124 +75,130 @@ public class Angel extends BasePersonality {
         character.getGrowth().bonusStamina = 1;
         character.getGrowth().bonusArousal = 4;
 
-        character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 10 && !Flag.checkFlag(ANGEL_SEX_FOCUS) && !Flag.checkFlag(ANGEL_NYMPHOMANIA_FOCUS);
-        }, (c, self, player) -> Formatter.format("After another exhausting fight with her where you've been pretty much been driven insane with her sexual prowess, "
-                        + "Angel shows a rare moment of vulnerability and slides into your arms. <i>\"Hey {other:name}, I've been thinking, do you think this is wrong?\"</i> "
-                        + "Puzzled, you ask her what she means. <i>\"Well... you know, fucking like rabbits every day. "
-                        + "I love feeling good and I know I'm good at making other people feel good. Sometimes though, I wonder if I'm being too overbearing. "
-                        + "Most " + player.guyOrGirl() + "s can't even keep up with me, but I feel like I always want more. I feel like sometimes I'm no longer in control you know?\"</i>"
-                        + "<br/><br/>"
-                        + "", self, player),
-                Arrays.asList(
-                        new CombatSceneChoice("Tell her you love her technique.", (c, self, other) -> {
-                            c.write("You hug Angel, and tell her that you love how she makes you feel, and sex with her is akin to a religious experience for you. "
-                                            + "Angel looks surprised for a second before giving you a wry grin. <i>\"You're not so bad yourself. But you're right, I am better.\"</i>"
-                                            + "<br/><br/>"
-                                            + "As if to prove a point, she sits down again on your rehardened cock. "
-                                            + "You groan as she slides rocks herself back and forth yet again, fucking you with a soft smile. "
-                                            + "<i>\"Quality over quantity as they say. I'll train you so you'll only be able to cum inside me. Wouldn't that be amusing " + other.getName() + "?\" </i>"
-                                            + "It's too much for your poor oversensitive cock, as you pump what remains in you into Angel a final time."
-                                            + "<br/>"
-                                            + "Angel gives you a quick kiss on the lips before leaving. <i>\"Thanks for listening to me "+ other.getName() + ", but you better be ready for me next time.\"</i>");
-                            useSex();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Tell her you love her sex drive", (c, self, other) -> {
-                            c.write("You tell Angel that her insatiable sex drive is one of the things you like best about her. "
-                                            + "After all, there's nothing else quite like fucking someone as enthusiastic as her. "
-                                            + "Angel looks up and makes eye contact with you. She seems rather... amused? "
-                                            + "<i>\"That's what all " + other.boyOrGirl() + "s say before they're squeezed dry. "
-                                            + "You're not going to be the same are you?\"</i>"
-                                            + "<br/><br/>"
-                                            + "You swallow your saliva a bit worriedly. What have you gotten yourself into?");
-                            useNymphomania();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Tell her you love both [Hard Mode]", (c, self, other) -> {
-                            c.write("You tell Angel that her insatiable sex drive and amazing sex technique are both part of what makes her unique and amazing(ly attractive). "
-                                            + "There are people out there with one or the other, but no one but Angel is as good at both. Angel grins and licks her lips"
-                                            + "<i>\"From most people, that would sound like a pathetic wishy-washy non-answer, but the way you put that made it sound like "
-                                            + "a challenge. I'll take that challenge, but think you've just doomed yourself to being my sex toy\"</i>"
-                                            + "<br/><br/>"
-                                            + "Angel looks like she's found a whole new level of resolve- you suddenly realize that you've made a terrible mistake. You resolve to step up training yourself, if that's possible.");
-                            useNymphomania();
-                            useSex();
-                            character.getGrowth().extraAttributes += 1;
-                            // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
-                            GameState.gameState.characterPool
-                                            .getPlayer().getGrowth().addTraitPoints(new int[]{12,39}, GameState.gameState.characterPool
-                                            .getPlayer());
-                            return true;
-                        })
-                    )
-                ));
-        character.addCombatScene(new CombatScene((c, self, other) -> {
-            return self.getLevel() >= 20 && !Flag.checkFlag(ANGEL_FOLLOWERS_FOCUS) && !Flag.checkFlag(ANGEL_WORSHIP_FOCUS)
-                            && (Flag.checkFlag(ANGEL_SEX_FOCUS) || Flag.checkFlag(ANGEL_NYMPHOMANIA_FOCUS));
-        }, (c, self, player) -> "After another session of fantastic sex with your favorite sex goddess, Angel looks a bit reluctant to leave. "
-                        + "You do want to try to get some more matches in, but her broody look invites some discussion. "
-                        + "Patting your own lap, you motion for Angel to sit down. Luckily for you, she doesn't leave you hanging and does just that. "
-                        + "<br/><br/>"
-                        + "The two of you spend a few moments relaxing before Angel decides to bring up her worries. "
-                        + "<i>\"Say " + player.getName() + ", what do you really think of me become a real goddess? "
-                        + "To be honest, I'm not even sure how it started. One night after the games, I started feeling a heat in my chest. "
-                        + "The next night when we started the match, I already had my wings. "
-                        + "I didn't think too much of it, with all the other strange things going on, "
-                        + "but recently I've started hearing a voice in my head asking me to gather faith. "
-                        + "I don't know what to think of it. I'm pretty happy with who I am now, and my friends are very important to me. "
-                        + "If I do try and build a following, I'm worried that I'll start leaving them behind.\"</i>",
-                Arrays.asList(
-                        new CombatSceneChoice("Answer: Focus on your friends", (c, self, other) -> {
-                            c.write("You answer that it just doesn't seem like Angel to abandon her friends even if she does become a full Goddess. "
-                                            + "There's no need to pick right? If she tells them, Mei, Sarah and Caroline would probably volunteer to be "
-                                            + "her followers numbers 1, 2 and 3."
-                                            + "<br/><br/>"
-                                            + "Angel scowls a bit at you and questions, <i>\"You mean you're not going to be my follower?\"</i> "
-                                            + "You hastily deny that and try to resolve the misunderstanding before you realize Angel's stern "
-                                            + "expression melts into a smile and you realize she was just joking. "
-                                            + "<i>\"Thanks "+ other.getName() + ", that took a lot off my mind. I'll pay you back, don't worry. "
-                                                            + "A Goddess always keeps her promises.\"</i>");
-                            useFollowers();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Answer: Focus on gathering a following", (c, self, other) -> {
-                            c.write(Formatter.format("You reply that you would her first follower if she was looking for them. "
-                                            + "You jokingly kneel in front of her and kiss her feet. "
-                                            + "Angel seems surprised for a moment before a familiar lascivious smile creeps into her expression. "
-                                            + "<i>\"{other:name}, {other:name}, {other:name}, what do we have here? A willing supplicant? "
-                                            + "Do you want to serve your Goddess? Groveling, begging, pleading, does that thrill you?\"</i>"
-                                            + "<br/><br/>"
-                                            + "There's a bit of a dangerous tone in Angel's voice, and you motion to get back up. "
-                                            + "However, a shapely foot forces your head onto the ground again. "
-                                            + "<i>\"Stand down!\"</i> she demands. This started off as a joke, but something in Angel's voice demands your obedience. "
-                                            + "Trembling, you do as she says and avert her eyes, looking only at the lower half of her perfect body. Angel chuckles as she inspects your prone form. "
-                                            + "<i>\"You know {other:name}, I wasn't sure I was cut out for this deity business, but I have to admit, this feels pretty good right now. "
-                                            + "Well what are you waiting for? Show me your faith!\"</i> "
-                                            + "You scramble to your feet and start lapping at Angel's heavenly orfice. "
-                                            + "Only after you bring her to two consecutive climaxes does she let you go. "
-                                            + "<br/><br/>"
-                                            + "Before she leaves, Angel kneels down to face you, and gives you a big kiss on the lips."
-                                            + "<i>\"Thanks {other:name} for being patient with me. This is all pretty so new, but I feel good with you by my side.\"</i>", self, other));
-                            useWorship();
-                            return true;
-                        }),
-                        new CombatSceneChoice("Answer: Why not both? [Hard Mode]", (c, self, other) -> {
-                            c.write(Formatter.format("You tell her that the Angel you know wouldn't even think of choosing between either of them. "
-                                            + "The Angel you know could gather a following within a day even while maintaining her close friendships. She's just amazing like that. "
-                                            + "<br/>For the first time since you've gotten to know her, Angel seems to blush. \"<i>Enough flattery " + other.getName() + ", it wont make me go any easier on you. "
-                                                            + "But you know, you're right. Why should I choose? They should be happy to grovel for me. I <b>am</b> a Goddess after all.</i>\"", self, other));
-                            useWorship();
-                            useFollowers();
-                            character.getGrowth().extraAttributes += 1;
-                            // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
-                            GameState.gameState.characterPool
-                                            .getPlayer().getGrowth().addTraitPoints(new int[]{21,48}, GameState.gameState.characterPool
-                                            .getPlayer());
-                            return true;
-                        })
-                    )
-                ));
+        character.addCombatScene(
+                        new CombatScene(and(level(10), not(flag(ANGEL_SEX_FOCUS)), not(flag(ANGEL_NYMPHOMANIA_FOCUS))),
+                                        (c, self, player) -> Formatter .format("After another exhausting fight with her where you've been pretty much been driven insane with her sexual prowess, "
+                                                                        + "Angel shows a rare moment of vulnerability and slides into your arms. <i>\"Hey {other:name}, I've been thinking, do you think this is wrong?\"</i> "
+                                                                        + "Puzzled, you ask her what she means. <i>\"Well... you know, fucking like rabbits every day. "
+                                                                        + "I love feeling good and I know I'm good at making other people feel good. Sometimes though, I wonder if I'm being too overbearing. "
+                                                                        + "Most " + player.guyOrGirl()
+                                                                        + "s can't even keep up with me, but I feel like I always want more. I feel like sometimes I'm no longer in control you know?\"</i>"
+                                                                        + "<br/><br/>" + "", self, player),
+                                        Arrays.asList(new CombatSceneChoice("Tell her you love her technique.",
+                                                        (c, self, other) -> {
+                                                            c.write("You hug Angel, and tell her that you love how she makes you feel, and sex with her is akin to a religious experience for you. "
+                                                                            + "Angel looks surprised for a second before giving you a wry grin. <i>\"You're not so bad yourself. But you're right, I am better.\"</i>"
+                                                                            + "<br/><br/>"
+                                                                            + "As if to prove a point, she sits down again on your rehardened cock. "
+                                                                            + "You groan as she slides rocks herself back and forth yet again, fucking you with a soft smile. "
+                                                                            + "<i>\"Quality over quantity as they say. I'll train you so you'll only be able to cum inside me. Wouldn't that be amusing "
+                                                                            + other.getName() + "?\" </i>"
+                                                                            + "It's too much for your poor oversensitive cock, as you pump what remains in you into Angel a final time."
+                                                                            + "<br/>"
+                                                                            + "Angel gives you a quick kiss on the lips before leaving. <i>\"Thanks for listening to me "
+                                                                            + other.getName()
+                                                                            + ", but you better be ready for me next time.\"</i>");
+                                                            useSex();
+                                                            return true;
+                                                        }), new CombatSceneChoice("Tell her you love her sex drive",
+                                                        (c, self, other) -> {
+                                                            c.write("You tell Angel that her insatiable sex drive is one of the things you like best about her. "
+                                                                            + "After all, there's nothing else quite like fucking someone as enthusiastic as her. "
+                                                                            + "Angel looks up and makes eye contact with you. She seems rather... amused? "
+                                                                            + "<i>\"That's what all " + other.boyOrGirl()
+                                                                            + "s say before they're squeezed dry. "
+                                                                            + "You're not going to be the same are you?\"</i>"
+                                                                            + "<br/><br/>"
+                                                                            + "You swallow your saliva a bit worriedly. What have you gotten yourself into?");
+                                                            useNymphomania();
+                                                            return true;
+                                                        }), new CombatSceneChoice("Tell her you love both [Hard Mode]",
+                                                        (c, self, other) -> {
+                                                            c.write("You tell Angel that her insatiable sex drive and amazing sex technique are both part of what makes her unique and amazing(ly attractive). "
+                                                                            + "There are people out there with one or the other, but no one but Angel is as good at both. Angel grins and licks her lips"
+                                                                            + "<i>\"From most people, that would sound like a pathetic wishy-washy non-answer, but the way you put that made it sound like "
+                                                                            + "a challenge. I'll take that challenge, but think you've just doomed yourself to being my sex toy\"</i>"
+                                                                            + "<br/><br/>"
+                                                                            + "Angel looks like she's found a whole new level of resolve- you suddenly realize that you've made a terrible mistake. You resolve to step up training yourself, if that's possible.");
+                                                            useNymphomania();
+                                                            useSex();
+                                                            character.getGrowth().extraAttributes += 1;
+                                                            // some compensation for the added difficulty. She gets 6 traits and 2 attribute points/level, and you only get 2 traits, but you are fighting more people than just her.
+                                                            GameState.gameState.characterPool.getPlayer().getGrowth()
+                                                                            .addTraitPoints(new int[] {12, 39},
+                                                                                            GameState.gameState.characterPool.getPlayer());
+                                                            return true;
+                                                        }))));
+        character.addCombatScene(
+                        new CombatScene(and(level(20), not(flag(ANGEL_FOLLOWERS_FOCUS)), not(flag(ANGEL_WORSHIP_FOCUS)),
+                                        or(flag(ANGEL_SEX_FOCUS), flag(ANGEL_NYMPHOMANIA_FOCUS))), (c, self, player) ->
+                                        "After another session of fantastic sex with your favorite sex goddess, Angel looks a bit reluctant to leave. "
+                                                        + "You do want to try to get some more matches in, but her broody look invites some discussion. "
+                                                        + "Patting your own lap, you motion for Angel to sit down. Luckily for you, she doesn't leave you hanging and does just that. "
+                                                        + "<br/><br/>"
+                                                        + "The two of you spend a few moments relaxing before Angel decides to bring up her worries. "
+                                                        + "<i>\"Say " + player.getName()
+                                                        + ", what do you really think of me become a real goddess? "
+                                                        + "To be honest, I'm not even sure how it started. One night after the games, I started feeling a heat in my chest. "
+                                                        + "The next night when we started the match, I already had my wings. "
+                                                        + "I didn't think too much of it, with all the other strange things going on, "
+                                                        + "but recently I've started hearing a voice in my head asking me to gather faith. "
+                                                        + "I don't know what to think of it. I'm pretty happy with who I am now, and my friends are very important to me. "
+                                                        + "If I do try and build a following, I'm worried that I'll start leaving them behind.\"</i>",
+                                        Arrays.asList(new CombatSceneChoice("Answer: Focus on your friends",
+                                                                        (c, self, other) -> {
+                                                                            c.write("You answer that it just doesn't seem like Angel to abandon her friends even if she does become a full Goddess. "
+                                                                                            + "There's no need to pick right? If she tells them, Mei, Sarah and Caroline would probably volunteer to be "
+                                                                                            + "her followers numbers 1, 2 and 3."
+                                                                                            + "<br/><br/>"
+                                                                                            + "Angel scowls a bit at you and questions, <i>\"You mean you're not going to be my follower?\"</i> "
+                                                                                            + "You hastily deny that and try to resolve the misunderstanding before you realize Angel's stern "
+                                                                                            + "expression melts into a smile and you realize she was just joking. "
+                                                                                            + "<i>\"Thanks " + other.getName()
+                                                                                            + ", that took a lot off my mind. I'll pay you back, don't worry. "
+                                                                                            + "A Goddess always keeps her promises.\"</i>");
+                                                                            useFollowers();
+                                                                            return true;
+                                                                        }),
+                                                        new CombatSceneChoice("Answer: Focus on gathering a following",
+                                                                        (c, self, other) -> {
+                                                                            c.write(Formatter.format("You reply that you would her first follower if she was looking for them. "
+                                                                                            + "You jokingly kneel in front of her and kiss her feet. "
+                                                                                            + "Angel seems surprised for a moment before a familiar lascivious smile creeps into her expression. "
+                                                                                            + "<i>\"{other:name}, {other:name}, {other:name}, what do we have here? A willing supplicant? "
+                                                                                            + "Do you want to serve your Goddess? Groveling, begging, pleading, does that thrill you?\"</i>"
+                                                                                            + "<br/><br/>"
+                                                                                            + "There's a bit of a dangerous tone in Angel's voice, and you motion to get back up. "
+                                                                                            + "However, a shapely foot forces your head onto the ground again. "
+                                                                                            + "<i>\"Stand down!\"</i> she demands. This started off as a joke, but something in Angel's voice demands your obedience. "
+                                                                                            + "Trembling, you do as she says and avert her eyes, looking only at the lower half of her perfect body. Angel chuckles as she inspects your prone form. "
+                                                                                            + "<i>\"You know {other:name}, I wasn't sure I was cut out for this deity business, but I have to admit, this feels pretty good right now. "
+                                                                                            + "Well what are you waiting for? Show me your faith!\"</i> "
+                                                                                            + "You scramble to your feet and start lapping at Angel's heavenly orfice. "
+                                                                                            + "Only after you bring her to two consecutive climaxes does she let you go. "
+                                                                                            + "<br/><br/>"
+                                                                                            + "Before she leaves, Angel kneels down to face you, and gives you a big kiss on the lips."
+                                                                                            + "<i>\"Thanks {other:name} for being patient with me. This is all pretty so new, but I feel good with you by my side.\"</i>", self, other));
+                                                                            useWorship();
+                                                                            return true;
+                                                                        }),
+                                                        new CombatSceneChoice("Answer: Why not both? [Hard Mode]",
+                                                                        (c, self, other) -> {
+                                                                            c.write(Formatter.format("You tell her that the Angel you know wouldn't even think of choosing between either of them. "
+                                                                                            + "The Angel you know could gather a following within a day even while maintaining her close friendships. She's just amazing like that. "
+                                                                                            + "<br/>For the first time since you've gotten to know her, Angel seems to blush. \"<i>Enough flattery "
+                                                                                            + other.getName()
+                                                                                            + ", it wont make me go any easier on you. "
+                                                                                            + "But you know, you're right. Why should I choose? They should be happy to grovel for me. I <b>am</b> a Goddess after all.</i>\"", self, other));
+                                                                            useWorship();
+                                                                            useFollowers();
+                                                                            character.getGrowth().extraAttributes += 1;
+                                                                            // some compensation for the added difficulty. She gets 6 traits and 1 attribute point/level, and you only get 2 traits, but you are fighting more people than just her.
+                                                                            GameState.gameState.characterPool.getPlayer().getGrowth()
+                                                                                            .addTraitPoints(new int[] { 21, 48},
+                                                                                                            GameState.gameState.characterPool .getPlayer());
+                                                                            return true;
+                                                                        }))));
         character.getGrowth().addTrait(0, Trait.undisciplined);
         character.getGrowth().addTrait(0, Trait.lickable);
         character.getGrowth().addTrait(3, Trait.responsive);
@@ -450,7 +458,7 @@ public class Angel extends BasePersonality {
                             + "<br/><br/>Finally it becomes too much, and you cum hard. You wrap your arms and legs unconsciously cling to Angel's body and you seek out "
                             + "a kiss from her. Angel takes note of your convulsing body, and smirks, <i>\"I think you need some more training. I could make "
                             + "anyone cum instantly while they're in me.\"</i> After a small pause, Angel grins devilishly and resumes pumping in and out of your pussy "
-                            + "in long leisurely strokes. <i>\"Hmm in fact, why don't I train you a bit? You know what they say, practice makes perfect!\" "
+                            + "in long leisurely strokes. <i>\"Hmm in fact, why don't I train you a bit? You know what they say, practice makes perfect!\"</i> "
                             + "You groan in frustration as your oversensitive cunt receives her cock again. "
                             + "<br/><br/>This could be a long night.";
         } else if (c.getStance().inserted(opponent)) {

@@ -8,6 +8,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BodyPartMod;
 import nightgames.combat.Result;
+import nightgames.global.Flag;
 import nightgames.items.Item;
 import nightgames.items.ItemAmount;
 import nightgames.status.Abuff;
@@ -47,6 +48,14 @@ public class RequirementShortcuts {
 
     public static DurationRequirement duration(int duration) {
         return new DurationRequirement(duration);
+    }
+
+    public static FlagRequirement flag(String flagName) {
+        return new FlagRequirement(flagName);
+    }
+
+    public static FlagRequirement flag(Flag flag) {
+        return new FlagRequirement(flag);
     }
 
     public static OrRequirement eitherinserted() {

@@ -24,6 +24,8 @@ import nightgames.status.Oiled;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static nightgames.requirements.RequirementShortcuts.*;
+
 public class Mara extends BasePersonality {
     /**
      *
@@ -187,9 +189,8 @@ public class Mara extends BasePersonality {
         character.getGrowth().bonusStamina = 1;
         character.getGrowth().bonusArousal = 2;
 
-        character.addCombatScene(new CombatScene(
-                        (c, self, other) -> self.getLevel() >= 10 && !Flag.checkFlag(MARA_GENERAL_TECH_FOCUS)
-                                        && !Flag.checkFlag(MARA_HARPOON_FOCUS),
+        character.addCombatScene(new CombatScene(and(level(10), not(flag(MARA_GENERAL_TECH_FOCUS)),
+                        not(flag(MARA_HARPOON_FOCUS))),
                         (c, self, other) -> Formatter.format(
                                         "You see {self:name} fiddling with the device on her arm"
                                                         + " as you both recover from your match. <i>\"Damn thing is on the fritz"
@@ -253,8 +254,7 @@ public class Mara extends BasePersonality {
                         }))));
 
         character.addCombatScene(new CombatScene(
-                        (c, self, other) -> self.getLevel() >= 20 && !Flag.checkFlag(MARA_OCTO_FOCUS)
-                                        && !Flag.checkFlag(MARA_MIND_CONTROL_FOCUS),
+                        and(level(20), not(flag(MARA_OCTO_FOCUS)), not(flag(MARA_MIND_CONTROL_FOCUS)), or(flag(MARA_HARPOON_FOCUS), flag(MARA_GENERAL_TECH_FOCUS))),
                         (c, self, other) -> Formatter.format(
                                         "You and {self:name} are both getting back up after your match,"
                                                         + " cleaning yourselves as much as possible before moving on. <i>\"Hey, {other:name}."

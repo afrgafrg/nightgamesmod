@@ -1268,39 +1268,38 @@ public class Combat extends Observable implements Cloneable {
     public void end() {
         p1.state = State.ready;
         p2.state = State.ready;
-        if (processedEnding) {
-            // TODO: probably shouldn't be calling this more than once. get rid of this branch
-            // we did this already
-            return;
-        }
-        boolean hasScene = false;
         if (p1.human() || p2.human()) {
-            if (postCombatScenesSeen < 3) {
-                if (!p2.human() && p2 instanceof NPC) {
-                    hasScene = doPostCombatScenes((NPC)p2);
-                } else if (!p1.human() && p1 instanceof NPC) {
-                    hasScene = doPostCombatScenes((NPC)p1);
+            Optional<CombatScene> scene;
+            do {
+                NPC npc;
+                if (!p1.human()) {
+                    npc = (NPC) p1;
+                } else {
+                    npc = (NPC) p2;
                 }
-                if (hasScene) {
-                    postCombatScenesSeen += 1;
-                    return;
+                scene = getPostCombatScene(npc);
+                if (scene.isPresent()) {
+                    GUI.gui.clearText();
+                    GUI.gui.clearCommand();
+                    scene.get().visit(this, npc);
+                    this.promptNext(GUI.gui);
                 }
-            } else {
-                this.promptNext(GUI.gui);
-            }
+            } while (scene.isPresent());
         }
+
         processedEnding = true;
         p1.endofbattle(this);
         p2.endofbattle(this);
+
         getCombatantData(p1).getRemovedItems().forEach(p1::gain);
         getCombatantData(p2).getRemovedItems().forEach(p2::gain);
+
         location.endEncounter();
-        // it's a little ugly, but we must be mindful of lazy evaluation
-        // TODO: rework to not rely on lazy evaluation side effects
         p1.spendXP();
         p1.spendLevels(this);
         p2.spendXP();
         p2.spendLevels(this);
+
         if (doExtendedLog()) {
             log.logEnd(winner);
         }
@@ -1312,20 +1311,12 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private boolean doPostCombatScenes(NPC npc) {
+    private Optional<CombatScene> getPostCombatScene(NPC npc) {
         List<CombatScene> availableScenes = npc.getPostCombatScenes()
                         .stream()
                         .filter(scene -> scene.meetsRequirements(this, npc))
                         .collect(Collectors.toList());
-        Optional<CombatScene> possibleScene = Random.pickRandom(availableScenes);
-        if (possibleScene.isPresent()) {
-            GUI.gui.clearText();
-            GUI.gui.clearCommand();
-            possibleScene.get().visit(this, npc);
-            return true;
-        } else {
-            return false;
-        }
+        return Random.pickRandom(availableScenes);
     }
 
     public void petbattle(Pet one, Pet two) {
@@ -1653,7 +1644,7 @@ public class Combat extends Observable implements Cloneable {
         return phase == CombatPhase.FINISHED_SCENE || phase == CombatPhase.ENDED;
     }
 
-    public void promptNext(GUI gui) {
+    void promptNext(GUI gui) {
         gui.clearCommand();
         ContinueButton next = new ContinueButton("Next");
         gui.addButton(next);

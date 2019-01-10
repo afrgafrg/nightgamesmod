@@ -27,10 +27,11 @@ public class Porn extends Activity {
     @Override
     public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
-        if (page == 0) {
+        if (choice.equals("Start")) {
             int gain = gainArousal(player);
             showScene(pickScene(gain));
             GUI.gui.message("<b>Your maximum arousal has increased by " + gain + ".</b>");
+            choose("Leave", nextChoices);
         } else {
             done(true, instance);
         }

@@ -28,12 +28,13 @@ public class Exercise extends Activity {
     @Override
     public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
-        if (page == 0) {
+        if (choice.equals("Start")) {
             int gain = gainStamina(player);
             showScene(pickScene(gain));
             if (gain > 0) {
                 GUI.gui.message("<b>Your maximum stamina has increased by " + gain + ".</b>");
             }
+            choose("Leave", nextChoices);
         } else {
             done(true, instance);
         }
@@ -215,7 +216,7 @@ public class Exercise extends Activity {
         return available.get(Random.random(available.size()));
     }
 
-    private static enum Scene {
+    private enum Scene {
         basic1,
         basic2,
         basic3,

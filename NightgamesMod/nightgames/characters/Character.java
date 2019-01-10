@@ -2963,7 +2963,7 @@ public abstract class Character extends Observable implements Cloneable {
             }
         }
         cooldowns.clear();
-        dropStatus(null, null);
+        dropStatus(c, c.getOpponent(this));
         orgasms = 0;
         setChanged();
         if (has(ClothingTrait.heels)) {

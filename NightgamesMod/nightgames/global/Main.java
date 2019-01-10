@@ -62,9 +62,10 @@ public class Main {
             } catch (InterruptedException e) {
                 System.err.println("Interrupted!");
                 e.printStackTrace();
+                exit = true;
             } catch (RuntimeException e) {
                 System.err.println("An error we didn't expect occurred:");
-                throw e;
+                e.printStackTrace();
             }
             if (!exit) {
                 GUI.gui.showGameCreation();

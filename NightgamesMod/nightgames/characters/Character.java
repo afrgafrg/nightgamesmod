@@ -597,7 +597,7 @@ public abstract class Character extends Observable implements Cloneable {
             int mag = Random.random(3) + 1;
             c.write(other, Formatter.format("Something about the way {other:subject-action:hit|hits}"
                             + " {self:name-do} seems to strip away {self:possessive} strength.", this, other));
-            add(c, new Abuff(this, Attribute.Power, -mag, 10));
+            add(c, new AttributeBuff(this, Attribute.Power, -mag, 10));
         }
         stamina.reduce(pain);
     }
@@ -1809,7 +1809,7 @@ public abstract class Character extends Observable implements Cloneable {
         if (has(Trait.sexualDynamo)) {
             c.write(this, Formatter.format("{self:NAME-POSSESSIVE} climax makes {self:direct-object} positively gleam with erotic splendor; "
                             + "{self:possessive} every move seems more seductive than ever.", this, opponent));
-            add(c, new Abuff(this, Attribute.Seduction, 5, 10));
+            add(c, new AttributeBuff(this, Attribute.Seduction, 5, 10));
         }
         if (has(Trait.lastStand)) {
             OrgasmicTighten tightenCopy = (OrgasmicTighten) TIGHTEN_SKILL.copy(this);

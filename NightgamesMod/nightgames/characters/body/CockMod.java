@@ -19,7 +19,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.damage.DamageType;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.CockBound;
 import nightgames.status.DivineCharge;
 import nightgames.status.Drained;
@@ -189,7 +189,7 @@ public class CockMod extends PartMod {
                                                                                            // 25->30->30
                     Attribute attr = new Attribute[] {Attribute.Power, Attribute.Cunning, Attribute.Seduction}[Random
                                     .random(3)];
-                    self.add(c, new Abuff(self, attr, 1, 10));
+                    self.add(c, new AttributeBuff(self, attr, 1, 10));
                 }
                 self.buildMojo(c, 5);
                 self.restoreWillpower(c, 1);

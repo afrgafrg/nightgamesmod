@@ -11,19 +11,19 @@ import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
 import nightgames.global.Formatter;
 
-public class Abuff extends DurationStatus {
+public class AttributeBuff extends DurationStatus {
     protected Attribute modded;
     protected int value;
 
-    public Abuff() {
+    public AttributeBuff() {
         this(NPC.noneCharacter(), Attribute.Hypnosis, 1, 0);
     }
 
-    public Abuff(Character affected, Attribute att, int value, int duration) {
+    public AttributeBuff(Character affected, Attribute att, int value, int duration) {
         this(String.format("%s %+d", att.toString(), value), affected, att, value, duration);
     }
 
-    public Abuff(String name, Character affected, Attribute att, int value, int duration) {
+    public AttributeBuff(String name, Character affected, Attribute att, int value, int duration) {
         super(name, affected, duration);
         flag(Stsflag.purgable);
         if (value < 0) {
@@ -36,11 +36,7 @@ public class Abuff extends DurationStatus {
     @Override
     public String initialMessage(Combat c, Optional<Status> replacement) {
         int newValue;
-        if (replacement.isPresent()) {
-            newValue = ((Abuff)replacement.get()).value;
-        } else {
-            newValue = this.value;
-        }
+        newValue = replacement.map(status -> ((AttributeBuff) status).value).orElseGet(() -> this.value);
         if (newValue < 0) {
             return Formatter.format("{self:pronoun-action:feel|seems} %s{self:if-human: than before}{self:if-nonhuman: now}", affected, affected, modded.getLowerPhrase());
         } else {
@@ -104,8 +100,8 @@ public class Abuff extends DurationStatus {
 
     @Override
     public void replace(Status s) {
-        assert s instanceof Abuff;
-        Abuff other = (Abuff) s;
+        assert s instanceof AttributeBuff;
+        AttributeBuff other = (AttributeBuff) s;
         assert other.modded == modded;
         setDuration(Math.max(other.getDuration(), getDuration()));
         value += other.value;
@@ -169,7 +165,7 @@ public class Abuff extends DurationStatus {
 
     @Override
     public Status instance(Character newAffected, Character newOther) {
-        return new Abuff(newAffected, modded, value, getDuration());
+        return new AttributeBuff(newAffected, modded, value, getDuration());
     }
 
     @Override
@@ -184,7 +180,7 @@ public class Abuff extends DurationStatus {
 
     @Override
     public Status loadFromJson(JsonObject obj) {
-        return new Abuff(null, Attribute.valueOf(obj.get("modded")
+        return new AttributeBuff(null, Attribute.valueOf(obj.get("modded")
                                                     .getAsString()),
                         obj.get("value")
                            .getAsInt(),

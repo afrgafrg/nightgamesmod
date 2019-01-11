@@ -11,7 +11,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.global.Match;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
 
@@ -81,7 +81,7 @@ public class MimicDryad extends Skill {
         if (getSelf().has(Trait.Masquerade)) {
             strength = strength * 3 / 2;
         }
-        getSelf().add(c, new Abuff(getSelf(), Attribute.Bio, strength, 10));
+        getSelf().add(c, new AttributeBuff(getSelf(), Attribute.Bio, strength, 10));
         getSelf().add(c, new SlimeMimicry("dryad", getSelf(), 10));
         getSelf().body.temporaryAddPartMod("pussy", PlantMod.INSTANCE, 10);
         return true;

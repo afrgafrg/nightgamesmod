@@ -8,7 +8,7 @@ import nightgames.combat.Result;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 
 public class LegLock extends Skill {
 
@@ -29,7 +29,7 @@ public class LegLock extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (target.roll(getSelf(), c, accuracy(c, target))) {
             writeOutput(c, Result.normal, target);
-            target.add(c, new Abuff(target, Attribute.Speed, -2, 5));
+            target.add(c, new AttributeBuff(target, Attribute.Speed, -2, 5));
             target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, Random.random(10, 16)));
             target.emote(Emotion.angry, 15);
         } else {

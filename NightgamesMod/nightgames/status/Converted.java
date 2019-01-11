@@ -12,7 +12,7 @@ import nightgames.combat.Combat;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 
-public class Converted extends Abuff {
+public class Converted extends AttributeBuff {
     private Attribute converted;
 
     public Converted(Character affected, Attribute att, Attribute converted, int value, int duration) {

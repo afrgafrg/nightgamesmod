@@ -68,7 +68,7 @@ public class Pheromones extends Horny {
                 } else {
                     GUI.gui.message(message);
                 }
-                affected.add(c, new Abuff(affected, att.get(), -1, 10));
+                affected.add(c, new AttributeBuff(affected, att.get(), -1, 10));
             }
             if (c != null && sourceCharacter.has(Trait.FrenzyScent)) {
                 if (Random.random(13 - stacks) == 0) {

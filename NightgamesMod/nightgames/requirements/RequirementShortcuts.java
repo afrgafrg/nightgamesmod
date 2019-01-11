@@ -11,7 +11,7 @@ import nightgames.combat.Result;
 import nightgames.global.Flag;
 import nightgames.items.Item;
 import nightgames.items.ItemAmount;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.Stsflag;
 
 /**
@@ -88,7 +88,7 @@ public class RequirementShortcuts {
 
     public static Requirement buffedAttLessThan(Attribute att, int amount) {
         return (c, self, other) -> {
-            int buff = self.getStatusOfClass(Abuff.class).stream().filter(abuff -> abuff.getModdedAttribute().equals(att)).mapToInt(abuff -> abuff.value()).sum();
+            int buff = self.getStatusOfClass(AttributeBuff.class).stream().filter(abuff -> abuff.getModdedAttribute().equals(att)).mapToInt(abuff -> abuff.value()).sum();
             return buff < amount;
         };
     }

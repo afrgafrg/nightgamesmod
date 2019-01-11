@@ -9,7 +9,7 @@ import nightgames.combat.Result;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 
 public class ArmBar extends Skill {
 
@@ -37,7 +37,7 @@ public class ArmBar extends Skill {
             int m = (int) getSelf().modifyDamage(DamageType.physical, target, Random.random(6, 10));
             writeOutput(c, m, Result.normal, target);
             target.pain(c, getSelf(), m);
-            target.add(c, new Abuff(target, Attribute.Power, -4, 5));
+            target.add(c, new AttributeBuff(target, Attribute.Power, -4, 5));
             target.emote(Emotion.angry, 15);
         } else {
             writeOutput(c, Result.miss, target);

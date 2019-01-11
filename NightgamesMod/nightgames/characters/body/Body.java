@@ -34,7 +34,7 @@ import nightgames.nskills.tags.SkillTag;
 import nightgames.pet.PetCharacter;
 import nightgames.skills.Divide;
 import nightgames.skills.Skill;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.BodyFetish;
 import nightgames.status.Status;
 import nightgames.status.Stsflag;
@@ -1276,9 +1276,9 @@ public class Body implements Cloneable {
             c.write(character, "<br/><b>" + Formatter.capitalizeFirstLetter(character.subjectAction("glow", "glows")
                             + " with power as the cum is absorbed by " + character.possessiveAdjective() + " "
                             + part.describe(character) + ".</b>"));
-            character.add(c, new Abuff(character, Attribute.Power, 5, 10));
-            character.add(c, new Abuff(character, Attribute.Seduction, 10, 10));
-            character.add(c, new Abuff(character, Attribute.Cunning, 5, 10));
+            character.add(c, new AttributeBuff(character, Attribute.Power, 5, 10));
+            character.add(c, new AttributeBuff(character, Attribute.Seduction, 10, 10));
+            character.add(c, new AttributeBuff(character, Attribute.Cunning, 5, 10));
             character.buildMojo(c, 100);
         }
         if (opponent.has(Trait.hypnoticsemen)) {

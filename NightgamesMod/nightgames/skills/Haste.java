@@ -4,7 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.Primed;
 
 public class Haste extends Skill {
@@ -35,7 +35,7 @@ public class Haste extends Skill {
     @Override
     public boolean resolve(Combat c, Character target) {
         getSelf().add(c, new Primed(getSelf(), -1));
-        getSelf().add(c, new Abuff(getSelf(), Attribute.Speed, 10, 6));
+        getSelf().add(c, new AttributeBuff(getSelf(), Attribute.Speed, 10, 6));
         writeOutput(c, Result.normal, target);
         return true;
     }

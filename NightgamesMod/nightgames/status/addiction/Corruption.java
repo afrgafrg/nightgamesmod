@@ -142,7 +142,7 @@ public class Corruption extends Addiction {
         return !UNDRAINABLE_ATTS.contains(att) && affected.get(att) > Math.max(10, affected.getPure(att) / 10);
     }
     private Optional<Attribute> getDrainAttr() {
-        Optional<Abuff> darkBuff = affected.getStatusOfClass(Abuff.class).stream().filter(status -> status.getModdedAttribute() == Attribute.Dark).findAny();
+        Optional<AttributeBuff> darkBuff = affected.getStatusOfClass(AttributeBuff.class).stream().filter(status -> status.getModdedAttribute() == Attribute.Dark).findAny();
         if (!darkBuff.isPresent() || darkBuff.get().getValue() <  10 + getMagnitude() * 50) {
             return Random.pickRandom(Arrays.stream(Attribute.values()).filter(this::attIsDrainable).toArray(Attribute[]::new));
         }

@@ -10,7 +10,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.global.GameState;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
 
@@ -81,7 +81,7 @@ public class MimicWitch extends Skill {
         if (getSelf().has(Trait.Masquerade)) {
             strength = strength * 3 / 2;
         }
-        getSelf().add(c, new Abuff(getSelf(), Attribute.Arcane, strength, 10));
+        getSelf().add(c, new AttributeBuff(getSelf(), Attribute.Arcane, strength, 10));
         getSelf().add(c, new SlimeMimicry("witch", getSelf(), 10));
 
         getSelf().body.temporaryAddPartMod("pussy", ArcaneMod.INSTANCE, 10);

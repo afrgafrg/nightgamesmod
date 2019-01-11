@@ -13,7 +13,7 @@ import nightgames.combat.Combat;
 import nightgames.combat.Result;
 import nightgames.global.Formatter;
 import nightgames.global.GameState;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.SlimeMimicry;
 import nightgames.status.Stsflag;
 
@@ -85,7 +85,7 @@ public class MimicCat extends Skill {
         if (getSelf().has(Trait.Masquerade)) {
             strength = strength * 3 / 2;
         }
-        getSelf().add(c, new Abuff(getSelf(), Attribute.Animism, strength, 10));
+        getSelf().add(c, new AttributeBuff(getSelf(), Attribute.Animism, strength, 10));
         getSelf().add(c, new SlimeMimicry("cat", getSelf(), 10));
         getSelf().body.temporaryAddPartMod("pussy", FeralMod.INSTANCE, 10);
         getSelf().body.temporaryAddPartMod("cock", CockMod.primal, 10);

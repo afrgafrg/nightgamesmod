@@ -7,7 +7,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.Arm;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.Atrophy;
 
 public class TentacleInjectVenom extends TentacleArmSkill {
@@ -35,8 +35,8 @@ public class TentacleInjectVenom extends TentacleArmSkill {
                             + "{other:pronoun} already {other:action:start} to feel sluggish as {other:pronoun-action:realize} "
                             + "{other:pronoun-action:have} been poisoned.", owner, target));
             target.add(c, new Atrophy(target, owner.getLevel() / 3, 10, getSourceString(owner)));
-            target.add(c, new Abuff(target, Attribute.Power, target.getPure(Attribute.Power) / 3, 10));
-            target.add(c, new Abuff(target, Attribute.Speed, target.getPure(Attribute.Speed) / 3, 10));
+            target.add(c, new AttributeBuff(target, Attribute.Power, target.getPure(Attribute.Power) / 3, 10));
+            target.add(c, new AttributeBuff(target, Attribute.Speed, target.getPure(Attribute.Speed) / 3, 10));
             return true;
         } else {
             c.write(PetCharacter.DUMMY, Formatter.format("A %s flies towards {other:name-do}, "

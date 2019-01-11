@@ -941,7 +941,7 @@ public class Combat extends Observable implements Cloneable {
             }
             write(self, Formatter.format("{self:SUBJECT-ACTION:feel|feels} right at home atop"
                             + " {other:name-do}, %s.", self, other, desc));
-            self.add(this, new Abuff(self, attr, Random.random(3) + 1, 10));
+            self.add(this, new AttributeBuff(self, attr, Random.random(3) + 1, 10));
         }
 
         if (self.has(Trait.unquestionable) && Random.random(4) == 0) {

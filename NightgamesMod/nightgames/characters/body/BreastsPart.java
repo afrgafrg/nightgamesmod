@@ -9,7 +9,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.Charmed;
 import nightgames.status.Stsflag;
 import nightgames.status.addiction.Addiction;
@@ -175,7 +175,7 @@ public class BreastsPart extends GenericBodyPart {
                                 Formatter.format("The power seems to leave {other:name-possessive} body as {other:pronoun-action:sip|sips} {self:possessive} cloying cream.",
                                                 self, opponent));
                 opponent.weaken(c, opponent.getStamina().max() / 10);
-                opponent.add(c, new Abuff(opponent, Attribute.Power, -Random.random(1, 3), 20));
+                opponent.add(c, new AttributeBuff(opponent, Attribute.Power, -Random.random(1, 3), 20));
             }
             if (self.has(Trait.Pacification)) {
                 c.write(opponent,

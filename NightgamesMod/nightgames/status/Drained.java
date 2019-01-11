@@ -13,7 +13,7 @@ import nightgames.combat.Combat;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
 
-public class Drained extends Abuff {
+public class Drained extends AttributeBuff {
     public static void drain(Combat c, Character drainer, Character drained, 
                     Attribute att, int value, int duration, boolean write) {
         if (drainer.has(Trait.WillingSacrifice) && drained.is(Stsflag.charmed)) {

@@ -10,7 +10,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
-import nightgames.status.Abuff;
+import nightgames.status.AttributeBuff;
 import nightgames.status.BodyFetish;
 import nightgames.status.Status;
 
@@ -74,7 +74,7 @@ public class SuccubusNurse extends Skill {
                                         ? "making {other:direct-object} feel strangely" + " calm and passive inside"
                                         : "feeling strangely erotic"));
         if (getSelf().has(Trait.Pacification)) {
-            target.add(c, new Abuff(target, Attribute.Power, -2, 5));
+            target.add(c, new AttributeBuff(target, Attribute.Power, -2, 5));
         }
         new Suckle(target).resolve(c, getSelf(), true);
         if (Random.random(100) < 5 + 2 * getSelf().get(Attribute.Fetish)) {

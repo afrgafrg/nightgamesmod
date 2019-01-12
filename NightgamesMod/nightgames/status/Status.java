@@ -48,10 +48,29 @@ public abstract class Status implements Cloneable {
         return requirements.stream().allMatch((req) -> req.meets(c, self, other));
     }
 
+    /**
+     * Message to print when status is applied in combat.
+     *
+     * @param c The active combat.
+     * @param replacement The status this status replaces, if any.
+     * @return The application description.
+     */
     public abstract String initialMessage(Combat c, Optional<Status> replacement);
 
+    /**
+     * Message to print when describing ongoing status in combat.
+     *
+     * @param c The active combat.
+     * @return A description of the ongoing effects of the status.
+     */
     public abstract String describe(Combat c);
 
+    /**
+     * Amount to modify an attribute while this status is active.
+     *
+     * @param a The attribute being queried.
+     * @return The amount by which the attribute is modified.
+     */
     public abstract int mod(Attribute a);
 
     public abstract int regen(Combat c);

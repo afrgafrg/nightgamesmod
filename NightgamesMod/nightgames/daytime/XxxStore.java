@@ -40,10 +40,7 @@ public class XxxStore extends Store {
         GUI.gui.clearCommand();
         if (choice.equals("Leave")) {
             done(acted, instance);
-            return;
-        }
-
-        if (player.human()) {
+        } else if (player.human()) {
             if (choice.startsWith("Learn to be Submissive")) {
                 GUI.gui.message("Your curiosity gets the best of you as you look over the leather collars on display. You were trying to figure out whether you could use on of these on an opponent, but clearly some of them are designed for men. You're idly wondering how uncomfortable they would be, when you suddenly feel something wrap around your neck.<br/><br/>You jump away in alarm and turn to face your attacker. There's a slim girl standing behind you, holding a black leather collar. She's less than intimidating. She's shorter than you, with blonde hair, short pigtails, and thick glasses. She has a friendly smile, that should suit her cute features, but there's something wrong with it. It must be her eyes, which are strangely hollow, like a doll's. She hands you the collar she just tried to put around your neck.<br/><br/>\"You should try this one. Most of those chokers are designed for gimps, or for pet play. You're not that kind of sub, are you? You should stick with something more comfortable.\" The collar is soft and supple, clearly higher quality than the ones you were looking at earlier. Is she an employee? That would explain why she's trying to sell you something. However, it is very presumptuous of her to assume you are a sub, just because you're looking at bondage gear. Her smile doesn't change, almost as if it's a mask. \"You're not much of a sub yet, but you have some aptitude for it. If you put in a little effort, I think you could become an amazing bottom.\"<br/><br/>She's kinda missing the point. You aren't trying to become a sub, you're looking for a way to gain an advantage. Sexfighting favors the dom. If you're going to win the Games, you need to overpower your opponents, not be at their mercy. The girl's expression still remains unchanged. For just a moment, though, her smile looks more like a sneer of contempt. \"Such a shallow understanding of power...\"<br/><br/>She starts to walk past you, but suddenly grabs your "
                                                 + player.getOutfit().getTopOfSlot(ClothingSlot.top)
@@ -65,8 +62,7 @@ public class XxxStore extends Store {
                 player.modAttributeDontSaveData(Attribute.Submissive, 1);
                 Flag.flag("Trained" + Attribute.Submissive.name());
                 acted = true;
-            }
-            if (choice.startsWith("Talk to Alice")) {
+            } else if (choice.startsWith("Talk to Alice")) {
                 GUI.gui.message("Alice gives you a cheerless smile as you approach. You tell her that you are "
                                 + "interested in becoming a better sub. She says nothing but beckons you to a room in "
                                 + "the back of the store. There are some boxes of inventory stacked up, but it looks "
@@ -317,7 +313,7 @@ public class XxxStore extends Store {
                 nextChoices.add(sale(Item.Strapon));
             }
             nextChoices.add(sale(Item.Blindfold));
-            displayClothes();
+            nextChoices.addAll(displayClothes());
             if (Flag.checkFlag(Flag.AliceAvailable)) {
                 GUI.gui.message("You see Alice hanging around near the bondage gear. You aren't sure whether "
                                 + "she's waiting for you or not.");

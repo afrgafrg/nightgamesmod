@@ -150,7 +150,7 @@
 	  "slots" : ["top", "bottom"],
 	  "shops" : ["Boutique"],
   	  "sex" : ["all"],
-	  "hotness":.7,
+	  "hotness":0.7,
       "name":"negligee",
       "toughness":14,
       "exposure":0.9

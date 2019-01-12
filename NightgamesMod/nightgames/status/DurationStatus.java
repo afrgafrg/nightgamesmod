@@ -28,11 +28,7 @@ public abstract class DurationStatus extends Status {
 
     @Override
     public int regen(Combat c) {
-        int i = 1;
-        if (affected.has(Trait.QuickRecovery) && flags.contains(Stsflag.disabling)) {
-            i *= 2;
-        }
-        req.tick(i);
+        tick(1);
         return 0;
     }
 

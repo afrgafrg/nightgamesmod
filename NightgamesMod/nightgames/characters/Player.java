@@ -71,11 +71,6 @@ public class Player extends Character {
         this.load(playerJson);
     }
 
-    @Override
-    public void finishClone(Character other) {
-        super.finishClone(other);
-    }
-
     public void applyBasicStats(Character self) {
         self.getStamina().setMax(80);
         self.getArousal().setMax(80);
@@ -181,21 +176,7 @@ public class Player extends Character {
 
     @Override
     public boolean chooseSkill(Combat c) {
-        Character target;
-        if (c.p1 == this) {
-            target = c.p2;
-        } else {
-            target = c.p1;
-        }
-        showSkillChoices(c, target);
-        try {
-            c.chooseSkill(this, GUI.gui.getChosenSkill());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-        // Already paused while completing skill choice future
-        return false;
+        return chooseSkillInteractive(c);
     }
 
     @Override
@@ -442,7 +423,9 @@ public class Player extends Character {
         }
         int levelsGained = levelsToGain;
         super.spendLevels(c);
-        assert (cloned == 0);
+        if (cloned > 0) {
+            return;
+        }
         Formatter.writeIfCombatUpdateImmediately(c, this,
                         String.format("You've leveled up %d times!<br/>Select which attributes to increase.", levelsGained));
         PlayerLevelUp levelUp = new PlayerLevelUp(this, this.availableAttributePoints, this.traitPoints);

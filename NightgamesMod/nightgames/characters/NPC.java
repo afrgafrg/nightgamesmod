@@ -78,22 +78,22 @@ public class NPC extends Character {
 
     @Override
     public String describe(int per, Combat c) {
-        String description = ai.describeAll(c, this);
+        StringBuilder description = new StringBuilder(ai.describeAll(c, this));
         boolean wroteStatus = false;
         for (Status s : status) {
             String statusDesc = s.describe(c);
             if (!statusDesc.isEmpty()) {
-                description = description + statusDesc;
+                description.append(statusDesc).append(" ");
                 wroteStatus = true;
             }
         }
         if (wroteStatus) {
-            description += "<br/>";
+            description.append("<br/>");
         }
-        description = description + outfit.describe(this);
-        description = description + observe(per);
-        description = description + c.getCombatantData(this).getManager().describe(this);
-        return description;
+        description.append(outfit.describe(this));
+        description.append(observe(per));
+        description.append(c.getCombatantData(this).getManager().describe(this));
+        return description.toString();
     }
 
     private String observe(int per) {
@@ -258,8 +258,7 @@ public class NPC extends Character {
 
     private boolean chooseSkill(Combat c, Character target) {
         if (target.human() && DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
-            showSkillChoices(c, target);
-            return true;
+            return chooseSkillInteractive(c);
         } else {
             // if there's no strategy, try getting a new one.
             if (!c.getCombatantData(this).getStrategy().isPresent()) {
@@ -588,14 +587,18 @@ public class NPC extends Character {
         }
     }
 
+    @Override public void ding(Combat c, int levelsToGain) {
+        super.ding(c, levelsToGain);
+        if (c != null && c.isBeingObserved()) {
+            Formatter.writeIfCombatUpdateImmediately(c, this,
+                            Formatter.format("{self:subject} gained %d levels!", this, this, levelsToGain));
+        }
+    }
+
     @Override
     public void ding(Combat c) {
         level++;
         ai.ding(this);
-        if (c != null && c.isBeingObserved()) {
-            Formatter.writeIfCombatUpdateImmediately(c, this, Formatter
-                            .format("{self:subject-action:have} leveled up!", this, this));
-        }
     }
 
     @Override

@@ -417,6 +417,13 @@ public abstract class Character extends Observable implements Cloneable {
 
     public abstract void ding(Combat c);
 
+    public void ding(Combat c, int levelsToGain) {
+        for (int i = 0; i < levelsToGain; i++) {
+            ding(c);
+        }
+
+    }
+
     public String dong() {
         getLevelUpFor(getLevel()).unapply(this);;
         getGrowth().levelDown(this);
@@ -1598,6 +1605,24 @@ public abstract class Character extends Observable implements Cloneable {
     public abstract Optional<Action> move() throws InterruptedException;
 
     public abstract void draw(Combat c, Result flag);
+
+    protected boolean chooseSkillInteractive(Combat c) {
+        Character target;
+        if (c.p1 == this) {
+            target = c.p2;
+        } else {
+            target = c.p1;
+        }
+        showSkillChoices(c, target);
+        try {
+            c.chooseSkill(this, GUI.gui.getChosenSkill());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+        // Already paused while completing skill choice future
+        return false;
+    }
 
     public abstract boolean human();
 
@@ -3062,8 +3087,9 @@ public abstract class Character extends Observable implements Cloneable {
 
     protected void showSkillChoices(Combat c, Character target) {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
-            c.write(this, nameOrPossessivePronoun() + " turn...");
             c.updateAndClearMessage();
+            c.write(this, nameOrPossessivePronoun() + " turn...");
+            c.updateGUI();
         }
         HashSet<Skill> available = new HashSet<>();
         HashSet<Skill> cds = new HashSet<>();
@@ -3742,9 +3768,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public void spendLevels(Combat c) {
-        for (int i = 0; i < levelsToGain; i++) {
-            ding(c);
-        }
+        ding(c, levelsToGain);
         levelsToGain = 0;
     }
 
@@ -3754,6 +3778,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     // TODO: move XP spending to ding() so we can't forget about it.
     // or level spending to spendXP(), or something
+    // Addendum: Looks like we want to be able to add levels while ignoring XP, like with Item.LevelUpEffect.
     public void spendXP() {
         int req;
         while (xp - (req = getXPReqToNextLevel(level + levelsToGain)) >= 0) {

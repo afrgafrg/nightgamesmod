@@ -151,16 +151,16 @@ public class DebugGUIPanel extends JPanel {
             if (list.size() > 2 && list.get(2) != null) {
                 try {
                     times = Integer.valueOf(list.get(2).trim());
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException ignored) {
                 }
             }
-            IntStream.range(0, times).forEach(i -> target.ding(GUI.gui.combat));
+            target.ding(GUI.gui.combat, times);
         }));
         consoleCommands.add(new DebugCommand("(\\w+)\\.list", (output, list) -> {
             try {
                 Character target = GameState.gameState.characterPool.getCharacterByType(list.get(1));
                 StringBuilder sb = new StringBuilder();
-                sb.append("Level: " + target.getLevel() + "\n");
+                sb.append("Level: ").append(target.getLevel()).append("\n");
                 List<Trait> traits = new ArrayList<>(target.getTraits());
                 for (int i = 0; i < traits.size(); i++) {
                     sb.append(traits.get(i));

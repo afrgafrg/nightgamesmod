@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * TODO: Write class-level documentation.
+ * Contains the player's attribute and trait point selections when leveling up.
  */
 class PlayerLevelUp {
     private final Player player;
@@ -71,10 +71,9 @@ class PlayerLevelUp {
             CompletableFuture<Trait> chosenTrait = new CompletableFuture<>();
             gui.clearCommand();
             Stream<Trait> traitChoices = Trait.getFeats(player).stream().filter(feat -> !player.has(feat));
-            List<ValueButton<Trait>> featButtons =
-                            traitChoices.map(feat -> new ValueButton<>(feat, feat.toString(), chosenTrait))
-                                            .collect(Collectors.toList());
-            featButtons.forEach(button -> button.setToolTipText(button.getValue().getDesc()));
+            List<ValueButton<Trait>> featButtons = traitChoices.map(
+                            feat -> new ValueButton<>(new LabeledValue<>(feat, feat.toString(), feat.getDesc()),
+                                            chosenTrait)).collect(Collectors.toList());
             gui.prompt(featButtons);
             CancelButton skipButton = new CancelButton("Skip", chosenTrait);
             skipButton.setToolTipText("Save perk points for next level-up");
@@ -120,7 +119,6 @@ class PlayerLevelUp {
                     gui.message("Attributes and feats refunded.");
                     break;
             }
-            // TODO: consider adding hotkey text to LabeledValue
         }
     }
 }

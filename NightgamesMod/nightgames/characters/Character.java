@@ -4004,7 +4004,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public List<Addiction> getAddictions() {
-        return getAdditionStream().collect(Collectors.toList());
+        return getAddictionStream().collect(Collectors.toList());
     }
 
     public List<Status> getPermanentStatuses() {
@@ -4015,20 +4015,20 @@ public abstract class Character extends Observable implements Cloneable {
         return status.stream().filter(status -> status.flags().contains(flag));
     }
 
-    public Stream<Addiction> getAdditionStream() {
+    public Stream<Addiction> getAddictionStream() {
         return status.stream().filter(status -> status instanceof Addiction).map(s -> (Addiction)s);
     }
 
     public boolean hasAddiction(AddictionType type) {
-        return getAdditionStream().anyMatch(a -> a.getType() == type);
+        return getAddictionStream().anyMatch(a -> a.getType() == type);
     }
 
     public Optional<Addiction> getAddiction(AddictionType type) {
-        return getAdditionStream().filter(a -> a.getType() == type).findAny();
+        return getAddictionStream().filter(a -> a.getType() == type).findAny();
     }
 
     public Optional<Addiction> getStrongestAddiction() {
-        return getAdditionStream().max(Comparator.comparing(Addiction::getSeverity));
+        return getAddictionStream().max(Comparator.comparing(Addiction::getSeverity));
     }
 
     private static final Set<AddictionType> NPC_ADDICTABLES = EnumSet.of(AddictionType.CORRUPTION);
@@ -4127,7 +4127,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public boolean checkAddiction() {
-        return getAdditionStream().anyMatch(a -> a.atLeast(Severity.LOW));
+        return getAddictionStream().anyMatch(a -> a.atLeast(Severity.LOW));
     }
     
     public boolean checkAddiction(AddictionType type) {

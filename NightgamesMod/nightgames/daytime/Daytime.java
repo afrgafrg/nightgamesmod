@@ -4,10 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
 import nightgames.characters.Player;
-import nightgames.global.Flag;
-import nightgames.global.GameState;
-import nightgames.global.Random;
-import nightgames.global.Time;
+import nightgames.global.*;
 import nightgames.gui.GUI;
 import nightgames.gui.LabeledValue;
 import nightgames.status.addiction.Addiction;
@@ -65,9 +62,10 @@ public class Daytime {
 
     private void morning() {
         GUI.gui.clearText();
-        GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::clearDaytime);
-        GameState.gameState.characterPool.getPlayer().getAddictions().stream().map(Addiction::describeMorning).forEach(
-                        s -> GUI.gui.message(s));
+        player.getAddictions().forEach(Addiction::clearDaytime);
+        player.getAddictions().stream().map(Addiction::describeMorning)
+                        .map(description -> Formatter.format(description, player, null))
+                        .forEach(s -> GUI.gui.message(s));
         if (eventMgr.playMorningScene()) {
             time = NOON;
         } else if (player.getLevel() >= 10 && player.getRank() == 0) {

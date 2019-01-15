@@ -13,7 +13,6 @@ import nightgames.items.Loot;
 import nightgames.items.clothing.ClothingTable;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Cache implements Deployable {
@@ -25,7 +24,7 @@ public class Cache implements Deployable {
     private ArrayList<Loot> reward;
 
     public Cache(int level) {
-        reward = new ArrayList<Loot>();
+        reward = new ArrayList<>();
         dc = 10 + level;
         this.level = level;
         switch (Random.random(4)) {
@@ -184,7 +183,7 @@ public class Cache implements Deployable {
         return false;
     }
 
-    public void calcReward(int level) {
+    private void calcReward(int level) {
         int bonusRollsPossible = (int) Math.floor((double) level / (double) MAX_VALUE);
         int bonusRolls = Random.random(bonusRollsPossible+1);
         int totalRolls = 1 + bonusRolls;

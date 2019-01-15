@@ -435,7 +435,7 @@ public class Airi extends BasePersonality {
                 c.write(self, "<b>"+manager.getActiveArms().size() + " tentacle arms erupt out of " + self.possessiveAdjective() + " back!</b>");
                 data.setManager(manager);
             }
-            if (unmasked && self.has(Trait.ThePrestige) && c.getStance().distance() < 2) {
+            if (unmasked && !self.equals(opponent) && self.has(Trait.ThePrestige) && c.getStance().distance() < 2) {
                 c.write(self, Formatter.format("<b>Taking advantage of {other:name-possessive} bewilderment, {self:subject-action:swoop} {self:possessive} slime onto {other:possessive} hapless form, swiftly engulfing it in {self:possessive} amorphous body.</b><br/>", self, opponent));
                 c.setStance(new Engulfed(self, opponent));
             }

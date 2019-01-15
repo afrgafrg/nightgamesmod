@@ -1098,6 +1098,9 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void write(String text) {
+        if (this.cloned) {
+            return;
+        }
         text = Formatter.capitalizeFirstLetter(text);
         if (text.isEmpty()) {
             return;

@@ -429,8 +429,8 @@ public class Decider {
 
         effect.execute(c2, newSkillUser, newTarget);
         DebugFlags.debugSimulation -= 1;
-        double selfFitnessDelta = newObserver.getFitness(c) - selfFit;
-        double otherFitnessDelta = newObserver.getOtherFitness(c, newOpponent) - otherFit;
+        double selfFitnessDelta = newObserver.getFitness(c2) - selfFit;
+        double otherFitnessDelta = newObserver.getOtherFitness(c2, newOpponent) - otherFit;
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILLS_RATING) && (c2.p1.human() || c2.p2.human())) {
             System.out.println("After:\n" + c2.debugMessage());
         }

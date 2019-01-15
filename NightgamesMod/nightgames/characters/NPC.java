@@ -83,7 +83,7 @@ public class NPC extends Character {
         for (Status s : status) {
             String statusDesc = s.describe(c);
             if (!statusDesc.isEmpty()) {
-                description.append(statusDesc).append(" ");
+                description.append(statusDesc).append("<br/>");
                 wroteStatus = true;
             }
         }

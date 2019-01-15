@@ -1345,4 +1345,8 @@ public class GUI extends JFrame implements Observer {
         GameState.gameState = state;
         return state;
     }
+
+    public void clearGameState() {
+        currentState.clear();
+    }
 }

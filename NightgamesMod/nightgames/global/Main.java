@@ -97,10 +97,14 @@ public class Main {
     }
 
     private static void run() throws ExecutionException, InterruptedException {
-        // TODO: test loading while waiting for a pause prompt
-        // Blocks until a game state is loaded into the GUI
-        GameState state = GUI.gui.getGameState();
-        state.gameLoop();
+        try {
+            // TODO: test loading while waiting for a pause prompt
+            // Blocks until a game state is loaded into the GUI
+            GameState state = GUI.gui.getGameState();
+            state.gameLoop();
+        } finally {
+            GUI.gui.clearGameState();
+        }
     }
 
     private static void makeGUI() {

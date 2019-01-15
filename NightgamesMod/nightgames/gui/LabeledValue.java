@@ -1,7 +1,5 @@
 package nightgames.gui;
 
-import com.sun.istack.internal.Nullable;
-
 /**
  * Bundles a returnable value with a label, suitable for using with a ValueButton.
  */
@@ -30,12 +28,11 @@ public class LabeledValue<T> {
         return label;
     }
 
-    @Nullable
     public T getValue() {
         return value;
     }
 
-    @Nullable public String getToolTipText() {
+    public String getToolTipText() {
         return toolTipText;
     }
 }

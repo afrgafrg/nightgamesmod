@@ -3,7 +3,7 @@
 	<property environment="env" />
 	<property name="debuglevel" value="source,lines,vars" />
 	<property name="source" value="NightgamesMod" />
-	<property name="build-root" location="build" />
+	<property name="build-root" location="out" />
 	<property name="classes" location="${build-root}/classes" />
 	<property name="stage" location="${build-root}/stage" />
 	<property name="dist" location="${build-root}" />
@@ -78,7 +78,7 @@
 	<target name="create_run_jar">
 		<jar destfile="${stage}/NightgamesMod.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="nightgames.global.GameState" />
+				<attribute name="Main-Class" value="nightgames.global.Main" />
 				<attribute name="Class-Path" value="." />
 			</manifest>
 			<fileset dir="${classes}" />

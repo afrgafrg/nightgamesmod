@@ -152,7 +152,10 @@ public class CustomNPC extends BasePersonality {
 
     @Override
     public String image(Combat c) {
-        Character other = c.getOpponent(character);
+        Character other = null;
+        if (c != null) {
+            other = c.getOpponent(character);
+        }
         return data.getPortraitName(c, character, other);
     }
 

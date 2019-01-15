@@ -29,11 +29,15 @@ public abstract class KeyableButton extends JPanel {
     }
 
     protected void resetFontSize() {
+        // FIXME: NPE in this method. Happens sometimes in the middle of painting skill buttons, while painting the 5th button.
+        // FIXME: Last time I saw, it happened while painting the Handjob button.
+        /*
         if (getButton().getText().contains("<br/>")) {
             getButton().setFont(new Font("Baskerville Old Face", Font.PLAIN, 14));
         } else {
             getButton().setFont(new Font("Baskerville Old Face", Font.PLAIN, 18));
         }
+        */
     }
 
     public abstract String getText();

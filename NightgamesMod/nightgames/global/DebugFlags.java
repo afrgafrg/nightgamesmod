@@ -37,6 +37,12 @@ public enum DebugFlags {
         parseDebugFlags(Arrays.asList(args));
     }
 
+    public void printf(String format, Object... args) {
+        if (isDebugOn(this)) {
+            System.out.printf(format, args);
+        }
+    }
+
     public static void parseDebugFlags(List<String> args) throws UnknownDebugFlagException {
         List<String> invalid = new ArrayList<>();
         for (String arg : args) {

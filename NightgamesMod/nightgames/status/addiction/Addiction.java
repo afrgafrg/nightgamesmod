@@ -13,6 +13,8 @@ import nightgames.status.Stsflag;
 
 import java.util.Optional;
 
+import static nightgames.global.DebugFlags.DEBUG_ADDICTION;
+
 public abstract class Addiction extends Status {
 
     public static final float LOW_INCREASE = .03f;
@@ -204,10 +206,8 @@ public abstract class Addiction extends Status {
         if (getSeverity() != old) {
             Formatter.writeIfCombat(c, getCause(), Formatter.format(describeIncrease(), affected, getCause()));
         }
-        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
-            System.out.printf("Aggravating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
-            System.out.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.getMagnitude(), oldMag);
-        }
+        DEBUG_ADDICTION.printf("Aggravating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
+        DEBUG_ADDICTION.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.getMagnitude(), oldMag);
     }
 
     public void alleviate(Combat c, float amt) {
@@ -217,10 +217,8 @@ public abstract class Addiction extends Status {
         if (getSeverity() != old) {
             Formatter.writeIfCombat(c, getCause(), Formatter.format(describeDecrease(), affected, getCause()));
         }
-        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
-            System.out.printf("Alleviating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
-            System.out.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.magnitude, oldMag);
-        }
+        DEBUG_ADDICTION.printf("Alleviating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
+        DEBUG_ADDICTION.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.magnitude, oldMag);
     }
 
     public void aggravateCombat(Combat c, float amt) {

@@ -120,6 +120,8 @@ public class Combat extends Observable implements Cloneable {
         gui = GUI.gui;
     }
 
+    // FIXME: Something funny is going on with stances being silently reversed.
+
     public Combat(Character p1, Character p2, Area loc, Encounter.Initiation init) {
         this(p1, p2, loc);
         switch (init) {
@@ -373,16 +375,7 @@ public class Combat extends Observable implements Cloneable {
 
     private void doPreturnUpkeep() {
         timer += 1;
-        Character player;
-        Character other;
-        if (p1.human()) {
-            player = p1;
-            other = p2;
-        } else {
-            player = p2;
-            other = p1;
-        }
-        write(describe(player, other));
+        write(describe());
         if (!shouldAutoresolve() && !Flag.checkFlag(Flag.noimage)) {
             gui.clearImage();
             if (!imagePath.isEmpty()) {
@@ -726,22 +719,31 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private String describe(Character player, Character other) {
-        if (beingObserved) {
+    private String describe() {
+        if (!p1.human() && !p2.human() && beingObserved) {
             return "<font color='rgb(255,220,220)'>"
-                            + other.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
+                            + p1.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
                             + "</font><br/><br/><font color='rgb(220,220,255)'>"
-                            + player.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
+                            + p2.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
                             + "</font><br/><br/><font color='rgb(134,196,49)'><b>"
                             + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "</b></font>";
-        } else if (!player.is(Stsflag.blinded)) {
-            return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>"
-                            + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
-                            + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
         } else {
-            return "<b>You are blinded, and cannot see what " + other.getTrueName() + " is doing!</b><br/><br/>"
-                            + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
-                            + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
+            Player player;
+            NPC other;
+            if (p1.human()) {
+                player = (Player) p1;
+                other = (NPC) p2;
+            } else {
+                player = (Player) p2;
+                other = (NPC) p1;
+            }
+            if (player.is(Stsflag.blinded)) {
+                return "<b>You are blinded, and cannot see what " + other.getTrueName() + " is doing!</b><br/><br/>" + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
+                                + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
+            } else {
+                return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>" + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
+                                + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
+            }
         }
     }
 

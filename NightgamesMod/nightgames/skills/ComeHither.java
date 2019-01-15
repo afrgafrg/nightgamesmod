@@ -109,7 +109,7 @@ public class ComeHither extends Skill {
                         + " {other:action:crawl|crawls} forward, ever closer to {self:name-possessive}"
                         + " warm embrace. Upon {other:possessive} arrival, {self:subject} ";
         if (modifier == Result.normal) {
-            msg += "wraps {self:possessive} arms around {other:possessive torso, pulling {other:direct-object}"
+            msg += "wraps {self:possessive} arms around {other:possessive} torso, pulling {other:direct-object}"
                             + " down into a passion-filled kiss.";
             if (getSelf().has(Trait.DemonsEmbrace) && getSelf().body.has("wings")) {
                 msg += " {self:PRONOUN} also takes the opportunity to wrap {self:possessive}"

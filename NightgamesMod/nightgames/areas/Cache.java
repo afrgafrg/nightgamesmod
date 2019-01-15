@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
+import nightgames.global.DebugFlags;
 import nightgames.global.Match;
 import nightgames.global.Random;
 import nightgames.gui.GUI;
@@ -12,8 +13,11 @@ import nightgames.items.Loot;
 import nightgames.items.clothing.ClothingTable;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Cache implements Deployable {
+    private static final int MAX_VALUE = 23;
     private int dc;
     private int level;
     private Attribute test;
@@ -56,11 +60,22 @@ public class Cache implements Deployable {
 
     @Override
     public boolean resolve(Character active) {
+        int bonus = 0;
         if (active.state == State.ready) {
             if (active.has(Trait.treasureSeeker)) {
-                dc -= 5;
+                bonus = 5;
             }
-            if (active.checkVsDc(test, dc)) {
+            Random.DieRoll primaryCheck = active.check(test, bonus);
+            Random.DieRoll secondaryCheck = active.check(secondary, bonus);
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_CACHE_ROLLS)) {
+                System.out.println(String.format("Cache roll for %s:", active.getTrueName()));
+                System.out.println(String.format("  Primary [%s]: %s vs dc %d", test.toString(), primaryCheck.debugString(), dc));
+                System.out.println(String.format("  Secondary [%s]: %s vs dc %d", secondary.toString(), secondaryCheck.debugString(), dc-5));
+            }
+            if (primaryCheck.vsDc(dc)) {
+                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_CACHE_ROLLS)) {
+                    System.out.println("Primary check success!");
+                }
                 if (active.human()) {
                     switch (test) {
                         case Cunning:
@@ -94,7 +109,10 @@ public class Cache implements Deployable {
                     i.pickup(active);
                 }
                 active.modMoney(Random.random(500) + 500);
-            } else if (active.checkVsDc(secondary, dc - 5)) {
+            } else if (secondaryCheck.vsDc(dc - 5)) {
+                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_CACHE_ROLLS)) {
+                    System.out.println("Secondary check success!");
+                }
                 if (active.human()) {
                     switch (test) {
                         case Cunning:
@@ -130,6 +148,9 @@ public class Cache implements Deployable {
                 }
                 active.modMoney(Random.random(500) + 500);
             } else {
+                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_CACHE_ROLLS)) {
+                    System.out.println("Failed to notice/open cache.");
+                }
                 switch (test) {
                     case Cunning:
                         GUI.gui.message(
@@ -164,130 +185,139 @@ public class Cache implements Deployable {
     }
 
     public void calcReward(int level) {
-        int value = level + Random.random(10);
-        switch (value) {
-            case 23:
-                reward.add(Item.Sprayer);
-                reward.add(Item.Sprayer);
-                reward.add(Item.Sprayer);
-                reward.add(Item.Tripwire);
-                reward.add(Item.Tripwire);
-                reward.add(Item.Talisman);
-            case 22:
-                reward.add(Item.SPotion);
-                reward.add(Item.SPotion);
-                reward.add(Item.Totem);
-                reward.add(Item.Aphrodisiac);
-                break;
-            case 21:
-                reward.add(Item.Rope);
-                reward.add(Item.Rope);
-                reward.add(Item.Rope);
-                reward.add(Item.Rope);
-                reward.add(Item.Tripwire);
-                break;
-            case 20:
-                reward.add(Item.Totem);
-                reward.add(Item.SPotion);
-                reward.add(Item.SPotion);
-                reward.add(Item.Lubricant);
-                reward.add(Item.Talisman);
-                break;
-            case 19:
-                reward.add(Item.Handcuffs);
-                reward.add(Item.Handcuffs);
-                reward.add(Item.DisSol);
-                break;
-            case 18:
-                // TODO: I think this is the source of the empty caches I keep finding.
-                ClothingTable.getByID("cup").ifPresent(cup -> reward.add(cup));
-                break;
-            case 17:
-                reward.add(Item.SPotion);
-                reward.add(Item.SPotion);
-                reward.add(Item.Talisman);
-                break;
-            case 16:
-                reward.add(Item.Totem);
-                reward.add(Item.Handcuffs);
-                reward.add(Item.FaeScroll);
-                break;
-            case 15:
-                reward.add(Item.SPotion);
-                reward.add(Item.Aphrodisiac);
-                reward.add(Item.Sprayer);
-                reward.add(Item.Talisman);
-                break;
-            case 14:
-                reward.add(Item.Lubricant);
-                reward.add(Item.Lubricant);
-                reward.add(Item.SPotion);
-                break;
-            case 13:
-                reward.add(Item.Rope);
-                reward.add(Item.Rope);
-                reward.add(Item.Sedative);
-                reward.add(Item.Talisman);
-                break;
-            case 12:
-                reward.add(Item.Aphrodisiac);
-                reward.add(Item.Aphrodisiac);
-                break;
-            case 11:
-                reward.add(Item.FaeScroll);
-                reward.add(Item.Talisman);
-                break;
-            case 10:
-                reward.add(Item.DisSol);
-                reward.add(Item.Tripwire);
-                reward.add(Item.Sprayer);
-                reward.add(Item.Talisman);
-                break;
-            case 9:
-                reward.add(Item.Totem);
-                reward.add(Item.Talisman);
-                break;
-            case 8:
-                reward.add(Item.Aphrodisiac);
-                reward.add(Item.Lubricant);
-                break;
-            case 7:
-                reward.add(Item.Tripwire);
-                reward.add(Item.Tripwire);
-                reward.add(Item.Phone);
-                reward.add(Item.Talisman);
-                break;
-            case 6:
-                reward.add(Item.SPotion);
-                break;
-            case 5:
-                reward.add(Item.Aphrodisiac);
-                break;
-            case 4:
-                reward.add(Item.Lubricant);
-                reward.add(Item.DisSol);
-                reward.add(Item.Talisman);
-                break;
-            case 3:
-                reward.add(Item.Beer);
-                reward.add(Item.Beer);
-                reward.add(Item.Beer);
-                break;
-            case 2:
-                reward.add(Item.ZipTie);
-                reward.add(Item.Tripwire);
-                break;
-            case 1:
-                reward.add(Item.FaeScroll);
-                reward.add(Item.Talisman);
-                break;
-            default:
-                reward.add(Item.Aphrodisiac);
-                reward.add(Item.Totem);
-                reward.add(Item.DisSol);
-                reward.add(Item.SPotion);
-                reward.add(Item.Handcuffs);
+        int bonusRollsPossible = (int) Math.floor((double) level / (double) MAX_VALUE);
+        int bonusRolls = Random.random(bonusRollsPossible+1);
+        int totalRolls = 1 + bonusRolls;
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_CACHE_ROLLS)) {
+            System.out.println(String.format("Cache reward rolls at approximate mean level %d (up to %d bonus):", level, bonusRollsPossible));
+            System.out.println(String.format("  1 base + %d bonus = %d total rolls", bonusRolls, totalRolls));
         }
+        IntStream.range(0, totalRolls).map(i -> Random.random(Math.min(MAX_VALUE, level))).forEach(value -> {
+            switch (value) {
+                case 23:
+                    reward.add(Item.Sprayer);
+                    reward.add(Item.Sprayer);
+                    reward.add(Item.Sprayer);
+                    reward.add(Item.Tripwire);
+                    reward.add(Item.Tripwire);
+                    reward.add(Item.Talisman);
+                    break;
+                case 22:
+                    reward.add(Item.SPotion);
+                    reward.add(Item.SPotion);
+                    reward.add(Item.Totem);
+                    reward.add(Item.Aphrodisiac);
+                    break;
+                case 21:
+                    reward.add(Item.Rope);
+                    reward.add(Item.Rope);
+                    reward.add(Item.Rope);
+                    reward.add(Item.Rope);
+                    reward.add(Item.Tripwire);
+                    break;
+                case 20:
+                    reward.add(Item.Totem);
+                    reward.add(Item.SPotion);
+                    reward.add(Item.SPotion);
+                    reward.add(Item.Lubricant);
+                    reward.add(Item.Talisman);
+                    break;
+                case 19:
+                    reward.add(Item.Handcuffs);
+                    reward.add(Item.Handcuffs);
+                    reward.add(Item.DisSol);
+                    break;
+                case 18:
+                    // TODO: I think this is the source of the empty caches I keep finding.
+                    ClothingTable.getByID("cup").ifPresent(cup -> reward.add(cup));
+                    break;
+                case 17:
+                    reward.add(Item.SPotion);
+                    reward.add(Item.SPotion);
+                    reward.add(Item.Talisman);
+                    break;
+                case 16:
+                    reward.add(Item.Totem);
+                    reward.add(Item.Handcuffs);
+                    reward.add(Item.FaeScroll);
+                    break;
+                case 15:
+                    reward.add(Item.SPotion);
+                    reward.add(Item.Aphrodisiac);
+                    reward.add(Item.Sprayer);
+                    reward.add(Item.Talisman);
+                    break;
+                case 14:
+                    reward.add(Item.Lubricant);
+                    reward.add(Item.Lubricant);
+                    reward.add(Item.SPotion);
+                    break;
+                case 13:
+                    reward.add(Item.Rope);
+                    reward.add(Item.Rope);
+                    reward.add(Item.Sedative);
+                    reward.add(Item.Talisman);
+                    break;
+                case 12:
+                    reward.add(Item.Aphrodisiac);
+                    reward.add(Item.Aphrodisiac);
+                    break;
+                case 11:
+                    reward.add(Item.FaeScroll);
+                    reward.add(Item.Talisman);
+                    break;
+                case 10:
+                    reward.add(Item.DisSol);
+                    reward.add(Item.Tripwire);
+                    reward.add(Item.Sprayer);
+                    reward.add(Item.Talisman);
+                    break;
+                case 9:
+                    reward.add(Item.Totem);
+                    reward.add(Item.Talisman);
+                    break;
+                case 8:
+                    reward.add(Item.Aphrodisiac);
+                    reward.add(Item.Lubricant);
+                    break;
+                case 7:
+                    reward.add(Item.Tripwire);
+                    reward.add(Item.Tripwire);
+                    reward.add(Item.Phone);
+                    reward.add(Item.Talisman);
+                    break;
+                case 6:
+                    reward.add(Item.SPotion);
+                    break;
+                case 5:
+                    reward.add(Item.Aphrodisiac);
+                    break;
+                case 4:
+                    reward.add(Item.Lubricant);
+                    reward.add(Item.DisSol);
+                    reward.add(Item.Talisman);
+                    break;
+                case 3:
+                    reward.add(Item.Beer);
+                    reward.add(Item.Beer);
+                    reward.add(Item.Beer);
+                    break;
+                case 2:
+                    reward.add(Item.ZipTie);
+                    reward.add(Item.Tripwire);
+                    break;
+                case 1:
+                    reward.add(Item.FaeScroll);
+                    reward.add(Item.Talisman);
+                    break;
+                default:
+                    reward.add(Item.Aphrodisiac);
+                    reward.add(Item.Totem);
+                    reward.add(Item.DisSol);
+                    reward.add(Item.SPotion);
+                    reward.add(Item.Handcuffs);
+            }
+        });
     }
 
     @Override

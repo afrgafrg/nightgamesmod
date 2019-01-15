@@ -81,7 +81,7 @@ public class Random {
         public DieRoll(int sides, int modifier) {
             this.sides = sides;
             this.modifier = modifier;
-            this.roll = Random.random(sides);
+            this.roll = Random.random(1, sides+1);
         }
 
         public DieRoll(int modifier) {
@@ -93,11 +93,24 @@ public class Random {
         }
 
         public boolean criticalHit() {
-            return roll == 0;
+            return roll == sides;
         }
 
         public boolean criticalMiss() {
-            return roll == sides - 1;
+            return roll == 1;
+        }
+
+        public boolean vsDc(int dc) {
+            return !criticalMiss() && (result() >= dc || criticalHit());
+        }
+
+        public boolean vsDcNoCrit(int dc) {
+            return result() > dc;
+        }
+
+        public String debugString() {
+            return String.format("Rolled a d%d: %d + %d = %d%s%s", sides, roll, modifier, result(),
+                            criticalHit() ? " (critical hit!)" : "", criticalMiss() ? " (critical miss!)" : "");
         }
     }
 }

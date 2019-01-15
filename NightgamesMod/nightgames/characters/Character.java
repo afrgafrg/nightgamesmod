@@ -354,13 +354,7 @@ public abstract class Character extends Observable implements Cloneable {
             System.out.println("Checked roll of " + roll.result() + " against dc " + dc + "." +
                             (roll.criticalHit() ? "Critical hit!" : "") + (roll.criticalMiss() ? "Critical miss!" : ""));
         }
-        if (roll.criticalHit()) {
-            return true;
-        }
-        if (roll.criticalMiss()) {
-            return false;
-        }
-        return roll.result() >= dc;
+        return roll.vsDc(dc);
     }
 
     public Random.DieRoll check(Attribute a) {

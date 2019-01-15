@@ -144,7 +144,9 @@ public abstract class BaseNPCTime extends Activity {
                 GUI.gui.message("<br/>");
             });
             choose("Back", nextChoices);
-        } else if (choice.equals("Start") || choice.equals("Back")) {
+        }
+        // "Change Outfit" above blocks until the closet GUI closes, so we should be back to visit selection.
+        if (choice.equals("Start") || choice.equals("Back") || choice.equals("Change Outfit")) {
             if (npc.getAffection(player) > 25 && (advTrait == null || npc.has(advTrait))) {
                 GUI.gui.message(Formatter.format(loveIntro, npc, player));
                 choose("Games", nextChoices);

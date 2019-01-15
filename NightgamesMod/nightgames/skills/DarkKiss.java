@@ -51,7 +51,7 @@ public class DarkKiss extends Skill {
         int amt = min + Random.random(mod);
         target.loseWillpower(c, amt, false);
         add.alleviateCombat(c, Addiction.HIGH_INCREASE);
-        getSelf().addict(c, AddictionType.CORRUPTION, null, Addiction.LOW_INCREASE);
+        getSelf().addict(c, AddictionType.CORRUPTION, add.getCause(), Addiction.LOW_INCREASE);
         return true;
     }
 

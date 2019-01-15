@@ -627,7 +627,6 @@ public class GUI extends JFrame implements Observer {
         // Use this for making save dialogs
         saveFileChooser = new NgsChooser(this);
 
-        gui = this;
     }
 
     public void load(GameState gameState) {

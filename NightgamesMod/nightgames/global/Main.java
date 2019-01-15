@@ -111,6 +111,7 @@ public class Main {
             gui = new GUI();
         }
         gui.addWindowListener(new CloseListener());
+        GUI.gui = gui;
     }
 
     public static void initialize() {

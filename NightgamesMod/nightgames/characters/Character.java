@@ -4053,9 +4053,7 @@ public abstract class Character extends Observable implements Cloneable {
         Addiction addict = addiction.get();
         addict.alleviate(c, mag);
         if (addict.shouldRemove()) {
-            if (dbg) {
-                System.out.printf("Removing %s from %s", type.name(), this.getTrueName());
-            }
+            DebugFlags.DEBUG_ADDICTION.printf("Removing %s from %s\n", type.name(), this.getTrueName());
             removeStatusImmediately(addict);
         }
     }

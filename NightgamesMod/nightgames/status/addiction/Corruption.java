@@ -138,9 +138,12 @@ public class Corruption extends Addiction {
     }
 
     private static final Set<Attribute> UNDRAINABLE_ATTS = EnumSet.of(Attribute.Dark, Attribute.Speed, Attribute.Perception);
+
     private boolean attIsDrainable(Attribute att) {
-        return !UNDRAINABLE_ATTS.contains(att) && affected.get(att) > Math.max(10, affected.getPure(att) / 10);
+        double maxDrainFraction = 1 - getMagnitude();
+        return !UNDRAINABLE_ATTS.contains(att) && affected.get(att) > Math.max(10, affected.getPure(att) * maxDrainFraction);
     }
+
     private Optional<Attribute> getDrainAttr() {
         Optional<AttributeBuff> darkBuff = affected.getStatusOfClass(AttributeBuff.class).stream().filter(status -> status.getModdedAttribute() == Attribute.Dark).findAny();
         if (!darkBuff.isPresent() || darkBuff.get().getValue() <  10 + getMagnitude() * 50) {

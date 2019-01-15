@@ -144,7 +144,7 @@ public abstract class Addiction extends Status {
         if (!didDaytime || overloading) {
             if (!overloading) {
                 float amount = (float) Random.randomdouble() / 4.f;
-                alleviate(null, amount);
+                affected.unaddict(null, this.getType(), amount);
             }
             if (isActive()) {
                 inWithdrawal = true;

@@ -35,9 +35,9 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
     **CODER BONUS** Providing an save game file as an argument to the main function will now launch that game directly. No more clicking through dialog boxes while debugging! (If we already had a way to do that, I'm gonna feel silly)
 
-1. Make the daytime loop explicit.
+1. **DONE** Make the daytime loop explicit.
 
-1. Fix everything I broke in the previous steps.
+1. **PRETTY GOOD** Fix everything I broke in the previous steps.
 
 1. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
 

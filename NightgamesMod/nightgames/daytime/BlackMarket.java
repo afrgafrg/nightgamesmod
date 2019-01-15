@@ -40,17 +40,17 @@ public class BlackMarket extends Store {
 
     @Override
     public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
+        GUI.gui.clearText();
+        GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
             trained = false;
-        }
-        GUI.gui.clearText();
-        GUI.gui.clearCommand();
-        if (choice.equals("Leave")) {
+        } else if (choice.equals("Leave")) {
             done(acted, instance);
             return;
+        } else {
+            attemptBuy(choice);
         }
-        attemptBuy(choice);
         if (player.human()) {
             if (Flag.checkFlag(Flag.blackMarketPlus)) {
                 if (!Flag.checkFlag(Flag.metRin)) {

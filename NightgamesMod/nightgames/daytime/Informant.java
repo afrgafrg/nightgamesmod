@@ -84,6 +84,7 @@ public class Informant extends Activity {
         }
         if (choice.equals("Leave")) {
             done(acted, instance);
+            return;
         }
         if (choice.equals("Purchasing supplies")) {
             GUI.gui.message("<i>\"As you were probably told when you entered, there are rules restricting the clothes you can wear to a match. If everyone wore a bunch of hard to remove layers, "

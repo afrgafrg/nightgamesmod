@@ -29,12 +29,12 @@ public class Bookstore extends Store {
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
-        }
-        if (choice.equals("Leave")) {
+        } else if (choice.equals("Leave")) {
             done(acted, instance);
             return;
+        } else {
+            attemptBuy(choice);
         }
-        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "In addition to textbooks, the campus bookstore sells assorted items for everyday use.");

@@ -30,12 +30,12 @@ public class Boutique extends Store {
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
-        }
-        if (choice.equals("Leave")) {
+        } else if (choice.equals("Leave")) {
             done(acted, instance);
             return;
+        } else {
+            attemptBuy(choice);
         }
-        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "This is a higher end store for women's clothing. Things may get a bit expensive here.");

@@ -28,11 +28,12 @@ public class ClothingStore extends Store {
         GUI.gui.clearCommand();
         if (choice.equals("Start")) {
             acted = false;
-        }
-        if (choice.equals("Leave")) {
+        } else if (choice.equals("Leave")) {
             done(acted, instance);
+            return;
+        } else {
+            attemptBuy(choice);
         }
-        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "This is a normal retail clothing outlet. For obvious reasons, you'll need to buy anything you want to wear at night in bulk.");

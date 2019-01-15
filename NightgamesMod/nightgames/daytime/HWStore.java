@@ -31,13 +31,13 @@ public class HWStore extends Store {
     public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
         GUI.gui.clearText();
         GUI.gui.clearCommand();
-        if (choice.equals("Start")) {
-            acted = false;
-        }
         if (choice.equals("Leave")) {
             done(acted, instance);
+        } else if (choice.equals("Start")) {
+            acted = false;
+        } else {
+            attemptBuy(choice);
         }
-        attemptBuy(choice);
         if (player.human()) {
             GUI.gui.message(
                             "Nothing at the hardware store is designed for the sort of activities you have in mind, but there are components you could use to make some "

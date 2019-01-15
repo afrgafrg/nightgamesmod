@@ -51,6 +51,7 @@ public class Combat extends Observable implements Cloneable {
         FINISHED_SCENE,
         ENDED,
     }
+    private GUI gui;
     public Character p1;
     public Character p2;
     public List<PetCharacter> otherCombatants;
@@ -116,6 +117,7 @@ public class Combat extends Observable implements Cloneable {
             log = new CombatLog(this);
         }
         finished = false;
+        gui = GUI.gui;
     }
 
     public Combat(Character p1, Character p2, Area loc, Encounter.Initiation init) {
@@ -194,7 +196,7 @@ public class Combat extends Observable implements Cloneable {
             if (doExtendedLog()) {
                 log.logHeader("\n");
             }
-            this.promptNext(GUI.gui);
+            this.promptNext(gui);
         }
     }
 
@@ -382,11 +384,9 @@ public class Combat extends Observable implements Cloneable {
         }
         write(describe(player, other));
         if (!shouldAutoresolve() && !Flag.checkFlag(Flag.noimage)) {
-            GUI.gui
-                  .clearImage();
+            gui.clearImage();
             if (!imagePath.isEmpty()) {
-                GUI.gui
-                      .displayImage(imagePath, images.get(imagePath));
+                gui.displayImage(imagePath, images.get(imagePath));
             }
         }
         p1.preturnUpkeep();
@@ -1226,7 +1226,7 @@ public class Combat extends Observable implements Cloneable {
             prompt = false;
         }
         if (prompt) {
-            this.promptNext(GUI.gui);
+            this.promptNext(gui);
         }
     }
 
@@ -1260,7 +1260,7 @@ public class Combat extends Observable implements Cloneable {
         }
         phase = CombatPhase.RESULTS_SCENE;
         if (p1.human() || p2.human() || intruder.human()) {
-            loadCombatGUI(GUI.gui);
+            loadCombatGUI(gui);
         }
     }
 
@@ -1279,10 +1279,10 @@ public class Combat extends Observable implements Cloneable {
                 }
                 scene = getPostCombatScene(npc);
                 if (scene.isPresent()) {
-                    GUI.gui.clearText();
-                    GUI.gui.clearCommand();
+                    gui.clearText();
+                    gui.clearCommand();
                     scene.get().visit(this, npc);
-                    this.promptNext(GUI.gui);
+                    this.promptNext(gui);
                 }
             } while (scene.isPresent());
         }
@@ -1392,8 +1392,7 @@ public class Combat extends Observable implements Cloneable {
             return;
         }
         if (!imagePath.isEmpty() && !cloned && isBeingObserved()) {
-            GUI.gui
-                  .displayImage(imagePath, images.get(imagePath));
+            gui.displayImage(imagePath, images.get(imagePath));
         }
     }
 
@@ -1693,7 +1692,7 @@ public class Combat extends Observable implements Cloneable {
         while (!finished) {
             boolean pause = false;
             if (!cloned && isBeingObserved()) {
-                GUI.gui.loadPortrait(this, p1, p2);
+                gui.loadPortrait(this, p1, p2);
             }
             if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SCENE)) {
                 System.out.println("Current phase = " + phase);

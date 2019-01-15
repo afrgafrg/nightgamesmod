@@ -44,15 +44,33 @@ public enum Attribute {
         return skillTag;
     }
 
-    public static boolean isBasic(Character self, Attribute a) {
-        return a == Power || a == Seduction || a == Perception || (self != null && self.has(Trait.nymphomania) && a == Attribute.Nymphomania);
+    public static boolean isBasic(Attribute a) {
+        return a == Power || a == Seduction || a == Cunning;
     }
 
     public static boolean isTrainable(Character self, Attribute a) {
-        if (a == Willpower) {
-            return self.getWillpower().max() + 2 <= self.getMaxWillpowerPossible();
+        // Speed and Perception cannot be trained.
+        // Basic attributes (Power, Seduction, Cunning) can always be trained.
+        // Willpower can be trained, up to a level-dependent cap.
+        // A few attributes only require a certain trait.
+        // Most attributes require instruction before they can be increased at level-up.
+        switch (a) {
+            case Willpower:
+                return self.getWillpower().max() + 2 <= self.getMaxWillpowerPossible();
+            case Speed:
+            case Perception:
+                return false;
+            case Power:
+            case Seduction:
+            case Cunning:
+                return true;
+            case Divinity:
+                return self.has(Trait.divinity);
+            case Nymphomania:
+                return self.has(Trait.nymphomania);
+            default:
+                 return self.getPure(a) > 0;
         }
-        return a != Speed && a != Perception && (self.has(Trait.divinity) || a != Divinity);
     }
 
     public String getLowerPhrase() {

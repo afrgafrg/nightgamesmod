@@ -3922,14 +3922,14 @@ public abstract class Character extends Observable implements Cloneable {
         return skills;
     }
 
-    public void distributePoints(List<PreferredAttribute> preferredAttributes) {
+    protected void distributePoints(List<PreferredAttribute> preferredAttributes) {
         if (availableAttributePoints <= 0) {
             return;
         }
-        ArrayList<Attribute> avail = new ArrayList<Attribute>();
-        Deque<PreferredAttribute> preferred = new ArrayDeque<PreferredAttribute>(preferredAttributes);
+        List<Attribute> avail = new ArrayList<>();
+        Deque<PreferredAttribute> preferred = new ArrayDeque<>(preferredAttributes);
         for (Attribute a : att.keySet()) {
-            if (Attribute.isTrainable(this, a) && (getPure(a) > 0 || Attribute.isBasic(this, a))) {
+            if (Attribute.isTrainable(this, a)) {
                 avail.add(a);
             }
         }
@@ -3942,12 +3942,10 @@ public abstract class Character extends Observable implements Cloneable {
         for (; availableAttributePoints > 0; availableAttributePoints--) {
             Attribute selected = null;
             // remove all the attributes that isn't in avail
-            preferred = new ArrayDeque<>(preferred.stream()
-                                                  .filter(p -> {
-                                                      Optional<Attribute> att = p.getPreferred(this);
-                                                      return att.isPresent() && avail.contains(att.get());
-                                                  })
-                                                  .collect(Collectors.toList()));
+            preferred = preferred.stream().filter(p -> {
+                Optional<Attribute> att = p.getPreferred(this);
+                return att.isPresent() && avail.contains(att.get());
+            }).collect(Collectors.toCollection(ArrayDeque::new));
             if (preferred.size() > 0) {
                 if (noPrefAdded > 1) {
                     noPrefAdded = 0;
@@ -3965,7 +3963,6 @@ public abstract class Character extends Observable implements Cloneable {
                 selected = avail.get(Random.random(avail.size()));
             }
             mod(selected, 1);
-            selected = null;
         }
     }
 

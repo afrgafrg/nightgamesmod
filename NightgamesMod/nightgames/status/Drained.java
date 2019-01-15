@@ -23,7 +23,7 @@ public class Drained extends AttributeBuff {
             duration *= 1.5;
         }
         int realValue = Math.min(drained.getPure(att) - 
-                        (Attribute.isBasic(drained, att) ? 3 : 0), value);
+                        (Attribute.isBasic(att) ? 3 : 0), value);
         if (realValue > 0) {
             drainer.add(c, new Drained(drainer, drained, att, realValue, duration));
             drained.add(c, new Drained(drained, drainer, att, -realValue, duration));

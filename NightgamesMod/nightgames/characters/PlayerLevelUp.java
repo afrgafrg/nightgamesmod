@@ -5,6 +5,7 @@ import nightgames.gui.*;
 import nightgames.utilities.FixedDeque;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CancellationException;
@@ -41,8 +42,8 @@ class PlayerLevelUp {
         boolean wantsToSpendAttributePoints = true;
         while (wantsToSpendAttributePoints && remainingAttributePoints() > 0) {
             gui.clearCommand();
-            List<Attribute> attributeChoices = player.att.keySet().stream()
-                            .filter(att -> Attribute.isTrainable(player, att) && player.getPure(att) > 0)
+            List<Attribute> attributeChoices = Arrays.stream(Attribute.values())
+                            .filter(att -> Attribute.isTrainable(player, att))
                             .collect(Collectors.toList());
             Formatter.writeIfCombatUpdateImmediately(gui.combat, player, remainingAttributePoints() + " Attribute Points remain.\n");
 

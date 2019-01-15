@@ -4035,19 +4035,11 @@ public abstract class Character extends Observable implements Cloneable {
         }
         Optional<Addiction> addiction = getAddiction(type);
         if (addiction.isPresent() && Objects.equals(addiction.map(Addiction::getCause).orElse(null), cause)) {
-            if (dbg) {
-                System.out.printf("Aggravating %s on player by %.3f\n", type.name(), mag);
-            }
             Addiction a = addiction.get();
             a.aggravate(c, mag);
-            if (dbg) {
-                System.out.printf("%s magnitude is now %.3f\n", a.getType()
-                                                                 .name(),
-                                a.getMagnitude());
-            }
         } else {
             if (dbg) {
-                System.out.printf("Creating initial %s on player with %.3f\n", type.name(), mag);
+                System.out.printf("Creating initial %s on %s with %.3f\n", type.name(), getTrueName(), mag);
             }
             Addiction addict = type.build(this, cause.getType(), mag);
             addNonCombat(addict);
@@ -4057,9 +4049,6 @@ public abstract class Character extends Observable implements Cloneable {
 
     public void unaddict(Combat c, AddictionType type, float mag) {
         boolean dbg = DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION);
-        if (dbg) {
-            System.out.printf("Alleviating %s on player by %.3f\n", type.name(), mag);
-        }
         Optional<Addiction> addiction = getAddiction(type);
         if (!addiction.isPresent()) {
             return;
@@ -4068,7 +4057,7 @@ public abstract class Character extends Observable implements Cloneable {
         addict.alleviate(c, mag);
         if (addict.shouldRemove()) {
             if (dbg) {
-                System.out.printf("Removing %s from player", type.name());
+                System.out.printf("Removing %s from %s", type.name(), this.getTrueName());
             }
             removeStatusImmediately(addict);
         }
@@ -4083,15 +4072,12 @@ public abstract class Character extends Observable implements Cloneable {
         Optional<Addiction> addiction = getAddiction(type);
         if (addiction.isPresent()) {
             if (dbg) {
-                System.out.printf("Aggravating %s on player by %.3f (Combat vs %s)\n", type.name(), mag,
-                                cause.getTrueName());
+                System.out.printf("Aggravating %s on player by %.3f (Combat vs %s)\n", type.name(), mag, cause.getTrueName());
             }
             Addiction a = addiction.get();
             a.aggravateCombat(c, mag);
             if (dbg) {
-                System.out.printf("%s magnitude is now %.3f\n", a.getType()
-                                                                 .name(),
-                                a.getMagnitude());
+                System.out.printf("%s magnitude is now %.3f\n", a.getType() .name(), a.getMagnitude());
             }
         } else {
             if (dbg) {

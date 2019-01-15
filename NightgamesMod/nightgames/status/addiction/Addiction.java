@@ -142,9 +142,6 @@ public abstract class Addiction extends Status {
         if (!didDaytime || overloading) {
             if (!overloading) {
                 float amount = (float) Random.randomdouble() / 4.f;
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
-                    System.out.println("Alleviating addiction " + this.getType() + " by " + amount);
-                }
                 alleviate(null, amount);
             }
             if (isActive()) {
@@ -202,17 +199,27 @@ public abstract class Addiction extends Status {
 
     public void aggravate(Combat c, float amt) {
         Severity old = getSeverity();
+        float oldMag = magnitude;
         magnitude = clamp(magnitude + amt);
         if (getSeverity() != old) {
             Formatter.writeIfCombat(c, getCause(), Formatter.format(describeIncrease(), affected, getCause()));
+        }
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
+            System.out.printf("Aggravating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
+            System.out.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.getMagnitude(), oldMag);
         }
     }
 
     public void alleviate(Combat c, float amt) {
         Severity old = getSeverity();
+        float oldMag = magnitude;
         magnitude = clamp(magnitude - amt);
         if (getSeverity() != old) {
             Formatter.writeIfCombat(c, getCause(), Formatter.format(describeDecrease(), affected, getCause()));
+        }
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_ADDICTION)) {
+            System.out.printf("Alleviating addiction %s on %s by %.3f\n", this.getType(), affected.getTrueName(), amt);
+            System.out.printf("%s magnitude is now %.3f (was %.3f)\n", this.getType(), this.magnitude, oldMag);
         }
     }
 

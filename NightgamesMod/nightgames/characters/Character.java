@@ -3081,7 +3081,7 @@ public abstract class Character extends Observable implements Cloneable {
 
     protected void showSkillChoices(Combat c, Character target) {
         if (DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
-            c.updateAndClearMessage();
+            c.updateGUI();
             c.write(this, nameOrPossessivePronoun() + " turn...");
             c.updateGUI();
         }

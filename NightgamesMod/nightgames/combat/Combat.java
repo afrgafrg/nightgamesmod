@@ -728,7 +728,7 @@ public class Combat extends Observable implements Cloneable {
                             + p2.describe(GameState.gameState.characterPool.getPlayer().get(Attribute.Perception), this)
                             + "</font><br/><br/><font color='rgb(134,196,49)'><b>"
                             + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "</b></font>";
-        } else {
+        } else if (beingObserved) {
             Player player;
             NPC other;
             if (p1.human()) {
@@ -745,6 +745,8 @@ public class Combat extends Observable implements Cloneable {
                 return other.describe(player.get(Attribute.Perception), this) + "<br/><br/>" + Formatter.capitalizeFirstLetter(getStance().describe(this)) + "<br/><br/>"
                                 + player.describe(other.get(Attribute.Perception), this) + "<br/><br/>";
             }
+        } else {
+            return "";
         }
     }
 

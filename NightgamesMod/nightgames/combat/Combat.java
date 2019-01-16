@@ -653,7 +653,8 @@ public class Combat extends Observable implements Cloneable {
             Character drainer = p1.has(Trait.leveldrainer) ? p1 : p2;
             Character drained = p1.has(Trait.leveldrainer) ? p2 : p1;
             if (drainer.equals(winner.orElse(null)) && !getCombatantData(drainer).getBooleanFlag("has_drained")) {
-                if (!getStance().havingSex(this) || !getStance().dom(drainer)) {
+                // Drainer needs to get on top after winning.
+                if (!getStance().havingSex(this, drainer) || !getStance().dom(drainer)) {
                     Position mountStance = new Mount(drainer, drained);
                     if (mountStance.insert(this, drained, drainer) != mountStance) {
                         write(drainer, Formatter.format("With {other:name-do} defeated and unable to fight back, {self:subject-action:climb|climbs} "

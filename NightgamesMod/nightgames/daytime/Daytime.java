@@ -172,7 +172,7 @@ public class Daytime {
     }
 
     public void npcDaytime(NPC npc) {
-        if (npc.getLevel() > npc.getRank() * 10) {
+        if (npc.getLevel() / 10 > npc.getRank()) {
             npc.rankup();
         }
         npc.daytime(dayLength);

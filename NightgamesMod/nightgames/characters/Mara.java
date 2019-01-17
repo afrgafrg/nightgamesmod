@@ -384,7 +384,8 @@ public class Mara extends BasePersonality {
 
     @Override
     public void rest(int time) {
-        if (character.rank == 1 && !character.has(Trait.madscientist)) {
+        if (character.rank >= 1 && !character.has(Trait.madscientist) &&
+                        (Flag.checkFlag(MARA_GENERAL_TECH_FOCUS) || Flag.checkFlag(MARA_HARPOON_FOCUS))) {
             advance();
         }
         super.rest(time);

@@ -5,20 +5,20 @@ import java.util.concurrent.CompletableFuture;
 /**
  * A button that completes a future on click.
  */
-public class ValueButton<T> extends RunnableButton {
+class ValueButton<T> extends RunnableButton {
     private static final long serialVersionUID = -2698381865901846194L;
     private final T value;
     protected final CompletableFuture<T> future;
 
 
-    public ValueButton(LabeledValue<T> value, CompletableFuture<T> future) {
+    ValueButton(LabeledValue<T> value, CompletableFuture<T> future) {
         this(value.getValue(), value.getLabel(), future);
         if (value.getToolTipText() != null) {
             this.setToolTipText(value.getToolTipText());
         }
     }
 
-    public ValueButton(T value, String label, CompletableFuture<T> future) {
+    ValueButton(T value, String label, CompletableFuture<T> future) {
         super(label);
         this.value = value;
         this.future = future;

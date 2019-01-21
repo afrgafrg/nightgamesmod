@@ -102,10 +102,9 @@ public class PreMatchSchool extends Prematch {
         switch (response) {
             case accept:
                 GUI.gui.clearText();
+                GUI.gui.clearCommand();
                 GUI.gui.message(type.acceptance());
-                ContinueButton startMatch = new ContinueButton(Response.start.label);
-                GUI.gui.prompt(startMatch);
-                startMatch.await();
+                GUI.gui.next(Response.start.label).await();
                 break;
             case refuse:
                 type = new NoModifier();

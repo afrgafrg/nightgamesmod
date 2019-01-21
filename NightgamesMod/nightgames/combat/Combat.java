@@ -1,16 +1,15 @@
 package nightgames.combat;
 
 import nightgames.areas.Area;
-import nightgames.characters.*;
 import nightgames.characters.Character;
+import nightgames.characters.*;
 import nightgames.characters.body.Body;
 import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.BreastsPart;
 import nightgames.characters.body.mods.*;
-import nightgames.global.*;
 import nightgames.global.Formatter;
 import nightgames.global.Random;
-import nightgames.gui.ContinueButton;
+import nightgames.global.*;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.Clothing;
@@ -23,8 +22,8 @@ import nightgames.pet.arms.ArmManager;
 import nightgames.skills.*;
 import nightgames.stance.*;
 import nightgames.status.*;
-import nightgames.status.Compulsive.Situation;
 import nightgames.status.Stunned;
+import nightgames.status.Compulsive.Situation;
 import nightgames.status.addiction.Addiction;
 import nightgames.status.addiction.Addiction.Severity;
 import nightgames.status.addiction.AddictionType;
@@ -1651,17 +1650,10 @@ public class Combat extends Observable implements Cloneable {
         return phase == CombatPhase.FINISHED_SCENE || phase == CombatPhase.ENDED;
     }
 
-    void promptNext(GUI gui) {
+    private void promptNext(GUI gui) throws InterruptedException {
         gui.clearCommand();
-        ContinueButton next = new ContinueButton("Next");
-        gui.addButton(next);
-        try {
-            next.await();
-            gui.clearCommand();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
+        gui.next("Next").await();
+        gui.clearCommand();
     }
 
     public void removeCombatGUI(GUI gui) {

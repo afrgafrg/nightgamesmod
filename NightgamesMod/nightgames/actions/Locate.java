@@ -4,10 +4,7 @@ import nightgames.areas.Area;
 import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.global.Match;
-import nightgames.gui.CancelButton;
-import nightgames.gui.GUI;
-import nightgames.gui.KeyableButton;
-import nightgames.gui.ValueButton;
+import nightgames.gui.*;
 import nightgames.items.Item;
 import nightgames.status.Detected;
 import nightgames.status.Horny;
@@ -48,12 +45,11 @@ public class Locate extends Action {
         gui.clearText();
         gui.validate();
         gui.message("Thinking back to your 'games' with Reyka, you take out a totem to begin a scrying ritual: ");
-        CompletableFuture<Character> choice = new CompletableFuture<>();
-        List<KeyableButton> choices = Match.getMatch().combatants.stream()
-                        .filter(c -> self.getAffection(c) >= MINIMUM_SCRYING_REQUIREMENT).map(character -> new ValueButton<>(
-                                        character, character.getTrueName(), choice)).collect(Collectors.toList());
-        choices.add(new CancelButton("Leave", choice));
-        gui.prompt(choices);
+        List<LabeledValue<Character>> choices = Match.getMatch().combatants.stream()
+                        .filter(c -> self.getAffection(c) >= MINIMUM_SCRYING_REQUIREMENT).map(character -> new LabeledValue<>(
+                                        character, character.getTrueName())).collect(Collectors.toList());
+        CompletableFuture<Character> choice =  gui.promptFuture(choices);
+        gui.cancel("Leave", choice);
         try {
             Character target = choice.get();
             Area area = target.location();
@@ -75,7 +71,6 @@ public class Locate extends Action {
             }
             self.addNonCombat(new Horny(self, self.getArousal().max() / 10, 10, "Scrying Ritual"));
         } catch (InterruptedException e) {
-            e.printStackTrace();
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

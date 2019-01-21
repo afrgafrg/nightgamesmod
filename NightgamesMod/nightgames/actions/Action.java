@@ -1,14 +1,12 @@
 package nightgames.actions;
 
+import nightgames.characters.Character;
+import nightgames.items.Item;
+import nightgames.trap.Trap;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import nightgames.characters.Character;
-import nightgames.gui.GUI;
-import nightgames.gui.RunnableButton;
-import nightgames.items.Item;
-import nightgames.trap.Trap;
 
 public abstract class Action implements Serializable {
     /**

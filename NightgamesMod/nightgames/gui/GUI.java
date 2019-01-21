@@ -43,6 +43,7 @@ import java.util.stream.Collectors;
 public class GUI extends JFrame implements Observer {
     private static final long serialVersionUID = 451431916952047183L;
     public static GUI gui;
+    private static CompletableFuture currentPrompt = null;
     public Combat combat;
     private Map<TacticGroup, List<SkillButton>> skills;
     private CompletableFuture<Skill> chosenSkill;
@@ -1058,8 +1059,7 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    // TODO: Make sure all instances of waiting for user input have a common, monitorable path.
-    public void prompt(KeyableButton... choices) {
+    private void prompt(List<? extends KeyableButton> choices) {
         clearCommand();
         for (KeyableButton button : choices) {
             commandPanel.add(button);
@@ -1067,13 +1067,10 @@ public class GUI extends JFrame implements Observer {
         commandPanel.refresh();
     }
 
-    public void prompt(List<? extends KeyableButton> choices) {
-        prompt(choices.toArray(new KeyableButton[] {}));
-    }
-
     public <T> void prompt(List<LabeledValue<T>> choices, CompletableFuture<T> future) {
         List<KeyableButton> buttons = choices.stream().map(choice -> new ValueButton<>(choice, future)).collect(
                         Collectors.toList());
+        currentPrompt = future;
         prompt(buttons);
     }
 
@@ -1091,7 +1088,13 @@ public class GUI extends JFrame implements Observer {
     public ContinueButton next(String label) {
         ContinueButton button = new ContinueButton(label);
         addButton(button);
+        GUI.currentPrompt = button.future;
         return button;
+    }
+
+    public <T> void cancel(String label, CompletableFuture<T> future) {
+        CancelButton button = new CancelButton(label, future);
+        addButton(button);
     }
 
     public void refresh() {
@@ -1297,7 +1300,7 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public void changeClothes(Character character) {
+    public void changeClothes(Character character) throws InterruptedException {
         CompletableFuture<Boolean> changeClothes = new CompletableFuture<>();
         clothesPanel.removeAll();
         clothesPanel.add(new ClothesChangeGUI(character, changeClothes));
@@ -1305,8 +1308,6 @@ public class GUI extends JFrame implements Observer {
         layout.show(centerPanel, USE_CLOSET_UI);
         try {
             changeClothes.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } finally {

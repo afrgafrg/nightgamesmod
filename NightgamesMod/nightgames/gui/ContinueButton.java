@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 public class ContinueButton extends ValueButton<String> {
     private static final long serialVersionUID = -7842752203787391615L;
 
-    public ContinueButton(String label) {
+    ContinueButton(String label) {
         super(null, label, new CompletableFuture<>());
 
     }

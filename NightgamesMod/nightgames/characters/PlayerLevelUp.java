@@ -72,10 +72,10 @@ class PlayerLevelUp {
             CompletableFuture<Trait> chosenTrait = new CompletableFuture<>();
             gui.clearCommand();
             Stream<Trait> traitChoices = Trait.getFeats(player).stream().filter(feat -> !player.has(feat));
-            List<ValueButton<Trait>> featButtons = traitChoices.map(
-                            feat -> new ValueButton<>(new LabeledValue<>(feat, feat.toString(), feat.getDesc()),
-                                            chosenTrait)).collect(Collectors.toList());
-            gui.prompt(featButtons);
+            List<LabeledValue<Trait>> featButtons = traitChoices.map(
+                            feat -> new LabeledValue<>(feat, feat.toString(), feat.getDesc())
+                                            ).collect(Collectors.toList());
+            gui.prompt(featButtons, chosenTrait);
             CancelButton skipButton = new CancelButton("Skip", chosenTrait);
             skipButton.setToolTipText("Save perk points for next level-up");
             gui.addButton(skipButton);

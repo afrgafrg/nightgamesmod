@@ -500,8 +500,8 @@ public class CreationGUI extends JPanel {
             GameState state = new GameState(name, startConfig, traits, sex, selectedAttributes, expRateMap.get(rate),
                             GameState.DEFAULT_MONEY_RATE);
             try {
-                GUI.gui.currentState.clear();
-                GUI.gui.currentState.put(state);
+                GUI.gui.loadedState.clear();
+                GUI.gui.loadedState.put(state);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

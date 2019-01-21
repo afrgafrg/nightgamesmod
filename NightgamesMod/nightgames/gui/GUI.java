@@ -106,12 +106,14 @@ public class GUI extends JFrame implements Observer {
 	private JFrame inventoryFrame;
     private JMenuItem mntmOptions;
 
+    private Player populatedPlayer;
+
     private final static String USE_PORTRAIT = "PORTRAIT";
     private final static String USE_MAP = "MAP";
     private final static String USE_NONE = "NONE";
     private static final String USE_MAIN_TEXT_UI = "MAIN_TEXT";
     private static final String USE_CLOSET_UI = "CLOSET";
-    volatile BlockingQueue<GameState> currentState = new ArrayBlockingQueue<>(1);
+    volatile BlockingQueue<GameState> loadedState = new ArrayBlockingQueue<>(1);
     private volatile boolean refreshRequested = false;
 
     public GUI() {
@@ -148,7 +150,7 @@ public class GUI extends JFrame implements Observer {
 
         // menu bar
 
-        getContentPane().setLayout(new BoxLayout(getContentPane(), 1));
+        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -185,7 +187,15 @@ public class GUI extends JFrame implements Observer {
 
         mntmLoad.addActionListener(arg0 -> {
             Optional<GameState> gameState = SaveFile.loadWithDialog();
-            gameState.ifPresent(this::load);
+            if (gameState.isPresent()) {
+                try {
+                    loadedState.clear();
+                    loadedState.put(gameState.get());
+                    GameState.closeCurrentGame();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         });
 
         menuBar.add(mntmLoad);
@@ -501,13 +511,13 @@ public class GUI extends JFrame implements Observer {
 
         gamePanel = new JPanel();
         getContentPane().add(gamePanel);
-        gamePanel.setLayout(new BoxLayout(gamePanel, 1));
+        gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.Y_AXIS));
 
         // panel0 - invisible, only handles topPanel
 
         panel0 = new Panel();
         gamePanel.add(panel0);
-        panel0.setLayout(new BoxLayout(panel0, 0));
+        panel0.setLayout(new BoxLayout(panel0, BoxLayout.X_AXIS));
 
         // topPanel - invisible, menus
 
@@ -525,7 +535,7 @@ public class GUI extends JFrame implements Observer {
         // statusPanel - visible, character status
 
         statusPanel = new JPanel();
-        statusPanel.setLayout(new BoxLayout(statusPanel, 1));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
 
         // portraitPanel - invisible, contains imgPanel, west panel
 
@@ -601,11 +611,11 @@ public class GUI extends JFrame implements Observer {
         skills = new HashMap<>();
         clearCommand();
         currentTactics = TacticGroup.all;
-        showGameCreation();
         setVisible(true);
         pack();
         JPanel panel = (JPanel) getContentPane();
         panel.setFocusable(true);
+        // TODO: It's easy to lose focus and make hotkeys stop working.
         panel.addKeyListener(new KeyListener() {
             /**
              * Space bar will select the first option, unless they are in the default actions list.
@@ -613,9 +623,7 @@ public class GUI extends JFrame implements Observer {
             @Override
             public void keyReleased(KeyEvent e) {
                 Optional<KeyableButton> buttonOptional = commandPanel.getButtonForHotkey(e.getKeyChar());
-                if (buttonOptional.isPresent()) {
-                    buttonOptional.get().call();
-                }
+                buttonOptional.ifPresent(KeyableButton::call);
             }
 
             @Override
@@ -631,14 +639,13 @@ public class GUI extends JFrame implements Observer {
     }
 
     public void load(GameState gameState) {
-        purgeGameState();
         try {
-            currentState.put(gameState);
+            loadedState.clear();
+            loadedState.put(gameState);
         } catch (InterruptedException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        populatePlayer(gameState.characterPool.human);
     }
 
     public Optional<File> askForSaveFile() {
@@ -651,7 +658,7 @@ public class GUI extends JFrame implements Observer {
         while (keys.hasMoreElements()) {
           Object key = keys.nextElement();
           Object value = UIManager.get (key);
-          if (value != null && value instanceof javax.swing.plaf.FontUIResource)
+          if (value instanceof javax.swing.plaf.FontUIResource)
             UIManager.put (key, f);
           }
     }
@@ -764,18 +771,21 @@ public class GUI extends JFrame implements Observer {
     }
 
     // getLabelString - handles all the meters (bars)
-    public String getLabelString(Meter meter) {
+    private String getLabelString(Meter meter) {
         if (meter.getOverflow() > 0) {
-            return "(" + Integer.toString(meter.get() + meter.getOverflow()) + ")/" + meter.max();
+            return "(" + (meter.get() + meter.getOverflow()) + ")/" + meter.max();
         }
-        return Integer.toString(meter.get()) + "/" + meter.max();
+        return meter.get() + "/" + meter.max();
     }
 
-    public void populatePlayer(Player player) {
-        mntmOptions.setEnabled(true);
+    private void populateGameState(GameState gameState) {
         getContentPane().remove(creation);
         getContentPane().add(gamePanel);
         getContentPane().validate();
+
+        Player player = gameState.characterPool.getPlayer();
+        populatedPlayer = player;
+        mntmOptions.setEnabled(true);
         player.gui = this;
         player.addObserver(this);
         JPanel meter = new JPanel();
@@ -784,7 +794,7 @@ public class GUI extends JFrame implements Observer {
         meter.setLayout(new GridLayout(0, 4, 0, 0));
 
         stamina = new JLabel("Stamina: " + getLabelString(player.getStamina()));
-        stamina.setFont(new Font("Sylfaen", 1, 15));
+        stamina.setFont(new Font("Sylfaen", Font.BOLD, 15));
         stamina.setHorizontalAlignment(SwingConstants.CENTER);
         stamina.setForeground(new Color(164, 8, 2));
         stamina.setToolTipText(
@@ -792,7 +802,7 @@ public class GUI extends JFrame implements Observer {
         meter.add(stamina);
 
         arousal = new JLabel("Arousal: " + getLabelString(player.getArousal()));
-        arousal.setFont(new Font("Sylfaen", 1, 15));
+        arousal.setFont(new Font("Sylfaen", Font.BOLD, 15));
         arousal.setHorizontalAlignment(SwingConstants.CENTER);
         arousal.setForeground(new Color(254, 1, 107));
         arousal.setToolTipText(
@@ -800,7 +810,7 @@ public class GUI extends JFrame implements Observer {
         meter.add(arousal);
 
         mojo = new JLabel("Mojo: " + getLabelString(player.getMojo()));
-        mojo.setFont(new Font("Sylfaen", 1, 15));
+        mojo.setFont(new Font("Sylfaen", Font.BOLD, 15));
         mojo.setHorizontalAlignment(SwingConstants.CENTER);
         mojo.setForeground(new Color(51, 153, 255));
         mojo.setToolTipText(
@@ -808,7 +818,7 @@ public class GUI extends JFrame implements Observer {
         meter.add(mojo);
 
         willpower = new JLabel("Willpower: " + getLabelString(player.getWillpower()));
-        willpower.setFont(new Font("Sylfaen", 1, 15));
+        willpower.setFont(new Font("Sylfaen", Font.BOLD, 15));
         willpower.setHorizontalAlignment(SwingConstants.CENTER);
         willpower.setForeground(new Color(68, 170, 85));
         willpower.setToolTipText("Willpower is a representation of your will to fight. When this reaches 0, you lose.");
@@ -864,16 +874,16 @@ public class GUI extends JFrame implements Observer {
 
         JLabel name = new JLabel(player.getTrueName());
         name.setHorizontalAlignment(SwingConstants.LEFT);
-        name.setFont(new Font("Sylfaen", 1, 15));
+        name.setFont(new Font("Sylfaen", Font.BOLD, 15));
         name.setForeground(GUIColors.textColorLight);
         bio.add(name);
         lvl = new JLabel("Lvl: " + player.getLevel());
-        lvl.setFont(new Font("Sylfaen", 1, 15));
+        lvl.setFont(new Font("Sylfaen", Font.BOLD, 15));
         lvl.setForeground(GUIColors.textColorLight);
 
         bio.add(lvl);
         xp = new JLabel("XP: " + player.getXP());
-        xp.setFont(new Font("Sylfaen", 1, 15));
+        xp.setFont(new Font("Sylfaen", Font.BOLD, 15));
         xp.setForeground(GUIColors.textColorLight);
         bio.add(xp);
 
@@ -902,7 +912,7 @@ public class GUI extends JFrame implements Observer {
             toggleInventory();
         });
         loclbl = new JLabel();
-        loclbl.setFont(new Font("Sylfaen", 1, 16));
+        loclbl.setFont(new Font("Sylfaen", Font.BOLD, 16));
         loclbl.setForeground(GUIColors.textColorLight);
 
         //stsbtn.setBackground(new Color(85, 98, 112));
@@ -910,11 +920,11 @@ public class GUI extends JFrame implements Observer {
         bio.add(loclbl);
 
         timeLabel = new JLabel();
-        timeLabel.setFont(new Font("Sylfaen", 1, 16));
+        timeLabel.setFont(new Font("Sylfaen", Font.BOLD, 16));
         timeLabel.setForeground(GUIColors.textColorLight);
         bio.add(timeLabel);
         cashLabel = new JLabel();
-        cashLabel.setFont(new Font("Sylfaen", 1, 16));
+        cashLabel.setFont(new Font("Sylfaen", Font.BOLD, 16));
         cashLabel.setForeground(new Color(33, 180, 42));
         bio.add(cashLabel);
         bio.add(inventoryButton);
@@ -927,12 +937,23 @@ public class GUI extends JFrame implements Observer {
     public void showGameCreation() {
         mntmOptions.setEnabled(false);
         getContentPane().remove(gamePanel);
+        if (creation != null) {
+            getContentPane().remove(creation);
+        }
         creation = new CreationGUI();
         getContentPane().add(creation);
         getContentPane().validate();
     }
 
     public void purgeGameState() {
+        if (currentPrompt != null) {
+            currentPrompt.cancel(true);
+            currentPrompt = null;
+        }
+        SwingUtilities.invokeLater(this::purgeGameStateInternal);
+    }
+
+    private void purgeGameStateInternal() {
         getContentPane().remove(gamePanel);
         clearText();
         clearCommand();
@@ -941,11 +962,6 @@ public class GUI extends JFrame implements Observer {
         mntmQuitMatch.setEnabled(false);
         combat = null;
         topPanel.removeAll();
-        if (GameState.gameState != null) {
-            GameState.gameState.closeGame();
-        }
-        currentState.clear();
-        GameState.gameState = null;
     }
 
     public void clearText() {
@@ -993,7 +1009,7 @@ public class GUI extends JFrame implements Observer {
         refresh();
     }
 
-    public void combatMessage(String text, boolean clearText) {
+    private void combatMessage(String text, boolean clearText) {
         HTMLDocument doc = (HTMLDocument) textPane.getDocument();
         HTMLEditorKit editorKit = (HTMLEditorKit) textPane.getEditorKit();
         if (clearText) {
@@ -1101,12 +1117,13 @@ public class GUI extends JFrame implements Observer {
     public void refresh() {
         if (!this.refreshRequested) {
             this.refreshRequested = true;
-            SwingUtilities.invokeLater(this::refreshInternal);
+            if (populatedPlayer != null) {
+                SwingUtilities.invokeLater(() -> refreshInternal(populatedPlayer));
+            }
         }
     }
 
-    private void refreshInternal() {
-        Player player = GameState.gameState.characterPool.human;
+    private void refreshInternal(Player player) {
         stamina.setText("Stamina: " + getLabelString(player.getStamina()));
         arousal.setText("Arousal: " + getLabelString(player.getArousal()));
         mojo.setText("Mojo: " + getLabelString(player.getMojo()));
@@ -1151,7 +1168,7 @@ public class GUI extends JFrame implements Observer {
             timeText = "";
         }
         timeLabel.setText(String.format("<html>Day %d - <font color='%s'>%s</font></html>", Time.getDate(), textColor, timeText));
-        displayStatus();
+        displayStatus(player);
         List<Item> availItems = player.getInventory().entrySet().stream().filter(entry -> (entry.getValue() > 0))
                 .map(Map.Entry::getKey).collect(Collectors.toList());
 
@@ -1162,7 +1179,7 @@ public class GUI extends JFrame implements Observer {
 
 	    Map<Item, Integer> items = player.getInventory();
 	    int count = 0;
-	
+
 	    for (Item i : availItems) {
 	        JLabel label = new JLabel(i.getName() + ": " + items.get(i) + "\n");
 	        label.setForeground(GUIColors.textColorLight);
@@ -1187,7 +1204,7 @@ public class GUI extends JFrame implements Observer {
     	});
     }
     
-    public void displayStatus() {
+    private void displayStatus(Player player) {
         statusPanel.removeAll();
         statusPanel.repaint();
         //statusPanel.setPreferredSize(new Dimension(400, mainPanel.getHeight()));
@@ -1199,8 +1216,6 @@ public class GUI extends JFrame implements Observer {
             System.out.println("STATUS PANEL");
         }
         JPanel statsPanel = new JPanel(new GridLayout(0, 3));
-
-        Player player = GameState.gameState.characterPool.human;
 
         statusPanel.add(statsPanel);
         //statsPanel.setPreferredSize(new Dimension(400, 200));
@@ -1332,11 +1347,11 @@ public class GUI extends JFrame implements Observer {
         }
     }
 
-    public int nSkillsForGroup(TacticGroup group) {
+    int nSkillsForGroup(TacticGroup group) {
         return skills.get(group).size();
     }
 
-    public void switchTactics(TacticGroup group) {
+    void switchTactics(TacticGroup group) {
         groupBox.removeAll();
         currentTactics = group;
         gui.showSkills();

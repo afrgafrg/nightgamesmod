@@ -106,6 +106,7 @@ public class SaveFile {
         try (Reader loader = new InputStreamReader(new FileInputStream(file))) {
             object = new JsonParser().parse(loader).getAsJsonObject();
         }
+        System.out.println(String.format("Loaded game data from file %s", file.getName()));
         return new SaveData(object);
     }
 

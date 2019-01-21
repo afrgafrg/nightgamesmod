@@ -41,9 +41,6 @@ public class GameState {
         if(characterPool.human.has(Trait.largereserves)) {
             characterPool.human.getWillpower().gain(20);
         }
-        if (GUI.gui != null) {
-            GUI.gui.populatePlayer(characterPool.human);
-        }
         SkillPool.buildSkillPool(characterPool.human);
         SkillPool.learnSkills(characterPool.human);
         if (!cfgFlags.isEmpty()) {

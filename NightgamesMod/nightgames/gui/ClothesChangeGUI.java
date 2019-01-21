@@ -95,7 +95,7 @@ public class ClothesChangeGUI extends JPanel {
         tempList.sort(new ClothingSorter());
         tempList.forEach(article -> outfitListModel.addElement(article));
         DecimalFormat format = new DecimalFormat("#.##");
-        appearanceLabel.setText("Attractiveness: " + format.format(character.body.getHotness(GameState.gameState.characterPool.getCharacterByType("Angel"))));
+        appearanceLabel.setText("Attractiveness: " + format.format(character.body.getHotness()));
         exposureLabel.setText("Exposure: " + format.format(character.outfit.getExposure()));
         GUI.gui.refresh();
     }

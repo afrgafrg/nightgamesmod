@@ -25,6 +25,9 @@ public interface BodyPart {
 
     public String adjective();
 
+    /**
+     * How hot the opponent finds this bodypart.
+     */
     public double getHotness(Character self, Character opponent);
 
     public double getPleasure(Character self, BodyPart target);

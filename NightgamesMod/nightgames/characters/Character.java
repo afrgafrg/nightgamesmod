@@ -3040,12 +3040,9 @@ public abstract class Character extends Observable implements Cloneable {
         b.append("<br/>Max Stamina " + stamina.max() + ", Max Arousal " + arousal.max() + ", Max Mojo " + mojo.max()
                         + ", Max Willpower " + willpower.max() + ".");
         b.append("<br/>");
-        if (human()) {
-            // ALWAYS GET JUDGED BY ANGEL. lol.
-            body.describeBodyText(b, GameState.gameState.characterPool.getCharacterByType("Angel"), notableOnly);
-        } else {
-            body.describeBodyText(b, GameState.gameState.characterPool.getPlayer(), notableOnly);
-        }
+        // ALWAYS GET JUDGED BY ANGEL. lol.
+        // Angel responds, "Judge thyself."
+        body.describeBodyText(b, this, notableOnly);
         if (getTraits().size() > 0) {
             b.append("<br/>Traits:<br/>");
             List<Trait> traits = new ArrayList<>(getTraits());

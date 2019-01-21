@@ -114,7 +114,7 @@ public class Player extends Character {
         if (GUI.gui.combat != null && (GUI.gui.combat.p1.human() || GUI.gui.combat.p2.human())) {
             body.describeBodyText(b, GUI.gui.combat.getOpponent(this), false);
         } else {
-            body.describeBodyText(b, GameState.gameState.characterPool.getCharacterByType("Angel"), false);
+            body.describeBodyText(b, this, false);
         }
         if (getTraits().size() > 0) {
             b.append("<br/>Traits:<br/>");

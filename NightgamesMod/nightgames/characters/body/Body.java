@@ -473,6 +473,11 @@ public class Body implements Cloneable {
         }
     }
 
+    /**
+     * How hot your opponent thinks your body is.
+     * @param opponent The character whose preferences are used.
+     * @return The composite hotness of this body.
+     */
     public double getHotness(Character opponent) {
         // represents tempt damage
         double bodyHotness = hotness;
@@ -497,6 +502,11 @@ public class Body implements Cloneable {
             totalHotness = Math.max(totalHotness * 1.5, totalHotness + 3.0);
         }
         return totalHotness;
+    }
+
+    public double getHotness() {
+        // If no one else is around, only you can judge yourself.
+        return getHotness(character);
     }
 
     public void remove(BodyPart part) {

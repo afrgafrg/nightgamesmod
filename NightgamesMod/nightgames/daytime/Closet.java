@@ -20,7 +20,8 @@ public class Closet extends Activity {
     }
 
     @Override
-    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance)
+                    throws InterruptedException {
         if (choice.equals("Start")) {
             GUI.gui.clearText();
             GUI.gui.clearCommand();

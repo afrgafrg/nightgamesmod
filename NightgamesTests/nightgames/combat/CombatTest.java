@@ -111,7 +111,7 @@ public class CombatTest {
                         other.eligible(self));
     }
 
-    @Test public void mercyAfterCombatDraw() {
+    @Test public void mercyAfterCombatDraw() throws Exception {
         self.getWillpower().empty();
         other.getWillpower().empty();
         combat.timer = Combat.NPC_TURN_LIMIT + 1;

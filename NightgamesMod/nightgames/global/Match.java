@@ -354,7 +354,7 @@ public class Match {
     public void quit() {
         Character human = GameState.gameState.characterPool.getPlayer();
         if (human.state == State.combat) {
-            human.location().activeEncounter.getCombat().ifPresent(combat -> combat.forfeit(human));
+            human.location().activeEncounter.getCombat().ifPresent(Combat::forfeit);
             human.location().endEncounter();
         }
         human.travel(new Area("Retirement", "", Movement.retire));

@@ -19,7 +19,7 @@ public class TestGameState extends GameState {
     }
 
     @Override public void closeGame() {
-        run = false;
+        super.closeGame();
     }
 
     public Match makeMatch(List<Character> participants) {

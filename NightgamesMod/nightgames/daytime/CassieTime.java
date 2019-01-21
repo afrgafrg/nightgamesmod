@@ -552,7 +552,8 @@ public class CassieTime extends BaseNPCTime {
     }
 
     @Override
-    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance)
+                    throws InterruptedException {
         if (choice.equals("Leave")) {
             Flag.modCounter(Flag.CassieLoneliness, -2);
         }

@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +24,7 @@ import java.util.stream.Stream;
  * Program entry point
  */
 public class Main {
-    public static volatile boolean exit = false;
+    private static volatile boolean exit = false;
 
     public static void main(String[] args) {
         Map<Boolean, List<String>> splitArgs =
@@ -51,20 +50,18 @@ public class Main {
             } catch (SaveData.SaveDataException | IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            GUI.gui.showGameCreation();
         }
         while (!exit) {
-            // TODO: Make sure this captures and logs useful information on interrupts and errors
-            // probably need to run the game logic on its own thread, then get the exit status of that thread
+            // TODO: Make sure this captures and logs useful information on errors
             try {
                 run();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                System.err.println("Interrupted!");
-                e.printStackTrace();
-                exit = true;
             } catch (RuntimeException e) {
                 System.err.println("An error we didn't expect occurred:");
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                System.err.println("Game closed by interrupt not caught by main loop:");
                 e.printStackTrace();
             }
             if (!exit) {
@@ -96,14 +93,14 @@ public class Main {
         return Optional.empty();
     }
 
-    private static void run() throws ExecutionException, InterruptedException {
+    private static void run() throws InterruptedException {
         try {
-            // TODO: test loading while waiting for a pause prompt
             // Blocks until a game state is loaded into the GUI
-            GameState state = GUI.gui.getGameState();
-            state.gameLoop();
+            GameState.gameState = GUI.gui.getGameState();
+            GameState.gameState.gameLoop();
         } finally {
-            GUI.gui.clearGameState();
+            GameState.closeCurrentGame();
+            GUI.gui.purgeGameState();
         }
     }
 
@@ -118,7 +115,7 @@ public class Main {
         GUI.gui = gui;
     }
 
-    public static void initialize() {
+    static void initialize() {
         TraitRequirement.setTraitRequirements(new TraitTree(ResourceLoader.getFileResourceAsStream("data/TraitRequirements.xml")));
         Map<String, Boolean> configurationFlags = JsonUtils.mapFromJson(JsonUtils.rootJson(
                         new InputStreamReader(ResourceLoader.getFileResourceAsStream("data/globalflags.json")))

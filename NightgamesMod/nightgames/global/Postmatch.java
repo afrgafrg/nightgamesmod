@@ -17,7 +17,7 @@ class Postmatch {
     private List<Character> combatants;
     protected boolean normal;
 
-    public Postmatch(Character player, List<Character> combatants) {
+    Postmatch(Character player, List<Character> combatants) throws InterruptedException {
         readyForBed = new CountDownLatch(1);
         this.player = player;
         this.combatants = combatants;

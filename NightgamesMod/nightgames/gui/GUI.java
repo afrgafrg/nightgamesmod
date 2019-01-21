@@ -167,7 +167,7 @@ public class GUI extends JFrame implements Observer {
                                 "Do you want to start a new game? You'll lose any unsaved progress.", "Start new game?",
                                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 if (result == JOptionPane.OK_OPTION) {
-                    purgeGameState();
+                    GameState.closeCurrentGame();
                 }
             }
         });
@@ -636,6 +636,7 @@ public class GUI extends JFrame implements Observer {
             currentState.put(gameState);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
         populatePlayer(gameState.characterPool.human);
     }
@@ -1342,12 +1343,12 @@ public class GUI extends JFrame implements Observer {
     }
 
     public GameState getGameState() throws InterruptedException {
-        GameState state = currentState.take();
-        GameState.gameState = state;
-        return state;
-    }
-
-    public void clearGameState() {
-        currentState.clear();
+        if (Thread.interrupted()) {
+            // Un-interrupt thread before blocking to wait for user input
+            System.out.println("Uninterrupting thread: " + Thread.currentThread().getName());
+        }
+        GameState gameState = loadedState.take();
+        populateGameState(gameState);
+        return gameState;
     }
 }

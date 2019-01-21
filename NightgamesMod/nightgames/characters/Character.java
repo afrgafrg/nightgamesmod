@@ -1594,7 +1594,7 @@ public abstract class Character extends Observable implements Cloneable {
      * @param c combat to act in
      * @return true if combat should be paused.
      */
-    public abstract boolean chooseSkill(Combat c);
+    public abstract boolean chooseSkill(Combat c) throws InterruptedException;
 
     public abstract Optional<Action> move() throws InterruptedException;
 
@@ -1611,7 +1611,6 @@ public abstract class Character extends Observable implements Cloneable {
         try {
             c.chooseSkill(this, GUI.gui.getChosenSkill());
         } catch (InterruptedException e) {
-            e.printStackTrace();
             Thread.currentThread().interrupt();
         }
         // Already paused while completing skill choice future

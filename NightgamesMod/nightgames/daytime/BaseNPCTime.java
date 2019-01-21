@@ -68,7 +68,8 @@ public abstract class BaseNPCTime extends Activity {
     }
 
     @Override
-    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance) {
+    public void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance)
+                    throws InterruptedException {
         GUI.gui.clearText();
         GUI.gui.clearCommand();
         List<Loot> giftables = getGiftables();

@@ -2,10 +2,7 @@ package nightgames.combat;
 
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
-import nightgames.gui.ContinueButton;
 import nightgames.gui.GUI;
-import nightgames.gui.LabeledValue;
-import nightgames.gui.RunnableButton;
 import nightgames.requirements.Requirement;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ public class CombatScene {
         this.requirement = requirement;
     }
 
-    public void visit(Combat c, Character npc) {
+    public void visit(Combat c, Character npc) throws InterruptedException {
         c.write(message.provide(c, npc, c.getOpponent(npc)));
         Future<CombatSceneChoice> choiceFuture = GUI.gui.promptFuture(choices, CombatSceneChoice::getChoice);
         try {
@@ -36,9 +33,6 @@ public class CombatScene {
             CombatSceneChoice choice = choiceFuture.get();
             choice.choose(c, npc);
             c.updateGUI();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }

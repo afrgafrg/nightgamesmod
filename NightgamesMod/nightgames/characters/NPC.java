@@ -252,54 +252,55 @@ public class NPC extends Character {
     }
 
     @Override
-    public boolean chooseSkill(Combat c) {
-        return chooseSkill(c, c.getOpponent(this));
-    }
-
-    private boolean chooseSkill(Combat c, Character target) {
+    public boolean chooseSkill(Combat c) throws InterruptedException {
+        Character target = c.getOpponent(this);
         if (target.human() && DebugFlags.isDebugOn(DebugFlags.DEBUG_SKILL_CHOICES)) {
             return chooseSkillInteractive(c);
         } else {
-            // if there's no strategy, try getting a new one.
-            if (!c.getCombatantData(this).getStrategy().isPresent()) {
-                c.getCombatantData(this).setStrategy(c, this, pickStrategy(c));
-            }
-            // if the strategy is out of moves, try getting a new one.
-            Collection<Skill> possibleSkills = c.getCombatantData(this).getStrategy().get().nextSkills(c, this);
-            if (possibleSkills.isEmpty()) {
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
-                    System.out.printf("%s has no moves available for strategy %s, picking a new one\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
-                }
-                c.getCombatantData(this).setStrategy(c, this, pickStrategy(c));
-                possibleSkills = c.getCombatantData(this).getStrategy().get().nextSkills(c, this);
-            }
-            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
-                System.out.println("next skills: " +  possibleSkills);
-            }
-            // if there are still no moves, just use all available skills for this turn and try again next turn.
-            if (possibleSkills.isEmpty()) {
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
-                    System.out.printf("%s has no moves available for strategy %s\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
-                }
-                possibleSkills = getSkills();
-            } else {
-                if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
-                    System.out.printf("%s is using strategy %s\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
-                }
-            }
-            HashSet<Skill> available = new HashSet<>();
-            for (Skill act : possibleSkills) {
-                if (Skill.skillIsUsable(c, act) && cooldownAvailable(act)) {
-                    available.add(act);
-                }
-            }
-            Skill.filterAllowedSkills(c, available, this, target);
-            if (available.size() == 0) {
-                available.add(new Nothing(this));
-            }
-            c.chooseSkill(this, ai.chooseSkill(available, c));
-            return false;
+            return chooseSkill(c, target);
         }
+    }
+
+    private boolean chooseSkill(Combat c, Character target) {
+        // if there's no strategy, try getting a new one.
+        if (!c.getCombatantData(this).getStrategy().isPresent()) {
+            c.getCombatantData(this).setStrategy(c, this, pickStrategy(c));
+        }
+        // if the strategy is out of moves, try getting a new one.
+        Collection<Skill> possibleSkills = c.getCombatantData(this).getStrategy().get().nextSkills(c, this);
+        if (possibleSkills.isEmpty()) {
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+                System.out.printf("%s has no moves available for strategy %s, picking a new one\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
+            }
+            c.getCombatantData(this).setStrategy(c, this, pickStrategy(c));
+            possibleSkills = c.getCombatantData(this).getStrategy().get().nextSkills(c, this);
+        }
+        if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+            System.out.println("next skills: " +  possibleSkills);
+        }
+        // if there are still no moves, just use all available skills for this turn and try again next turn.
+        if (possibleSkills.isEmpty()) {
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+                System.out.printf("%s has no moves available for strategy %s\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
+            }
+            possibleSkills = getSkills();
+        } else {
+            if (DebugFlags.isDebugOn(DebugFlags.DEBUG_STRATEGIES)) {
+                System.out.printf("%s is using strategy %s\n", this.getTrueName(), c.getCombatantData(this).getStrategy().get().getClass().getSimpleName());
+            }
+        }
+        HashSet<Skill> available = new HashSet<>();
+        for (Skill act : possibleSkills) {
+            if (Skill.skillIsUsable(c, act) && cooldownAvailable(act)) {
+                available.add(act);
+            }
+        }
+        Skill.filterAllowedSkills(c, available, this, target);
+        if (available.size() == 0) {
+            available.add(new Nothing(this));
+        }
+        c.chooseSkill(this, ai.chooseSkill(available, c));
+        return false;
     }
 
     private CombatStrategy pickStrategy(Combat c) {

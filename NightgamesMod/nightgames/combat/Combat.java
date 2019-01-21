@@ -182,7 +182,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public void startScene() {
+    public void startScene() throws InterruptedException {
         if (p1.mostlyNude() && !p2.mostlyNude()) {
             p1.emote(Emotion.nervous, 20);
         }
@@ -708,7 +708,7 @@ public class Combat extends Observable implements Cloneable {
      * Invokes character skill choice.
      * @return true (should pause) if the character picking skills is human-controlled.
      */
-    private boolean pickSkills() {
+    private boolean pickSkills() throws InterruptedException {
         if (p1act == null) {
             return p1.chooseSkill(this);
         } else if (p2act == null) {
@@ -1217,7 +1217,7 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    private void next() {
+    private void next() throws InterruptedException {
         // TODO: ensure we only bother updating the GUI when we need input from the user. Then we can probably get rid of a lot of this stuff.
         boolean prompt = true;
         // NPCs only
@@ -1272,7 +1272,7 @@ public class Combat extends Observable implements Cloneable {
     }
 
     // TODO: There's some questionable logic going on here. Go through and document it.
-    public void end() {
+    public void end() throws InterruptedException {
         p1.state = State.ready;
         p2.state = State.ready;
         if (p1.human() || p2.human()) {
@@ -1403,8 +1403,12 @@ public class Combat extends Observable implements Cloneable {
         }
     }
 
-    public void forfeit(Character player) {
-        end();
+    public void forfeit() {
+        try {
+            end();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Position getStance() {
@@ -1675,12 +1679,12 @@ public class Combat extends Observable implements Cloneable {
         gui.showPortrait();
     }
 
-    void runCombatNoDelay() {
+    void runCombatNoDelay() throws InterruptedException {
         delayCounter = 0;
         runCombat();
     }
 
-    public void runCombat() {
+    public void runCombat() throws InterruptedException {
         // delayCounter only applies to combats not involving a human
         if (!isBeingObserved() && delayCounter > 0) {
             delayCounter--;

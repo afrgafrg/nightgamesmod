@@ -40,7 +40,7 @@ public class CombatStats {
         DebugFlags.debug = new boolean[DebugFlags.values().length];
     }
 
-    private void doTestRun() {
+    private void doTestRun() throws InterruptedException {
         for (int i = 0; i < combatants.size(); i++) {
             for (int j = 0; j < i; j++) {
                 fightMany(combatants.get(i), combatants.get(j), MATCH_COUNT);
@@ -66,7 +66,7 @@ public class CombatStats {
         }
     }
 
-    private void fightMany(Character c1, Character c2, int count) {
+    private void fightMany(Character c1, Character c2, int count) throws InterruptedException {
         // ExecutorService threadPool = Executors.newFixedThreadPool(50);
         System.out.println(String.format("%s vs. %s (%dX)", c1.getTrueName(), c2.getTrueName(), count));
         for (int i = 0; i < count; i++) {
@@ -87,7 +87,7 @@ public class CombatStats {
          */
     }
 
-    private void fight(Character c1, Character c2) {
+    private void fight(Character c1, Character c2) throws InterruptedException {
         ((BasePersonality) ((NPC) c1).ai).character = (NPC) c1;
         ((BasePersonality) ((NPC) c2).ai).character = (NPC) c2;
         Combat cbt = new Combat(c1, c2, NULL_AREA);

@@ -116,7 +116,7 @@ public class Daytime {
         }
     }
 
-    public void dayLoop() {
+    public void dayLoop() throws InterruptedException {
         morning();
         while (time < NEXT_MATCH_TIME) {
             GUI.gui.message(String.format("It is currently %s. Your next match starts at %s.", displayTime(), displayTime(NEXT_MATCH_TIME)));
@@ -126,13 +126,10 @@ public class Daytime {
             List<LabeledValue<Activity>> activityButtonLabels = activities.stream().filter(Activity::known)
                             .filter(activity -> activity.time() + time <= NEXT_MATCH_TIME)
                             .map(activity -> new LabeledValue<>(activity, activity.name)).collect(Collectors.toList());
-            Activity activity = null;
+            Activity activity;
             try {
                 activity = GUI.gui.promptFuture(activityButtonLabels).get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
             if (activity != null) {
@@ -146,11 +143,7 @@ public class Daytime {
                     } else {
                         try {
                             activityInstance.currentChoice = GUI.gui.promptFuture(availableChoices).get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            Thread.currentThread().interrupt();
                         } catch (ExecutionException e) {
-                            e.printStackTrace();
                             throw new RuntimeException(e);
                         }
                         activityInstance.next();

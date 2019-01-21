@@ -20,7 +20,8 @@ public abstract class Activity {
 
     public abstract boolean known();
 
-    public abstract void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance);
+    public abstract void visit(String choice, int page, List<LabeledValue<String>> nextChoices, ActivityInstance instance)
+                    throws InterruptedException;
 
     public int time() {
         return time;
@@ -61,7 +62,7 @@ public abstract class Activity {
             page++;
         }
 
-        List<LabeledValue<String>> visit() {
+        List<LabeledValue<String>> visit() throws InterruptedException {
             List<LabeledValue<String>> nextChoices = new ArrayList<>();
             activity.visit(currentChoice, page, nextChoices, this);
             return nextChoices;

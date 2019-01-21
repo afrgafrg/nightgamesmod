@@ -22,7 +22,6 @@ public class GameState {
     public double moneyRate;
     public double xpRate;
     private static boolean ingame = false;
-    protected volatile boolean run;
     public CharacterPool characterPool;
     private volatile Thread loopThread;
 
@@ -115,12 +114,11 @@ public class GameState {
         return ingame;
     }
 
-    public synchronized void gameLoop() {
+    synchronized void gameLoop() {
+        System.out.println(String.format("Starting game with player %s", this.characterPool.human.getName()));
         loopThread = Thread.currentThread();
         ingame = true;
-        run = true;
-        // TODO: Get rid of run flag. Thread.interrupted should be enough.
-        while (run && !loopThread.isInterrupted()) {
+        while (!Thread.interrupted()) {
             try {
                 if (Time.getTime() == Time.NIGHT) {
                     // do nighttime stuff
@@ -161,17 +159,24 @@ public class GameState {
                     SaveFile.autoSave();
                 }
             } catch (InterruptedException e) {
-                run = false;
+                // Usually fires when choosing "New Game" or "Load Game" from the menu during a running game.
+                Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
-                run = false;
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
+        System.out.println("Closing game");
         ingame = false;
     }
 
     public void closeGame() {
-        run = false;
         loopThread.interrupt();
+    }
+
+    public static void closeCurrentGame() {
+        if (GameState.gameState != null) {
+            GameState.gameState.closeGame();
+            GameState.gameState = null;
+        }
     }
 }

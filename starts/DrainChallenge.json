@@ -17,6 +17,9 @@
 		"body":{
 			"archetype":"DEMON"
 		},
+		"clothing": [
+			"sneakers"
+		],
 		"traits": ["succubus", "leveldrainer", "energydrain", "spiritphage", "powerfulhips"],
 		"trait_choice":false
 	},
@@ -78,7 +81,7 @@
 			"gender":"male",
 			"body": {
 				"breasts":0,
-				"faceFemininity": -.7
+				"faceFemininity": -0.7
 			},
 			"clothing": [
 				"Tshirt",

@@ -268,7 +268,6 @@ public class XxxStore extends Store {
                                 + player.getInventory().get(i) + ")");
             }
         }
-        GUI.gui.message("You have :$" + player.money + " to spend.");
         nextChoices.add(sale(Item.Lubricant));
 
         if (player.has(Item.Dildo)) {
@@ -312,7 +311,14 @@ public class XxxStore extends Store {
             nextChoices.add(sale(Item.Strapon));
         }
         nextChoices.add(sale(Item.Blindfold));
+
+        GUI.gui.message("<br/>They also sell a selection of salacious clothing:");
+        clothingstock.keySet().forEach(clothing -> GUI.gui.message(String.format("%s: $%d%s", clothing.getName(), clothing.getPrice(),
+                                        player.has(clothing) ? " (Owned)" : "")));
         nextChoices.addAll(displayClothes());
+
+        GUI.gui.message("You have $" + player.money + " to spend.");
+
         if (Flag.checkFlag(Flag.AliceAvailable)) {
             GUI.gui.message("You see Alice hanging around near the bondage gear. You aren't sure whether "
                             + "she's waiting for you or not.");

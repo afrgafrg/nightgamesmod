@@ -39,13 +39,17 @@ This stable branch is feature-frozen at v2.5.1.2 of nergantre's master branch. C
 
 1. **PRETTY GOOD** Fix everything I broke in the previous steps.
 
+1. Migrate combat to an event-based system, or at least some sort of system. Will enable the next step.
+    1. Add hooks to combat phases, movement phases, taking and receiving damage, daytime activities, etc. that trait and status specifications can use to apply their effects.
+    1. Migrate existing traits and statuses to use this system.
+
 1. Separate display and game logic. There will need to be a layer between display logic and game logic, although exactly where that code lives is less important than the conceptual structure.
 
     1. HTML styling should be handled on the display style. Having on-screen text stored in an easy-to-parse/compare format somewhere would be helpful.
 
-1. Migrate combat to an event-based system, or at least some sort of system. Will enable the next step.
+1. Make most trait and status effects specified in data files, rather than code.
 
-1. Make the effects of a trait or status viewable in a single location.
+1. Create an editor?
 
 1. man who even knows
 

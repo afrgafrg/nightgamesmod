@@ -89,7 +89,12 @@ public enum Flag {
     static Map<String, Float> counters;
     private static String DISABLED_FORMAT = "%sDisabled";
 
+    // TODO: de-static this and make it part of the game state.
     static {
+        resetCounters();
+    }
+
+    static void resetCounters() {
         counters = new HashMap<>();
         counters.put(malePref.name(), 0.f);
     }

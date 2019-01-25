@@ -43,9 +43,8 @@ public class GameState {
         }
         SkillPool.buildSkillPool(characterPool.human);
         SkillPool.learnSkills(characterPool.human);
-        if (!cfgFlags.isEmpty()) {
-            Flag.flags = new HashSet<>(cfgFlags);
-        }
+        Flag.flags = new HashSet<>(cfgFlags);
+        Flag.resetCounters();
         Time.time = Time.NIGHT;
         Time.date = 1;
         Flag.setCharacterDisabledFlag(characterPool.getNPCByType("Yui"));
@@ -68,8 +67,8 @@ public class GameState {
             characterPool = new CharacterPool(data.player, data.npcs);
         }
         SkillPool.buildSkillPool(characterPool.human);
-        Flag.flags.addAll(data.flags);
-        Flag.counters.putAll(data.counters);
+        Flag.flags = new HashSet<>(data.flags);
+        Flag.counters = new HashMap<>(data.counters);
         Time.date = data.date;
         Time.time = data.time;
         GUI.gui.fontsize = data.fontsize;

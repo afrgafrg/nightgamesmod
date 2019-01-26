@@ -22,7 +22,9 @@ public class SlimeMelt extends SimpleEnemySkill {
 
     @Override
     public boolean usable(Combat c, Character target) {
-        return super.usable(c, target) && !(target.crotchAvailable() && target.breastsAvailable());
+        return super.usable(c, target) && !(target.crotchAvailable() 
+                        && target.breastsAvailable()) 
+                        && target.stripDifficulty(getSelf()) == 0;
     }
 
     @Override

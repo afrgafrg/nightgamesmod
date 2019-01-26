@@ -90,6 +90,7 @@ public class MagLocked extends Status {
     @Override
     public Set<Stsflag> flags() {
         Set<Stsflag> flags = new HashSet<>(super.flags().size() + 1);
+        flags.addAll(super.flags());
         flags.add(Stsflag.stunned);
         return flags;
     }

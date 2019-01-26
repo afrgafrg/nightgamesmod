@@ -34,10 +34,10 @@ public class ImpStrip extends SimpleEnemySkill {
 
     private List<ClothingSlot> getStrippableSlots(Combat c, Character target) {
         List<ClothingSlot> strippable = new ArrayList<>();
-        if (!target.crotchAvailable()) {
+        if (!target.crotchAvailable() && target.stripDifficulty(getSelf()) == 0) {
             strippable.add(ClothingSlot.bottom);
         }
-        if (!target.breastsAvailable()) {
+        if (!target.breastsAvailable() && target.stripDifficulty(getSelf()) == 0) {
             strippable.add(ClothingSlot.top);
         }
         return strippable;

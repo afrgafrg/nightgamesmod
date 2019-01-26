@@ -7,6 +7,7 @@ import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
+import nightgames.items.clothing.ClothingTrait;
 import nightgames.pet.PetCharacter;
 import nightgames.pet.arms.Arm;
 
@@ -28,7 +29,8 @@ public class DefabRay extends ArmSkill {
         if (success) {
             ClothingSlot slot = target.outfit.getRandomShreddableSlot();
             Clothing item = target.outfit.getTopOfSlot(slot);
-            if (item == null) {
+            if (item == null || item.is(ClothingTrait.harpoonDildo) 
+                            || item.is(ClothingTrait.harpoonOnahole)) {
                 return false;
             }
             target.shred(slot);

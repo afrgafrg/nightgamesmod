@@ -56,13 +56,18 @@ public class CommandMasturbate extends PlayerCommand {
     public String deal(Combat c, int magnitude, Result modifier, Character target) {
         switch (modifier) {
             case normal:
-                return target.getName() + " seems more than happy to do as you tell her, "
-                                + "as she starts fingering herself in abandon.";
+                return String.format("%s seems more than happy to do as you tell %s, "
+                                + "as %s starts fingering herself in abandon.",
+                                target.subject(), target.directObject(),
+                                target.pronoun());
             case special:
-                return "Looking at you lustily, " + target.getName() + " rubs her clit as she gets wetter and wetter.";
+                return String.format("Looking at you lustily, %s rubs %s clit as %s gets "
+                                + "wetter and wetter.", target.subject(),
+                                target.possessiveAdjective(), target.pronoun());
             case weak:
-                return target.getName() + " follows your command to the letter, but"
-                                + " it doesn't seem to have that much of an effect on her.";
+                return String.format("%s follows your command to the letter, but"
+                                + " it doesn't seem to have that much of an effect on %s.",
+                                target.subject(), target.directObject());
             default:
                 return "<<This should not be displayed, please inform The" + " Silver Bard: CommandMasturbate-deal>>";
         }

@@ -51,7 +51,7 @@ public class BreastSmother extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Shove your opponent's face between your tits to crush her resistance.";
+        return "Shove your opponent's face between your tits to crush their resistance.";
     }
 
     @Override

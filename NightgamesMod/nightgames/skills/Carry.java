@@ -90,11 +90,14 @@ public class Carry extends Fuck {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "you pick up " + target.getName() + ", but she flips out of your arms and manages to trip you.";
+            return String.format("You pick up %s, but %s flips out of your arms "
+                            + "and manages to trip you.", target.subject(), target.pronoun());
         } else {
-            return "you scoop up " + target.getName()
-                            + ", lifting her into the air and simultaneously thrusting your dick into her hot depths. She lets out a noise that's "
-                            + "equal parts surprise and delight as you bounce her on your pole.";
+            return String.format("You scoop up %s, lifting %s into the air and simultaneously "
+                            + "thrusting your dick into %s hot depths. %s lets out a noise that's "
+                            + "equal parts surprise and delight as you bounce %s on your pole.",
+                            target.subject(), target.directObject(), target.possessiveAdjective(),
+                            Formatter.capitalizeFirstLetter(target.pronoun()), target.directObject());
         }
     }
 
@@ -106,7 +109,7 @@ public class Carry extends Fuck {
                                             + "picks {other:subject} up, but {other:pronoun-action:manage|manages} out of"
                                             + " {self:possessive} grip before {self:pronoun} can do anything. Moreover, "
                                             + "{other:pronoun-action:scramble|scrambles} to trip {self:direct-object} "
-                                            + "while she's distracted.",
+                                            + "while {self:pronoun-action:are} distracted.",
                             getSelf(), target);
         } else {
             return Formatter.format(
@@ -119,7 +122,7 @@ public class Carry extends Fuck {
 
     @Override
     public String describe(Combat c) {
-        return "Picks up opponent and penetrates her: Mojo 10.";
+        return "Picks up opponent and penetrates them: Mojo 10.";
     }
 
     @Override

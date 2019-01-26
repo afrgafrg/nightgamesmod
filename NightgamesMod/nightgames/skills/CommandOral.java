@@ -4,6 +4,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 
 public class CommandOral extends PlayerCommand {
@@ -61,16 +62,22 @@ public class CommandOral extends PlayerCommand {
     public String deal(Combat c, int magnitude, Result modifier, Character target) {
         switch (modifier) {
             case normal:
-                return target.getName() + " is ecstatic at being given the privilege of"
-                                + " pleasuring you and does a fairly good job at it, too. She"
-                                + " sucks your hard dick powerfully while massaging your balls.";
+                return String.format("%s is ecstatic at being given the privilege of"
+                                + " pleasuring you and does a fairly good job at it, too. %s"
+                                + " sucks your hard dick powerfully while massaging your balls.",
+                                target.subject(),
+                                Formatter.capitalizeFirstLetter(target.pronoun()));
             case strong:
-                return target.getName() + " seems delighted to 'help' you, and makes short work"
-                                + " of taking your flaccid length into her mouth and getting it " + "nice and hard.";
+                return String.format("%s seems delighted to 'help' you, and makes short work"
+                                + " of taking your flaccid length into %s mouth"
+                                + " and getting it nice and hard.", target.subject(),
+                                target.possessiveAdjective());
             case weak:
-                return target.getName() + " tries her very best to get you ready by running"
-                                + " her tongue all over your groin, but even"
-                                + " her psychically induced enthusiasm can't get you hard.";
+                return String.format("%s tries %s very best to get you ready by running"
+                                + " %s tongue all over your groin, but even"
+                                + " %s psychically induced enthusiasm can't get you hard.",
+                                target.subject(), target.possessiveAdjective(),
+                                target.possessiveAdjective(), target.possessiveAdjective());
             default:
                 return "<<This should not be displayed, please inform The" + " Silver Bard: CommandOral-deal>>";
         }

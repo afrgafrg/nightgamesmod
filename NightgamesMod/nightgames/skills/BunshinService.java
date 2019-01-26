@@ -168,7 +168,8 @@ public class BunshinService extends Skill {
             }
         }else{
             if(getSelf().hasBreasts()){
-                return String.format("A %s clone presses her boobs against %s and teases %s nipples.",getSelf().getName(),
+                return String.format("A %s clone presses %s boobs against %s and teases %s nipples.",
+                                getSelf().getName(), getSelf().possessiveAdjective(),
                                 target.subject(), target.possessiveAdjective());
             }else{
                 return String.format("A %s clone caresses %s chest and teases %s nipples.",getSelf().getName(),

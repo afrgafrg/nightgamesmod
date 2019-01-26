@@ -82,7 +82,7 @@ public class BreastWorship extends Skill {
         } else {
             return "You worshipfully circle your tongue around each of " + target.getName()
                             + "'s nipples, and start sucking like a newborn while furiously masturbating. "
-                            + "Her milk slides smoothly down your throat, and you're left with a warm comfortable feeling.";
+                            + "The milk slides smoothly down your throat, and you're left with a warm comfortable feeling.";
         }
     }
 

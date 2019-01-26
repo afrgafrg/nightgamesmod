@@ -28,7 +28,7 @@ public class AttireShift extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Seperate your opponent from her clothes: 2 charges";
+        return "Seperate your opponent from their clothes: 2 charges";
     }
 
     @Override
@@ -59,9 +59,9 @@ public class AttireShift extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return String.format("%s triggers a device on her arm and %s clothes suddenly vanish. "
-                        + "What the fuck did %s just do?",getSelf().getName(), target.nameOrPossessivePronoun(),
-                        getSelf().pronoun());
+        return String.format("%s triggers a device on %s arm and %s clothes suddenly vanish. "
+                        + "What the fuck did %s just do?",getSelf().getName(), getSelf().possessiveAdjective(),
+                        target.nameOrPossessivePronoun(), getSelf().pronoun());
     }
 
 }

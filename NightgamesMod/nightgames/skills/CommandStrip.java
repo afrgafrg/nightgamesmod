@@ -3,6 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 
 public class CommandStrip extends PlayerCommand {
@@ -45,9 +46,11 @@ public class CommandStrip extends PlayerCommand {
 
     @Override
     public String deal(Combat c, int magnitude, Result modifier, Character target) {
-        return "You look " + target.getName() + " in the eye, sending a psychic command for"
-                        + " her to strip. She complies without question, standing before you nude only"
-                        + " seconds later.";
+        return String.format("You look %s in the eye, sending a psychic command for"
+                        + " %s to strip. %s complies without question, standing before"
+                        + " you nude only seconds later.", target.nameDirectObject(),
+                        target.directObject(),
+                        Formatter.capitalizeFirstLetter(target.pronoun()));
     }
 
     @Override

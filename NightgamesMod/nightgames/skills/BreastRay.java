@@ -34,7 +34,7 @@ public class BreastRay extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Grow your opponent's boobs to make her more sensitive: 2 Batteries";
+        return "Grow your opponent's boobs to make them more sensitive: 2 Batteries";
     }
 
     @Override
@@ -71,8 +71,11 @@ public class BreastRay extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         String message;
-        message = "You point your growth ray at " + target.getName()
-                        + "'s breasts and fire. Her breasts balloon up and the new sensitivity causes her to moan.";
+        message = String.format("You point your growth ray at %s %s and fire. "
+                        + "They balloon up and the new sensitivity causes %s to moan.",
+                        target.nameOrPossessivePronoun(), 
+                        target.body.getRandomBreasts().describe(target),
+                        target.directObject());
         if (damage > 0) {
             message += " The change in " + target.getName() + " looks permanent!";
         }

@@ -40,8 +40,10 @@ public class CommandDismiss extends PlayerCommand {
 
     @Override
     public String deal(Combat c, int magnitude, Result modifier, Character target) {
-        return "You think you briefly see a pang of regret in " + target.getName()
-                        + "'s eyes, but she quickly dismisses her summons.";
+        return String.format("You think you briefly see a pang of regret in %s eyes, "
+                        + "but %s quickly dismisses %s summons.",
+                        target.nameOrPossessivePronoun(), target.pronoun(),
+                        target.possessiveAdjective());
     }
 
     @Override

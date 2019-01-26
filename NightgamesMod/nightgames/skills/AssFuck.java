@@ -201,17 +201,27 @@ public class AssFuck extends Fuck {
             }
         } else if (modifier == Result.special) {
             // Eve
-            return String.format(
-                            "While maintaining a firm grip, Eve runs her hands down your sides. <i>\"Are you ready for"
-                                            + " me now, %s? Actually, I don't care if you are. It's not like you can stop me now.\"</i> There's only"
-                                            + " one thing that could mean, and you don't want any part of it. You struggle in Eve's arms, trying to"
-                                            + " get away as she is dryhumping your ass, getting it wet for her. Finally, you manage to stumble away,"
-                                            + " but Eve trips you before you regain your balance. She follows you to the ground, rolling you onto your"
-                                            + " back and lifting your legs. <i>\"Uh uh, you're not going anywhere, my little cumslut-to-be. Now just lay back and"
-                                            + " take it.\"</i> Keeping your legs up with one arm, she uses the other to line up her %s with your hole. Then,"
-                                            + " she brutually slams it all the way in in one go. Your screams and Eve's laughter fill the air as she starts"
-                                            + " fucking you at a furious pace.",
-                            target.getName(), getSelf().body.getRandomCock().describe(getSelf()));
+            return Formatter.format(
+                            "While maintaining a firm grip, {self:subject-action:run} "
+                            + "{self:possessive} hands down {other:name-possessive} sides. "
+                            + "<i>\"Are you ready for me now, {other:name}? Actually, I don't"
+                            + " care if you are. It's not like you can stop me now.\"</i> "
+                            + "There's only one thing that could mean, and {other:pronoun-action:do} not want any "
+                            + "part of it. {other:SUBJECT-ACTION:struggle} in {self:name-possessive} arms, "
+                            + "trying to get away as {self:pronoun-action:are} dryhumping"
+                            + " {other:possessive} ass, getting it wet for {self:direct-object}. Finally, "
+                            + "{other:pronoun-action:manage} to stumble away, but {self:pronoun-action:trip}"
+                            + " {other:direct-object} before {other:pronoun-action:regain} {other:possessive} "
+                            + "balance. {self:PRONOUN-ACTION:follow} {other:direct-object} to the ground, rolling"
+                            + " {other:direct-object} onto {other:possessive} back and lifting {other:possessive} "
+                            + " legs. <i>\"Uh uh, you're not going anywhere, my little cumslut-to-be. Now just lay back"
+                            + " and take it.\"</i> Keeping {other:name-possessive} legs up with one arm, "
+                            + "{self:subject-action:use} the other to line up {self:possessive} {self:body-part:cock}"
+                            + " with {other:possessive} hole. Then, {self:pronoun} brutually {self:action:slam} "
+                            + "it all the way in in one go. {other:POSSESSIVE} screams and {self:possessive} laughter"
+                            + " fill the air as {self:pronoun-action:start} fucking"
+                            + " {other:direct-object} at a furious pace.",
+                            getSelf(), target);
         } else {
             return String.format("%s rubs %s dick against %s ass, but it's still flaccid and can't actually penetrate %s.",
                             getSelf().getName(), getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(), target.directObject());

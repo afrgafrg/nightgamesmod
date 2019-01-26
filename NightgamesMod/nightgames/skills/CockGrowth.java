@@ -91,15 +91,18 @@ public class CockGrowth extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         String message;
         if (modifier == Result.miss) {
-            message = "You attempt to channel your arcane energies into " + target.getName()
-                            + "'s crotch, but she dodges out of the way, causing your spell to fail.";
+            message = String.format("You attempt to channel your arcane energies into %s"
+                            + " crotch, but %s dodges out of the way, causing your spell to fail.",
+                            target.nameOrPossessivePronoun(), target.pronoun());
         } else {
             if (modifier == Result.special) {
-                message = "You channel your arcane energies into " + target.getName() + "'s groin. A moment later, "
-                                + target.getName() + " yelps as her clitoris rapidly enlarges into a small girl-cock!";
+                message = String.format("You channel your arcane energies into %s groin. A moment later, "
+                                + "%s yelps as %s clitoris rapidly enlarges into a small girl-cock!",
+                                target.nameOrPossessivePronoun(), target.pronoun(), target.possessiveAdjective());
             } else {
-                message = "You channel your arcane energies into " + target.getName() + "'s dick. A moment later, "
-                                + target.getName() + " yelps as her cock rapidly enlarges!";
+                message = String.format("You channel your arcane energies into %s dick. A moment later, "
+                                + "%s yelps as %s cock rapidly enlarges!", target.nameOrPossessivePronoun(),
+                                target.pronoun(), target.possessiveAdjective());
             }
             if (damage > 0) {
                 message += " You realize the effects are permanent!";

@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.status.BD;
 import nightgames.status.Stsflag;
 
@@ -55,8 +56,10 @@ public class Bondage extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().getName()
-                        + " flushes and wraps her arms around herself tightly. Suddenly the thought of being tied up and dominated slips into "+target.nameOrPossessivePronoun()+" head.";
+        return String.format("%s and wraps %s arms around herself tightly. "
+                        + "Suddenly the thought of being tied up and dominated slips into %s head.",
+                        getSelf().subjectAction("flush"), getSelf().possessiveAdjective(),
+                        target.nameOrPossessivePronoun());
     }
 
 }

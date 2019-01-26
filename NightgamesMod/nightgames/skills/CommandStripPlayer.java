@@ -43,9 +43,10 @@ public class CommandStripPlayer extends PlayerCommand {
 
     @Override
     public String deal(Combat c, int magnitude, Result modifier, Character target) {
-        return "With an elated gleam in her eyes, " + target.getName()
-                        + " moves her hands with nigh-inhuman dexterity, stripping all"
-                        + " of your clothes in just a second.";
+        return String.format("With an elated gleam in %s eyes, %s moves %s hands with nigh-inhuman "
+                        + "dexterity, stripping all of your clothes in just a second.",
+                        target.nameOrPossessivePronoun(), target.pronoun(), 
+                        target.possessiveAdjective());
     }
 
     @Override

@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.status.Shield;
 
 public class Barrier extends Skill {
@@ -57,8 +58,9 @@ public class Barrier extends Skill {
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().getName()
-                        + " holds a hand in front of her and "+target.subjectAction("see")+" a magical barrier appear briefly, before it becomes invisible.";
+        return Formatter.format("{self:SUBJECT-ACTION:hold} {self:direct-object} and"
+                        + " {other:subject-action:see} a magical barrier appear briefly before"
+                        + " it becomes invisible.", getSelf(), target);
     }
 
 }

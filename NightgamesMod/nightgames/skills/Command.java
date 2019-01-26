@@ -136,7 +136,9 @@ public class Command extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         // Not used - executeCommand prints messages
         if (modifier == null) {
-            return getSelf().getName() + "'s order confuses you for a moment, snapping her control over you.";
+            return String.format("%s order confuses you for a "
+                            + "moment, snapping %s control over you.",
+                            getSelf().nameOrPossessivePronoun(), getSelf().possessiveAdjective());
         }
         switch (modifier) {
             case critical:
@@ -145,7 +147,10 @@ public class Command extends Skill {
                         return "While commanding you to be still, " + getSelf().getName()
                                         + " starts bouncing wildly on your dick.";
                     case 1:
-                        return "Her scent overwhelms you and you feel a compulsion to pleasure her.";
+                        return String.format("%s scent overwhelms you and you feel"
+                                        + " a compulsion to pleasure %s.",
+                                        Formatter.capitalizeFirstLetter(getSelf().possessiveAdjective()),
+                                        getSelf().directObject());
                     case 2:
                         return "You feel an irresistible compulsion to lie down on your back";
                     default:
@@ -154,9 +159,13 @@ public class Command extends Skill {
             case miss:
                 return "You feel an uncontrollable desire to undress yourself";
             case normal:
-                return getSelf().getName() + "'s eyes bid you to pleasure yourself on her behalf.";
+                return String.format("%s eyes bid you to pleasure yourself on %s behalf.",
+                                Formatter.capitalizeFirstLetter(getSelf().nameOrPossessivePronoun()),
+                                getSelf().possessiveAdjective());
             case special:
-                return getSelf().getName() + "'s voice pulls you in and you cannot resist fucking her";
+                return String.format("%s voice pulls you in and you cannot resist fucking %s.",
+                                Formatter.capitalizeFirstLetter(getSelf().nameOrPossessivePronoun()),
+                                getSelf().directObject());
             case weak:
                 return "You are desperate to see more of " + getSelf().getName() + "'s body";
             default:

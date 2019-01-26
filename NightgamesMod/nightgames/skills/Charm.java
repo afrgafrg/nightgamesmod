@@ -104,15 +104,22 @@ public class Charm extends Skill {
         if (modifier == Result.miss) {
             return "You flash a dazzling smile at " + target.directObject() + ", but it wasn't very effective.";
         } else if (modifier == Result.weak){
-            return "You let out a soft purr and give " + target.getName()
-            + " your best puppy dog eyes. She smiles, but then aims a quick punch at your groin, which you barely avoid. "
-            + "Maybe you shouldn't have mixed your animal metaphors.";
+            return String.format("You let out a soft purr and give %s"
+            + " your best puppy dog eyes. %s smiles, but then aims a quick punch"
+            + " at your groin, which you barely avoid. "
+            + "Maybe you shouldn't have mixed your animal metaphors.",
+            target.subject(), Formatter.capitalizeFirstLetter(target.pronoun()));
         } else if (modifier == Result.special) {
-            String message = "You give " + target.getName()
-                            + " an affectionate purr and your most disarming smile. Her battle aura melts away and she pats your head, completely taken with your "
-                            + "endearing behavior.";
+            String message = String.format("You give %s"
+                            + " an affectionate purr and your most disarming smile. "
+                            + "%s battle aura melts away and %s pats your head, completely taken with your "
+                            + "endearing behavior.", target.subject(),
+                            Formatter.capitalizeFirstLetter(target.possessiveAdjective()),
+                            target.pronoun());
             if (damage > 0) {
-                message += "\nSome of your apparent arousal seems to have affected her, her breath seems shallower than before.";
+                message += String.format("\nSome of your apparent arousal seems to have affected %s, "
+                                + "%s breath seems shallower than before.",
+                                target.nameDirectObject(), target.possessiveAdjective());
             }
             return message;
         } else {
@@ -131,10 +138,10 @@ public class Charm extends Skill {
         } else if (modifier == Result.special) {
             String message = String.format("%s purrs cutely, and looks up at %s with sad eyes. Oh God,"
                             + " %s's so adorable! It'd be mean to beat %s too quickly. "
-                            + "Maybe %s should let her get some "
+                            + "Maybe %s should let %s get some "
                             + "attacks in while %s %s watching %s earnest efforts.",
                             getSelf().subject(), target.nameDirectObject(),
-                            getSelf().pronoun(), getSelf().directObject(), target.subject(),
+                            getSelf().pronoun(), getSelf().directObject(), target.subject(), getSelf().directObject(),
                             target.pronoun(), target.action("enjoy"), getSelf().possessiveAdjective());
             if (damage > 0) {
                 message += String.format("\nYou're not sure if this was intentional, but %s flushed "

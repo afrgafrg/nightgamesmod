@@ -58,7 +58,8 @@ public class Binding extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You cast a binding spell on " + target.getName() + ", holding her in place.";
+        return String.format("You cast a binding spell on %s, holding %s in place.", 
+                        target.getName(), target.directObject());
     }
 
     @Override

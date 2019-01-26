@@ -245,9 +245,9 @@ public class AssJob extends Skill {
                                 target.possessiveAdjective(), target.body.getRandomCock().describe(target));
             case miss:
             default:
-                return String.format("%s moves %s ass towards %s crotch, but %s %s her away.", getSelf().getName(),
+                return String.format("%s moves %s ass towards %s crotch, but %s %s %s away.", getSelf().getName(),
                                 getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(), target.pronoun(),
-                                target.action("push", "pushes"));
+                                target.action("push", "pushes"), getSelf().directObject());
         }
     }
 

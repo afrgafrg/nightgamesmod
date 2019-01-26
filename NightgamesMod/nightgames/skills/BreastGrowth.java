@@ -40,7 +40,7 @@ public class BreastGrowth extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Grow your opponent's boobs to make her more sensitive.";
+        return "Grow your opponent's boobs to make them more sensitive.";
     }
 
     @Override

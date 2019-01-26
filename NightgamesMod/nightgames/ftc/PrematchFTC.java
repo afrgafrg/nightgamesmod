@@ -38,7 +38,7 @@ public class PrematchFTC extends Prematch {
         super(match);
     }
 
-    public void prompt(Player player) throws InterruptedException {
+    public void prompt(Player player, boolean allowPerspectiveSwitch) throws InterruptedException {
         List<LabeledValue<Response>> choices = new ArrayList<>();
         String message = "";
         if (!Flag.checkFlag(Flag.didFTC)) {

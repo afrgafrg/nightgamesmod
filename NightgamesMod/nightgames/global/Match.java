@@ -287,6 +287,16 @@ public class Match {
             }
         }
         GameState.gameState.characterPool.getPlayer().getAddictions().forEach(Addiction::endNight);
+        
+        if (GameState.state().exchanged != null) {
+            try {
+                Character.exchange(player, GameState.state().exchanged);
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            GameState.state().exchanged = null;
+        }
+        
         matchComplete.countDown();
     }
 

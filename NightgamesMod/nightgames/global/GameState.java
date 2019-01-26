@@ -24,6 +24,7 @@ public class GameState {
     private static boolean ingame = false;
     public CharacterPool characterPool;
     private volatile Thread loopThread;
+    public NPC exchanged;
 
     public GameState(String playerName, Optional<StartConfiguration> config, List<Trait> pickedTraits,
                 CharacterSex pickedGender, Map<Attribute, Integer> selectedAttributes) {
@@ -122,7 +123,7 @@ public class GameState {
                     CompletableFuture<Match> preparedMatch = new CompletableFuture<>();
                     Prematch prematch = Prematch.decideMatchType(preparedMatch);
                     // set up match
-                    prematch.prompt(characterPool.human);
+                    prematch.prompt(characterPool.human, true);
                     Match match = preparedMatch.get();
                     // start match
                     CountDownLatch matchComplete = match.matchComplete;

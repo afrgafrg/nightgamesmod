@@ -105,6 +105,7 @@ public class GUI extends JFrame implements Observer {
     private Box groupBox;
 	private JFrame inventoryFrame;
     private JMenuItem mntmOptions;
+    private JLabel nameLabel;
 
     private Player populatedPlayer;
 
@@ -872,11 +873,11 @@ public class GUI extends JFrame implements Observer {
         bio.setLayout(new GridLayout(2, 0, 0, 0));
         bio.setBackground(GUIColors.bgDark);
 
-        JLabel name = new JLabel(player.getTrueName());
-        name.setHorizontalAlignment(SwingConstants.LEFT);
-        name.setFont(new Font("Sylfaen", Font.BOLD, 15));
-        name.setForeground(GUIColors.textColorLight);
-        bio.add(name);
+        nameLabel = new JLabel(player.getTrueName());
+        nameLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        nameLabel.setFont(new Font("Sylfaen", Font.BOLD, 15));
+        nameLabel.setForeground(GUIColors.textColorLight);
+        bio.add(nameLabel);
         lvl = new JLabel("Lvl: " + player.getLevel());
         lvl.setFont(new Font("Sylfaen", Font.BOLD, 15));
         lvl.setForeground(GUIColors.textColorLight);
@@ -1130,6 +1131,8 @@ public class GUI extends JFrame implements Observer {
         willpower.setText("Willpower: " + getLabelString(player.getWillpower()));
         lvl.setText("Lvl: " + player.getLevel());
         xp.setText("XP: " + player.getXP());
+        nameLabel.setText(player.getTrueName());
+        
         staminaBar.setMaximum(player.getStamina().max());
         staminaBar.setValue(player.getStamina().get());
         arousalBar.setMaximum(player.getArousal().max());

@@ -21,7 +21,7 @@ public class OrgasmSeal extends DurationStatus {
 
     @Override
     public String initialMessage(Combat c, Optional<Status> replacement) {
-        return String.format("%s ability to cum is now sealed!\n", affected.subject());
+        return String.format("%s ability to cum is now sealed!\n", affected.nameOrPossessivePronoun());
     }
 
     @Override

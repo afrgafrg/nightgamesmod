@@ -658,7 +658,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String subject() {
-        return getName();
+        return ProseUtils.subject(this);
     }
 
     public int pleasure(int i, Combat c, Character source) {
@@ -833,7 +833,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String subjectAction(String verb, String pluralverb) {
-        return subject() + " " + pluralverb;
+        return ProseUtils.subjectAction(this, verb, pluralverb);
     }
 
     public String subjectAction(String verb) {
@@ -841,7 +841,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String subjectWas() {
-        return subject() + " was";
+        return ProseUtils.subjectWas(this);
     }
 
     public void tempt(int i) {
@@ -3339,7 +3339,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String nameOrPossessivePronoun() {
-        return getName() + "'s";
+        return ProseUtils.nameOrPossessivePronoun(this);
     }
 
     public double getExposure(ClothingSlot slot) {
@@ -3368,11 +3368,7 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String pronoun() {
-        if (useFemalePronouns()) {
-            return "she";
-        } else {
-            return "he";
-        }
+        return ProseUtils.pronoun(this);
     }
 
     public Emotion getMood() {
@@ -3380,27 +3376,15 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String possessiveAdjective() {
-        if (useFemalePronouns()) {
-            return "her";
-        } else {
-            return "his";
-        }
+        return ProseUtils.possessiveAdjective(this);
     }
     
     public String possessivePronoun() {
-        if (useFemalePronouns()) {
-            return "hers";
-        } else {
-            return "his";
-        }
+        return ProseUtils.possessivePronoun(this);
     }
 
     public String directObject() {
-        if (useFemalePronouns()) {
-            return "her";
-        } else {
-            return "him";
-        }
+        return ProseUtils.directObject(this);
     }
 
     public boolean useFemalePronouns() {
@@ -3413,17 +3397,11 @@ public abstract class Character extends Observable implements Cloneable {
     }
 
     public String nameDirectObject() {
-        return getName();
+        return ProseUtils.nameOrDirectObject(this);
     }
 
     public String reflectivePronoun() {
-        String self = possessiveAdjective() + "self";
-        if (self.equals("hisself")) {
-            // goddammit english.
-            return "himself";
-        } else {
-            return self;
-        }
+        return ProseUtils.reflectivePronoun(this);
     }
 
     public boolean clothingFuckable(BodyPart part) {
@@ -4127,5 +4105,128 @@ public abstract class Character extends Observable implements Cloneable {
      */
     public int fleeModifier() {
         return get(Attribute.Speed) + (has(Trait.sprinter) ? 5 : 0);
+    }
+    
+    /**
+     * Switch all data from one character to another and vice versa.
+     */
+    public static void exchange(Character a, Character b) throws CloneNotSupportedException {
+        Character aClone = a.clone();
+        Character bClone = b.clone();
+        aClone.finishClone(b);
+        bClone.finishClone(a);
+        
+        String bName = b.name;
+        int bLevel = b.level;
+        int bXp = b.xp;
+        int bRank = b.rank;
+        int bMoney = b.money;
+        Area bLoc = b.location;
+        Map<String, Integer> bCooldowns = new HashMap<>(b.cooldowns);
+        Item bTrophy = b.trophy;
+        State bState = b.state;
+        int bBusy = b.busy;
+        Set<Clothing> bCloset = new HashSet<>(b.closet);
+        List<Challenge> bChallenges = new ArrayList<>(b.challenges);
+        int bAttPoints = b.availableAttributePoints;
+        boolean bOrgasmed = b.orgasmed;
+        boolean bCustom = b.custom;
+        boolean bPleasured = b.pleasured;
+        int bOrgasms = b.orgasms;
+        int bCloned = b.cloned;
+        int bLevelsToGain = b.levelsToGain;
+        
+        b.name = a.name;
+        b.level = a.level;
+        b.xp = a.xp;
+        b.money = a.money;
+        b.location = a.location;
+        b.cooldowns = a.cooldowns;
+        b.trophy = a.trophy;
+        b.state = a.state;
+        b.busy = a.busy;
+        b.closet = new HashSet<>(a.closet);
+        b.challenges = new ArrayList<>(a.challenges);
+        b.availableAttributePoints = a.availableAttributePoints;
+        b.orgasmed = a.orgasmed;
+        b.custom = a.custom;
+        b.pleasured = a.pleasured;
+        b.orgasms = a.orgasms;
+        b.cloned = a.cloned;
+        b.levelsToGain = a.levelsToGain;
+        
+        a.name = bName;
+        a.level = bLevel;
+        a.xp = bXp;
+        a.money = bMoney;
+        a.location = bLoc;
+        a.cooldowns = bCooldowns;
+        a.trophy = bTrophy;
+        a.state = bState;
+        a.busy = bBusy;
+        a.closet = bCloset;
+        a.challenges = bChallenges;
+        a.availableAttributePoints = bAttPoints;
+        a.orgasmed = bOrgasmed;
+        a.custom = bCustom;
+        a.pleasured = bPleasured;
+        a.orgasms = bOrgasms;
+        a.cloned = bCloned;
+        a.levelsToGain = bLevelsToGain;
+       
+        b.att = aClone.att;
+        b.stamina = aClone.stamina;
+        b.arousal = aClone.arousal;
+        b.mojo = aClone.mojo;
+        b.willpower = aClone.willpower;
+        b.outfitPlan = aClone.outfitPlan;
+        b.outfit = aClone.outfit;
+        b.flags = aClone.flags;
+        b.status = aClone.status;
+        b.traits = aClone.traits;
+        b.temporaryAddedTraits = aClone.temporaryAddedTraits;
+        b.temporaryRemovedTraits = aClone.temporaryRemovedTraits;
+        b.growth = aClone.growth;
+        b.removelist = aClone.removelist;
+        b.addlist = aClone.addlist;
+        b.mercy = aClone.mercy;
+        b.inventory = aClone.inventory;
+        b.attractions = aClone.attractions;
+        b.affections = aClone.affections;
+        b.skills = aClone.skills;
+        b.body = aClone.body;
+        b.body.character = b;
+        b.orgasmed = aClone.orgasmed;
+        b.statusFlags = aClone.statusFlags;
+        b.levelPlan = aClone.levelPlan;
+        
+        a.att = bClone.att;
+        a.stamina = bClone.stamina;
+        a.arousal = bClone.arousal;
+        a.mojo = bClone.mojo;
+        a.willpower = bClone.willpower;
+        a.outfitPlan = bClone.outfitPlan;
+        a.outfit = bClone.outfit;
+        a.flags = bClone.flags;
+        a.status = bClone.status;
+        a.traits = bClone.traits;
+        a.temporaryAddedTraits = bClone.temporaryAddedTraits;
+        a.temporaryRemovedTraits = bClone.temporaryRemovedTraits;
+        a.growth = bClone.growth;
+        a.removelist = bClone.removelist;
+        a.addlist = bClone.addlist;
+        a.mercy = bClone.mercy;
+        a.inventory = bClone.inventory;
+        a.attractions = bClone.attractions;
+        a.affections = bClone.affections;
+        a.skills = bClone.skills;
+        a.body = bClone.body;
+        a.body.character = a;
+        a.orgasmed = bClone.orgasmed;
+        a.statusFlags = bClone.statusFlags;
+        a.levelPlan = bClone.levelPlan;
+        a.initialGender = b.initialGender;
+        a.level = b.level;
+        a.xp = b.xp;
     }
 }

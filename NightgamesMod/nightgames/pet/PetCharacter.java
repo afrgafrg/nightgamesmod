@@ -17,7 +17,6 @@ import nightgames.skills.Tactics;
 import nightgames.status.Slimed;
 import nightgames.status.Status;
 import nightgames.trap.Trap;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -151,7 +150,6 @@ public class PetCharacter extends Character {
 
     @Override public void doAction(Action action) {
         System.err.println(String.format("Pet character %s with owner type %s should not exist outside of combat.", this.getName(), this.ownerType));
-        throw new NotImplementedException();
     }
 
     @Override

@@ -823,55 +823,6 @@ public class Player extends Character {
         }
     }
 
-    @Override
-    public String nameDirectObject() {
-        return "you";
-    }
-
-    @Override
-    public String subjectAction(String verb, String pluralverb) {
-        return subject() + " " + verb;
-    }
-
-    @Override
-    public String nameOrPossessivePronoun() {
-        return "your";
-    }
-
-    @Override
-    public String possessiveAdjective() {
-        return "your";
-    }
-    
-    @Override
-    public String possessivePronoun() {
-        return "yours";
-    }
-
-    @Override
-    public String reflectivePronoun() {
-        return "yourself";
-    }
-
-    @Override
-    public String subject() {
-        return "you";
-    }
-
-    @Override
-    public String subjectWas() {
-        return subject() + " were";
-    }
-
-    @Override
-    public String pronoun() {
-        return "you";
-    }
-
-    @Override
-    public String directObject() {
-        return "you";
-    }
 
     @Override
     public void emote(Emotion emo, int amt) {

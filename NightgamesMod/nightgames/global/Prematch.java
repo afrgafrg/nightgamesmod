@@ -101,6 +101,7 @@ public abstract class Prematch {
         }
         List<Character> participants = new ArrayList<>();
         participants.add(characterPool.human);
+        
         // Disable characters flagged as disabled
         for (NPC npc : characterPool.availableNpcs()) {
             if (!Flag.checkCharacterDisabledFlag(npc)) {
@@ -111,6 +112,9 @@ public abstract class Prematch {
             lineup.add(lover);
         }
         lineup.add(characterPool.human);
+        if (GameState.state().exchanged != null) {
+            lineup.add(GameState.state().exchanged);
+        }
         if (matchmod.name().equals("maya")) {
             if (!Flag.checkFlag(Flag.Maya)) {
                 characterPool.newChallenger(new Maya(characterPool.human.getLevel()).getCharacter());
@@ -157,6 +161,6 @@ public abstract class Prematch {
         GUI.gui.clearText();
     }
 
-    public abstract void prompt(Player player) throws InterruptedException, ExecutionException;
+    public abstract void prompt(Player player, boolean allowPerspectiveSwitch) throws InterruptedException, ExecutionException;
 
 }

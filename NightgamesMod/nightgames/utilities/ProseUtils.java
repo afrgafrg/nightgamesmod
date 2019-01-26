@@ -46,9 +46,7 @@ public class ProseUtils {
         MALE,
         PLAYER;
         
-        static GrammarGender determine(Character c) {
-            NPC exchanged = GameState.state() == null ? null : GameState.state().exchanged;
-            
+        static GrammarGender determine(Character c) {            
             if (c.human()) {
                 return PLAYER;
             }

@@ -3877,12 +3877,11 @@ public abstract class Character extends Observable implements Cloneable {
         if (o == NPC.noneCharacter() || this == NPC.noneCharacter())
             return false;
         Character character = (Character) o;
-        return getType().equals(character.getType()) && name.equals(character.name);
+        return getType().equals(character.getType());
     }
 
     @Override public int hashCode() {
-        int result = getType().hashCode();
-        return result * 31 + name.hashCode();
+        return getType().hashCode();
     }
 
     public Growth getGrowth() {

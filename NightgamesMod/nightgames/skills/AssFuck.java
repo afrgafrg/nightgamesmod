@@ -82,7 +82,7 @@ public class AssFuck extends Fuck {
         } else if (target.human()) {
             if (!c.getStance().behind(getSelf()) && getSelf().has(Trait.strapped)) {
                 c.write(getSelf(), receive(c, premessage.length(), Result.upgrade, target));
-            } else if (getSelf().getType().equals("Eve") && c.getStance().behind(getSelf())) {
+            } else if (getSelf().getTrueName().equals("Eve") && c.getStance().behind(getSelf())) {
                 m += 5;
                 c.write(getSelf(), receive(c, premessage.length(), Result.special, target));
             } else {
@@ -98,7 +98,7 @@ public class AssFuck extends Fuck {
 
         boolean voluntary = getSelf().canMakeOwnDecision();
         if (c.getStance().behind(getSelf())) {
-            if (getSelf().getType().equals("Eve")) {
+            if (getSelf().getTrueName().equals("Eve")) {
                 c.setStance(new AnalProne(getSelf(), target), getSelf(), voluntary);
             } else {
                 if (c.getStance().enumerate() == Stance.behindfootjob) {c.setStance(new BehindFootjob(getSelf(),target));}

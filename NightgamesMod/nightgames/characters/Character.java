@@ -188,7 +188,9 @@ public abstract class Character extends Observable implements Cloneable {
         c.inventory = new HashMap<>(inventory);
         c.attractions = new HashMap<>(attractions);
         c.affections = new HashMap<>(affections);
-        c.skills = (new CopyOnWriteArrayList<>(getSkills()));
+        c.skills = getSkills().stream().map(s -> s.copy(c))
+                        .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+     
         c.body = body.clone();
         c.body.character = c;
         c.orgasmed = orgasmed;

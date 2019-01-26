@@ -3,7 +3,6 @@ package nightgames.global;
 import nightgames.characters.Player;
 import nightgames.characters.Character;
 import nightgames.characters.NPC;
-import nightgames.gui.ContinueButton;
 import nightgames.gui.GUI;
 import nightgames.gui.LabeledValue;
 import nightgames.gui.SaveButton;

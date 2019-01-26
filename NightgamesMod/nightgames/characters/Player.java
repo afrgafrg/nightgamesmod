@@ -640,12 +640,26 @@ public class Player extends Character {
         gainXP(getAssistXP(target));
         target.defeated(this);
         assist.gainAttraction(this, 1);
-        c.write("You take your time, approaching " + target.getName() + " and " + assist.getName() + " stealthily. "
-                        + assist.getName() + " notices you first and before her reaction "
-                        + "gives you away, you quickly lunge and grab " + target.getName()
-                        + " from behind. She freezes in surprise for just a second, but that's all you need to "
-                        + "restrain her arms and leave her completely helpless. Both your hands are occupied holding her, so you focus on kissing and licking the "
-                        + "sensitive nape of her neck.<br/><br/>");
+        c.write(getInterveneScene(target, assist));
+    }
+    
+    public String getInterveneScene(Character target, Character assist) {
+        return String.format("%s %s time, approaching %s and %s stealthily. "
+                        + "%s %s first and before %s reaction "
+                        + "gives %s away, %s quickly %s and %s %s"
+                        + " from behind. %s %s in surprise for just a second, but that's all %s %s to "
+                        + "restrain %s arms and leave %s completely helpless. Both of %s hands are "
+                        + "occupied holding %s, so %s %s on kissing and licking the "
+                        + "sensitive nape of %s neck.<br/><br/>",
+                        Formatter.capitalizeFirstLetter(subjectAction("take")), possessiveAdjective(),
+                        target.getName(), assist.getName(), 
+                        Formatter.capitalizeFirstLetter(assist.subjectAction("notice")), 
+                        directObject(), assist.possessiveAdjective(), directObject(), pronoun(),
+                        action("lunge"), action("grab"), target.getName(),
+                        Formatter.capitalizeFirstLetter(target.pronoun()), target.action("freeze"),
+                        pronoun(), action("need"),
+                        target.possessiveAdjective(), target.directObject(), possessiveAdjective(),
+                        target.getName(), pronoun(), action("focus"), target.possessiveAdjective());
     }
 
     @Override

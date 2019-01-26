@@ -182,7 +182,17 @@ public class NPC extends Character {
         gainTrophy(c, target);
 
         target.defeated(this);
-        c.write(ai.victory(c, flag));
+        
+        String scene;
+        // If the opponent is the player, and the two have switched perspective,
+        // then we show the opposite scene.
+        // We have to use reference equality, as the names have also switched
+        if (target.human() && GameState.state().exchanged == this) { 
+            scene = ai.defeat(c, flag);
+        } else {
+            scene = ai.victory(c, flag);
+        }
+        
         gainAttraction(target, 1);
         target.gainAttraction(this, 2);
     }
@@ -212,7 +222,18 @@ public class NPC extends Character {
         undress(c);
         target.gainTrophy(c, this);
         defeated(target);
-        c.write(ai.defeat(c, flag));
+        
+        String scene;
+        // If the opponent is the player, and the two have switched perspective,
+        // then we show the opposite scene.
+        // We have to use reference equality, as the names have also switched
+        if (target.human() && GameState.state().exchanged == this) { 
+            scene = ai.victory(c, flag);
+        } else {
+            scene = ai.defeat(c, flag);
+        }
+        
+        c.write(scene);
         gainAttraction(target, 2);
         target.gainAttraction(this, 1);
     }
@@ -221,7 +242,13 @@ public class NPC extends Character {
     public void intervene3p(Combat c, Character target, Character assist) {
         gainXP(getAssistXP(target));
         target.defeated(this);
-        c.write(ai.intervene3p(c, target, assist));
+        String scene;
+        if (target.human() && GameState.state().exchanged == this) { 
+            scene = ((Player) target).getInterveneScene(this, assist);
+        } else {
+            scene = ai.intervene3p(c, target, assist);
+        }
+        c.write(scene);
         assist.gainAttraction(this, 1);
     }
 

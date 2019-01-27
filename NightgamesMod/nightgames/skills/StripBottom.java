@@ -120,7 +120,8 @@ public class StripBottom extends Skill {
     }
 
     @Override public String describe(Combat c) {
-        return "Attempt to remove opponent's pants. More likely to succeed if she's weakened and aroused";
+        return "Attempt to remove opponent's pants. More likely to succeed"
+                        + " if they're weakened and aroused";
     }
 
     @Override public boolean makesContact() {

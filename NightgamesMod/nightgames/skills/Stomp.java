@@ -119,20 +119,30 @@ public class Stomp extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
             if (target.hasBalls()) {
-                return "You push " + target.getName()
-                                + "'s legs apart, exposing her private parts. Her girl-cock is hanging over her testicles, so you prod it with your foot "
-                                + "to push it out of the way. She becomes slightly aroused at your touch and your attention, not realizing you're planning something extremely "
-                                + "painful. You're going to feel a bit bad about this, but probably not nearly as much as she will. You jump up, lifting both legs and coming "
-                                + "down in a double legdrop directly hitting her unprotected jewels.";
+                msg = "You push {other:name-possessive}"
+                                + " legs apart, exposing {other:possessive} private parts. "
+                                + "{other:possessive} {other:body-part:cock} is hanging over "
+                                + "{other:possessive} testicles, so you prod it with your foot "
+                                + "to push it out of the way. {other:PRONOUN} becomes slightly "
+                                + "aroused at your touch and your attention, not realizing "
+                                + "you're planning something extremely painful. You're going "
+                                + "to feel a bit bad about this, but probably not nearly as "
+                                + "much as {other:pronoun} will. You jump up, lifting both "
+                                + "legs and coming down in a double legdrop directly hitting"
+                                + " {other:possessive} unprotected jewels.";
             } else {
-                return "You push " + target.getName()
-                                + "'s legs apart, fully exposing her womanhood. She flushes in shame, apparently misunderstanding you intentions, which "
-                                + "compels you to mutter a quick apology before you jump up and slam your heel into her vulnerable quim.";
+                msg = "You push {other:name-possessive}"
+                                + " legs apart, fully exposing {other:possessive} womanhood. "
+                                + "{other:PRONOUN} flushes in shame, apparently misunderstanding"
+                                + " you intentions, which compels you to mutter a quick apology "
+                                + "before you jump up and slam your heel into {other:possessive}"
+                                + " vulnerable quim.";
             }
         } else if (modifier == Result.strong) {
-            return String.format(
+            msg = String.format(
                             "You use your foot to maneuver %s's %s out of the way and revealing %s soft balls. "
                                             + "%s does not seem to realize what you are planning before your foot is already plunging down towards them."
                                             + " When it lands, you feel a sympathetic jolt run up your spine as %s gonads are crushed beneath your foot."
@@ -141,22 +151,29 @@ public class Stomp extends Skill {
                             Formatter.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(),
                             Formatter.capitalizeFirstLetter(target.pronoun()));
         } else if (modifier == Result.weak) {
-            return "You step between " + target.getName()
-                            + "'s legs and stomp down on her groin. Your foot hits something solid and she doesn't seem terribly affected.";
+            msg = "You step between {other:name-possessive}"
+                            + " legs and stomp down on {other:possessive} groin. Your foot hits"
+                            + " something solid and {other:direct-object} doesn't seem "
+                            + "terribly affected.";
         } else if (modifier == Result.weak2) {
-            return String.format(
+            msg = String.format(
                             "You step between %s's legs and stomp down on %s groin."
                                             + "%s exhales sharply, but does not seem hurt much at all. Somehow.",
                             target.getName(), target.possessiveAdjective(), Formatter.capitalizeFirstLetter(target.pronoun()));
         } else {
             if (target.hasBalls()) {
-                return "You pull " + target.getName()
-                                + "'s legs open and stomp on her vulnerable balls. She cries out in pain and curls up in the fetal position.";
+                msg = "You pull {other:name-possessive}"
+                                + " legs open and stomp on {other:possessive} vulnerable balls. "
+                                + "{other:PRONOUN} cries out in pain and curls up in the fetal"
+                                + " position.";
             } else {
-                return "You step between " + target.getName()
-                                + "'s legs and stomp down on her sensitive pussy. She cries out in pain and rubs her injured girl bits.";
+                msg = "You step between {other:name-possessive}"
+                                + " legs and stomp down on {other:possessive} sensitive pussy. "
+                                + "{other:PRONOUN} cries out in pain and rubs {other:possessive}"
+                                + " injured girl bits.";
             }
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

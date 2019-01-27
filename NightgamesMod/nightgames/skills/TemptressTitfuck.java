@@ -120,25 +120,28 @@ public class TemptressTitfuck extends Paizuri {
                                 getSelf().pronoun(), target.pronoun(), target.action("pull"), getSelf().pronoun());
             case special:
                 return String.format(
-                                "%s %s %s %s between her %s and %s them with intense pressure. %s %s hardens"
+                                "%s %s %s %s between %s %s and %s them with intense pressure. %s %s hardens"
                                                 + " instantly, throbbing happily in it's new home.",
                                  getSelf().pronoun(), getSelf().subjectAction("trap"), target.possessivePronoun(),
-                                target.body.getRandomCock().describe(target), getSelf().body.getLargestBreasts().describe(getSelf()),
+                                target.body.getRandomCock().describe(target), getSelf().possessiveAdjective(),
+                                getSelf().body.getLargestBreasts().describe(getSelf()),
                                 getSelf().action("squeeze"), target.possessivePronoun(), target.body.getRandomCock().describe(target));
             default: // should be Result.normal
                 switch (damage) {
                     case 0:
                         return String.format(
-                                        "%s strokes %s %s with her %s in slow circular motions while"
+                                        "%s strokes %s %s with %s %s in slow circular motions while"
                                                         + " lightly licking the tip, causing %s to groan in pleasure.",
                                         getSelf().getName(), target.nameOrPossessivePronoun(),
-                                        target.body.getRandomCock().describe(target), getSelf().body.getLargestBreasts().fullDescribe(getSelf()), target.directObject());
+                                        target.body.getRandomCock().describe(target), getSelf().possessiveAdjective(),
+                                        getSelf().body.getLargestBreasts().fullDescribe(getSelf()), target.directObject());
                     case 1:
                         return String.format("%s tongue loops around the head of %s hard %s "
-                                        + "and %s the shaft with her %s, constantly increasing  in intensity.",
+                                        + "and %s the shaft with %s %s, constantly increasing  in intensity.",
                                         getSelf().nameOrPossessivePronoun(),
                                         target.nameOrPossessivePronoun(), target.body.getRandomCock().describe(target),
-                                        getSelf().action("milk"), getSelf().body.getLargestBreasts().fullDescribe(getSelf()));
+                                        getSelf().action("milk"), getSelf().possessiveAdjective(),
+                                        getSelf().body.getLargestBreasts().fullDescribe(getSelf()));
                     default:
                         return String.format("As %s %s rapidly fuck %s %s, a pleasurable pressure constantly builds at the base. "
                                         + "All while %s %s the head sending bolts of electric pleasure back down %s shaft. "

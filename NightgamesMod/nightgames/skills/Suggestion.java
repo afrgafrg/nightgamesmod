@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.status.Charmed;
 import nightgames.status.Stsflag;
 
@@ -31,7 +32,7 @@ public class Suggestion extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Hypnotize your opponent so she can't defend herself";
+        return "Hypnotize your opponent so they can't defend themselves";
     }
 
     @Override
@@ -70,8 +71,10 @@ public class Suggestion extends Skill {
                             target.getName(), target.pronoun());
         }
         return String.format(
-                        "You speak in a calm, rhythmic tone, lulling %s into a hypnotic trance. Her eyes seem to glaze over slightly, momentarily slipping under your influence.",
-                        target.getName());
+                        "You speak in a calm, rhythmic tone, lulling %s into a hypnotic trance. "
+                        + "%s eyes seem to glaze over slightly, momentarily slipping under your influence.",
+                        target.getName(),
+                        Formatter.capitalizeFirstLetter(target.possessiveAdjective()));
     }
 
     @Override

@@ -31,7 +31,7 @@ public class TortoiseWrap extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "User your bondage skills to wrap your opponent to increase her sensitivity";
+        return "User your bondage skills to wrap your opponent to increase their sensitivity";
     }
 
     @Override

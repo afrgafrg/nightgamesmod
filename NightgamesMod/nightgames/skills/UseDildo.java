@@ -68,19 +68,21 @@ public class UseDildo extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to slip a dildo into " + target.getName() + ", but she blocks it.";
+            msg = "You try to slip a dildo into {other:name-do}, but {other:pronoun} blocks it.";
         } else if (modifier == Result.upgrade) {
-            return "You touch the imperceptibly vibrating dildo to " + target.getName()
-                            + "'s love button and she jumps as if shocked. Before she can defend herself, you "
-                            + "slip it into her " + target.body.getRandomPussy().describe(target)
-                            + ". She starts moaning in pleasure immediately.";
+            msg = "You touch the imperceptibly vibrating dildo to {other:name-possessive}"
+                            + " love button and {other:pronoun} jumps as if shocked. Before "
+                            + "{other:pronoun} can defend herself, you slip it into {other:possessive} "
+                            + "{other:body-part:pussy}. {other:PRONOUN} starts moaning in pleasure immediately.";
         } else {
-            return "You rub the dildo against " + target.getName()
-                            + "'s lower lips to lubricate it before you thrust it inside her. She can't help moaning a little as you "
-                            + "pump the rubber toy in and out of her " + target.body.getRandomPussy().describe(target)
-                            + ".";
+            msg = "You rub the dildo against {other:name-possessive} lower lips to lubricate "
+                            + "it before you thrust it inside {other:direct-object}. {other:PRONOUN}"
+                            + " can't help moaning a little as you pump the rubber toy in and"
+                            + " out of {other:possessive} {other:body-part:pussy}.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

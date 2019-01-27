@@ -106,19 +106,23 @@ public class TentacleRape extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You use your " + tentacles.describe(getSelf()) + " to snare " + target.getName()
-                            + ", but she nimbly dodges them.";
+            msg = "You use your %s to snare {other:name-do}"
+                            + ", but {other:pronoun} nimbly dodges them.";
         } else if (modifier == Result.weak) {
-            return "You use your " + tentacles.describe(getSelf()) + " to wrap around " + target.getName()
-                            + "'s arms, holding her in place.";
+            msg = "You use your %s to wrap around {other:name-do}"
+                            + "'s arms, holding {other:direct-object} in place.";
         } else if (modifier == Result.normal) {
-            return "You use your " + tentacles.describe(getSelf()) + " to wrap around " + target.getName()
-                            + "'s naked body. They squirm against her and squirt slimy fluids on her body.";
+            msg = "You use your %s to wrap around {other:name-possessive}"
+                            + "'s naked body. They squirm against {other:direct-object}"
+                            + " and squirt slimy fluids on {other:possessive} body.";
         } else {
-            return "You use your " + tentacles.describe(getSelf()) + " to toy with " + target.getName()
-                            + "'s helpless form. The tentacles toy with her breasts and penetrate her genitals and ass.";
+            msg = "You use your %s to toy with {other:name-possessive}"
+                            + " helpless form. The tentacles toy with {other:possessive}"
+                            + " breasts and penetrate {other:possessive} genitals and ass.";
         }
+        return Formatter.format(msg, getSelf(), target, tentacles.describe(getSelf()));
     }
 
     @Override

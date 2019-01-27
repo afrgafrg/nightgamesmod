@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -62,14 +63,17 @@ public class Suckle extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.normal) {
-            return "You slowly circle your tongue around each of " + target.getName()
-                            + "'s nipples, and start sucking like a newborn.";
+            msg = "You slowly circle your tongue around each of {other:name-possessive}"
+                            + " nipples, and start sucking like a newborn.";
         } else {
-            return "You slowly circle your tongue around each of " + target.getName()
-                            + "'s nipples, and start sucking like a newborn. "
-                            + "Her milk slides smoothly down your throat, and you're left with a warm comfortable feeling.";
+            msg = "You slowly circle your tongue around each of {other:name-possessive}"
+                            + " nipples, and start sucking like a newborn. "
+                            + "{other:POSSESSIVE} milk slides smoothly down your "
+                            + "throat, and you're left with a warm comfortable feeling.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

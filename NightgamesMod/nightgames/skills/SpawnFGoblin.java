@@ -4,12 +4,15 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.pet.FGoblin;
+import nightgames.pet.PetCharacter;
 import nightgames.pet.Ptype;
 
 public class SpawnFGoblin extends Skill {
 
     private final Ptype gender;
+    private PetCharacter pet;
     
     public SpawnFGoblin(Character user, Ptype gender) {
         super("Spawn Fetish Goblin", user);
@@ -39,7 +42,8 @@ public class SpawnFGoblin extends Skill {
         int power = 3 + getSelf().get(Attribute.Fetish);
         int ac = 2 + getSelf().get(Attribute.Fetish);
         writeOutput(c, Result.normal, target);
-        c.addPet(getSelf(), new FGoblin(getSelf(), power, ac).getSelf());
+        pet = new FGoblin(getSelf(), power, ac).getSelf();
+        c.addPet(getSelf(), pet);
         return true;
     }
 
@@ -55,10 +59,18 @@ public class SpawnFGoblin extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return String.format(
-                        "You channel all the fetishes in your twisted libido into a single form. The creature is about 4 feet tall and has a shapely female body covered "
-                                        + "with bandage gear. Her face is completely obscured by a latex mask, but her big tits and her crotch are completely exposed. She has a large cock, "
-                                        + "which looks ready to burst if it wasn't tightly bound at the base. Past her heavy sack, you can see sex toys sticking out of both her pussy and ass.");
+        return Formatter.format(
+                        "You channel all the fetishes in your twisted libido into a single form."
+                        + " The creature is about 4 feet tall and has a shapely female body"
+                        + " covered with bondage gear. {other:POSSESSIVE} face is completely"
+                        + " obscured by a "
+                        + "latex mask, but {other:possessive} big tits and {other:possessive}"
+                        + " crotch are completely exposed."
+                        + " {other:PRONOUN} has a large cock, which looks ready to burst if "
+                        + "it wasn't tightly bound at the base. Past {other:possessive} heavy "
+                        + "sack, you can see sex toys sticking out of both"
+                        + " {other:possessive} pussy and ass.",
+                        getSelf(), pet);
     }
 
     @Override

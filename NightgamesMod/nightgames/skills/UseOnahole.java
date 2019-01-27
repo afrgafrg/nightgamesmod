@@ -3,6 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
@@ -65,16 +66,21 @@ public class UseOnahole extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to stick your onahole onto " + target.getName() + "'s dick, but she manages to avoid it.";
+            msg = "You try to stick your onahole onto {other:name-possessive} dick, "
+                            + "but {other:pronoun} manages to avoid it.";
         } else if (modifier == Result.upgrade) {
-            return "You slide your onahole over " + target.getName()
-                            + "'s dick. The well-lubricated toy covers her member with minimal resistance. As you pump it, she moans in "
-                            + "pleasure and her hips buck involuntarily.";
+            msg = "You slide your onahole over {other:name-possessive} dick. The "
+                            + "well-lubricated toy covers {other:possessive} member "
+                            + "with minimal resistance. As you pump it, {other:pronoun} moans in "
+                            + "pleasure and {other:possessive} hips buck involuntarily.";
         } else {
-            return "You stick your cocksleeve onto " + target.getName()
-                            + "'s erection and rapidly pump it. She squirms a bit at the sensation and can't quite stifle a moan.";
+            msg = "You stick your cocksleeve onto {other:name-possessive} erection and "
+                            + "rapidly pump it. {other:PRONOUN} squirms a bit at the "
+                            + "sensation and can't quite stifle a moan.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

@@ -38,7 +38,7 @@ public class ShrinkRay extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Shrink your opponent's 'assets' to damage her ego: 2 Batteries";
+        return "Shrink your opponent's 'assets' to damage their ego: 2 Batteries";
     }
 
     @Override
@@ -107,16 +107,19 @@ public class ShrinkRay extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         String message;
         if (modifier == Result.special) {
-            message = "You aim your shrink ray at " + target.getName()
-                            + "'s cock, shrinking her male anatomy. She turns red and glares at you in humiliation.";
+            message = "You aim your shrink ray at {other:name-possessive} cock, "
+                            + "shrinking {other:possessive} male anatomy. {other:PRONOUN}"
+                            + " turns red and glares at you in humiliation.";
         } else {
-            message = "You point your shrink ray to turn " + target.getName()
-                            + "'s breasts. She whimpers and covers her chest in shame.";
+            message = "You point your shrink ray to turn {other:name-possessive}"
+                            + " breasts. {other:PRONOUN} whimpers and covers "
+                            + "{other:possessive} chest in shame.";
         }
         if (damage > 0) {
-            message += " She glares at you angrily when she realizes the effects are permanent!";
+            message += " {other:PRONOUN} glares at you angrily when "
+                            + "{other:pronoun} realizes the effects are permanent!";
         }
-        return message;
+        return Formatter.format(message, getSelf(), target);
     }
 
     @Override

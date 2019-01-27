@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.clothing.Clothing;
 import nightgames.items.clothing.ClothingSlot;
@@ -85,19 +86,18 @@ public class StripTop extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You attempt to strip off " + target.getName() + "'s "
-                            + stripped.getName()
-                            + ", but she shoves you away.";
+            msg = "You attempt to strip off {other:name-possessive} %s, "
+                            + "but {other:pronoun} shoves you away.";
         } else {
-            String msg = "After a brief struggle, you manage to pull off " + target.getName() + "'s "
-                            + stripped.getName() + ".";
+            msg = "After a brief struggle, you manage to pull off {other:name-possessive} %s.";
             if (modifier == Result.critical && extra != null) {
                 msg += String.format(" Taking advantage of the situation, you also"
                                 + " manage to snag %s %s!", target.possessiveAdjective(), extra.getName());
             }
-            return msg;
         }
+        return Formatter.format(msg, getSelf(), target, stripped.getName());
     }
 
     @Override
@@ -121,7 +121,7 @@ public class StripTop extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Attempt to remove opponent's top. More likely to succeed if she's weakened and aroused";
+        return "Attempt to remove opponent's top. More likely to succeed if they're weakened and aroused";
     }
 
     @Override

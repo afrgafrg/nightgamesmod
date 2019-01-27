@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.items.Item;
 import nightgames.status.Bound;
 import nightgames.status.Stsflag;
@@ -69,13 +70,18 @@ public class Tie extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to catch " + target.getName() + "'s hands, but she squirms too much to keep your grip on her.";
+            msg = "You try to catch {other:name-possessive} hands, but {other:pronoun}"
+                            + " squirms too much to keep your grip on {other:direct-object}.";
         } else if (modifier == Result.special) {
-            return "You catch " + target.getName() + "'s wrists and slap a pair of cuffs on her.";
+            msg = "You catch {other:name-possessive} wrists and"
+                            + " slap a pair of cuffs on {other:direct-object}.";
         } else {
-            return "You catch both of " + target.getName() + " hands and wrap a ziptie around her wrists.";
+            msg = "You catch both of {other:name-possessive} hands and"
+                            + " wrap a ziptie around {other:possessive} wrists.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

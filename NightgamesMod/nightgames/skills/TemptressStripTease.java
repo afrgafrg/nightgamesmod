@@ -99,27 +99,34 @@ public class TemptressStripTease extends StripTease {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (isDance(c)) {
             return String.format("%s backs up a little and starts swinging"
-                            + " her hips side to side. Curious as to what's going on, %s"
-                            + " %s attacks and watch as she bends and curves, putting"
-                            + " on a slow dance that would be very arousing even if she weren't"
+                            + " %s hips side to side. Curious as to what's going on, %s"
+                            + " %s attacks and watch as %s bends and curves, putting"
+                            + " on a slow dance that would be very arousing even if %s weren't"
                             + " naked. Now, without a stitch of clothing to obscure %s view,"
                             + " the sight stirs %s imagination. %s shocked out of %s"
-                            + " reverie when she plants a soft kiss on %s lips, and %s dreamily"
-                            + " %s into her eyes as she gets back into a fighting stance.",
-                            getSelf().subject(), target.subjectAction("cease"),
-                            target.possessiveAdjective(), target.possessiveAdjective(),
+                            + " reverie when %s plants a soft kiss on %s lips, and %s dreamily"
+                            + " %s into %s eyes as %s gets back into a fighting stance.",
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            target.subjectAction("cease"),
+                            target.possessiveAdjective(), getSelf().pronoun(), getSelf().pronoun(),
+                            target.possessiveAdjective(),
                             target.nameOrPossessivePronoun(), target.subjectAction("are", "is"),
-                            target.possessiveAdjective(), target.possessiveAdjective(), target.pronoun(),
-                            target.action("gaze"));
+                            target.possessiveAdjective(), getSelf().subject(), 
+                            target.possessiveAdjective(), target.pronoun(),
+                            target.action("gaze"), getSelf().possessiveAdjective(), getSelf().pronoun());
         } else {
             return String.format("%s takes a few steps back and starts "
-                            + "moving sinously. She sensually runs her hands over her body, "
-                            + "undoing straps and buttons where she encounters them, and starts"
-                            + " peeling her clothes off slowly, never breaking eye contact."
-                            + " %s can only gawk in amazement as her perfect body is revealed bit"
+                            + "moving sinously. %s sensually runs %s hands over %s body, "
+                            + "undoing straps and buttons where %s encounters them, and starts"
+                            + " peeling %s clothes off slowly, never breaking eye contact."
+                            + " %s can only gawk in amazement as %s perfect body is revealed bit"
                             + " by bit, and the thought of doing anything to blemish such"
                             + " perfection seems very unpleasant indeed.", getSelf().subject(),
-                            Formatter.capitalizeFirstLetter(target.subject()));
+                            Formatter.capitalizeFirstLetter(getSelf().pronoun()),
+                            getSelf().possessiveAdjective(), getSelf().pronoun(),
+                            getSelf().possessiveAdjective(),
+                            Formatter.capitalizeFirstLetter(target.subject()),
+                            getSelf().possessiveAdjective());
         }
     }
 

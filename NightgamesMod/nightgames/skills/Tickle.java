@@ -149,27 +149,33 @@ public class Tickle extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to tickle " + target.getName() + ", but she squirms away.";
+            msg = "You try to tickle {other:name-do}, but {other:pronoun} squirms away.";
         } else if (modifier == Result.special) {
-            return "You work your fingers across " + target.getName()
-                            + "'s most ticklish and most erogenous zones until she is writhing in pleasure and can't even make coherent words.";
+            msg = "You work your fingers across {other:name-possessive} most ticklish and most"
+                            + " erogenous zones until {other:pronoun} is writhing in pleasure "
+                            + "and can't even make coherent words.";
         } else if (modifier == Result.critical) {
-            return "You brush your tickler over " + target.getName()
-                            + "'s body, causing her to shiver and retreat. When you tickle her again, she yelps and almost falls down. "
-                            + "It seems like your special feathers made her more sensitive than usual.";
+            msg = "You brush your tickler over {other:name-possessive} body, causing "
+                            + "{other:direct-object} to shiver and retreat. When you tickle "
+                            + "{other:direct-object} again, {other:pronoun} yelps and almost "
+                            + "falls down. It seems like your special feathers made "
+                            + "{other:direct-object} more sensitive than usual.";
         } else if (modifier == Result.strong) {
-            return "You run your tickler across " + target.getName()
-                            + "'s sensitive thighs and pussy. She can't help but let out a quiet whimper of pleasure.";
+            msg = "You run your tickler across {other:name-possessive} sensitive thighs and "
+                            + "pussy. {other:PRONOUN} can't help but let out a quiet whimper "
+                            + "of pleasure.";
         } else if (modifier == Result.item) {
-            return "You tease " + target.getName()
-                            + "'s naked upper body with your feather tickler, paying close attention to her nipples.";
+            msg = "You tease {other:name-possessive} naked upper body with your feather "
+                            + "tickler, paying close attention to {other:possessive} nipples.";
         } else if (modifier == Result.weak) {
-            return "You catch " + target.getName() + " off guard by tickling her neck and ears.";
+            msg = "You catch {other:name-do} off guard by tickling {other:possessive} neck and ears.";
         } else {
-            return "You tickle " + target.getName() + "'s sides as she giggles and squirms.";
+            msg = "You tickle {other:name-possessive} sides as {other:pronoun} giggles and "
+                            + "squirms.";
         }
-
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -209,7 +215,7 @@ public class Tickle extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Tickles opponent, weakening and arousing her. More effective if she's nude";
+        return "Tickles opponent, weakening and arousing them. More effective if they're nude";
     }
 
     private boolean hastickler() {

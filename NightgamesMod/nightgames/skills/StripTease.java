@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.Alluring;
@@ -85,9 +86,12 @@ public class StripTease extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "During a brief respite in the fight as " + target.getName()
-                        + " is catching her breath, you make a show of seductively removing your clothes. "
-                        + "By the time you finish, she's staring with undisguised arousal, pressing a hand unconsciously against her groin.";
+        return Formatter.format("During a brief respite in the fight as {other:subject}"
+                        + " is catching {other:possessive} breath, you make a show of"
+                        + " seductively removing your clothes. By the time you finish, "
+                        + "{other:pronoun}'s staring with undisguised arousal, pressing "
+                        + "a hand unconsciously against {other:possessive} groin.",
+                        getSelf(), target);
     }
 
     @Override

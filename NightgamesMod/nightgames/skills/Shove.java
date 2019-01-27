@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
@@ -51,8 +52,9 @@ public class Shove extends Skill {
         } else if (c.getStance().getClass() == Mount.class || c.getStance().getClass() == ReverseMount.class) {
             if (getSelf().checkVsDc(Attribute.Power, target.knockdownDC() + 5)) {
                 if (getSelf().human()) {
-                    c.write(getSelf(), "You shove " + target.getName()
-                                    + " off of you and get to your feet before she can retaliate.");
+                    c.write(getSelf(), Formatter.format("You shove {other:name-do}"
+                                    + " off of you and get to your feet before {other:pronoun} "
+                                    + "can retaliate.", getSelf(), target));
                 } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(), String.format("%s shoves %s hard enough to free %s and jump up.",
                                     getSelf().subject(), target.nameDirectObject(), getSelf().reflectivePronoun()));
@@ -60,7 +62,8 @@ public class Shove extends Skill {
                 c.setStance(new Neutral(getSelf(), c.getOpponent(getSelf())), getSelf(), true);
             } else {
                 if (getSelf().human()) {
-                    c.write(getSelf(), "You push " + target.getName() + ", but you're unable to dislodge her.");
+                    c.write(getSelf(), Formatter.format("You push {other:name-do}, but you're unable "
+                                    + "to dislodge {other:direct-object}.", getSelf(), target));
                 } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(), String.format("%s shoves %s weakly.", getSelf().subject(), 
                                     target.nameDirectObject()));
@@ -71,16 +74,21 @@ public class Shove extends Skill {
         } else {
             if (getSelf().checkVsDc(Attribute.Power, target.knockdownDC())) {
                 if (getSelf().human()) {
-                    c.write(getSelf(), "You shove " + target.getName() + " hard enough to knock her flat on her back.");
+                    c.write(getSelf(), Formatter.format("You shove {other:name-do} hard enough to knock "
+                                    + "{other:direct-object} flat on {other:possessive} back.",
+                                    getSelf(), target));
                 } else if (c.shouldPrintReceive(target, c)) {
-                    c.write(getSelf(), String.format("%s knocks %s off balance and %s %s at her feet.",
+                    c.write(getSelf(), String.format("%s knocks %s off balance and %s %s at %s feet.",
                                     getSelf().subject(), target.nameDirectObject(),
-                                    target.pronoun(), target.action("fall")));
+                                    target.pronoun(), target.action("fall"),
+                                    getSelf().possessiveAdjective()));
                 }
                 target.add(c, new Falling(target));
             } else {
                 if (getSelf().human()) {
-                    c.write(getSelf(), "You shove " + target.getName() + " back a step, but she keeps her footing.");
+                    c.write(getSelf(), Formatter.format("You shove {other:name-do} back a step, but "
+                                    + "{other:pronoun} keeps {other:possessive} footing.",
+                                    getSelf(), target));
                 } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(), String.format("%s pushes %s back, but %s %s able to maintain %s balance.",
                                     getSelf().subject(), target.nameDirectObject(), target.pronoun(),
@@ -124,8 +132,10 @@ public class Shove extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You channel your ki into your hands and strike " + target.getName() + " in the chest, destroying her "
-                        + target.getOutfit().getTopOfSlot(ClothingSlot.top).getName() + ".";
+        return Formatter.format("You channel your ki into your hands and strike "
+        + "{other:name-do} in the chest, destroying {other:possessive} %s. ",
+                        getSelf(), target, 
+                        target.getOutfit().getTopOfSlot(ClothingSlot.top).getName());
     }
 
     @Override
@@ -140,7 +150,7 @@ public class Shove extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Slightly damage opponent and try to knock her down";
+        return "Slightly damage opponent and try to knock them down";
     }
 
     @Override

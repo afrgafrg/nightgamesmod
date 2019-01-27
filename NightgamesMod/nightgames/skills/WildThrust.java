@@ -90,18 +90,24 @@ public class WildThrust extends Thrust {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.anal || modifier == Result.upgrade) {
-            return "You wildly pound " + target.getName()
-                            + " in the ass with no regard to technique. She whimpers in pleasure and can barely summon the strength to hold herself off the floor.";
+            msg = "You wildly pound {other:name-do} in the ass with no "
+                            + "regard to technique. {other:PRONOUN} whimpers in "
+                            + "pleasure and can barely summon the strength to hold "
+                            + "{other:reflective} off the floor.";
         } else if (modifier == Result.reverse) {
-            return Formatter.format(
-                            "{self:SUBJECT-ACTION:%s {other:name-possessive} cock with no regard to technique, relentlessly driving you both towards orgasm.",
+            msg = Formatter.format(
+                            "{self:SUBJECT-ACTION:%s {other:name-possessive} cock with no regard to technique, "
+                            + "relentlessly driving you both towards orgasm.",
                             getSelf(), target, c.getStance().sub(getSelf()) ? "grind} against" : "bounce} on");
         } else {
-            return "You wildly pound your dick into " + target.getName()
-                            + "'s pussy with no regard to technique. Her pleasure filled cries are proof that you're having an effect, but you're feeling it "
-                            + "as much as she is.";
+            msg = "You wildly pound your dick into {other:name-possessive} pussy with no "
+                            + "regard to technique. {other:POSSESSIVE} pleasure filled cries "
+                            + "are proof that you're having an effect, but you're feeling it "
+                            + "as much as {other:pronoun} is.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

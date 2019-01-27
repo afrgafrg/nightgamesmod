@@ -117,25 +117,28 @@ public class Squeeze extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to grab " + target.getName() + "'s balls, but she avoids it.";
+            msg = "You try to grab {other:name-possible} balls, but {other:pronoun} avoids it.";
         } else if (modifier == Result.special) {
-            return "You use your shock glove to deliver a painful jolt directly into " + target.getName()
-                            + "'s testicles.";
+            msg = "You use your shock glove to deliver a painful jolt directly into "
+                            + "{other:name-possessive} testicles.";
         } else if (modifier == Result.weak) {
-            return "You grab the bulge in " + target.getName() + "'s "
+            msg = "You grab the bulge in {other:name-possessive} "
                             + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName() + " and squeeze.";
         } else if (modifier == Result.weak2) {
-            return "You grab " + target.getName() + "by the balls and squeeze hard, but" + target.pronoun()
-                            + " does not flinch at all.";
+            msg = "You grab {other:name-do} by the balls and squeeze hard, but "
+                            + "{other:pronoun} does not flinch at all.";
         } else if (modifier == Result.item) {
-            return "You grab the bulge in " + target.getName() + "'s "
+            msg = "You grab the bulge in {other:name-possessive} "
                             + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName()
                             + ", but find it solidly protected.";
         } else {
-            return "You manage to grab " + target.getName()
-                            + "'s balls and squeeze them hard. You feel a twinge of empathy when she cries out in pain, but you maintain your grip.";
+            msg = "You manage to grab {other:name-possessive} balls and squeeze "
+                            + "them hard. You feel a twinge of empathy when {other:pronoun}"
+                            + " cries out in pain, but you maintain your grip.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -185,7 +188,7 @@ public class Squeeze extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Grab opponent's groin; deals more damage if she's naked";
+        return "Grab opponent's groin; deals more damage if they're naked";
     }
 
     @Override

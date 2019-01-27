@@ -73,19 +73,23 @@ public class SpiralThrust extends Thrust {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.anal) {
-            return "You unleash your strongest technique into " + target.getName()
-                            + "'s ass, spiraling your hips and stretching her tight sphincter.";
+            msg = "You unleash your strongest technique into {other:name-possessive} ass, "
+                            + "spiraling your hips and stretching {other:possessive} tight sphincter.";
         } else if (modifier == Result.reverse) {
-            return Formatter.format("As you bounce on " + target.getName()
-                            + "'s steaming pole, you feel a power welling up inside you. You put everything you have into moving your hips circularly, "
-                            + "rubbing every inch of her cock with your hot slippery "
-                            + getSelfOrgan(c, target).fullDescribe(getSelf()) + ".", getSelf(), target);
+            msg = Formatter.format("As you bounce on {other:name-possessive} steaming pole, "
+                            + "you feel a power welling up inside you. You put everything "
+                            + "you have into moving your hips circularly, "
+                            + "rubbing every inch of {other:possessive} cock with your hot slippery"
+                            + " {self:body-part:pussy}.", getSelf(), target);
         } else {
-            return "As you thrust into " + target.getName()
-                            + "'s hot pussy, you feel a power welling up inside you. You put everything you have into moving your hips circularly "
-                            + "while you continue to drill into her.";
+            msg = "As you thrust into {other:name-possessive} hot pussy, you feel a power "
+                            + "welling up inside you. You put everything you have into moving "
+                            + "your hips circularly "
+                            + "while you continue to drill into {other:direct-object}.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

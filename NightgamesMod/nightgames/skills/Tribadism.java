@@ -92,7 +92,9 @@ public class Tribadism extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
             return Formatter.format(
-                            "You grab {other:name-possessive} legs and push them apart. You then push your hot snatch across her pussy lips and grind down on it.",
+                            "You grab {other:name-possessive} legs and push them apart. "
+                            + "You then push your hot snatch across {other:possessive}"
+                            + " pussy lips and grind down on it.",
                             getSelf(), target);
         }
         return "Bad stuff happened";
@@ -103,11 +105,13 @@ public class Tribadism extends Skill {
         BodyPart selfO = getSelfOrgan();
         BodyPart targetO = getTargetOrgan(target);
         if (modifier == Result.normal) {
-            String message = String.format("%s grabs %s leg and slides her crotch against %s."
-                            + " She then grinds her %s against %s wet %s.", getSelf().subject(),
-                            target.nameOrPossessivePronoun(), target.possessivePronoun(),
-                            selfO.describe(getSelf()), target.possessiveAdjective(),
-                            targetO.describe(getSelf()));
+            String message = String.format("%s grabs %s leg and slides %s crotch against %s."
+                            + " %s then grinds %s %s against %s wet %s.", getSelf().subject(),
+                            target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
+                            target.possessivePronoun(),
+                            Formatter.capitalizeFirstLetter(getSelf().pronoun()),
+                            getSelf().possessiveAdjective(), selfO.describe(getSelf()), 
+                            target.possessiveAdjective(), targetO.describe(getSelf()));
             return message;
         }
         return "Bad stuff happened";

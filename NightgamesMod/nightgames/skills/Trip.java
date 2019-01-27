@@ -96,21 +96,22 @@ public class Trip extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to trip " + target.getName() + ", but she keeps her balance.";
+            msg = "You try to trip {other:name-do}, but {other:pronoun}"
+                            + " keeps {other:possessive} balance.";
         } else if (modifier == Result.special) {
-            return String.format(
-                            "You reshape your hands into a sheet of slime and slide it under %s's feet."
-                                            + " When you quickly pull it back, %s falls flat on %s back.",
-                            target.getName(), target.pronoun(), target.possessiveAdjective());
+            msg = "You reshape your hands into a sheet of slime and slide it under "
+                            + "{other:name-possessive} feet. When you quickly pull it back, "
+                            + "{other:pronoun} falls flat on {other:possessive} back.";
         } else if (modifier == Result.weak) {
-            return String.format(
-                            "You reshape your hands into a sheet of slime and slide it towards %s."
-                                            + " In the nick of time, %s jumps clear, landing safely back on %s feet.",
-                            target.getName(), target.pronoun(), target.possessiveAdjective());
+            msg = "You reshape your hands into a sheet of slime and slide it towards {other:name-do}."
+                                            + " In the nick of time, {other:pronoun} jumps clear, "
+                                            + "landing safely back on {other:possessive} feet.";
         } else {
-            return "You catch " + target.getName() + " off balance and trip " + target.directObject() + ".";
+            msg = "You catch {other:name-do} off balance and trip {other:direct-object}.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

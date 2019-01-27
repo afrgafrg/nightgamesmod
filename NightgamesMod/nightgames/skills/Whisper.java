@@ -76,13 +76,17 @@ public class Whisper extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
-            return "You whisper words of domination in " + target.getName()
-                            + "'s ear, filling her with your darkness. The spirit in her eyes seems to dim as she submits to your will.";
+            msg = "You whisper words of domination in {other:name-possessive} ear, filling "
+                            + "{other:direct-object} with your darkness. The spirit in "
+                            + "{other:possessive} eyes seems to dim as {other:pronoun}"
+                            + " submits to your will.";
         } else {
-            return "You whisper sweet nothings in " + target.getName()
-                            + "'s ear. Judging by her blush, it was fairly effective.";
+            msg = "You whisper sweet nothings in {other:name-possessive} ear. Judging by "
+                            + "{other:possessive} blush, it was fairly effective.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -104,6 +108,6 @@ public class Whisper extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Arouse opponent by whispering in her ear";
+        return "Arouse opponent by whispering in their ear";
     }
 }

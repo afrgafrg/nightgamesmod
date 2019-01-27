@@ -87,7 +87,9 @@ public class ViceGrip extends Tighten {
 
     @Override
     public String describe(Combat c) {
-        return "Ninjitsu technique: squeezes your opponent's dick like a vice, 100% chance to make him cum, but can only be used when the opponent is stunned or weak.";
+        return "Ninjitsu technique: squeezes your opponent's dick like a vice,"
+                        + " 100% chance to make them cum, but can only be used "
+                        + "when the opponent is stunned or weak.";
     }
 
     @Override

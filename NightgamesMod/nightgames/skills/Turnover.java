@@ -29,7 +29,7 @@ public class Turnover extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Turn your opponent over and get behind her";
+        return "Turn your opponent over and get behind them";
     }
 
     @Override
@@ -52,7 +52,9 @@ public class Turnover extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You turn " + target.getName() + " onto her hands and knees. You move behind her while she slowly gets up.";
+        return Formatter.format("You turn {other:name-do} onto {other:direct-object}"
+                        + " hands and knees. You move behind {other:direct-object}"
+                        + " while {other:pronoun} slowly gets up.", getSelf(), target);
     }
 
     @Override

@@ -92,8 +92,8 @@ public class Tear extends Skill {
                                             + (target.getStamina().percent() - target.getArousal().percent()) / 4)
                             || !target.canAct()) {
                 if (getSelf().human()) {
-                    c.write(getSelf(), target.getName() + " yelps in surprise as you rip her " + article.getName()
-                                    + " apart.");
+                    c.write(getSelf(), Formatter.format("{other:subject] yelps in surprise as you rip "
+                                    + "{other:possessive} %s apart.", getSelf(), target, article.getName()));
                 } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(), String.format("%s violently rips %s %s off.",
                                     getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));
@@ -177,8 +177,8 @@ public class Tear extends Skill {
                                             + (target.getStamina().percent() - target.getArousal().percent()) / 4)
                             || !target.canAct()) {
                 if (getSelf().human()) {
-                    c.write(getSelf(), target.getName() + " yelps in surprise as you rip her " + article.getName()
-                                    + " apart.");
+                    c.write(getSelf(), Formatter.format("{other:subject] yelps in surprise as you rip "
+                                    + "{other:possessive} %s apart.", getSelf(), target, article.getName()));
                 } else if (c.shouldPrintReceive(target, c)) {
                     c.write(getSelf(), String.format("%s violently rips %s %s off.",
                                     getSelf().subject(), target.nameOrPossessivePronoun(), article.getName()));

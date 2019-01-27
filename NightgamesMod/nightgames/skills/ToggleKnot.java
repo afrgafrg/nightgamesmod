@@ -48,7 +48,9 @@ public class ToggleKnot extends Skill {
         if (isActive(target)) {
             if (getSelf().human()) {
                 c.write(getSelf(),
-                                "Deciding she's had enough for now, you let your cock return to its regular shape, once again permitting movement.");
+                                Formatter.format("Deciding {other:pronoun}'s had enough for now, you let"
+                                + " your cock return to its regular shape,"
+                                + " once again permitting movement.", getSelf(), target));
             } else if (c.shouldPrintReceive(target, c)) {
                 String part = Random.pickRandom(c.getStance().getPartsFor(c, target, getSelf())).orElse(Body.nonePart).describe(target);
                 c.write(getSelf(), String.format("%s the intense pressure in %s %s "
@@ -60,10 +62,11 @@ public class ToggleKnot extends Skill {
         } else {
             if (getSelf().human()) {
                 c.write(getSelf(),
-                                "You'd like to stay inside " + target.getName() + " for a bit, so you "
+                                Formatter.format("You'd like to stay inside {other:name-do} for a bit, so you "
                                                 + (c.getStance().canthrust(c, getSelf()) ? "thrust" : "buck up")
-                                                + " as deep inside of her as you can and send a mental command to the base of your cock, where your"
-                                                + " knot soon swells up, locking you inside,");
+                                                + " as deep inside of {other:direct-object} as you can and"
+                                                + " send a mental command to the base of your cock, where your"
+                                                + " knot soon swells up, locking you inside,", getSelf(), target));
             } else if (c.shouldPrintReceive(target, c)) {
                 String firstPart;
                 if (c.getStance().dom(getSelf())) {

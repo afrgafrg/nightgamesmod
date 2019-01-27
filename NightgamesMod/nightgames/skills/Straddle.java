@@ -3,6 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Mount;
 
@@ -50,7 +51,8 @@ public class Straddle extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You straddle " + target.getName() + " using your body weight to hold her down.";
+        return Formatter.format("You straddle {other:name-do} using your body weight"
+                        + " to hold {other:direct-object} down.", getSelf(), target);
     }
 
     @Override

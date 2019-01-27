@@ -117,10 +117,12 @@ public class Struggle extends Skill {
                 }
             } else if (c.shouldPrintReceive(target, c)) {
                 if (status != null) {
-                    c.write(getSelf(), getSelf().getName() + " struggles against the " + status
-                                    + ", but can't free her hands.");
+                    c.write(getSelf(), Formatter.format("{self:subject} struggles against the %s"
+                                    + ", but can't free {self:possessive} hands.", 
+                                    getSelf(), target, status));
                 } else {
-                    c.write(getSelf(), getSelf().getName() + " struggles, but can't free her hands.");
+                    c.write(getSelf(), Formatter.format("{self:subject} struggles, but can't "
+                                    + "free {self:possessive} hands.", getSelf(), target));
                 }
             }
             getSelf().struggle();
@@ -140,9 +142,10 @@ public class Struggle extends Skill {
                 c.setStance(c.getStance().reverse(c, true));
             } else if (getSelf().human()) {
                 if (knotted) {
-                    c.write(getSelf(), "With a herculean effort, you painfully force "
-                                    + target.possessiveAdjective()
-                                    + " knot through your asshole, and the rest of her dick soon follows.");
+                    c.write(getSelf(), Formatter.format("With a herculean effort, you painfully"
+                                    + " force {other:name-possessive} knot through your asshole, "
+                                    + "and the rest of {other:possessive} dick soon follows.",
+                                    getSelf(), target));
                     getSelf().removeStatus(Stsflag.knotted);
                     target.pain(c, getSelf(), (int) getSelf().modifyDamage(DamageType.physical, target, 10));
                 } else {

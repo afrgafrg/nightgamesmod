@@ -114,21 +114,24 @@ public class Tackle extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
-            return "You let your instincts take over and you pounce on " + target.getName()
+            msg = "You let your instincts take over and you pounce on {other:name-do}"
                             + " like a predator catching your prey.";
         } else if (modifier == Result.normal) {
-            return "You tackle " + target.getName() + " to the ground and straddle her.";
+            msg = "You tackle {other:name-do} to the ground and straddle {other:direct-object}.";
         } else {
-            return "You lunge at " + target.getName() + ", but she dodges out of the way.";
+            msg = "You lunge at {other:name-do}, but {other:pronoun} dodges out of the way.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return String.format("%s wiggles her butt cutely before leaping at %s and pinning %s to the floor.",
-                            getSelf().subject(), target.nameDirectObject(), target.directObject());
+            return String.format("%s wiggles %s butt cutely before leaping at %s and pinning %s to the floor.",
+                            getSelf().subject(), target.possessiveAdjective(),
+                            target.nameDirectObject(), target.directObject());
         }
         if (modifier == Result.miss) {
             return String.format("%s tries to tackle %s, but %s %s out of the way.",
@@ -142,7 +145,7 @@ public class Tackle extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Knock opponent to ground and get on top of her";
+        return "Knock opponent to ground and get on top of them";
     }
 
     @Override

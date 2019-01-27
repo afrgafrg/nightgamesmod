@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
@@ -85,28 +86,35 @@ public class UseCrop extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
             if (!target.has(Item.Crop)) {
-                return "You lash out with your riding crop, but it fails to connect.";
+                msg = "You lash out with your riding crop, but it fails to connect.";
             } else {
-                return "You try to hit " + target.getName() + " with your riding crop, but she deflects it with her own.";
+                msg = "You try to hit {other:name-do} with your riding crop, but "
+                                + "{other:pronoun} deflects it with {other:possessive} own.";
             }
         } else if (modifier == Result.critical) {
             if (target.hasBalls()) {
-                return "You strike " + target.getName()
-                                + "'s bare ass with your crop and the 'Treasure Hunter' attachment slips between her legs, hitting one of her hanging testicles "
-                                + "squarely. She lets out a shriek and clutches her sore nut";
+                msg = "You strike {other:name-possessive} bare ass with your crop and the "
+                                + "'Treasure Hunter' attachment slips between {other:possessive}"
+                                + " legs, hitting one of {other:possessive} hanging testicles "
+                                + "squarely. {other:PRONOUN} lets out a shriek and clutches "
+                                + "{other:possessive} sore nut";
             } else {
-                return "You strike " + target.getName()
-                                + "'s bare ass with your crop and the 'Treasure Hunter' attachment slips between her legs, impacting on her sensitive pearl. She "
-                                + "lets out a high pitched yelp and clutches her injured anatomy.";
+                return "You strike {other:name-possessive} bare ass with your crop and the "
+                                + "'Treasure Hunter' attachment slips between {other:possessive}"
+                                + " legs, impacting on {other:possessive} sensitive pearl. "
+                                + "{other:PRONOUN} lets out a high pitched yelp and "
+                                + "clutches {other:possessive} injured anatomy.";
             }
         } else if (modifier == Result.weak) {
-            return "You hit " + target.getName() + " with your riding crop.";
+            msg = "You hit {other:name-do} with your riding crop.";
         } else {
-            return "You strike " + target.getName()
-                            + "'s soft, bare skin with your riding crop, leaving a visible red mark.";
+            msg = "You strike {other:name-possessive} soft, bare skin with your riding "
+                            + "crop, leaving a visible red mark.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -141,7 +149,7 @@ public class UseCrop extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Strike your opponent with riding crop. More effective if she's naked";
+        return "Strike your opponent with riding crop. More effective if they're naked";
     }
 
     @Override

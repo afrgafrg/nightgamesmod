@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -81,15 +82,19 @@ public class SuckNeck extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You lean in to kiss " + target.getName() + "'s neck, but she slips away.";
+            msg = "You lean in to kiss {other:name-possessive} neck, but {other:pronoun} slips away.";
         } else if (modifier == Result.special) {
-            return "You draw close to " + target.getName()
-                            + " as she's momentarily too captivated to resist. You run your tongue along her neck and bite gently. She shivers and you "
-                            + "can feel the energy of her pleasure flow into you, giving you strength.";
+            msg = "You draw close to {other:name-do}"
+                            + " as {other:pronoun}'s momentarily too captivated to resist. You "
+                            + "run your tongue along {other:possessive} neck and bite gently. "
+                            + "{other:PRONOUN} shivers and you can feel the energy of "
+                            + "{other:possessive} pleasure flow into you, giving you strength.";
         } else {
-            return "You lick and suck " + target.getName() + "'s neck hard enough to leave a hickey.";
+            msg = "You lick and suck {other:name-possessive} neck hard enough to leave a hickey.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

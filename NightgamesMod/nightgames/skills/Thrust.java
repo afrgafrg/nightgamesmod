@@ -155,18 +155,20 @@ public class Thrust extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.anal) {
-            return "You thrust steadily into " + target.getName() + "'s ass, eliciting soft groans of pleasure.";
+            msg = "You thrust steadily into {other:name-possessive} ass, "
+                            + "eliciting soft groans of pleasure.";
         } else if (modifier == Result.reverse) {
-            return Formatter.format(
-                            "You rock your hips against {other:direct-object}, riding {other:direct-object} smoothly. "
-                                            + "Despite the slow pace, {other:subject} soon starts gasping and mewing with pleasure.",
-                            getSelf(), target);
+            msg = "You rock your hips against {other:direct-object}, riding {other:direct-object} smoothly. "
+                 + "Despite the slow pace, {other:subject} soon starts gasping and mewing with pleasure.";
         } else {
-            return "You thrust into " + target.getName()
-                            + " in a slow, steady rhythm. She lets out soft breathy moans in time with your lovemaking. You can't deny you're feeling "
-                            + "it too, but by controlling the pace, you can hopefully last longer than she can.";
+            msg = "You thrust into {other:name-do} in a slow, steady rhythm. {other:PRONOUN}"
+                            + " lets out soft breathy moans in time with your lovemaking. You "
+                            + "can't deny you're feeling it too, but by controlling the pace,"
+                            + " you can hopefully last longer than {other:pronoun} can.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -174,8 +176,9 @@ public class Thrust extends Skill {
         if (modifier == Result.anal) {
             String res;
             if (getSelf().has(Trait.strapped)) {
-                res = String.format("%s thrusts her hips, pumping her artificial cock in and out"
+                res = String.format("%s thrusts %s hips, pumping %s artificial cock in and out"
                                 + " of %s ass and pushing on %s %s.", getSelf().subject(),
+                                getSelf().possessiveAdjective(), getSelf().possessiveAdjective(),
                                 target.nameOrPossessivePronoun(), target.possessiveAdjective(),
                                 target.hasBalls() ? "prostate" : "innermost parts");
                 

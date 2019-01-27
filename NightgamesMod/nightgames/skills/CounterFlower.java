@@ -118,17 +118,22 @@ public class CounterFlower extends CounterBase {
                             getSelf(), target);
         } else if (modifier == Result.miss) {
             return Formatter.format(
-                            "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
-                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
+                            "Numerous vines shoot out of {self:name-possessive} flower, entangling your body and stopping you in your tracks. "
+                            + "With a salacious smile, {self:subject} uses {self:possessive} vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
                             + " {self:PRONOUN} forces {other:possessive} hips forward before frowning"
-                            + " when she discovers {other:pronoun-action:don't|doesn't} have the right equipment.",
+                            + " when {self:pronoun} discovers {other:pronoun-action:don't|doesn't} have the right equipment.",
                             getSelf(), target);
         } else {
             return Formatter.format(
-                            "Numerous vines shoot out of her flower, entangling your body and stopping you in your tracks. "
-                            + "With a salacious smile, {self:subject} uses her vines and drags {other:name-do} into {self:possessive} flower and deposits you in {self:possessive} arms. "
-                            + "{self:PRONOUN} coils her limbs around {other:possessive}s, forcing {other:possessive}"
-                            + " face inside her fragrant cleavage and {other:possessive} cock inside her warm sticky flower cunt.",
+                            "Numerous vines shoot out of {self:name-possessive} flower,"
+                            + " entangling your body and stopping you in your tracks. "
+                            + "With a salacious smile, {self:subject} uses {self:possessive}"
+                            + " vines and drags {other:name-do} into {self:possessive} flower "
+                            + "and deposits you in {self:possessive} arms. {self:PRONOUN} coils"
+                            + " {self:possessive} limbs around {other:possessive}s, forcing "
+                            + "{other:possessive} face inside {self:possessive} fragrant "
+                            + "cleavage and {other:possessive} cock inside {self:possessive}"
+                            + " warm sticky flower cunt.",
                             getSelf(), target);
         }
     }

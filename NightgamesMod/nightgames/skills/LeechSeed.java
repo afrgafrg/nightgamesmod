@@ -79,14 +79,21 @@ public class LeechSeed extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You try to plant a seed in " + target.directObject() + ", but she dodges out of the way (maybe you should pin her down?).";
+            return Formatter.format("You try to plant a seed in {other:name-do}, but "
+                            + "{other:pronoun} dodges out of the way (maybe you "
+                            + "should pin {other:direct-object} down?).", getSelf(), target);
         }
         String hole = "pussy";
         if (modifier == Result.anal) {
             hole = "ass";
         }
         return Formatter.format(
-                        "You sneak one of your thinner tentacles behind {other:name-do} and prepare one of your seeds. While {other:subject} is distracted, you slip the tentacle into {other:possessive} %s and plant a hard lemon-sized orb into {other:direct-object}. {other:SUBJECT} yelps in surprise, but by then it was too late. Your seed is planted firmly inside her %s.",
+                        "You sneak one of your thinner tentacles behind {other:name-do} and prepare"
+                        + " one of your seeds. While {other:subject} is distracted, you slip "
+                        + "the tentacle into {other:possessive} %s and plant a hard lemon-sized "
+                        + "orb into {other:direct-object}. {other:SUBJECT} yelps in surprise,"
+                        + " but by then it was too late. Your seed is planted "
+                        + "firmly inside {other:possessive} %s.",
                         getSelf(), target, hole, hole);
     }
 

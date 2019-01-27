@@ -113,9 +113,9 @@ public class MimicSuccubus extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Formatter.format("{self:NAME-POSSESSIVE} mercurial form seems to suddenly expand, then collapse onto itself. "
-                        + "Her crystal blue goo glimmers and shifts into a deep obsidian. After reforming her features out of "
-                        + "her eratically flowing slime, {other:subject-action:see|sees} that she has taken on an appearance reminiscent of Reyka's succubus form, "
-                        + "complete with large translucent gel wings, a thick tail and her characteristic laviscious grin.", getSelf(), target);
+                        + "{self:POSSESSIVE} crystal blue goo glimmers and shifts into a deep obsidian. After reforming {self:possessive} features out of "
+                        + "{self:possessive} eratically flowing slime, {other:subject-action:see|sees} that {self:pronoun} has taken on an appearance reminiscent of Reyka's succubus form, "
+                        + "complete with large translucent gel wings, a thick tail and {self:possessive} characteristic laviscious grin.", getSelf(), target);
     }
 
 }

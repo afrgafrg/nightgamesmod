@@ -96,31 +96,43 @@ public class FaceFuck extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         String m = "";
         if (modifier == Result.strapon || modifier == Result.upgrade) {
-            m = "You grab hold of " + target.getName()
-                            + "'s head and push your cock into her mouth. She flushes in shame and anger, but still dutifully services you with her lips "
-                            + "and tongue while you thrust your hips.";
+            m = "You grab hold of {other:name-possessive} head and push your cock into "
+                            + "{other:possessive} mouth. {other:PRONOUN} flushes in shame "
+                            + "and anger, but still dutifully services you with {other:possessive}"
+                            + " lips and tongue while you thrust your hips.";
             if (modifier == Result.upgrade) {
-                m += "<br/>Additionally, your upgraded vibrocock thoroughly stimulates her throat.";
+                m += "<br/>Additionally, your upgraded vibrocock thoroughly stimulates "
+                                + "{other:possessive} throat.";
             }
         } else {
             if (target.body.getRandom("mouth").isErogenous()) {
-                m = "You grab hold of " + target.getName()
-                                + "'s head and push your cock into her mouth. What you find inside is unexpected, though. "
-                                + target.getName()
-                                + " has transformed her mouth into a second female genitalia; its soft hot walls, its ridges and folds slide across your dick delightfully as you thrust into her.";
+                m = "You grab hold of {other:name-possessive} head and push your "
+                                + "cock into {other:possessive} mouth. What you find "
+                                + "inside is unexpected, though. {other:PRONOUN} has "
+                                + "transformed {other:possessive} mouth into a second "
+                                + "set of female genitalia; its soft hot walls, its "
+                                + "ridges and folds slide across your dick delightfully "
+                                + "as you thrust into {other:direct-object}.";
                 if (modifier == Result.reverse) {
-                    m += "<br/>Her skillful tongue works its magic on your cock while you're fucking her mouth pussy, and you find yourself on the verge of orgasm way quicker than you would like.";
+                    m += "<br/>{other:POSSESSIVE} skillful tongue works its magic on"
+                                    + " your cock while you're fucking {other:possessive}"
+                                    + " mouth pussy, and you find yourself on the verge "
+                                    + "of orgasm way quicker than you would like.";
                 }
             } else {
-                m = "You grab hold of " + target.getName()
-                                + "'s head and push your cock into her mouth. She flushes in shame and anger, but still dutifully services you with her lips "
-                                + "and tongue while you thrust your hips.";
+                m = "You grab hold of {other:name-possessive} head and push your cock "
+                                + "into {other:possessive} mouth. {other:PRONOUN} flushes"
+                                + " in shame and anger, but still dutifully services you"
+                                + " with {other:possessive} lips and tongue while "
+                                + "you thrust your hips.";
                 if (modifier == Result.reverse) {
-                    m += "<br/>Her skillful tongue works its magic on your cock though, and you find yourself on the verge of orgasm way quicker than you would like.";
+                    m += "<br/>{other:POSSESSIVE} skillful tongue works its magic on your "
+                                    + "cock though, and you find yourself on the verge of "
+                                    + "orgasm way quicker than you would like.";
                 }
             }
         }
-        return m;
+        return Formatter.format(m, getSelf(), target);
     }
 
     @Override
@@ -132,17 +144,22 @@ public class FaceFuck extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         String m;
         if (modifier == Result.strapon) {
-            m = String.format("%s forces her strapon cock into %s mouth and fucks %s face with it. "
+            m = String.format("%s forces %s strapon cock into %s mouth and fucks %s face with it. "
                             + "It's only rubber, but the position is still humiliating. %s not "
-                            + "to gag on the artificial member while %s revels in her dominance.",
-                            Formatter.capitalizeFirstLetter(getSelf().subject()), target.nameOrPossessivePronoun(), target.possessiveAdjective(),
-                            target.subjectAction("try", "tries"), getSelf().subject());
+                            + "to gag on the artificial member while %s revels in %s dominance.",
+                            Formatter.capitalizeFirstLetter(getSelf().subject()), 
+                            getSelf().possessiveAdjective(), target.nameOrPossessivePronoun(), 
+                            target.possessiveAdjective(),
+                            target.subjectAction("try", "tries"), getSelf().subject(),
+                            getSelf().possessiveAdjective());
         } else if (modifier == Result.upgrade) {
-            m = String.format("%s moves slightly towards %s, pushing her strapon against %s lips. %s to keep %s"
+            m = String.format("%s moves slightly towards %s, pushing %s strapon against %s lips. %s to keep %s"
                             + " mouth closed but %s pinches %s nose shut, "
                             + "and pushes in the rubbery invader as %s for air. After a few sucks, %s"
                             + " %s to break free, although %s %s still shivering "
-                            + "with a mix of arousal and humiliation.", Formatter.capitalizeFirstLetter(getSelf().subject()), target.nameDirectObject(),
+                            + "with a mix of arousal and humiliation.", 
+                            Formatter.capitalizeFirstLetter(getSelf().subject()), target.nameDirectObject(),
+                            getSelf().possessiveAdjective(),
                             target.possessiveAdjective(), target.subjectAction("try", "tries"), target.possessiveAdjective(),
                             getSelf().subject(), target.possessiveAdjective(), target.subjectAction("gasp"),
                             target.pronoun(), target.action("manage"), target.pronoun(), target.action("are", "is"));

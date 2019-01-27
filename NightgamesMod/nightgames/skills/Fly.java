@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.FlyingCarry;
@@ -90,16 +91,18 @@ public class Fly extends Fuck {
     @Override
     public String deal(Combat c, int amount, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return (amount == 0 ? "You " : "") + "grab " + target.getName() + " tightly and try to take off. However "
-                            + target.pronoun()
-                            + " has other ideas. She knees your crotch as you approach and sends you sprawling to the ground.";
+            return Formatter.format("%sgrab {other:name-do} tightly and try to take off."
+                            + " However {other:pronoun} has other ideas. {other:PRONOUN} knees"
+                            + " your crotch as you approach and sends you sprawling to the ground.",
+                            getSelf(), target, amount == 0 ? "You " : "");
         } else {
-            return (amount == 0 ? "You " : "") + "grab " + target.getName() + " tightly and take off, "
+            return Formatter.format("%sgrab {other:name-do} tightly and take off, "
                             + (target.hasDick() && getSelf().hasPussy()
-                                            ? "inserting her dick into your hungry "
-                                                            + getSelf().body.getRandomPussy().describe(getSelf()) + "."
-                                            : " holding her helpless in the air and thrusting deep into her wet "
-                                                            + target.body.getRandomPussy().describe(getSelf()) + ".");
+                                            ? "inserting {other:possessive} dick into your hungry {self:body-part:pussy}."
+                                            : " holding {other:direct-object} helpless in the air "
+                                                            + "and thrusting deep into {other:possessive} "
+                                                            + "wet {other:body-part:pussy}."),
+                            getSelf(), target, amount == 0 ? "You " : "");
         }
     }
 

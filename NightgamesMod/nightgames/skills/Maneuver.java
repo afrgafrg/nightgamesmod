@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Behind;
 
@@ -84,14 +85,17 @@ public class Maneuver extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
-            return "You channel your ki into your feet and dash behind " + target.getName()
-            + " faster than her eyes can follow.";
+            msg = "You channel your ki into your feet and dash behind {other:name-do}"
+            + " faster than {other:possessive} eyes can follow.";
         } else if (modifier == Result.miss) {
-            return "You try to get behind " + target.getName() + " but are unable to.";
+            msg = "You try to get behind {other:name-do} but are unable to.";
         } else {
-            return "You dodge past " + target.getName() + "'s guard and grab her from behind.";
+            msg = "You dodge past {other:name-possessive} guard and grab "
+                            + "{other:direct-object} from behind.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -122,7 +126,7 @@ public class Maneuver extends Skill {
     @Override
     public String describe(Combat c) {
         if (isFlashStep(c)) {
-            return "Use lightning speed to get behind your opponent before she can react: 10% stamina";
+            return "Use lightning speed to get behind your opponent before they can react: 10% stamina";
         } else {
             return "Get behind opponent";
         }

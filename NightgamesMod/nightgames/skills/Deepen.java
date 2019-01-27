@@ -43,21 +43,27 @@ public class Deepen extends Skill {
     public boolean resolve(Combat c, Character target) {
         if (target.is(Stsflag.trance)) {
             if (target.human()) {
-                c.write(getSelf(), Formatter.format("{self:NAME-POSSESSIVE} all-encompassing eyes completely fills your field of vision now as she destroys any last trace of independent thought inside your mind.", getSelf(), target));
+                c.write(getSelf(), Formatter.format("{self:NAME-POSSESSIVE} all-encompassing eyes completely fills"
+                                + " your field of vision now as {other:pronoun} destroys any last trace of independent thought"
+                                + " inside your mind.", getSelf(), target));
             } else {
                 c.write(getSelf(), Formatter.format("Since {other:NAME-DO} has alreay been heavy hypnotized, you take the chance to erode the last bits of {other:possessive} resistance. There's no way {other:pronoun} can disobey you now.", getSelf(), target));
             }
             target.add(c, new Enthralled(target, getSelf(), 3));
         } else if (target.is(Stsflag.lovestruck)) {
             if (target.human()) {
-                c.write(getSelf(), Formatter.format("{self:SUBJECT} holds your face in her hands and forces you to look into her eyes. You don't even think about resisting as her words become truth inside your brain.", getSelf(), target));
+                c.write(getSelf(), Formatter.format("{self:SUBJECT} holds your face in {self:possessive} hands and forces "
+                                + "you to look into {self:possessive} eyes. You don't even think about resisting as "
+                                + "{self:possessive} words become truth inside your brain.", getSelf(), target));
             } else {
                 c.write(getSelf(), Formatter.format("Since {other:NAME-DO} has alreay been hypnotized, you take the chance to bring {other:direct-object} even deeper.", getSelf(), target));
             }
             target.add(c, new Trance(target, 4));
         } else if (target.is(Stsflag.charmed)) {
             if (target.human()) {
-                c.write(getSelf(), Formatter.format("{self:SUBJECT} leans close and brings you deeper under her control with her hypnotic voice.", getSelf(), target));
+                c.write(getSelf(), Formatter.format("{self:SUBJECT} leans close and brings you deeper under "
+                                + "{self:possessive} control with {self:possessive} hypnotic voice.", 
+                                getSelf(), target));
             } else {
                 c.write(getSelf(), Formatter.format("Since {other:NAME-DO} has alreay been lightly hypnotized, you take the chance to bring {other:direct-object} deeper.", getSelf(), target));
             }

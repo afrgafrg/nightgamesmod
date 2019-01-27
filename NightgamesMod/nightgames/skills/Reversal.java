@@ -7,6 +7,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Pin;
@@ -87,12 +88,15 @@ public class Reversal extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to get on top of " + target.getName()
-                            + ", but she's apparently more ready for it than you realized.";
+            msg = "You try to get on top of {other:name-do}, but {other:pronoun}'s "
+                            + "apparently more ready for it than you realized.";
         } else {
-            return "You take advantage of " + target.getName() + "'s distraction and put her in a pin.";
+            msg = "You take advantage of {other:name-possessive} distraction "
+                            + "and put {other:direct-object} in a pin.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

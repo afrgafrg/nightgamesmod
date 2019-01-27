@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Pin;
 
@@ -68,11 +69,15 @@ public class Restrain extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to catch " + target.getName() + "'s hands, but she squirms too much to keep your grip on her.";
+            msg = "You try to catch {other:name-possessive} hands, but {other:pronoun}"
+                            + " squirms too much to keep your grip on {other:direct-object}.";
         } else {
-            return "You manage to restrain " + target.getName() + ", leaving her helpless and vulnerable beneath you.";
+            msg = "You manage to restrain {other:name-do}, leaving {other:direct-object}"
+                            + " helpless and vulnerable beneath you.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -90,7 +95,7 @@ public class Restrain extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Restrain opponent until she struggles free";
+        return "Restrain opponent until they struggle free";
     }
 
     @Override

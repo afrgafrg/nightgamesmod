@@ -141,8 +141,9 @@ public class Masturbate extends Skill {
                                 getSelf().subject(), getSelf().possessiveAdjective());
             }
         } else if (targetO.isType("pussy")) {
-            return String.format("%s slowly teases her own labia and starts playing with %s.",
-                            getSelf().subject(), getSelf().reflectivePronoun());
+            return String.format("%s slowly teases %s own labia and starts playing with %s.",
+                            getSelf().subject(), getSelf().possessiveAdjective(), 
+                            getSelf().reflectivePronoun());
         } else if (targetO.isType("ass")) {
             return String.format("%s teases %s own asshole and sticks a finger in.",
                             getSelf().subject(), getSelf().possessiveAdjective());

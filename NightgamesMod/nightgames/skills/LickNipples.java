@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -68,10 +69,14 @@ public class LickNipples extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You go after " + target.getName() + "'s nipples, but she pushes you away. (Maybe try getting closer?)";
+            return Formatter.format("You go after {other:name-possessive} nipples, "
+                            + "but {other:pronoun{ pushes you away. (Maybe try getting closer?)",
+                            getSelf(), target);
         } else {
-            return "You slowly circle your tongue around each of " + target.getName()
-                            + "'s nipples, making her moan and squirm in pleasure.";
+            return Formatter.format("You slowly circle your tongue around each of "
+                            + "{other:name-possessive} nipples, making {other-direct-object}"
+                            + " moan and squirm in pleasure.",
+                            getSelf(), target);
         }
     }
 

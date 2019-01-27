@@ -202,12 +202,12 @@ public class PetThreesome extends Skill {
     }
 
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You bowl your opponent over and pin her down while your pet fucks her [PLACEHOLDER]";
+        return "";
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
-        return getSelf().subject() + " pins you down while her pet fucks you [PLACEHOLDER]";
+        return "";
     }
 
     @Override

@@ -88,7 +88,9 @@ public class PinningPaizuri extends Skill {
         if( c.getStance().en == Stance.oralpin)
         {
             return Formatter.format(
-                            "{self:SUBJECT-ACTION:free|frees} {other:possessive} cock from her mouth, and quickly {self:action:wrap|wraps} {self:possessive} breasts around {other:possessive} cock.",
+                            "{self:SUBJECT-ACTION:free|frees} {other:possessive} cock from "
+                            + "{self:possessive} mouth, and quickly {self:action:wrap|wraps}"
+                            + " {self:possessive} breasts around {other:possessive} cock.",
                             getSelf(), target);
         }else
         {

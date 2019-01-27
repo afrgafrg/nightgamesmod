@@ -114,8 +114,12 @@ public class Divide extends Skill {
             return Formatter.format("You focus your attention on your slimey consitution and force yourself apart. "
                             + "The force of effort almost makes you black out, but when you finally raise your head, you are face to face with your own clone!", getSelf(), target);
         } else {
-            return Formatter.format("Airi's slimey body bubbles as if boiling over. Worried, you step closer to make sure she's not in any kind of trouble. "
-                            + "Suddenly, her viscous body splits apart, making you jump in surprise. Somehow, she managed to divide her body in half, and now you're another copy of her!",
+            return Formatter.format("Airi's slimy body bubbles as if boiling over. Worried, you step "
+                            + "closer to make sure {self:pronoun-action:are} not in any kind of trouble. "
+                            + "Suddenly, {self:possessive} viscous body splits apart, "
+                            + "making you jump in surprise. Somehow, {self:pronoun} managed to "
+                            + "divide {self:possessive} body in half, and now you're fighting "
+                            + "another copy of {self:direct-object}!",
                             getSelf(), target);
         }
     }

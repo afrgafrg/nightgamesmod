@@ -105,16 +105,20 @@ public class Nurse extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
-            return "You cradle " + target.getName() + "'s head in your lap and press your "
-                            + getSelf().body.getRandomBreasts().fullDescribe(getSelf()) + " over her face. "
-                            + target.getName()
-                            + " vocalizes a confused little yelp, and you take advantage of it to force your nipples between her lips.";
+            msg = "You cradle {other:name-possessive} head in your lap and press your "
+                            + "{self:body-part:breasts} over {other:possessive} face. "
+                            + "{other:PRONOUN} vocalizes a confused little yelp, "
+                            + "and you take advantage of it to force your "
+                            + "nipple between {other:possessive} lips.";
         } else {
-            return "You gently stroke " + target.nameOrPossessivePronoun() + " hair as you feed your nipples to "
-                            + target.directObject() + ". " + "Even though she is reluctant at first, you soon have "
-                            + target.getName() + " sucking your teats like a newborn.";
+            msg = "You gently stroke {other:name-possessive} hair as you feed your nipples to "
+                            + "{other:direct-object}. Even though {other:pronoun} is reluctant "
+                            + "at first, you soon have {other:pronoun} sucking your teats "
+                            + "like a newborn.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
@@ -128,10 +132,11 @@ public class Nurse extends Skill {
                             getSelf().subject(), target.nameOrPossessivePronoun(), getSelf().possessiveAdjective(),
                             target.possessiveAdjective(), target.pronoun(), target.action("let"));
         } else {
-            return String.format("%s gently strokes %s hair as %s presents her nipples to %s mouth. "
+            return String.format("%s gently strokes %s hair as %s presents %s nipples to %s mouth. "
                             + "Presented with the opportunity, %s happily %s on %s breasts.",
                             getSelf().subject(), target.nameOrPossessivePronoun(),
-                            getSelf().pronoun(), target.possessiveAdjective(),
+                            getSelf().pronoun(), getSelf().possessiveAdjective(),
+                            target.possessiveAdjective(),
                             target.subject(), target.action("suck"), getSelf().possessiveAdjective());
         }
     }

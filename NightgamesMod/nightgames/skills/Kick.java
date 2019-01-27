@@ -113,18 +113,25 @@ public class Kick extends Skill {
             return "Your kick hits nothing but air.";
         }
         if (modifier == Result.special) {
-            return "You focus your ki into a single kick, targeting not " + target.getName() + "'s body, but her "
+            return Formatter.format("You focus your ki into a single kick, targeting not " 
+                            + "{other:name-possessive} body, but {other:possessive} "
                             + target.getOutfit().getTopOfSlot(ClothingSlot.bottom).getName()
                             + ". The garment is completely destroyed, but "
-                            + "she is safely left completely unharmed. Wait, you are actually fighting right now, aren't you?";
+                            + "{other:pronoun} is safely left completely unharmed. Wait, "
+                            + "you are actually fighting right now, aren't you?", 
+                            getSelf(), target);
         }
         if (modifier == Result.strong) {
-            return "Lying on the floor, you feign exhaustion, hoping " + target.getName()
-                            + " will lower her guard. As she approaches unwarily, you suddenly kick up between "
-                            + "her legs, delivering a painful hit to her sensitive vulva.";
+            return Formatter.format("Lying on the floor, you feign exhaustion, hoping "
+                            + "{other:subject} will lower {other:possessive} guard. As "
+                            + "{other:pronoun} approaches unwarily, you suddenly kick up "
+                            + "between {other:possessive} legs, delivering a painful hit "
+                            + "to {other:possessive} sensitive vulva.", 
+                            getSelf(), target);
         } else {
-            return "You deliver a swift kick between " + target.getName()
-                            + "'s legs, hitting her squarely on the baby maker.";
+            return Formatter.format("You deliver a swift kick between {other:name-possessive}"
+                            + " legs, hitting {other:direct-object} squarely on the baby maker.", 
+                            getSelf(), target);
         }
     }
 

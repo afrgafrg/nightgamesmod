@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -62,9 +63,12 @@ public class LegLock extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You grab " + target.getName() + "'s leg, but she kicks free.";
+            return Formatter.format("You grab {other:name-possessive} leg, but "
+                            + "{other:pronoun} kicks free.", getSelf(), target);
         } else {
-            return "You take hold of " + target.getName() + "'s ankle and force her leg to extend painfully.";
+            return Formatter.format("You take hold of {other:name-possessive} ankle and "
+                            + "force {other:possessive} leg to extend painfully.",
+                            getSelf(), target);
         }
     }
 

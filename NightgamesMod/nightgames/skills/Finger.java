@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.clothing.ClothingSlot;
 import nightgames.nskills.tags.SkillTag;
@@ -83,24 +84,30 @@ public class Finger extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You grope at " + target.getName() + "'s pussy, but miss. (Maybe you should get closer?)";
+            return Formatter.format("You grope at {other:name-possessive} {other:body-part:pussy}"
+                            + ", but miss. (Maybe you should get closer?)", getSelf(), target);
         }
         if (modifier == Result.weak) {
-            return "You grope between " + target.getName()
-                            + "'s legs, not really knowing what you're doing. You don't know where she's the most sensitive, so you rub and "
-                            + "stroke every bit of moist flesh under your fingers.";
+            return Formatter.format("You grope between {other:name-possessive} legs, not really "
+                            + "knowing what you're doing. You don't know where {other:pronoun} is"
+                            + " the most sensitive, so you rub and stroke every bit of moist flesh "
+                            + "under your fingers.", getSelf(), target);
         } else {
             if (target.getArousal().get() <= 15) {
-                return "You softly rub the petals of " + target.getName() + "'s closed flower.";
+                return Formatter.format("You softly rub the petals of {other:name-possessive}"
+                                + " closed flower.", getSelf(), target);
             } else if (target.getArousal().percent() < 50) {
-                return target.getName()
-                                + "'s sensitive lower lips start to open up under your skilled touch and you can feel her becoming wet.";
+                return Formatter.format("{other:NAME-POSSESSIVE sensitive lower lips start to "
+                                + "open up under your skilled touch and you can feel "
+                                + "{other:direct-object} becoming wet.", getSelf(), target);
             } else if (target.getArousal().percent() < 80) {
-                return "You locate " + target.getName()
-                                + "'s clitoris and caress it directly, causing her to tremble from the powerful stimulation.";
+                return Formatter.format("You locate {other:name-possessive} clitoris and "
+                                + "caress it directly, causing {other:direct-object} to "
+                                + "tremble from the powerful stimulation.", getSelf(), target);
             } else {
-                return "You stir " + target.getName()
-                                + "'s increasingly soaked pussy with your fingers and rub her clit with your thumb.";
+                return Formatter.format("You stir {other:name-possessive} increasingly soaked "
+                                + "pussy with your fingers and rub {other:possessive} clit "
+                                + "with your thumb.", getSelf(), target);
             }
         }
     }
@@ -143,7 +150,8 @@ public class Finger extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Digitally stimulate opponent's pussy, difficult to land without pinning her down.";
+        return "Digitally stimulate opponent's pussy, difficult to land without "
+                        + "pinning her down.";
     }
 
     @Override

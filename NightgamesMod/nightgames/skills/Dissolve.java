@@ -88,24 +88,28 @@ public class Dissolve extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return "You pop a Dissolving Solution into your Aerosolizer and spray " + target.getName()
-                            + " with a cloud of mist. She emerges from the cloud with her clothes rapidly "
-                            + "melting off her body.";
+            return Formatter.format("You pop a Dissolving Solution into your Aerosolizer and spray {other:name-do}"
+                            + " with a cloud of mist. {other:PRONOUN} emerges from the cloud with"
+                            + " {other:possessive} clothes rapidly melting off {other:possessive body.", 
+                            getSelf(), target);
         } else if (modifier == Result.miss) {
-            return "You throw a Dissolving Solution at " + target.getName()
-                            + ", but she avoids most of it. Only a couple drops burn through her outfit.";
+            return Formatter.format("You throw a Dissolving Solution at {other:name-do}"
+                            + ", but {other:pronoun} avoids most of it. Only a couple drops burn"
+                            + " through {other:possessive} outfit.", getSelf(), target);
         } else {
-            return "You throw a Dissolving Solution at " + target.getName() + ", which eats away her clothes.";
+            return Formatter.format("You throw a Dissolving Solution at {other:name-do}, which "
+                            + "eats away {other:possessive} clothes.", getSelf(), target);
         }
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character attacker) {
         if (modifier == Result.special) {
-            return String.format("%s inserts a bottle into the attachment on her arm. "
+            return String.format("%s inserts a bottle into the attachment on %s arm. "
                             + "%s suddenly surrounded by a cloud of mist."
                             + " %s clothes begin to disintegrate immediately.",
-                            getSelf().subject(), Formatter.capitalizeFirstLetter(attacker.subjectAction("are", "is")),
+                            getSelf().subject(), getSelf().possessiveAdjective(),
+                            Formatter.capitalizeFirstLetter(attacker.subjectAction("are", "is")),
                             Formatter.capitalizeFirstLetter(attacker.nameOrPossessivePronoun()));
         } else if (modifier == Result.miss) {
             return String.format("%s splashes a bottle of liquid in %s direction, but none of it hits %s.",

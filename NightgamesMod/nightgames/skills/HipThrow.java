@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -65,11 +66,17 @@ public class HipThrow extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
-            return target.getName()
-                            + " rushes toward you, but you step in close and pull her towards you, using her momentum to throw her across your hip and onto the floor.";
+            return Formatter.format("{other:subject} rushes toward you, but you step "
+                            + "in close and pull {other:direct-object} towards you, "
+                            + "using {other:possessive} momentum to throw {other:direct-object}"
+                            + " across your hip and onto the floor.",
+                            getSelf(), target);
         } else {
-            return "As " + target.getName()
-                            + " advances, you pull her towards you and attempt to throw her over your hip, but she steps away from the throw and manages to keep her footing.";
+            return Formatter.format("As {other:subject} advances, you pull {other:direct-object}"
+                            + " towards you and attempt to throw {other:direct-object} over "
+                            + "your hip, but {other:pronoun} steps away from the throw and "
+                            + "manages to keep {other:possessive} footing.",
+                            getSelf(), target);
         }
     }
 

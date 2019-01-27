@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 
 public class PerfectTouch extends Skill {
 
@@ -70,14 +71,16 @@ public class PerfectTouch extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You try to steal " + target.getName() + "'s clothes off of her, but she catches you.";
+            msg = "You try to steal {other:name-possessive} clothes off of "
+                            + "{other:direct-object}, but {other:pronoun} catches you.";
         } else {
-            return "You feint to the left while your right hand makes quick work of " + target.getName()
-                            + "'s clothes. By the time she realizes what's happening, you've "
-                            + "already stripped all her clothes off.";
+            msg = "You feint to the left while your right hand makes quick work of {other:name-possessive}"
+                            + " clothes. By the time {other:pronoun} realizes what's happening, you've "
+                            + "already stripped all {other:possessive} clothes off.";
         }
-
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

@@ -112,60 +112,84 @@ public class Cunnilingus extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return "You try to eat out " + target.getName() + ", but she pushes your head away.";
+            return Formatter.format("You try to eat out {other:name-do}, but {other:pronoun}"
+                            + " pushes your head away.", getSelf(), target);
         }
         if (target.getArousal().get() < 10) {
-            return "You run your tongue over " + target.getName() + "'s dry vulva, lubricating it with your saliva.";
+            return Formatter.format("You run your tongue over {other:name-possessive}"
+                            + " dry vulva, lubricating it with your saliva.", getSelf(), target);
         }
         if (modifier == Result.special) {
-            return "Your skilled tongue explores " + target.getName()
-                            + "'s pussy, finding and pleasuring her more sensitive areas. You frequently tease her clitoris until she "
-                            + "can't suppress her pleasured moans."
-                            + (damage == -1 ? " Under your skilled ministrations, her juices flow freely, and they unmistakably"
+            return Formatter.format("Your skilled tongue explores {other:name-possessive}"
+                            + " {other:body-part:pussy}, finding and pleasuring {other:direct-object}"
+                            + " more sensitive areas. You frequently tease {other:possessive}"
+                            + " clitoris until {other:pronoun} can't suppress {other:possessive} pleasured moans."
+                            + (damage == -1 ? " Under your skilled ministrations, {other:possessive}"
+                                            + " juices flow freely, and they unmistakably"
                                             + " have their effect on you."
                                             : "")
                             + (damage == -2 ? " You feel a strange pull on you mind,"
-                                            + " somehow she has managed to enthrall you with her juices." : "");
+                                            + " somehow {other:pronoun} has managed to enthrall "
+                                            + "you with {other:possessive} juices." : ""),
+                                            getSelf(), target);
         }
         if (modifier == Result.reverse) {
-            return "You resign yourself to lapping at " + target.nameOrPossessivePronoun()
-                            + " pussy, as she dominates your face with her ass."
-                            + (damage == -1 ? " Under your skilled ministrations, her juices flow freely, and they unmistakably"
+            return Formatter.format("You resign yourself to lapping at {other:name-possessive} "
+                            + " {other:body-pary:pussy}, as {other:pronoun} dominates"
+                            + " your face with {other:possessive} ass."
+                            + (damage == -1 ? " Under your skilled ministrations, {other:possessive} juices"
+                                            + " flow freely, and they unmistakably"
                                             + " have their effect on you."
                                             : "")
                             + (damage == -2 ? " You feel a strange pull on you mind,"
-                                            + " somehow she has managed to enthrall you with her juices." : "");
+                                            + " somehow {other:pronoun} has managed to "
+                                            + "enthrall you with {other:possessive} juices." : ""),
+                                            getSelf(), target);
         }
         if (target.getArousal().percent() > 80) {
-            return "You relentlessly lick and suck the lips of " + target.getName()
-                            + "'s pussy as she squirms in pleasure. You let up just for a second before kissing her"
+            return Formatter.format("You relentlessly lick and suck the lips of {other:name-possessive} "
+                            + "{other:body-part:pussy} as {other:pronoun} squirms in pleasure. "
+                            + "You let up just for a second before kissing {other:direct-object}"
                             + " swollen clit, eliciting a cute gasp."
-                            + (damage == -1 ? " The highly aroused succubus' vulva is dripping with her "
-                                            + "aphrodisiac juices and you consume generous amounts of them."
+                            + (damage == -1 ? " The highly aroused succubus' vulva is dripping with"
+                                            + " {other:possessive} aphrodisiac juices and you consume"
+                                            + " generous amounts of them."
                                             : "")
                             + (damage == -2 ? " You feel a strange pull on you mind,"
-                                            + " somehow she has managed to enthrall you with her juices." : "");
+                                            + " somehow {other:pronoun} has managed to enthrall"
+                                            + " you with {other:possessive} juices." : ""),
+                            getSelf(), target);
         }
         int r = Random.random(3);
         if (r == 0) {
-            return "You gently lick " + target.getName() + "'s pussy and sensitive clit."
-                            + (damage == -1 ? " As you drink down her juices, they seem to flow "
+            return Formatter.format("You gently lick {other:name-possessive} {other:body-part:pussy} and sensitive clit."
+                            + (damage == -1 ? " As you drink down {other:possessive} juices, they seem to flow "
                                             + "straight down to your crotch, lighting fires when they arrive."
                                             : "")
                             + (damage == -2 ? " You feel a strange pull on you mind,"
-                                            + " somehow she has managed to enthrall you with her juices." : "");
+                                            + " somehow {other:pronoun} has managed to enthrall"
+                                            + " you with {other:possessive} juices." : ""),
+                            getSelf(), target);
         }
         if (r == 1) {
-            return "You thrust your tongue into " + target.getName() + "'s hot vagina and lick the walls of her pussy."
-                            + (damage == -1 ? " Your tongue tingles with her juices, clouding your mind with lust."
+            return Formatter.format("You thrust your tongue into {other:name-possessive} hot vagina and"
+                            + " lick the walls of {other:possessive} pussy."
+                            + (damage == -1 ? " Your tongue tingles with {other:possessive} juices, "
+                                            + "clouding your mind with lust."
                                             : "")
                             + (damage == -2 ? " You feel a strange pull on you mind,"
-                                            + " somehow she has managed to enthrall you with her juices." : "");
+                                            + " somehow {other:pronoun} has managed to enthrall"
+                                            + " you with {other:possessive} juices." : ""),
+                            getSelf(), target);
         }
-        return "You locate and capture " + target.getName() + "'s clit between your lips and attack it with your tongue."
-                        + (damage == -1 ? " Her juices taste wonderful and you cannot help but desire more." : "")
+        return Formatter.format("You locate and capture {other:name-possessive} clit between your "
+                        + "lips and attack it with your tongue."
+                        + (damage == -1 ? " {other:POSSESSIVE} juices taste wonderful and you "
+                                        + "cannot help but desire more." : "")
                         + (damage == -2 ? " You feel a strange pull on you mind,"
-                                        + " somehow she has managed to enthrall you with her juices." : "");
+                                        + " somehow {other:pronoun} has managed to enthrall"
+                                        + " you with {other:possessive} juices." : ""),
+                        getSelf(), target);
     }
 
     @Override

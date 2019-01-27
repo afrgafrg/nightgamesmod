@@ -106,8 +106,8 @@ public class MimicDryad extends Skill {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return Formatter.format("{self:NAME-POSSESSIVE} amorphous body quivers and collapses into a puddle. "
                         + "Starting from the center, the slime matter dyes itself green, transforming itself into a verdant emerald hue within seconds. "
-                        + "After reforming her features out of her slime, {other:subject-action:see|sees} that {self:NAME} has taken on an appearance reminiscent of Rosea the dryad, "
-                        + "complete with a large slime-parody of a flower replacing where her usual vagina is.", getSelf(), target);
+                        + "After reforming {self:possessive} features out of {self:possessive} slime, {other:subject-action:see|sees} that {self:NAME} has taken on an appearance reminiscent of Rosea the dryad, "
+                        + "complete with a large slime-parody of a flower replacing where {self:possessive} usual vagina is.", getSelf(), target);
     }
 
 }

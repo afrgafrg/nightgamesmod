@@ -75,25 +75,37 @@ public class Invitation extends Skill {
                                 "You command {other:name} to embrace you. {other:SUBJECT} moves to walk towards you for a second before snapping out of it.",
                                 getSelf(), target);
             }
-            return Formatter.format("You try to hug {other:name} and pull her down, but she twists out of your grasp.\n",
+            return Formatter.format("You try to hug {other:name} and pull {other:direct-object} down, but "
+                            + "{other:pronoun} twists out of your grasp.\n",
                             getSelf(), target);
         } else if (!c.getStance().inserted(getSelf())) {
             if (hasDivinity()) {
                 return Formatter.format(
-                                "You command {other:name} to embrace you. {other:SUBJECT} obeys and hugs you close to {other:direct-object}. You follow up on your earlier command and tell her to fuck you, which she promptly lovingly complies.",
+                                "You command {other:name} to embrace you. {other:SUBJECT} obeys and hugs you "
+                                + "close to {other:direct-object}. You follow up on your earlier command and "
+                                + "tell {other:direct-object} to fuck you, which {other:pronoun} promptly lovingly complies.",
                                 getSelf(), target);
             }
             return Formatter.format(
-                            "You embrace {other:name} and smoothly slide her cock into your folds while she's distracted. You then pull her to the ground on top of you and softly wrap your legs around her waist",
+                            "You embrace {other:name} and smoothly slide {other:possessive} cock into "
+                            + "your folds while {other:pronoun}'s distracted. You then pull "
+                            + "{other:direct-object} to the ground on top of you and softly wrap "
+                            + "your legs around {other:possessive} waist",
                             getSelf(), target);
         } else {
             if (hasDivinity()) {
                 return Formatter.format(
-                                "You command {other:name} to embrace you. {other:SUBJECT} obeys and hugs you close to {other:direct-object}. You follow up on your earlier command and tell her to fuck you, which she promptly lovingly complies.",
+                                "You command {other:name} to embrace you. {other:SUBJECT} obeys and "
+                                + "hugs you close to {other:direct-object}. You follow up on your "
+                                + "earlier command and tell {other:direct-object} to fuck you, which "
+                                + "{other:pronoun} promptly lovingly complies.",
                                 getSelf(), target);
             }
             return Formatter.format(
-                            "You embrace {other:name} and pull her on top of you. Taking advantage of her distraction, you push her on top of you while you are fucking her from beneath.",
+                            "You embrace {other:name} and pull {other:direct-object} on top of you. "
+                            + "Taking advantage of {other:possessive} distraction, you push "
+                            + "{other:direct-object} on top of you while "
+                            + "you are fucking {other:direct-object} from beneath.",
                             getSelf(), target);
         }
     }

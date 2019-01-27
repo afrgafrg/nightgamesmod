@@ -96,7 +96,7 @@ public class ProseUtils {
             case MALE:
                 return "his";
             case PLAYER:
-                return "your";
+                return "yours";
             default: throw new IllegalStateException();
         }
     }

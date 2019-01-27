@@ -60,9 +60,10 @@ public class IceForm extends Skill {
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         return String.format("%s takes a deep breath and %s expression turns so "
-                        + "frosty that %s not sure %s can ever thaw her out.",
+                        + "frosty that %s not sure %s can ever thaw %s out.",
                         getSelf().subject(), getSelf().possessiveAdjective(),
-                        target.subjectAction("are", "is"), target.pronoun());
+                        target.subjectAction("are", "is"), target.pronoun(),
+                        getSelf().directObject());
     }
 
 }

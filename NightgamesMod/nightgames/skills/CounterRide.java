@@ -89,13 +89,13 @@ public class CounterRide extends CounterBase {
                             getSelf(), target);
         } else if (getSelf().hasPussy() && target.hasDick()) {
             return Formatter.format(
-                            "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under her. "
+                            "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under {other:direct-object}. "
                                             + "With one smooth motion, you drop your hips and lodge {other:possessive} dick firmly inside yourself.",
                             getSelf(), target);
         } else {
             return Formatter.format(
-                            "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under her. "
-                                            + "With one smooth motion, you spread her legs apart and plunge into her depths.",
+                            "As {other:subject} approaches you, you suddenly lower your center of balance and sweep {other:possessive} legs out from under {other:direct-object}. "
+                                            + "With one smooth motion, you spread {other:possessive} legs apart and plunge into {other:possessive} depths.",
                             getSelf(), target);
         }
     }
@@ -104,12 +104,15 @@ public class CounterRide extends CounterBase {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
             return Formatter.format(
-                            "{self:SUBJECT} turns around and bends over her ass seductively waving in the air. She slowly "
-                                            + "teases her glistening lower lips and spread them apart, inviting {other:name-do} in to her depths.",
+                            "{self:SUBJECT} turns around and bends over {self:possessive} ass seductively waving in the air. {self:PRONOUN} slowly "
+                                            + "teases {self:possessive} glistening lower lips and spread them apart, inviting {other:name-do} in to {self:possessive} depths.",
                             getSelf(), target);
         } else if (modifier == Result.setup && getSelf().hasDick()) {
             return Formatter.format(
-                            "{self:SUBJECT} takes out her cock and strokes it to full mast. She then lets her dick go and it swings back and forth, catching {other:name-possessive} gaze.",
+                            "{self:SUBJECT} takes out {self:possessive} {self:body-part:cock} and "
+                            + "strokes it to full mast. {self:PRONOUN} then lets {self:possessive}"
+                            + " dick go, swinging it back and forth and catching "
+                            + "{other:name-possessive} gaze.",
                             getSelf(), target);
         } else if (getSelf().hasPussy() && target.hasDick()) {
             return Formatter.format(
@@ -119,7 +122,7 @@ public class CounterRide extends CounterBase {
                             getSelf(), target);
         } else {
             return Formatter.format(
-                            "As {other:subject} approaches {self:name}, she suddenly disappears from {other:name-possessive} view; half a second "
+                            "As {other:subject} approaches {self:name}, {self:pronoun} suddenly disappears from {other:name-possessive} view; half a second "
                             + "later, {other:possessive} legs are swept out from under {other:direct-object}. "
                                             + "With a sexy grin, {self:name} wrenches {other:name-possessive}"
                                             + " legs apart and plunges into {other:possessive} slobbering vagina.",

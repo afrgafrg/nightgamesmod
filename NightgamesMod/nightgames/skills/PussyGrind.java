@@ -76,8 +76,10 @@ public class PussyGrind extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.normal) {
             return Formatter.format(
-                            "You rock your tangled bodies back and forth, grinding your loins into hers. {other:subject} passionately gasps as the stimulation overwhelms her. "
-                                            + "Soon the floor is drenched with the fruits of your combined labor.",
+                            "You rock your tangled bodies back and forth, grinding your loins into "
+                            + "{other:poss-pronoun}. {other:subject} passionately gasps as the "
+                            + "stimulation overwhelms {other:direct-object}. Soon the floor is "
+                            + "drenched with the fruits of your combined labor.",
                             getSelf(), target);
         }
         return "Bad stuff happened";
@@ -90,7 +92,7 @@ public class PussyGrind extends Skill {
                             "{self:SUBJECT} rocks {other:name-possessive} tangled bodies back and forth, grinding {self:possessive}"
                             + " crotch into %s. {other:SUBJECT-ACTION:moan|moans} passionately as the stimulation overwhelms {other:direct-object}. "
                                             + "Soon the floor is drenched with the fruits of %s combined labor.",
-                            getSelf(), target, target.human() ? "yours" : target.useFemalePronouns() ? "hers" : "his",
+                            getSelf(), target, target.possessivePronoun(),
                                             c.bothPossessive(target));
         }
         return "Bad stuff happened";

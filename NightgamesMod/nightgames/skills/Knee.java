@@ -95,8 +95,10 @@ public class Knee extends Skill {
         if (modifier == Result.miss) {
             return target.getName() + " blocks your knee strike.";
         }
-        return "You deliver a powerful knee strike to " + target.getName()
-                        + "'s delicate lady flower. She lets out a pained whimper and nurses her injured parts.";
+        return Formatter.format("You deliver a powerful knee strike to {other:name-possessive}"
+                        + " delicate lady flower. {other:PRONOUN} lets out a pained "
+                        + "whimper and nurses {other:direct-object} injured parts.",
+                        getSelf(), target);
     }
 
     @Override

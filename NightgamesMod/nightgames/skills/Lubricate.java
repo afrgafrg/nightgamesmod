@@ -57,7 +57,7 @@ public class Lubricate extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Oil up your opponent, making her easier to pleasure";
+        return "Oil up your opponent, making them easier to pleasure";
     }
 
 }

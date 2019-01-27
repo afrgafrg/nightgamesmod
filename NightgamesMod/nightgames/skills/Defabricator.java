@@ -53,8 +53,10 @@ public class Defabricator extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You charge up your Defabricator and point it in " + target.getName()
-                        + "'s general direction. A bright light engulfs her and her clothes are disintegrated in moment.";
+        return Formatter.format("You charge up your Defabricator and point it in "
+                        + "{other:name-possessive} general direction. A bright light engulfs "
+                        + "{other:direct-object} and {other:possessive} clothes are "
+                        + "disintegrated in moment.", getSelf(), target);
     }
 
     @Override

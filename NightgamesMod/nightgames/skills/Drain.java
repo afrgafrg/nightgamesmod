@@ -124,63 +124,82 @@ public class Drain extends Skill {
             String partDesc = c.getStance().anallyPenetrated(c, getSelf())
                             ? getSelf().body.getRandom("ass").describe(getSelf())
                             : getSelf().body.getRandomPussy().describe(getSelf());
-            String base = "You put your powerful " + muscDesc + " muscles to work whilst" + " transfixing "
-                            + target.getName() + "'s gaze with your own, goading " + target.possessiveAdjective()
-                            + " energy into " + target.possessiveAdjective() + " cock."
-                            + " Soon it erupts from her into your " + partDesc + ", ";
+            String base = "You put your powerful %s muscles to work whilst transfixing "
+                            + "{other:name-possessive} gaze with your own, goading {other:possessive}"
+                            + " energy into {other:possessive} {other:body-part:cock}."
+                            + " Soon it erupts from {other:direct-object} into your %s, ";
             switch (damage) {
                 case 4:
-                    return base + "and you can feel " + target.possessiveAdjective() + " strength pumping into you.";
+                    base += "and you can feel {other:possessive} strength pumping into you.";
+                    break;
                 case 3:
-                    return base + "and you can feel " + target.possessiveAdjective() + " memories and experiences flow"
+                    base += "and you can feel {other:possessive} memories and experiences flow"
                                     + " into you, adding to your skill.";
+                    break;
                 case 5:
-                    return base + "taking " + target.possessiveAdjective() + " raw sexual energy and"
-                                    + " adding it to your own";
+                    base += "taking {other:possessive} raw sexual energy and adding it to your own";
+                    break;
                 case 1:
-                    return base + "but unfortunately you made a mistake, and only feel a small" + " bit of "
-                                    + target.possessiveAdjective() + " energy traversing the space between you.";
+                    base += "but unfortunately you made a mistake, and only feel a small bit of "
+                                    + "{other:possessive} energy traversing the space between you.";
+                    break;
                 case 2:
-                    return base + "but unfortunately you made a mistake, and only feel a small" + " bit of "
-                                    + target.possessiveAdjective() + " energy traversing the space between you.";
+                    base += "but unfortunately you made a mistake, and only feel a small bit of "
+                                    + "{other:possessive} energy traversing the space between you.";
+                    break;
                 case 6:
-                    return base + "far more powerfully than you even thought possible." + " You feel a fragment of "
-                                    + target.possessiveAdjective() + " soul break away from her and"
-                                    + " gush into you, taking along a portion of " + target.possessiveAdjective()
-                                    + " strength," + " skill and wits, merging with your own. You have clearly"
+                    base += "far more powerfully than you even thought possible. You feel a fragment of "
+                                    + "{other:possessive} soul break away from {other:direct-object} and"
+                                    + " gush into you, taking along a portion of {other:possessive}"
+                                    + " strength, skill and wits, merging them with your own. You have clearly"
                                     + " won this fight, and a lot more than that.";
+                    break;
                 default:
                     // Should never happen
                     return " but nothing happens, you feel strangely impotent.";
             }
+            return Formatter.format(base, getSelf(), target, muscDesc, partDesc);
         } else {
-            String base = "With your cock deep inside " + target.getName()
-                            + ", you can feel the heat from her core. You draw the energy from her, mining her depths. ";
+            String base = "With your cock deep inside {other:name-do}"
+                            + ", you can feel the heat from {other:possessive} core. You draw "
+                            + "the energy from {other:direct-object}, mining {other:possessive} depths. ";
             switch (damage) {
                 case 4:
-                    return base + "You feel yourself grow stronger as you steal her physical power.";
+                    base +=  "You feel yourself grow stronger as you steal {other:possessive} physical power.";
+                    break;
                 case 5:
-                    return base + "You manage to steal some of her sexual experience and skill at seduction.";
+                    base +=  "You manage to steal some of {other:possessive} sexual experience"
+                                    + " and skill at seduction.";
+                    break;
                 case 3:
-                    return base + "You draw some of her wit and cunning into yourself.";
+                    base +=  "You draw some of {other:possessive} wit and cunning into yourself.";
+                    break;
                 case 1:
-                    return "You attempt to drain " + target.getName()
-                                    + "'s energy through your intimate connection, taking a bit of her energy.";
+                    base = "You attempt to drain {other:name-possessive} energy through your"
+                                    + " intimate connection, taking a bit of {other:possessive} energy.";
+                    break;
                 case 2:
-                    return "You attempt to drain " + target.getName()
-                                    + "'s energy through your intimate connection, stealing some of her restraint.";
+                    base = "You attempt to drain {other:name-possessive} energy through your "
+                                    + "intimate connection, stealing some of {other:possessive} restraint.";
+                    break;
                 case 0:
-                    return "You attempt to drain " + target.getName()
-                                    + "'s energy through your intimate connection, but it goes wrong. You feel intense pleasure feeding "
-                                    + "back into you and threatening to overwhelm you. You brink the spiritual link as fast as you can, but you're still left on the brink of "
-                                    + "climax.";
+                    base = "You attempt to drain {other:name-possessive} energy through your intimate "
+                                    + "connection, but it goes wrong. You feel intense pleasure feeding "
+                                    + "back into you and threatening to overwhelm you. You break the"
+                                    + " spiritual link as fast as you can, but you're still left on "
+                                    + "the brink of climax.";
+                    break;
                 case 6:
-                    return base + "You succeed in siphoning off a portion of her soul, stealing both her physical and mental strength. This energy will eventually "
-                                    + "return to its owner, but for now, you're very powerful!";
+                    base +=  "You succeed in siphoning off a portion of {other:possessive} soul, "
+                                    + "stealing both {other:possessive} physical and mental strength. "
+                                    + "This energy will eventually return to its owner, but for now, "
+                                    + "you're very powerful!";
+                    break;
                 default:
                     // Should never happen
                     return " but nothing happens, you feel strangely impotent.";
             }
+            return Formatter.format(base, getSelf(), target);
         }
     }
 
@@ -197,14 +216,14 @@ public class Drain extends Skill {
             String base = String.format("%s %s  powerful %s muscles suddenly tighten around %s. "
                             + "%s starts kneading %s dick, bringing %s immense pleasure and soon"
                             + " %s %s erupt into %s, but %s %s %s %s shooting"
-                            + " something far more precious than semen into her %s; "
+                            + " something far more precious than semen into %s %s; "
                             + "as more of the ethereal fluid leaves %s, %s ", 
                             target.subjectAction("feel"), getSelf().nameOrPossessivePronoun(),
                             muscDesc, target.directObject(), getSelf().subject(),
                             target.possessiveAdjective(), target.directObject(),
                             target.subjectAction("feel"), target.reflectivePronoun(), getSelf().nameDirectObject(),
                             target.pronoun(), target.action("realize"), target.pronoun(), target.action("are", "is"),
-                            partDesc, target.directObject(), target.subjectAction("feel"));
+                            target.possessiveAdjective(), partDesc, target.directObject(), target.subjectAction("feel"));
             switch (damage) {
                 case 4:
                     return base + String.format("%s strength leaving %s with it, "

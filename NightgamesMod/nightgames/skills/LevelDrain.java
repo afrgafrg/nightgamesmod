@@ -117,44 +117,60 @@ public class LevelDrain extends Drain {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (getSelf().hasPussy()) {
-            String base = "You put your powerful vaginal muscles to work whilst" + " transfixing " + target.getName()
-                            + "'s gaze with your own, goading his energy into his cock." + " Soon it erupts from him, ";
+            String base = "You put your powerful vaginal muscles to work whilst transfixing "
+                            + "{other:name-possessive} gaze with your own, goading "
+                            + "{other:possessive} energy into {other:possessive} {other:body-part:cock}." 
+                            + " Soon it erupts from {other:direct-object}, ";
             switch (damage) {
                 case 0:
-                    return base + "but unfortunately you made a mistake, and the feedback leaves"
+                    base += "but unfortunately you made a mistake, and the feedback leaves"
                                     + " you on the edge of climax!";
+                    break;
                 case 1:
-                    return base + "and you can feel his memories and experiences flow"
+                    base += "and you can feel {other:possessive} memories and experiences flow"
                                     + " into you, adding to your skill.";
+                    break;
                 case 2:
-                    return base + "far more powerfully than you even thought possible."
-                                    + " You feel a fragment of his soul break away from him and"
-                                    + " spew into you, taking with it a portion of his very being"
+                    base += "far more powerfully than you even thought possible."
+                                    + " You feel a fragment of {other:possessive} soul break "
+                                    + "away from {other:direct-object} and"
+                                    + " spew into you, taking with it a portion of "
+                                    + "{other:possessive} very being"
                                     + "and merging with your own. You have clearly"
                                     + " won this fight, and a lot more than that.";
+                    break;
                 default:
                     // Should never happen
-                    return " but nothing happens, you feel strangely impotent.";
+                    base += " but nothing happens, you feel strangely impotent.";
             }
+            return Formatter.format(base, getSelf(), target);
         } else {
-            String base = "With your cock deep inside " + target.getName()
-                            + ", you can feel the heat from her core. You draw the energy from her, mining her depths. ";
+            String base = "With your cock deep inside {other:name-do}, you can feel the "
+                            + "heat from {other:possessive} core. You draw the energy "
+                            + "from {other:direct-object}, mining {other:possessive} depths. ";
             switch (damage) {
                 case 0:
-                    return "You attempt to drain " + target.getName()
-                                    + "'s energy through your intimate connection, but it goes wrong. You feel intense pleasure feeding "
-                                    + "back into you and threatening to overwhelm you. You brink the spiritual link as fast as you can, but you're still left on the brink of "
+                    base = "You attempt to drain {other:name-possessive} energy through your "
+                                    + "intimate connection, but it goes wrong. You feel "
+                                    + "intense pleasure feeding back into you and threatening "
+                                    + "to overwhelm you. You brink the spiritual link as fast "
+                                    + "as you can, but you're still left on the brink of "
                                     + "climax.";
+                    break;
                 case 1:
-                    return "You attempt to drain " + target.getName()
-                                    + "'s energy through your intimate connection, taking a bit of her experience.";
+                    base = "You attempt to drain {other:name-possessive} energy through "
+                                    + "your intimate connection, taking a bit of {other:possessive}"
+                                    + " experience.";
+                    break;
                 case 2:
-                    return base + "You succeed in siphoning off a portion of her soul, stealing a portion of her very being. This energy permanently "
-                                    + "settles within you!";
+                    base += "You succeed in siphoning off a portion of {other:possessive} soul, "
+                                    + " stealing a portion of {other:possessive} very being. "
+                                    + "This energy permanently settles within you!";
                 default:
                     // Should never happen
                     return " but nothing happens, you feel strangely impotent.";
             }
+            return Formatter.format(base, getSelf(), target);
         }
     }
 

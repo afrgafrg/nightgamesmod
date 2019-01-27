@@ -6,6 +6,7 @@ import nightgames.characters.Trait;
 import nightgames.characters.body.BreastsPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.Stance;
@@ -160,19 +161,19 @@ public class Paizuri extends Skill {
 
     public String receive(int damage, Result modifier, Character target, BreastsPart breasts) {
         StringBuilder b = new StringBuilder();
-        b.append(getSelf().getName() + " squeezes your dick between her ");
+        b.append("{self:subject} squeezes your dick between {self:possessive} ");
         b.append(breasts.describe(getSelf()));
         if( getSelf().has(Trait.lactating))
         {
-            b.append(" and milk squirts from her lactating teats");
+            b.append(" and milk squirts from {self:possessive} lactating teats");
         }
         b.append(". ");       
         
         if(getSelf().is(Stsflag.oiled)){
-            b.append("She rubs her oiled tits up and down your shaft and teasingly licks your tip.");
+            b.append("{self:PRONOUN} rubs {self:possessive} oiled tits up and down your shaft and teasingly licks your tip.");
         }
         else{
-            b.append("She rubs them up and down your shaft and teasingly licks your tip.");
+            b.append("{self:PRONOUN} rubs them up and down your shaft and teasingly licks your tip.");
         }
         
         if (getSelf().has(Trait.temptingtits)) {
@@ -188,7 +189,7 @@ public class Paizuri extends Skill {
             }
         }
         
-        return b.toString();
+        return Formatter.format(b.toString(), getSelf(), target);
     }
 
     @Override

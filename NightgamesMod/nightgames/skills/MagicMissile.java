@@ -81,20 +81,28 @@ public class MagicMissile extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You fire a bolt of magical energy, but " + target.getName() + " narrowly dodges out of the way.";
+            msg = "You fire a bolt of magical energy, but {other:subject}"
+                            + " narrowly dodges out of the way.";
         } else if (modifier == Result.critical) {
             if (target.hasBalls()) {
-                return "You cast and fire a magic missile at " + target.getName()
-                                + ". Just by luck, it hits her directly in the jewels. She cringes in pain, cradling her bruised parts.";
+                msg = "You cast and fire a magic missile at {other:name-do}" 
+                                + ". Just by luck, it hits {other:direct-object} directly "
+                                + "in the jewels. {other:PRONOUN} cringes in pain, "
+                                + "cradling {other:possessive} bruised parts.";
             } else {
-                return "You cast and fire a magic missile at " + target.getName()
-                                + ". By chance, it flies under her guard and hits her solidly in the pussy. She doubles over "
-                                + "with a whimper, holding her bruised parts.";
+                msg = "You cast and fire a magic missile at {other:name-do}" 
+                                + ". By chance, it flies under {other:possessive} guard "
+                                + "and hits {other:direct-object} solidly in the pussy. "
+                                + "{other:PRONOUN doubles over "
+                                + "with a whimper, holding {other:possessive} bruised parts.";
             }
         } else {
-            return "You hurl a magic missile at " + target.getName() + ", hitting and staggering her a step.";
+            msg = "You hurl a magic missile at {other:name-do}, hitting and "
+                            + "staggering {other:direct-object} a step.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

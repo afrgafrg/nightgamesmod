@@ -71,13 +71,17 @@ public class ReverseCarry extends Carry {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return (damage > 0 ? "" : "You ") + "leap into " + target.possessiveAdjective()
-                            + " arms, but she deposits you back onto the floor.";
+            return Formatter.format((damage > 0 ? "" : "You ") + "leap into {other:possessive}"
+                            + " arms, but {other:pronoun} deposits you back onto the floor.",
+                            getSelf(), target);
         } else {
             return Formatter.format(
                             (damage > 0 ? "" : "You ")
-                                            + " leap into {other:possessive} arms, impaling yourself onto her {other:body-part:cock} "
-                                            + ". She lets out a noise that's equal parts surprise and delight as you bounce on her pole.",
+                                            + " leap into {other:possessive} arms, impaling "
+                                            + "yourself onto {other:possessive} {other:body-part:cock} "
+                                            + ". {other:PRONOUN} lets out a noise that's equal "
+                                            + "parts surprise and delight as you bounce on "
+                                            + "{other:possessive} pole.",
                             getSelf(), target);
         }
     }
@@ -103,7 +107,7 @@ public class ReverseCarry extends Carry {
 
     @Override
     public String describe(Combat c) {
-        return "Jump into your opponent's arms and impale yourself on her cock: Mojo 10.";
+        return "Jump into your opponent's arms and impale yourself on their cock: Mojo 10.";
     }
 
     @Override

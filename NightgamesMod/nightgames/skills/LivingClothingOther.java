@@ -58,11 +58,12 @@ public class LivingClothingOther extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         String message;
-        message = "You power up your fabricator and dial the knob to the emergency reclothing setting. "
-                        + "You hit the button and dark tentacles squirm out of the device. " + "You hold "
-                        + target.subject() + " down and point the tentacles at her body. "
-                        + "The undulating tentacles coils around " + target.possessiveAdjective()
-                        + " body and wraps itself into a living suit.";
+        message = Formatter.format("You power up your fabricator and dial the knob to the emergency "
+                        + "reclothing setting. You hit the button and dark tentacles squirm out "
+                        + "of the device. You hold {other:name-do}"
+                        + " down and point the tentacles at {other:possessive} body. "
+                        + "The undulating tentacles coils around {other:possessive}"
+                        + " body and wraps itself into a living suit.", getSelf(), target);
         return message;
     }
 

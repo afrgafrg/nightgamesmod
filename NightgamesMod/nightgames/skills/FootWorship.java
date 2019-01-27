@@ -88,12 +88,18 @@ public class FootWorship extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (!c.getCombatantData(getSelf()).getBooleanFlag("footworshipped")) {
-            return "You throw yourself at " + target.nameOrPossessivePronoun()
-                            + " dainty feet and start sucking on her toes. " + target.subject()
-                            + " seems surprised at first, "
-                            + "but then grins and shoves her toes further in to your mouth, eliciting a moan from you.";
+            return Formatter.format("You throw yourself at {other:name-possessive} dainty "
+                            + "feet and start sucking on {other:possessive} toes. {other:PRONOUN} seems "
+                            + "surprised at first, but then grins and shoves {other:possessive}"
+                            + " toes further in to your mouth, eliciting a moan from you.",
+                            getSelf(), target);
         } else {
-            return "You can't seem to bring yourself to stop worshipping her feet as your tongue makes its way down to {other:name-possessive} soles. {other:SUBJECT} presses her feet against your face and you feel more addicted to her feet.";
+            return Formatter.format("You can't seem to bring yourself to stop worshipping "
+                            + "{other:possessive} feet as your tongue makes its way down to "
+                            + "{other:name-possessive} soles. {other:SUBJECT} presses "
+                            + "{other:possessive} feet against your face and you feel more "
+                            + "addicted to {other:possessive} feet.",
+                            getSelf(), target);
         }
     }
 

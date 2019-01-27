@@ -6,6 +6,7 @@ import nightgames.characters.Emotion;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.skills.damage.DamageType;
@@ -95,13 +96,15 @@ public class Flick extends Skill {
             return "You flick " + target.getName() + "'s balls, but " + target.pronoun() + " seems utterly unfazed.";
         } else {
             if (target.hasBalls()) {
-                return "You use two fingers to simultaneously flick both of " + target.getName()
-                                + " dangling balls. She tries to stifle a yelp and jerks her hips away reflexively. "
-                                + "You feel a twinge of empathy, but she's done far worse.";
+                return Formatter.format("You use two fingers to simultaneously flick both of {other:name-possessive}"
+                                + " dangling balls. {other:PRONOUN} tries to stifle a yelp and jerks "
+                                + "{other:possessive} hips away reflexively. You feel a twinge of "
+                                + "empathy, but {other:pronoun} has done far worse.", getSelf(), target);
             } else {
-                return "You flick your finger sharply across " + target.getName()
-                                + "'s sensitive clit, causing her to yelp in surprise and pain. She quickly covers her girl parts "
-                                + "and glares at you in indignation.";
+                return Formatter.format("You flick your finger sharply across {other:name-possessive}"
+                                + " sensitive clit, causing {other:direct-object} to yelp in "
+                                + "surprise and pain. {other:PRONOUN} quickly covers "
+                                + "{other:possessive} girl parts and glares at you in indignation.", getSelf(), target);
             }
         }
     }

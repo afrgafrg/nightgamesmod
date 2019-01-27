@@ -3,6 +3,7 @@ package nightgames.skills;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.stance.ReverseMount;
 
@@ -48,7 +49,8 @@ public class ReverseStraddle extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You straddle " + target.getName() + ", facing her feet.";
+        return Formatter.format("You straddle {other:name-do}, facing {other:possessive} feet.",
+                        getSelf(), target);
     }
 
     @Override

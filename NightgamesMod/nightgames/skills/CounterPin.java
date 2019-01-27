@@ -58,7 +58,7 @@ public class CounterPin extends CounterBase {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup && getSelf().hasPussy()) {
-            return Formatter.format("You shift into a low stance, beckoning her inside your reach.", getSelf(), target);
+            return Formatter.format("You shift into a low stance, beckoning {other:name-do} inside your reach.", getSelf(), target);
         } else {
             return "";
         }

@@ -58,8 +58,10 @@ public class ImaginaryBonds extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return Formatter.format("You lean close to {other:name-do} and tell her that {other:pronoun} cannot move {other:possessive} body. "
-                        + "{other:NAME-POSSESSIVE} eyes widen as your hypnotic suggestion rings true in {other:possessive} mind.", getSelf(), target);
+        return Formatter.format("You lean close to {other:name-do} and tell {other:direct-object}"
+                        + " that {other:pronoun} cannot move {other:possessive} body. "
+                        + "{other:NAME-POSSESSIVE} eyes widen as your hypnotic suggestion"
+                        + " rings true in {other:possessive} mind.", getSelf(), target);
     }
 
     @Override

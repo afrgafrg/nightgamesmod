@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.status.Stsflag;
 
 public class OrgasmSeal extends Skill {
@@ -51,8 +52,9 @@ public class OrgasmSeal extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You focus your energy onto " + target.nameOrPossessivePronoun()
-                        + " abdomen, coalescing it into a blood red mark that prevents her from cumming.";
+        return Formatter.format("You focus your energy onto {other:name-possessive}"
+                        + " abdomen, coalescing it into a blood red mark that"
+                        + " prevents {other:direct-object} from cumming.", getSelf(), target);
     }
 
     @Override

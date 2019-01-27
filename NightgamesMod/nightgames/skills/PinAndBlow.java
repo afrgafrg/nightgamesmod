@@ -84,7 +84,9 @@ public class PinAndBlow extends Skill {
         if( c.getStance().en == Stance.paizuripin)
         {
             return Formatter.format(
-                            "{self:SUBJECT-ACTION:free|frees} {other:possessive} cock from her breasts, and quickly {self:action:settle|settles} {self:possessive} head between {other:possessive} legs.",
+                            "{self:SUBJECT-ACTION:free|frees} {other:possessive} cock from {self:possessive}"
+                            + " breasts, and quickly {self:action:settle|settles} {self:possessive}"
+                            + " head between {other:possessive} legs.",
                             getSelf(), target);
         }else
         {

@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.nskills.tags.SkillTag;
 
 public class NakedBloom extends Skill {
@@ -60,8 +61,10 @@ public class NakedBloom extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You chant a short spell and turn " + target.getName()
-                        + "'s clothes into a burst of flowers. The cloud of flower petals flutters to the ground, exposing her nude body.";
+        return Formatter.format("You chant a short spell and turn {other:name-possessive}"
+                        + " clothes into a burst of flowers. "
+                        + "The cloud of flower petals flutters to "
+                        + "the ground, exposing {other:possessive} nude body.", getSelf(), target);
     }
 
     @Override

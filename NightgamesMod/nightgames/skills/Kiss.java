@@ -144,54 +144,81 @@ public class Kiss extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You pull " + target.getName()
-                            + " in for a kiss, but " + target.pronoun() + " pushes your face away. Rude. (Maybe you should try pinning her down?)";
+            msg = "You pull {other:name-do} in for a kiss, but {other:pronoun} pushes your "
+                            + "face away. Rude. (Maybe you should "
+                            + "try pinning {other:direct-object} down?)";
         }
         if (modifier == Result.divine) {
-            return "You pull " + target.getName()
-                            + " to you and kiss her passionately, sending your divine aura into her body though her mouth. "
-                            + "You tangle your tongue around hers and probe the sensitive insides of her mouth while mirroring the action in the space of her soul, sending quakes of pleasure through her physical and astral body. "
-                            + "As you finally break the kiss, she looks energized but desperate for more.";
+            msg = "You pull {other:name-do} to you and kiss {other:direct-object} passionately, "
+                            + "sending your divine aura into {other:possessive} body though "
+                            + "{other:possessive} mouth. You tangle your tongue around "
+                            + "{other:poss-pronoun} and probe the sensitive insides of "
+                            + "{other:possessive} mouth while mirroring the action in the "
+                            + "space of {other:possessive} soul, sending quakes of pleasure "
+                            + "through {other:possessive} physical and astral body. "
+                            + "As you finally break the kiss, {other:pronoun} looks energized "
+                            + "but desperate for more.";
         }
         if (modifier == Result.special) {
-            return "You pull " + target.getName()
-                            + " to you and kiss her passionately. You run your tongue over her lips until she opens them and immediately invade her mouth. "
-                            + "You tangle your tongue around hers and probe the sensitive insides her mouth. As you finally break the kiss, she leans against you, looking kiss-drunk and needy.";
+            msg = "You pull {other:name-do} to you and kiss {other:direct-object} passionately. "
+                            + "You run your tongue over {other:possessive} lips until "
+                            + "{other:pronoun} opens them and immediately invade "
+                            + "{other:possessive} mouth. You tangle your tongue around "
+                            + "{other:poss-pronoun} and probe the sensitive insides "
+                            + "{other:possessive} mouth. As you finally break the kiss, "
+                            + "{other:pronoun} leans against you, looking kiss-drunk and needy.";
         }
         if (modifier == Result.upgrade) {
-            return "You pull " + target.getName()
-                            + " to you and kiss her passionately. You run your tongue over her lips until her opens them and immediately invade her mouth. "
-                            + "You focus on her lifeforce inside her and draw it out through the kiss while overwhelming her defenses with heady pleasure. As you finally break the kiss, she leans against you, looking kiss-drunk and needy.";
+            msg = "You pull {other:name-do} to you and kiss {other:direct-object} passionately. "
+                            + "You run your tongue over {other:possessive} lips until "
+                            + "{other:pronoun} opens them and immediately invade {other:possessive}"
+                            + " mouth. You focus on {other:possessive} lifeforce inside "
+                            + "{other:direct-object} and draw it out through the kiss while "
+                            + "overwhelming {other:possessive} defenses with heady pleasure. "
+                            + "As you finally break the kiss, {other:pronoun} leans against you, "
+                            + "looking kiss-drunk and needy.";
         } else if (modifier == Result.weak) {
-            return "You aggressively kiss " + target.getName()
-                            + " on the lips. It catches her off guard for a moment, but she soon responds approvingly.";
+            msg = "You aggressively kiss {other:name-do} on the lips. It catches "
+                            + "{other:direct-object} off guard for a moment, but "
+                            + "{other:pronoun} soon responds approvingly.";
         } else {
             switch (Random.random(4)) {
                 case 0:
-                    return "You pull " + target.getName()
-                                    + " close and capture her lips. She returns the kiss enthusiastically and lets out a soft noise of approval when you "
-                                    + "push your tongue into her mouth.";
+                    msg = "You pull {other:name-do} close and capture {other:possessive} lips. "
+                                    + "{other:PRONOUN} returns the kiss enthusiastically and "
+                                    + "lets out a soft noise of approval when you "
+                                    + "push your tongue into {other:possessive} mouth.";
+                    break;
                 case 1:
-                    return "You press your lips to " + target.getName()
-                                    + "'s in a romantic kiss. You tease out her tongue and meet it with your own.";
+                    msg = "You press your lips to {other:poss-pronoun} in a romantic kiss. "
+                                    + "You tease out {other:possessive} tongue and meet it "
+                                    + "with your own.";
+                    break;
                 case 2:
-                    return "You kiss " + target.getName()
-                                    + " deeply, overwhelming her senses and swapping quite a bit of saliva.";
+                    msg = "You kiss {other:name-do} deeply, overwhelming {other:possessive}"
+                                    + " senses and swapping quite a bit of saliva.";
+                    break;
                 default:
-                    return "You steal a quick kiss from " + target.getName()
-                                    + ", pulling back before she can respond. As she hesitates in confusion, you kiss her twice more, "
-                                    + "lingering on the last to run your tongue over her lips.";
+                    msg = "You steal a quick kiss from {other:name-do}, pulling back "
+                                    + "before {other:pronoun} can respond. As {other:pronoun}"
+                                    + " hesitates in confusion, you kiss {other:direct-object}"
+                                    + " twice more, lingering on the last to run "
+                                    + "your tongue over {other:possessive} lips.";
+                    break;
             }
 
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
-            return getSelf().subject()
-                            + " pulls you in for a kiss, but you manage to push her face away.";
+            return String.format("%s pulls you in for a kiss, but you manage to "
+                            + "push %s face away.", getSelf().subject(), 
+                            getSelf().possessiveAdjective());
         }
         if (modifier == Result.divine) {
             return String.format("%s seductively pulls %s into a deep kiss. As first %s %s to match %s enthusiastic"

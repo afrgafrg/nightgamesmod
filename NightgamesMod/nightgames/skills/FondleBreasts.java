@@ -77,18 +77,24 @@ public class FondleBreasts extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You grope at " + target.getName() + "'s breasts, but miss. (Maybe you should get closer?)";
+            msg = "You grope at {other:name-possessive} breasts, but miss. "
+                            + "(Maybe you should get closer?)";
         } else if (modifier == Result.strong) {
-            return "You massage " + target.getName()
-            + "'s soft breasts and pinch her nipples, causing her to moan with desire.";
+            msg = "You massage {other:name-possessive} soft breasts and pinch "
+                            + "{other:possessive} nipples, causing {other:direct-object}"
+                            + " to moan with desire.";
         } else if (modifier == Result.special) {
-            return "You slip your hands into " + target.nameOrPossessivePronoun() + " " + target.outfit.getTopOfSlot(ClothingSlot.top).getName() + ", massaging " + target.getName()
-            + "'s soft breasts and pinching her nipples.";
+            msg = "You slip your hands into {other:name-possessive} " 
+                            + target.outfit.getTopOfSlot(ClothingSlot.top).getName() + 
+                            ", massaging {other:possessive} soft breasts"
+                            + " and pinching {other:possessive} nipples.";
         } else {
-            return "You massage " + target.getName() + "'s breasts over her "
+            msg = "You massage {other:name-possessive} breasts over {other:possessive} "
                             + target.getOutfit().getTopOfSlot(ClothingSlot.top).getName() + ".";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

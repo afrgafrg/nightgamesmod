@@ -125,31 +125,43 @@ public class FaceSit extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (getSelf().hasBalls()) {
             if (modifier == Result.special) {
-                return "You crouch over " + target.nameOrPossessivePronoun()
-                                + " face and dunk your balls into her mouth. She can do little except lick them submissively, which does feel "
-                                + "pretty good. She's so affected by your manliness that her eyes glaze over and she falls under your control. Oh yeah. You're awesome.";
+                return Formatter.format("You crouch over {other:name-possessive} face and dunk your balls into "
+                                + "{other:possessive} mouth. {other:PRONOUN} can do little "
+                                + "except lick them submissively, which does feel "
+                                + "pretty good. {other:PRONOUN} is so affected by your manliness "
+                                + "that {other:possessive} eyes glaze over and {other:pronoun}"
+                                + " falls under your control. Oh yeah. You're awesome.", getSelf(), target);
             } else if (modifier == Result.strong) {
-                return "You crouch over " + target.nameOrPossessivePronoun()
-                                + " face and dunk your balls into her mouth. She can do little except lick them submissively, which does feel "
-                                + "pretty good. Your powerful musk is clearly starting to turn her on. Oh yeah. You're awesome.";
+                return Formatter.format("You crouch over {other:name-possessive} face and dunk your balls "
+                                + "into {other:possessive} mouth. {other:PRONOUN} can do little"
+                                + " except lick them submissively, which does feel "
+                                + "pretty good. Your powerful musk is clearly starting to "
+                                + "turn {other:direct-object} on. Oh yeah. You're awesome.", getSelf(), target);
             } else {
-                return "You crouch over " + target.nameOrPossessivePronoun()
-                                + " face and dunk your balls into her mouth. She can do little except lick them submissively, which does feel "
-                                + "pretty good. Oh yeah. You're awesome.";
+                return Formatter.format("You crouch over {other:name-possessive} face and dunk your balls into "
+                                + "{other:possessive} mouth. {other:PRONOUN} can do little "
+                                + "except lick them submissively, which does feel "
+                                + "pretty good. Oh yeah. You're awesome.", getSelf(), target);
             }
         } else {
             if (modifier == Result.special) {
-                return "You straddle " + target.nameOrPossessivePronoun()
-                                + " face and grind your pussy against her mouth, forcing her to eat you out. Your juices take control of her lust and "
-                                + "turn her into a pussy licking slave. Ooh, that feels good. You better be careful not to get carried away with this.";
+                return Formatter.format("You straddle {other:name-possessive} face and grind your pussy "
+                                + "against {other:possessive} mouth, forcing {other:direct-object} to "
+                                + "eat you out. Your juices take control of {other:possessive} lust and "
+                                + "turn {other:direct-object} into a pussy licking slave. Ooh, that "
+                                + "feels good. You better be careful not to get carried away with this."
+                                , getSelf(), target);
             } else if (modifier == Result.strong) {
-                return "You straddle " + target.nameOrPossessivePronoun()
-                                + " face and grind your pussy against her mouth, forcing her to eat you out. She flushes and seeks more of your tainted juices. "
-                                + "Ooh, that feels good. You better be careful not to get carried away with this.";
+                return Formatter.format("You straddle {other:name-possessive} face and grind your pussy "
+                                + "against {other:possessive} mouth, forcing {other:direct-object} to eat "
+                                + "you out. {other:PRONOUN} flushes and seeks more of your tainted juices. "
+                                + "Ooh, that feels good. You better be careful not to get carried away "
+                                + "with this.", getSelf(), target);
             } else {
-                return "You straddle " + target.nameOrPossessivePronoun()
-                                + " face and grind your pussy against her mouth, forcing her to eat you out. Ooh, that feels good. You better be careful "
-                                + "not to get carried away with this.";
+                return Formatter.format("You straddle {other:name-possessive} face and grind your pussy "
+                                + "against {other:possessive} mouth, forcing {other:direct-object} to eat "
+                                + "you out. Ooh, that feels good. You better be careful "
+                                + "not to get carried away with this.", getSelf(), target);
             }
         }
     }

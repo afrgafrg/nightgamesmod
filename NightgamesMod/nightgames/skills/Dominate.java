@@ -32,7 +32,7 @@ public class Dominate extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Overwhelm your opponent to force her to lie down: 30% Arousal";
+        return "Overwhelm your opponent to force them to lie down: 30% Arousal";
     }
 
     @Override
@@ -62,10 +62,13 @@ public class Dominate extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You take a deep breathe, gathering dark energy into your lungs. You expend the power to command "
-                        + target.getName() + " to submit. The demonic command renders her "
-                        + "unable to resist and she drops to floor, spreading her legs open to you. As you approach, she comes to her senses and quickly closes her legs. Looks like her "
-                        + "will is still intact.";
+        return Formatter.format("You take a deep breathe, gathering dark energy into your "
+                        + "lungs. You expend the power to command {other:name-do} to "
+                        + "submit. The demonic command renders {self:direct-object} "
+                        + "unable to resist and {self:pronoun} drops to floor, spreading "
+                        + "{self:possessive} legs open to you. As you approach, {self:pronoun}"
+                        + " comes to {self:possessive} senses and quickly closes {self:possessive}"
+                        + " legs. Looks like {self:possessive} will is still intact.", getSelf(), target);
     }
 
     @Override

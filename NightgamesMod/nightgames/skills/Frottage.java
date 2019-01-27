@@ -8,6 +8,7 @@ import nightgames.characters.body.BodyPart;
 import nightgames.characters.body.StraponPart;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.nskills.tags.SkillTag;
 import nightgames.status.BodyFetish;
@@ -88,10 +89,13 @@ public class Frottage extends Skill {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.special) {
-            return "You tease " + target.getName() + "'s penis with your own, dueling her like a pair of fencers.";
+            return Formatter.format("You tease {other:name-possessive} penis with your own, "
+                            + "dueling {other:direct-object} like a pair of fencers.",
+                            getSelf(), target);
         } else {
-            return "You press your hips against " + target.getName()
-                            + "'s legs, rubbing her nether lips and clit with your dick.";
+            return Formatter.format("You press your hips against {other:name-possessive} legs, "
+                            + "rubbing {other:possessive} nether lips and clit with your dick.",
+                            getSelf(), target);
         }
     }
 
@@ -111,10 +115,11 @@ public class Frottage extends Skill {
                             getSelf().body.getRandomCock().describe(getSelf()), target.nameOrPossessivePronoun(),
                             target.possessiveAdjective());
         } else {
-            return String.format("%s pushes %s cock against her soft thighs, rubbing %s shaft up"
+            return String.format("%s pushes %s cock against %s soft thighs, rubbing %s shaft up"
                             + " against %s nether lips.", getSelf().subject(),
                             target.nameOrPossessivePronoun(), target.possessiveAdjective(),
-                            getSelf().possessiveAdjective());
+                            getSelf().possessiveAdjective(),
+                            target.possessiveAdjective());
         }
     }
 

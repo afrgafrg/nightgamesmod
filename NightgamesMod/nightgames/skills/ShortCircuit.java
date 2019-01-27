@@ -28,7 +28,7 @@ public class ShortCircuit extends Skill {
 
     @Override
     public String describe(Combat c) {
-        return "Fire a  blast of energy to confuse your opponent's nerves so she can't tell pleasure from pain: 3 Batteries.";
+        return "Fire a  blast of energy to confuse your opponent's nerves so they can't tell pleasure from pain: 3 Batteries.";
     }
 
     @Override
@@ -51,8 +51,10 @@ public class ShortCircuit extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
-        return "You send a light electrical current through " + target.getName()
-                        + "'s body, disrupting her nerve endings. She'll temporarily feel pleasure as pain and pain as pleasure.";
+        return "You send a light electrical current through {other:name-possessive}"
+                        + " body, disrupting {other:possessive} nerve endings. "
+                        + "{other:PRONOUN}'ll temporarily feel pleasure as pain "
+                        + "and pain as pleasure.";
     }
 
     @Override

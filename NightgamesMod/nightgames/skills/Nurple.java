@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.combat.Combat;
 import nightgames.combat.Result;
+import nightgames.global.Formatter;
 import nightgames.global.Random;
 import nightgames.items.Item;
 import nightgames.nskills.tags.SkillTag;
@@ -89,13 +90,17 @@ public class Nurple extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.miss) {
-            return "You grope at " + target.getName() + "'s breasts, but miss.";
+            msg = "You grope at {other:name-possessive} {other:body-part:breasts}, but miss.";
         } else if (modifier == Result.special) {
-            return "You grab " + target.getName() + "'s boob with your shock-gloved hand, painfully shocking her.";
+            msg = "You grab {other:name-possessive} boob with your shock-gloved "
+                            + "hand, painfully shocking {other:direct-object}.";
         } else {
-            return "You pinch and twist " + target.getName() + "'s nipples, causing her to yelp in surprise.";
+            msg = "You pinch and twist {other:name-possessive} nipples, causing "
+                            + "{other:direct-object} to yelp in surprise.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

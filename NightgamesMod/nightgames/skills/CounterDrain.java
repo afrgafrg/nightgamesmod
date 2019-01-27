@@ -84,8 +84,9 @@ public class CounterDrain extends CounterBase {
             return Formatter.format(
                             "You suddenly open your eyes as you sense {other:name} approaching. "
                                             + "The purple light that surrounds you suddenly flies into {other:direct-object}, "
-                                            + "eliciting a cry out of her. She collapses like a puppet with her strings cut and falls to the ground. "
-                                            + "Seeing the opportunity, you smirk and leisurely mount her.",
+                                            + "eliciting a cry out of {other:direct-object}. {other:PRONOUN}"
+                                            + " collapses like a puppet with {other:possessive} strings cut and falls to the ground. "
+                                            + "Seeing the opportunity, you smirk and leisurely mount {other:direct-object}.",
                             getSelf(), target);
         }
     }
@@ -94,12 +95,13 @@ public class CounterDrain extends CounterBase {
     public String receive(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.setup) {
             return Formatter.format(
-                            "She drops her stance, takes a deep breath and closes her eyes. {other:SUBJECT-ACTION:notice|notices}"
-                            + " a purple glow begin to radiate from her core.",
+                            "{self:PRONOUN} drops {self:possessive} stance, takes a deep "
+                            + "breath and closes {self:possessive} eyes. {other:SUBJECT-ACTION:notice|notices}"
+                            + " a purple glow begin to radiate from {self:possessive} core.",
                             getSelf(), target);
         } else {
             return Formatter.format(
-                            "{self:SUBJECT} suddenly opens her eyes as {other:subject-action:approach|approaches}. "
+                            "{self:SUBJECT} suddenly opens {self:possessive} eyes as {other:subject-action:approach|approaches}. "
                                             + "The purple light that was orbiting around {self:direct-object} suddenly reverses directions and flies into {other:direct-object}. "
                                             + "The purple energy seems to paralyze {other:possessive} muscles and {other:pronoun-action:collapse|collapses}"
                                             + " like a puppet with {other:possessive} strings cut. {other:PRONOUN} can't help but fall to the ground with a cry. "

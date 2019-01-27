@@ -52,16 +52,20 @@ public class Piston extends Thrust {
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.anal || modifier == Result.upgrade) {
-            return "You pound " + target.getName()
-                            + " in the ass. She whimpers in pleasure and can barely summon the strength to hold herself off the floor.";
+            return Formatter.format("You pound {other:name-do}"
+                            + " in the ass. {other:PRONOUN} whimpers in pleasure and can "
+                            + "barely summon the strength to hold herself off the floor.",
+                            getSelf(), target);
         } else if (modifier == Result.reverse) {
             return Formatter.format(
                             "{self:SUBJECT-ACTION:bounce|bounces} on {other:name-possessive} cock, relentlessly driving you both towards orgasm.",
                             getSelf(), target);
         } else {
-            return "You rapidly pound your dick into " + target.getName()
-                            + "'s pussy. Her pleasure-filled cries are proof that you're having an effect, but you're feeling it "
-                            + "as much as she is.";
+            return Formatter.format("You rapidly pound your dick into {other:name-possessive}"
+                            + " pussy. {other:POSSESSIVE} pleasure-filled cries are proof "
+                            + "that you're having an effect, but you're feeling it "
+                            + "as much as {other:direct-object} is.",
+                            getSelf(), target);
         }
     }
 

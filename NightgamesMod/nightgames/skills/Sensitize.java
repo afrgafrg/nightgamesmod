@@ -62,17 +62,20 @@ public class Sensitize extends Skill {
 
     @Override
     public String deal(Combat c, int damage, Result modifier, Character target) {
+        String msg;
         if (modifier == Result.special) {
-            return "You pop a sensitivity potion into your Aerosolizer and spray " + target.getName()
-                            + " with a cloud of mist. She shivers as it takes hold and heightens her "
-                            + "sense of touch.";
+            msg = "You pop a sensitivity potion into your Aerosolizer and spray {other:name-do}"
+                            + " with a cloud of mist. {other:PRONOUN} shivers as it takes hold "
+                            + "and heightens {other:possessive} sense of touch.";
         } else if (modifier == Result.miss) {
-            return "You throw a bottle of sensitivity elixir at " + target.getName()
-                            + ", but she ducks out of the way and it splashes harmlessly on the ground. What a waste.";
+            msg = "You throw a bottle of sensitivity elixir at {other:name-do}"
+                            + ", but {other:pronoun} ducks out of the way and it "
+                            + "splashes harmlessly on the ground. What a waste.";
         } else {
-            return "You throw a sensitivity potion at " + target.getName()
-                            + ". You see her skin flush as it takes effect.";
+            msg = "You throw a sensitivity potion at {other:name-do}"
+                            + ". You see {other:possessive} skin flush as it takes effect.";
         }
+        return Formatter.format(msg, getSelf(), target);
     }
 
     @Override

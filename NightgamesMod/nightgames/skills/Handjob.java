@@ -119,8 +119,8 @@ public class Handjob extends Skill {
                                 getSelf().subject(), target.nameOrPossessivePronoun(),
                                 target.possessiveAdjective());
             } else {
-                return String.format("%s jerks %s off like she's trying to milk every drop of %s cum.",
-                                getSelf().subject(), target.subject(),
+                return String.format("%s jerks %s off like %s's trying to milk every drop of %s cum.",
+                                getSelf().subject(), target.subject(), getSelf().pronoun(),
                                 target.possessiveAdjective());
             }
         }

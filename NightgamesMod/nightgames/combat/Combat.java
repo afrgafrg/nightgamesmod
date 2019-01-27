@@ -856,12 +856,18 @@ public class Combat extends Observable implements Cloneable {
     }
 
     public void chooseSkill(Character c, Skill skill) {
+        if (skill.user() != c) {
+            System.out.printf("Warning: A %s tried to use a %s which was constructed for a %s!",
+                            c.getType(), skill.getName(), skill.user().getType());
+            skill = skill.copy(c);
+        }
         if (c == p1) {
             p1act = skill;
         }
         if (c == p2) {
             p2act = skill;
         }
+        
     }
 
     /**

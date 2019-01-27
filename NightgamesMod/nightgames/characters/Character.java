@@ -4229,5 +4229,10 @@ public abstract class Character extends Observable implements Cloneable {
         a.initialGender = b.initialGender;
         a.level = b.level;
         a.xp = b.xp;
+
+        a.skills = a.skills.stream().map(s -> s.copy(a))
+                        .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        b.skills = b.skills.stream().map(s -> s.copy(b))
+                        .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 }

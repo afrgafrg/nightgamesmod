@@ -218,9 +218,11 @@ public class Combat extends Observable implements Cloneable {
         if (loser.hasDick() && victor.has(Trait.succubus)) {
             victor.gain(Item.semen, 3);
             if (loser.human()) {
-                write(victor, "<br/><b>As she leaves, you see all your scattered semen ooze out and gather into a orb in "
-                                + victor.nameOrPossessivePronoun() + " hands. "
-                                + "She casually drops your seed in some empty vials that appeared out of nowhere</b>");
+                write(victor, Formatter.format("<br/><b>As {self:pronoun} leaves, you see all your"
+                                + " scattered semen ooze out and gather into a orb in "
+                                + "{self:name-possessive} hands. {self:PRONOUN casually drops "
+                                + "your seed in some empty vials that appeared out of nowhere</b>",
+                                victor, loser));
             } else if (victor.human()) {
                 write(victor, "<br/><b>" + loser.nameOrPossessivePronoun()
                                 + " scattered semen lazily oozes into a few magically conjured flasks. "
@@ -437,7 +439,7 @@ public class Combat extends Observable implements Cloneable {
                         && character.outfit.slotOpen(ClothingSlot.top)) {
             Character mainOpponent = getOpponent(character);
             write(character, Formatter.format("The instant {self:subject-action:lay|lays} {self:possessive} eyes on {other:name-possessive} bare breasts, {self:possessive} consciousness flies out of {self:possessive} mind. " +
-                            (character.canAct() ? "{other:SUBJECT-ACTION:giggle|giggles} a bit and cups her stupendous tits and gives them a little squeeze to which {self:subject} can only moan." : ""), 
+                            (character.canAct() ? "{other:SUBJECT-ACTION:giggle|giggles} a bit and cups {self:possessive} stupendous tits and gives them a little squeeze to which {self:subject} can only moan." : ""), 
                             character, mainOpponent));
             opponents.forEach(opponent -> opponent.add(this, new Trance(opponent, 50)));
             getCombatantData(character).setBooleanFlag(beguilingbreastCompletedFlag, true);

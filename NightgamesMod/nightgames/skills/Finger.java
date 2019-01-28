@@ -97,7 +97,7 @@ public class Finger extends Skill {
                 return Formatter.format("You softly rub the petals of {other:name-possessive}"
                                 + " closed flower.", getSelf(), target);
             } else if (target.getArousal().percent() < 50) {
-                return Formatter.format("{other:NAME-POSSESSIVE sensitive lower lips start to "
+                return Formatter.format("{other:NAME-POSSESSIVE} sensitive lower lips start to "
                                 + "open up under your skilled touch and you can feel "
                                 + "{other:direct-object} becoming wet.", getSelf(), target);
             } else if (target.getArousal().percent() < 80) {

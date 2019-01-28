@@ -100,18 +100,18 @@ public class Encounter implements Serializable {
                 p1.addNonCombat(new Flatfooted(p1, 2));
                 p1.addNonCombat(new Hypersensitive(p1));
                 if (p1.human()) {
-                    messageIfObserved( "At " + p2.getName() + "'s interruption, you break free from the"
+                    messageIfObserved("At " + p2.getName() + "'s interruption, you break free from the"
                                     + " succubus' hold on your mind. However, the shock all but"
                                     + " short-circuits your brain; you "
                                     + " collapse to the floor, feeling helpless and"
                                     + " strangely oversensitive");
                 } else if (p2.human()) {
-                    messageIfObserved(p1.getName() + " doesn't appear to notice you at first, but when you "
-                                    + "wave your hand close to her face her eyes open wide and"
-                                    + " she immediately drops to the floor. Although the display"
-                                    + " leaves you somewhat worried about her health, she is"
-                                    + " still in a very vulnerable position and you never were"
-                                    + " one to let an opportunity pass you by.");
+                    messageIfObserved(Formatter.format("{self:subject} doesn't appear to notice you at first, "
+                                    + "but when you wave your hand close to {self:possessive} face {self:possessive}"
+                                    + " eyes open wide and {self:pronoun} immediately drops to the floor. Although "
+                                    + "the display leaves you somewhat worried about {self:possessive} health, "
+                                    + "{self:pronoun} is still in a very vulnerable position and you never were"
+                                    + " one to let an opportunity pass you by.", p1, p2));
                 }
             }
         }
@@ -190,30 +190,40 @@ public class Encounter implements Serializable {
         } else {
             if (p1.state == State.masturbating) {
                 if (p1.human()) {
-                    messageIfObserved(p2.getName()
-                                    + " catches you masturbating, but fortunately she's still not allowed to attack you, so she just watches you jerk off with "
-                                    + "an amused grin.");
+                    messageIfObserved(Formatter.format(
+                                    "{other:subject} catches you masturbating, but fortunately {other:pronoun}'s "
+                                    + "still not allowed to attack you, so {other:pronoun}"
+                                    + " just watches you jerk off with "
+                                    + "an amused grin.", p1, p2));
                 } else if (p2.human()) {
-                    messageIfObserved("You stumble onto " + p1.getName()
-                                    + " with her hand between her legs, masturbating. Since you just fought, you still can't touch her, so "
-                                    + "you just watch the show until she orgasms.");
+                    messageIfObserved(Formatter.format("You stumble onto {self:name-do} with "
+                                    + "{self:possessive} hand between {self:possessive} legs, "
+                                    + "masturbating. Since you just fought, you still can't "
+                                    + "touch {self:direct-object}, so you just watch the"
+                                    + " show until {self:pronoun} orgasms.", p1, p2));
                 }
             } else if (p2.state == State.masturbating) {
                 if (p2.human()) {
-                    messageIfObserved(p1.getName()
-                                    + " catches you masturbating, but fortunately she's still not allowed to attack you, so she just watches you jerk off with "
-                                    + "an amused grin.");
+                    messageIfObserved(Formatter.format(p1.getName()
+                                    + "{self:subject} catches you masturbating, but fortunately "
+                                    + "{self:pronoun}'s still not allowed to attack you, so "
+                                    + "{self:pronoun} just watches you jerk off with "
+                                    + "an amused grin.", p1, p2));
                 } else if (p1.human()) {
-                    messageIfObserved("You stumble onto " + p2.getName()
-                                    + " with her hand between her legs, masturbating. Since you just fought, you still can't touch her, so "
-                                    + "you just watch the show until she orgasms.");
+                    messageIfObserved(Formatter.format("You stumble onto {other:subject} with "
+                                    + "{other:possessive} hand between {other:possessive} "
+                                    + "legs, masturbating. Since you just fought, you still "
+                                    + "can't touch {other:direct-object}, so you just watch "
+                                    + "the show until {other:pronoun} orgasms.", p1, p2));
                 }
             } else if (!p1.eligible(p2) && p1.human()) {
-                messageIfObserved("You encounter " + p2.getName()
-                                + ", but you still haven't recovered from your last fight.");
+                messageIfObserved(Formatter.format("You encounter {other:name-do}, but you "
+                                + "still haven't recovered from your last fight.", p1, p2));
             } else if (p1.human()) {
-                messageIfObserved("You find " + p2.getName()
-                                + " still naked from your last encounter, but she's not fair game again until she replaces her clothes.");
+                messageIfObserved(Formatter.format("You find {other:name-do} still naked "
+                                + "from your last encounter, but {other:pronoun}'s not fair "
+                                + "game again until {other:pronoun} replaces"
+                                + " {other:pronoun} clothes.", p1, p2));
             }
             location.endEncounter();
         }
@@ -277,9 +287,13 @@ public class Encounter implements Serializable {
     protected void fleeAttempt(Character attacker, Character runner) {
         if (this.faster.get(0).equals(attacker)) {
             if (attacker.human()) {
-                GUI.gui.message(runner.getName() + " tries to run, but you stay right on her heels and catch her.");
+                GUI.gui.message(Formatter.format("{other:subject} tries to run, but you stay right"
+                                + " on {other:possessive} heels and catch {other:direct-object}.",
+                                attacker, runner));
             } else if (runner.human()) {
-                GUI.gui.message("You quickly try to escape, but " + attacker.getName() + " is quicker. She corners you and attacks.");
+                GUI.gui.message(Formatter.format("You quickly try to escape, but {self:subject} is "
+                                + "quicker. {self:PRONOUN} corners you and attacks.",
+                                attacker, runner));
             }
             this.fight = new Combat(attacker, runner, this.location);
         } else {
@@ -306,21 +320,32 @@ public class Encounter implements Serializable {
                                 messageIfObserved("You aren't in the shower long before you realize you're not alone. Before you can turn around, a soft hand grabs your exposed penis. "
                                                 + attacker.getName() + " has the drop on you.");
             } else if (location.id() == Movement.pool) {
-                                messageIfObserved("The relaxing water causes you to lower your guard a bit, so you don't notice "
-                                                + attacker.getName()
-                                                + " until she's standing over you. There's no chance to escape, you'll have to face her nude.");
+                                messageIfObserved(Formatter.format("The relaxing water causes you to lower your guard "
+                                                + "a bit, so you don't notice "
+                                                + "{self:name-do} until {self:pronoun}'s standing over you. There's "
+                                                + "no chance to escape, you'll have to face {self:direct-object} nude.",
+                                                attacker, target));
             }
         } else if (attacker.human()) {
             if (location.id() == Movement.shower) {
-                                messageIfObserved("You stealthily walk up behind " + target.getName()
-                                                + ", enjoying the view of her wet naked body. When you stroke her smooth butt, "
-                                                + "she jumps and lets out a surprised yelp. Before she can recover from her surprise, you pounce!");
+                                messageIfObserved(Formatter.format("You stealthily walk up behind {other:name-do}, "
+                                                + "enjoying the view of {other:possessive} wet naked body. When you "
+                                                + "stroke {other:possessive} smooth butt, {other:pronoun} jumps "
+                                                + "and lets out a surprised yelp. Before {other:pronoun} can "
+                                                + "recover from {other:possessive} surprise, you pounce!",
+                                                attacker, target));
             } else if (location.id() == Movement.pool) {
-                                messageIfObserved("You creep up to the jacuzzi where " + target.getName()
-                                                + " is soaking comfortably. As you get close, you notice that her eyes are "
-                                                + "closed and she may well be sleeping. You crouch by the edge of the jacuzzi for a few seconds and just admire her nude body with her breasts "
-                                                + "just above the surface. You lean down and give her a light kiss on the forehead to wake her up. She opens her eyes and swears under her breath "
-                                                + "when she sees you. She scrambles out of the tub, but you easily catch her before she can get away.");
+                                messageIfObserved(Formatter.format("You creep up to the jacuzzi where {other:name-do} is"
+                                                + " soaking comfortably. As you get close, you notice that {other:possessive} "
+                                                + "eyes are closed and {other:pronoun} may well be sleeping. You crouch by "
+                                                + "the edge of the jacuzzi for a few seconds and just admire {other:possessive}"
+                                                + " nude body with {other:possessive} breasts just above the surface. You lean "
+                                                + "down and give {other:direct-object} a light kiss on the forehead to wake "
+                                                + "{other:direct-object} up. {other:PRONOUN} opens {other:possessive} eyes and "
+                                                + "swears under {other:possessive} breath when {other:pronoun} sees you. "
+                                                + "{other:PRONOUN} scrambles out of the tub, but you easily catch "
+                                                + "{other:direct-object} before {other:pronoun} can get away.",
+                                                attacker, target));
             }
         }
         fight = new Combat(attacker, target, location, Initiation.ambushStrip);
@@ -332,40 +357,82 @@ public class Encounter implements Serializable {
         target.gainXP(target.getDefeatXP(attacker));
         if (target.human()) {
             if (location.id() == Movement.shower) {
-                                messageIfObserved("The hot shower takes your fatigue away, but you can't seem to calm down. Your cock is almost painfully hard. You need to deal with this while "
-                                                + "you have the chance. You jerk off quickly, hoping to finish before someone stumbles onto you. Right before you cum, you are suddenly grabbed from behind and "
-                                                + "spun around. " + attacker.getName()
-                                                + " has caught you at your most vulnerable and, based on her expression, may have been waiting for this moment. She kisses you and "
-                                                + "firmly grasps your twitching dick. In just a few strokes, you cum so hard it's almost painful.\n");
+                                messageIfObserved(Formatter.format("The hot shower takes your fatigue away, "
+                                                + "but you can't seem to calm down. Your cock is almost "
+                                                + "painfully hard. You need to deal with this while "
+                                                + "you have the chance. You jerk off quickly, hoping to "
+                                                + "finish before someone stumbles onto you. Right before you"
+                                                + " cum, you are suddenly grabbed from behind and "
+                                                + "spun around. {self:subject} has caught you at your most "
+                                                + "vulnerable and, based on {self:possessive} expression, "
+                                                + "may have been waiting for this moment. {self:PRONOUN} "
+                                                + "kisses you and firmly grasps your twitching dick. In "
+                                                + "just a few strokes, you cum so hard it's"
+                                                + " almost painful.\n", attacker, target));
             } else if (location.id() == Movement.pool) {
-                                messageIfObserved("As you relax in the jacuzzi, you start to feel extremely horny. Your cock is in your hand before you're even aware of it. You stroke yourself "
-                                                + "off underwater and you're just about ready to cum when you hear nearby footsteps. Oh shit, you'd almost completely forgotten you were in the middle of a "
-                                                + "match. The footsteps are from " + attacker.getName()
-                                                + ", who sits down at the edge of the jacuzzi while smiling confidently. You look for a way to escape, but it's "
-                                                + "hopeless. You were so close to finishing you just need to cum now. "
-                                                + attacker.getName()
-                                                + " seems to be thinking the same thing, as she dips her bare feet into the "
-                                                + "water and grasps your penis between them. She pumps you with her feet and you shoot your load into the water in seconds.\n");
+                                messageIfObserved(Formatter.format("As you relax in the jacuzzi, you start"
+                                                + " to feel extremely horny. Your cock is in your hand "
+                                                + "before you're even aware of it. You stroke yourself "
+                                                + "off underwater and you're just about ready to cum "
+                                                + "when you hear nearby footsteps. Oh shit, you'd "
+                                                + "almost completely forgotten you were in the middle of a "
+                                                + "match. The footsteps are from {self:name-do}, who sits "
+                                                + "down at the edge of the jacuzzi while smiling confidently."
+                                                + " You look for a way to escape, but it's hopeless. You "
+                                                + "were so close to finishing you just need to cum now. "
+                                                + "{self:subject} seems to be thinking the same thing, as "
+                                                + "{self:pronoun} dips {self:possessive} bare feet into the "
+                                                + "water and grasps your penis between them. {self:PRONOUN}"
+                                                + " pumps you with {self:possessive} feet and you shoot "
+                                                + "your load into the water in seconds.\n", attacker, target));
             }
         } else if (attacker.human()) {
             if (location.id() == Movement.shower) {
-                                messageIfObserved("You empty the bottle of aphrodisiac onto the shower floor, letting the heat from the shower turn it to steam. You watch "
-                                                + target.getName() + " and wait "
-                                                + "for a reaction. Just when you start to worry that it was all washed down the drain, you see her hand slip between her legs. Her fingers go to work pleasuring herself "
-                                                + "and soon she's completely engrossed in her masturbation, allowing you to safely get closer without being noticed. She's completely unreserved, assuming she's alone "
-                                                + "and you feel a voyeuristic thrill at the show. You can't just remain an observer though. For this to count as a victory, you need to be in physical contact with her "
-                                                + "when she orgasms. When you judge that she's in the home stretch, you embrace her from behind and kiss her neck. She freezes in surprise and you move your hand between "
-                                                + "her legs to replace her own. Her pussy is hot, wet, and trembling with need. You stick two fingers into her and rub her clit with your thumb. She climaxes almost "
-                                                + "immediately. You give her a kiss on the cheek and leave while she's still too dazed to realize what happened. You're feeling pretty horny, but after a show like that "
-                                                + "it's hardly surprising.\n");
+                                messageIfObserved(Formatter.format("You empty the bottle of aphrodisiac onto"
+                                                + " the shower floor, letting the heat from the shower turn"
+                                                + " it to steam. You watch {other:name-do} and wait "
+                                                + "for a reaction. Just when you start to worry that it was"
+                                                + " all washed down the drain, you see {other:possessive} "
+                                                + "hand slip between {other:possessive} legs. {other:POSSESSIVE}"
+                                                + " fingers go to work pleasuring herself and soon "
+                                                + "{other:pronoun}'s completely engrossed in {other:possessive}"
+                                                + " masturbation, allowing you to safely get closer without"
+                                                + " being noticed. {other:PRONOUN}'s completely unreserved,"
+                                                + " assuming {other:pronoun}'s alone and you feel a voyeuristic "
+                                                + "thrill at the show. You can't just remain an observer though. "
+                                                + "For this to count as a victory, you need to be in physical "
+                                                + "contact with {other:possessive} when {other:pronoun} orgasms."
+                                                + " When you judge that {other:pronoun}'s in the home stretch, "
+                                                + "you embrace {other:direct-object} from behind and kiss "
+                                                + "{other:possessive} neck. {other:PRONOUN} freezes in "
+                                                + "surprise and you move your hand between {other:possessive}"
+                                                + " legs to replace {other:direct-object} own. {other:POSSESSIVE}"
+                                                + " pussy is hot, wet, and trembling with need. "
+                                                + "You stick two fingers into {other:direct-object} and rub "
+                                                + "{other:possessive} clit with your thumb. {other:PRONOUN} "
+                                                + "climaxes almost immediately. You give {other:direct-object}"
+                                                + " a kiss on the cheek and leave while {other:pronoun}'s still"
+                                                + " too dazed to realize what happened. You're feeling "
+                                                + "pretty horny, but after a show like that "
+                                                + "it's hardly surprising.\n", attacker, target));
             } else if (location.id() == Movement.pool) {
-                                messageIfObserved("You sneak up to the jacuzzi, and empty the aphrodisiac into the water without "
-                                                + target.getName() + " noticing. You slip away and find a hiding spot. In a "
-                                                + "couple minutes, you notice her stir. She glances around, but fails to see you and then closes her eyes and relaxes again. There's something different now though and "
-                                                + "her soft moan confirms it. You grin and quietly approach again. You can see her hand moving under the surface of the water as she enjoys herself tremendously. Her moans "
-                                                + "rise in volume and frequency. Now's the right moment. You lean down and kiss her on the lips. Her masturbation stops immediately, but you reach underwater and finger "
-                                                + "her to orgasm. When she recovers, she glares at you for your unsportsmanlike trick, but she can't manage to get really mad in the afterglow of her climax. You're "
-                                                + "pretty turned on by the encounter, but you can chalk this up as a win.\n");
+                                messageIfObserved(Formatter.format("You sneak up to the jacuzzi, and empty the aphrodisiac"
+                                                + " into the water without {other:name-do} noticing. You slip away and "
+                                                + "find a hiding spot. In a couple minutes, you notice {other:direct-object}"
+                                                + " stir. {other:PRONOUN} glances around, but fails to see you and then "
+                                                + "closes {other:possessive} eyes and relaxes again. There's something "
+                                                + "different now though and {other:possessive} soft moan confirms it. You "
+                                                + "grin and quietly approach again. You can see {other:possessive} hand "
+                                                + "moving under the surface of the water as {other:pronoun} enjoys herself"
+                                                + " tremendously. {other:POSSESSIVE} moans rise in volume and frequency. "
+                                                + "Now's the right moment. You lean down and kiss {other:direct-object} on"
+                                                + " the lips. {other:POSSESSIVE} masturbation stops immediately, but you "
+                                                + "reach underwater and finger {other:direct-object} to orgasm. When "
+                                                + "{other:pronoun} recovers, {other:pronoun} glares at you for your "
+                                                + "unsportsmanlike trick, but {other:pronoun} can't manage to get "
+                                                + "really mad in the afterglow of {other:possessive} climax. You're "
+                                                + "pretty turned on by the encounter, but you can chalk"
+                                                + " this up as a win.\n", attacker, target));
             }
         }
         if (!target.mostlyNude()) {
@@ -388,20 +455,32 @@ public class Encounter implements Serializable {
         attacker.gainXP(attacker.getVictoryXP(target));
         target.gainXP(target.getDefeatXP(attacker));
         if (target.human()) {
-            messageIfObserved("You jerk off frantically, trying to finish as fast as possible. Just as you feel the familiar sensation of imminent orgasm, you're grabbed from behind. "
-                            + "You freeze, cock still in hand. As you turn your head to look at your attacker, "
-                            + attacker.getName()
-                            + " kisses you on the lips and rubs the head of your penis with her "
-                            + "palm. You were so close to the edge that just you cum instantly.");
+            messageIfObserved(Formatter.format("You jerk off frantically, trying to finish as fast "
+                            + "as possible. Just as you feel the familiar sensation of imminent orgasm,"
+                            + " you're grabbed from behind. "
+                            + "You freeze, cock still in hand. As you turn your head to look at"
+                            + " your attacker, {self:subject} kisses you on the lips and rubs the head"
+                            + " of your penis with {self:possessive} palm. You were so close to the"
+                            + " edge that just you cum instantly.",
+                            attacker, target));
             if (!target.mostlyNude()) {
-                messageIfObserved("You groan in resignation and reluctantly strip off your clothes and hand them over.");
+                messageIfObserved(Formatter.format("You groan in resignation and reluctantly strip off "
+                                + "your clothes and hand them over.", attacker, target));
             }
         } else if (attacker.human()) {
-            messageIfObserved("You spot " + target.getName()
-                            + " leaning against the wall with her hand working excitedly between her legs. She is mostly, but not completely successful at "
-                            + "stifling her moans. She hasn't noticed you yet, and as best as you can judge, she's pretty close to the end. It'll be an easy victory for you as long as you work fast. "
-                            + "You sneak up and hug her from behind while kissing the nape of her neck. She moans and shudders in your arms, but doesn't stop fingering herself. She probably realizes "
-                            + "she has no chance of winning even if she fights back. You help her along by licking her neck and fondling her breasts as she hits her climax.");
+            messageIfObserved(Formatter.format("You spot {other:name-do}"
+                            + " leaning against the wall with {other:possessive} hand working excitedly between "
+                            + "{other:possessive} legs. {other:PRONOUN} is mostly, but not completely successful at "
+                            + "stifling {other:possessive} moans. {other:PRONOUN} hasn't noticed you yet, and"
+                            + " as best as you can judge, {other:pronoun}'s pretty close to the "
+                            + "end. It'll be an easy victory for you as long as you work fast. "
+                            + "You sneak up and hug {other:direct-object} from behind while kissing the nape of "
+                            + "{other:possessive} neck. {other:PRONOUN} moans and shudders in your arms, "
+                            + "but doesn't stop fingering herself. {other:PRONOUN} probably realizes "
+                            + "{other:pronoun} has no chance of winning even if {other:pronoun} fights back. You help "
+                            + "{other:direct-object} along by licking {other:possessive} neck and "
+                            + "fondling {other:possessive} breasts as {other:pronoun}"
+                            + " hits {other:possessive} climax.", attacker, target));
         }
         if (!target.mostlyNude()) {
             attacker.gain(target.getTrophy());
@@ -422,23 +501,42 @@ public class Encounter implements Serializable {
         attacker.gainXP(attacker.getVictoryXP(target));
         target.gainXP(target.getDefeatXP(attacker));
         if (attacker.human()) {
-                            messageIfObserved(target.getName()
-                                            + " is naked and helpless in the giant rope web. You approach slowly, taking in the lovely view of her body. You trail your fingers "
-                                            + "down her front, settling between her legs to tease her sensitive pussy lips. She moans and squirms, but is completely unable to do anything in her own defense. "
-                                            + "You are going to make her cum, that's just a given. If you weren't such a nice guy, you would leave her in that trap afterward to be everyone else's prey "
-                                            + "instead of helping her down. You kiss and lick her neck, turning her on further. Her entrance is wet enough that you can easily work two fingers into her "
-                                            + "and begin pumping. You gradually lick your way down her body, lingering at her nipples and bellybutton, until you find yourself eye level with her groin. "
-                                            + "You can see her clitoris, swollen with arousal, practically begging to be touched. You trap the sensitive bud between your lips and attack it with your tongue. "
-                                            + "The intense stimulation, coupled with your fingers inside her, quickly brings her to orgasm. While she's trying to regain her strength, you untie the ropes "
-                                            + "binding her hands and feet and ease her out of the web.");
+                            messageIfObserved(Formatter.format(
+                                            "{other:subject} is naked and helpless in the giant rope web. You approach slowly, "
+                                            + "taking in the lovely view of {other:possessive} body. You trail your fingers "
+                                            + "down {other:possessive} front, settling between {other:possessive} legs to "
+                                            + "tease {other:possessive} sensitive pussy lips. {other:PRONOUN} moans and"
+                                            + " squirms, but is completely unable to do anything in {other:possessive}"
+                                            + " own defense. You are going to make {other:possessive} cum, that's just"
+                                            + " a given. If you weren't such a nice guy, you would leave {other:direct-object}"
+                                            + " in that trap afterward to be everyone else's prey instead of helping "
+                                            + "{other:direct-object} down. You kiss and lick {other:possessive} neck, turning "
+                                            + "{other:direct-object} on further. {other:POSSESSIVE} entrance is wet enough "
+                                            + "that you can easily work two fingers into {other:direct-object} and begin pumping."
+                                            + " You gradually lick your way down {other:possessive} body, lingering at "
+                                            + "{other:possessive} nipples and bellybutton, until you find yourself eye "
+                                            + "level with {other:possessive} groin. You can see {other:possessive} clitoris, "
+                                            + "swollen with arousal, practically begging to be touched. You trap the "
+                                            + "sensitive bud between your lips and attack it with your tongue. The intense "
+                                            + "stimulation, coupled with your fingers inside {other:direct-object}, quickly "
+                                            + "brings {other:direct-object} to orgasm. While {other:pronoun}'s trying to "
+                                            + "regain {other:possessive} strength, you untie the ropes binding "
+                                            + "{other:possessive} hands and feet and ease {other:direct-object} out of the web.",
+                                            attacker, target));
         } else if (target.human()) {
-                            messageIfObserved("You're trying to figure out a way to free yourself, when you see " + attacker.getName()
-                                            + " approach. You groan in resignation. There's no way you're "
-                                            + "going to get free before she finishes you off. She smiles as she enjoys your vulnerable state. She grabs your dangling penis and puts it in her mouth, licking "
-                                            + "and sucking it until it's completely hard. Then the teasing starts. She strokes you, rubs you, and licks the head of your dick. She uses every technique to "
-                                            + "pleasure you, but stops just short of letting you ejaculate. It's maddening. Finally you have to swallow your pride and beg to cum. She pumps you dick in earnest "
-                                            + "now and fondles your balls. When you cum, you shoot your load onto her face and chest. You hang in the rope web, literally and figuratively drained. "
-                                            + attacker.getName() + " " + "graciously unties you and helps you down.");
+                            messageIfObserved(Formatter.format("You're trying to figure out a way to free yourself, when you see " 
+                                            + "{self:name-do} approach. You groan in resignation. There's no way you're "
+                                            + "going to get free before {self:pronoun} finishes you off. {self:PRONOUN} smiles "
+                                            + "as {self:pronoun} enjoys your vulnerable state. {self:PRONOUN} grabs your "
+                                            + "dangling penis and puts it in {self:possessive} mouth, licking and sucking it "
+                                            + "until it's completely hard. Then the teasing starts. {self:PRONOUN} strokes you, "
+                                            + "rubs you, and licks the head of your dick. {self:PRONOUN} uses every technique to "
+                                            + "pleasure you, but stops just short of letting you ejaculate. It's maddening. "
+                                            + "Finally you have to swallow your pride and beg to cum. {self:PRONOUN} pumps you "
+                                            + "dick in earnest now and fondles your balls. When you cum, you shoot your load onto "
+                                            + "{self:possessive} face and chest. You hang in the rope web, literally and "
+                                            + "figuratively drained. {self:subject} graciously unties you and helps you down.",
+                                            attacker, target));
         }
         if (!target.mostlyNude()) {
             attacker.gain(target.getTrophy());
@@ -482,8 +580,10 @@ public class Encounter implements Serializable {
 
     protected void steal(Character thief, Character target) {
         if (thief.human()) {
-            messageIfObserved("You quietly swipe " + target.getName()
-                            + "'s clothes while she's occupied. It's a little underhanded, but you can still turn them in for cash just as if you defeated her.");
+            messageIfObserved(Formatter.format("You quietly swipe {other:name-possessive} clothes"
+                            + " while {other:pronoun}'s occupied. It's a little underhanded, but"
+                            + " you can still turn them in for cash just as if you "
+                            + "defeated {other:direct-object}.", thief, target));
         }
         thief.gain(target.getTrophy());
         target.nudify();
@@ -493,9 +593,11 @@ public class Encounter implements Serializable {
 
     public void trap(Character opportunist, Character target, Trap trap) {
         if (opportunist.human()) {
-            messageIfObserved("You leap out of cover and catch " + target.getName() + " by surprise.");
+            messageIfObserved(Formatter.format("You leap out of cover and catch {other:name-do} "
+                            + "by surprise.", opportunist, target));
         } else if (target.human()) {
-            messageIfObserved("Before you have a chance to recover, " + opportunist.getName() + " pounces on you.");
+            messageIfObserved(Formatter.format("Before you have a chance to recover,"
+                            + " {self:subject} pounces on you.", opportunist, target));
         }
         trap.capitalize(opportunist, target, this);
     }

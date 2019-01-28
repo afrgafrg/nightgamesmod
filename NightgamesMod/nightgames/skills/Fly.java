@@ -108,7 +108,7 @@ public class Fly extends Fuck {
 
     @Override
     public String receive(Combat c, int amount, Result modifier, Character target) {
-        String subject = amount == 0 ? target.subject() + " " : "";
+        String subject = amount == 0 ? getSelf().subject() + " " : "";
         if (modifier == Result.miss) {
             return String.format("%slunges for %s with a hungry look in %s eyes. However %s other "
                             + "ideas. %s %s %s as %s approaches and %s %s sprawling to the floor.",

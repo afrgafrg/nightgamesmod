@@ -9,6 +9,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Emotion;
 import nightgames.characters.body.BodyPart;
 import nightgames.combat.Combat;
+import nightgames.global.Formatter;
 import nightgames.requirements.RequirementShortcuts;
 
 public class LegLocked extends Status {
@@ -28,7 +29,9 @@ public class LegLocked extends Status {
     @Override
     public String describe(Combat c) {
         if (affected.human()) {
-            return "Her legs are locked around your waist, preventing you from pulling out.";
+            return Formatter.format("{other:POSSESSIVE} legs are locked around your waist, "
+                            + "preventing you from pulling out.", 
+                            affected, c.getOpponent(affected));
         } else {
             return String.format("%s legs are wrapped around %s waist, preventing %s from pulling out.",
                             c.getOpponent(affected).nameOrPossessivePronoun(), affected.nameOrPossessivePronoun(),

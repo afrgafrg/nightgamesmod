@@ -18,8 +18,8 @@ public class AnalCowgirl extends AnalSexStance {
     @Override
     public String describe(Combat c) {
         if (top.human()) {
-            return String.format("You're sitting on top of %s with your ass squeezing her cock.",
-                            bottom.nameDirectObject());
+            return String.format("You're sitting on top of %s with your ass squeezing %s cock.",
+                            bottom.nameDirectObject(), top.possessiveAdjective());
         } else {
             return String.format("%s flat on %s back with %s cock buried inside %s ass.",
                             bottom.subjectAction("are", "is"), bottom.possessiveAdjective(),

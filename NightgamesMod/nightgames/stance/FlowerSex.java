@@ -2,6 +2,7 @@ package nightgames.stance;
 
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
+import nightgames.global.Formatter;
 
 public class FlowerSex extends FemdomSexStance {
 
@@ -17,8 +18,9 @@ public class FlowerSex extends FemdomSexStance {
     @Override
     public String describe(Combat c) {
         if (top.human()) {
-            return "You're coiled around " + bottom.nameOrPossessivePronoun()
-                            + " body with his cock inside you and the petals of your flower wrapped around both of you like a cocoon.";
+            return Formatter.format("You're coiled around {other:name-possessive} body with "
+                            + "{self:possessive} cock inside you and the petals of your "
+                            + "flower wrapped around both of you like a cocoon.", top, bottom);
         } else {
             return String.format("%s trapped in a giant flower bulb surrounding %s and %s. "
                             + "Inside, %s on top of %s with %s cock trapped in %s pussy "

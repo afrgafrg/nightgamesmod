@@ -13,7 +13,8 @@ public class Standing extends MaledomSexStance {
     @Override
     public String describe(Combat c) {
         if (top.human()) {
-            return "You are holding " + bottom.getName() + " in the air while buried deep in her pussy.";
+            return Formatter.format("You are holding {other:name-do} in the air while buried "
+                            + "deep in {other:possessive} pussy.", top, bottom);
         } else {
             return String.format("%s is holding %s in %s arms while pumping into %s girl parts.",
                             top.subject(), bottom.nameDirectObject(), top.possessiveAdjective(),

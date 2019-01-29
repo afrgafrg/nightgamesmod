@@ -144,8 +144,9 @@ public class NursingHold extends AbstractFacingStance {
     @Override
     public void struggle(Combat c, Character struggler) {
         if (struggler.human()) {
-            c.write(struggler, "You try to free yourself from " + top.getName()
-                            + ", but she pops a teat into your mouth and soon you're sucking like a newborn again.");
+            c.write(struggler, Formatter.format("You try to free yourself from {self:name-do}"
+                            + ", but {self:pronoun} pops a teat into your mouth and soon you're "
+                            + "sucking like a newborn again.", top, bottom));
         } else if (c.shouldPrintReceive(top, c)) {
             c.write(struggler, String.format("%s struggles against %s, but %s %s %s nipple "
                             + "against %s mouth again, forcing %s to suckle.", struggler.subject(),

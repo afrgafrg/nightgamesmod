@@ -95,8 +95,10 @@ public class FlyingCowgirl extends FemdomSexStance {
                 c.write("You're too tired to stay in the air. You plummet to the ground and " + bottom.getName()
                                 + " drops on you heavily, knocking the wind out of you.");
             } else {
-                c.write(top.getName()
-                                + " falls to the ground and so do you. Fortunately, her body cushions your fall, but you're not sure she appreciates that as much as you do.");
+                c.write(Formatter.format("{self:SUBJECT} falls to the ground and so do you. "
+                                + "Fortunately, {self:possessive} body cushions your fall, but "
+                                + "you're not sure {self:pronoun} appreciates that as much as "
+                                + "you do.", top, bottom));
             }
             top.pain(c, bottom, (int) bottom.modifyDamage(DamageType.physical, top, Random.random(50, 75)));
             c.setStance(new Mount(bottom, top));
@@ -121,7 +123,7 @@ public class FlyingCowgirl extends FemdomSexStance {
             return new FlyingCarry(bottom, top);
         } else {
             if (writeMessage) {
-                c.write(Formatter.format("Weakened by {self:possessive} squirming, {other:SUBJECT-ACTION:fall|falls} to the ground and so {self:action:do|does} {self:name-do}. Fortunately, {other:possessive} body cushions {self:possessive} fall, but you're not sure {self:action:if she appreciates that as much as you do|if you appreciate that as much as she does}. "
+                c.write(Formatter.format("Weakened by {self:possessive} squirming, {other:SUBJECT-ACTION:fall|falls} to the ground and so {self:action:do|does} {self:name-do}. Fortunately, {other:possessive} body cushions {self:possessive} fall, but you're not sure whether {self:pronoun-action:appreciates that as much as you do|appreciate that quite as much}. "
                                 + "While {other:subject-action:are|is} dazed, {self:subject-action:mount|mounts} {other:direct-object} and {self:action:start|starts} fucking {other:direct-object} in a missionary position.", bottom, top));
             }
             top.pain(c, bottom, (int) bottom.modifyDamage(DamageType.physical, top, Random.random(50, 75)));

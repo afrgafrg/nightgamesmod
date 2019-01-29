@@ -300,9 +300,9 @@ public class MindControl extends Addiction {
                                             + " and forces your eyelids open with " + controller.directObject() + " thumbs. ";
                         } else {
                             succeeded = false;
-                            description = "With " + controller.getName() + " pinned beneath you as " + controller.pronoun()
-                                            + " is, it's not hard for you to keep your eyes from meeting hers as you "
-                                            + "launch into your orgasm.";
+                            description = Formatter.format("With {other:name-do} pinned beneath you as {other:pronoun}"
+                                            + " is, it's not hard for you to keep your eyes from meeting "
+                                            + "{other:poss-pron} as you launch into your orgasm.", affected, controller);
                         }
                         break;
                     case oralpin:

@@ -4,6 +4,7 @@ import nightgames.characters.Attribute;
 import nightgames.characters.Character;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
+import nightgames.global.Formatter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.status.Enthralled;
@@ -44,11 +45,11 @@ public class EnthrallingTrap extends Trap {
             }
         } else if (target.checkVsDc(Attribute.Perception, 25 + target.baseDisarm()) || !target.eligible(owner) || !owner.eligible(target)) {
             if (target.location().humanPresent()) {
-                GUI.gui.message("You catch a bout of purple fire in your peripheral vision,"
+                GUI.gui.message(Formatter.format("You catch a bout of purple fire in your peripheral vision,"
                                 + "but once you have turned to look the flames are gone. All that is left"
-                                + " to see is " + target.getName() + ", standing still and staring blankly ahead."
-                                + " It would seem to be very easy to have your way with her now, but"
-                                + " who or whatever left that thing there will probably be thinking" + " the same.");
+                                + " to see is {self:name-do}, standing still and staring blankly ahead."
+                                + " It would seem to be very easy to have your way with {self:direct-object} now, but"
+                                + " who or whatever left that thing there will probably be thinking the same.", target, null));
             }
             target.addNonCombat(new Enthralled(target, owner, 5 + getStrength() / 20));
             target.location().opportunity(target, this);

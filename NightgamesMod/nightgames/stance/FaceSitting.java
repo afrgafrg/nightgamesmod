@@ -228,8 +228,10 @@ public class FaceSitting extends AbstractBehindStance {
     @Override
     public void struggle(Combat c, Character struggler) {
         if (struggler.human()) {
-            c.write(struggler, "You try to free yourself from " + top.getName()
-                            + ", but she drops her ass over your face again, forcing you to service her.");
+            c.write(struggler, Formatter.format("You try to free yourself from {self:name-do}"
+                            + ", but {self:pronoun} drops {self:pronoun} ass over your "
+                            + "face again, forcing you to service {self:direct-object}.",
+                            top, bottom));
         } else if (c.shouldPrintReceive(top, c)) {
             c.write(struggler, String.format("%s struggles against %s, but %s %s %s ass "
                             + "over %s face again, forcing %s to service %s.", struggler.subject(),

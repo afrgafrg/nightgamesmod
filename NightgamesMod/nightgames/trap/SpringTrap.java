@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
+import nightgames.global.Formatter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.items.clothing.ClothingTrait;
@@ -31,9 +32,10 @@ public class SpringTrap extends Trap {
                                 "As you're walking, your foot hits something and there's a sudden debilitating pain in your groin. Someone has set up a spring-loaded rope designed "
                                                 + "to shoot up into your nuts, which is what just happened. You collapse into the fetal position and pray that there's no one nearby.");
             } else if (target.location().humanPresent()) {
-                GUI.gui.message("You hear a sudden yelp as your trap catches " + target.getName()
-                                + " right in the cooch. She eventually manages to extract the rope from between her legs "
-                                + "and collapses to the floor in pain.");
+                GUI.gui.message(Formatter.format("You hear a sudden yelp as your trap catches "
+                                + "{self:name-do} right in the cooch. {self:PRONOUN} eventually "
+                                + "manages to extract the rope from between {self:possessive}"
+                                + " legs and collapses to the floor in pain.", target, null));
             }
             int m = 50 + target.getLevel() * 5;
             if (target.has(ClothingTrait.armored)) {

@@ -2,6 +2,7 @@ package nightgames.trap;
 
 import nightgames.characters.Attribute;
 import nightgames.characters.Character;
+import nightgames.global.Formatter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 
@@ -22,7 +23,8 @@ public class Alarm extends Trap {
                             "You're walking through the eerily quiet campus, when a loud beeping almost makes you jump out of your skin. You realize the beeping is "
                                             + "coming from a cell phone on the floor. You shut it off as quickly as you can, but it's likely everyone nearby heard it already.");
         } else if (target.location().humanPresent()) {
-            GUI.gui.message(target.getName() + " Sets off your alarm, giving away her presence.");
+            GUI.gui.message(Formatter.format("{self:subject} sets off your alarm, giving "
+                            + "away {self:possessive} presence.", target, null));
         }
         target.location().alarm = true;
         target.location().remove(this);

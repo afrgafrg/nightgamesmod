@@ -154,8 +154,10 @@ public class ZealAddiction extends Addiction {
 
     @Override
     protected String describeCombatDecrease() {
-        return "Doing " + getCause().getName() + "'s bidding clears your mind a bit. Why are you really doing this?"
-                        + " One look at her reaffirms " + getCause().directObject() + " divinity in your mind, though.";
+        return Formatter.format("Doing {other:name-possessive} bidding clears your mind a bit. "
+                        + "Why are you really doing this? One look at {other:direct-object}"
+                        + " reaffirms {other:possessive} divinity in your mind, though.",
+                        affected, getCause());
     }
 
     @Override

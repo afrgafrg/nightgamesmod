@@ -109,7 +109,8 @@ public class AnalProne extends AnalSexStance {
                 c.write("With your asshole suddenly disappearing, " + inserter.getName()
                                 + "'s dick pops out of what was once your sphincter.");
             } else {
-                c.write("Your dick pops out of " + inserted.getName() + " as her asshole shrinks and disappears.");
+                c.write(Formatter.format("Your dick pops out of {other:name-do} as {other:possessive}"
+                                + " asshole shrinks and disappears.", inserter, inserted));
             }
             c.setStance(insertRandom(c));
         }

@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
+import nightgames.global.Formatter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.status.Flatfooted;
@@ -39,9 +40,11 @@ public class AphrodisiacTrap extends Trap {
                                 "There's a sudden spray of gas in your face and the room seems to get much hotter. Your dick goes rock-hard and you realize you've been "
                                                 + "hit with an aphrodisiac.");
             } else if (target.location().humanPresent()) {
-                GUI.gui.message(
-                                target.getName() + " is caught in your trap and sprayed with aphrodisiac. She flushes bright red and presses a hand against her crotch. It seems like "
-                                                + "she'll start masturbating even if you don't do anything.");
+                GUI.gui.message(Formatter.format("{self:subject} is caught in your trap and "
+                                + "sprayed with aphrodisiac. {self:PRONOUN} flushes bright red "
+                                + "and presses a hand against {self:possessive} crotch. It seems"
+                                + " like {self:pronoun}'ll start masturbating even if you "
+                                + "don't do anything.", target, null));
             }
             target.addNonCombat(new Horny(target, (30 + getStrength()) / 10, 10, "Aphrodisiac Trap"));
             target.location().opportunity(target, this);

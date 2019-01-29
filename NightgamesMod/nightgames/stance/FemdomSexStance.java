@@ -51,7 +51,8 @@ public abstract class FemdomSexStance extends Position {
                 c.write("With your pussy suddenly disappearing, you can't continue riding " + inserter.getName()
                                 + " anymore.");
             } else {
-                c.write(inserted.getName() + " groans with frustration with the sudden disappearance of her pussy.");
+                c.write(Formatter.format("{self:SUBJECT} groans with frustration with the sudden "
+                                + "disappearance of {other:possessive} pussy.", inserter, inserted));
             }
             c.setStance(insertRandom(c));
         }

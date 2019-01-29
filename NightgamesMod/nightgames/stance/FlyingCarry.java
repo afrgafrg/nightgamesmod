@@ -102,8 +102,10 @@ public class FlyingCarry extends MaledomSexStance {
                 top.pain(c, bottom, (int) bottom.modifyDamage(DamageType.physical, top, Random.random(50, 75)));
                 c.setStance(new Mount(bottom, top));
             } else {
-                c.write(top.getName()
-                                + " falls to the ground and so do you. Fortunately, her body cushions your fall, but you're not sure she appreciates that as much as you do.");
+                c.write(Formatter.format("{self:SUBJECT} falls to the ground and so do you. "
+                                + "Fortunately, {self:possessive} body cushions your fall, but "
+                                + "you're not sure {self:pronoun} appreciates that"
+                                + " as much as you do.", top, bottom));
                 top.pain(c, bottom, (int) bottom.modifyDamage(DamageType.physical, top, Random.random(50, 75)));
                 c.setStance(new Mount(bottom, top));
             }
@@ -128,7 +130,7 @@ public class FlyingCarry extends MaledomSexStance {
             return new FlyingCowgirl(bottom, top);
         } else {
             if (writeMessage) {
-                c.write("Weakened by {self:possessive} squirming, {other:SUBJECT-ACTION:fall|falls} to the ground and so {self:action:do|does} {self:name-do}. Fortunately, {other:possessive} body cushions {self:possessive} fall, but you're not sure {self:action:she appreciates that as much as you do|you appreciate that as much as her}. While {other:subject-action:are|is} dazed, {self:subject-action:mount|mounts} {other:direct-object} and {self:action:start|starts} riding {other:direct-object} in a cowgirl position.");
+                c.write("Weakened by {self:possessive} squirming, {other:SUBJECT-ACTION:fall|falls} to the ground and so {self:action:do|does} {self:name-do}. Fortunately, {other:possessive} body cushions {self:possessive} fall, but you're not sure {self:pronoun-action: appreciates that as much as you do| appreciate that quite as much}. While {other:subject-action:are|is} dazed, {self:subject-action:mount|mounts} {other:direct-object} and {self:action:start|starts} riding {other:direct-object} in a cowgirl position.");
             }
             top.pain(c, bottom, (int) bottom.modifyDamage(DamageType.physical, top, Random.random(50, 75)));
             return new Cowgirl(bottom, top);

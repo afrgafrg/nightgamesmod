@@ -13,7 +13,8 @@ public class Pin extends AbstractFacingStance {
     @Override
     public String describe(Combat c) {
         if (top.human()) {
-            return "You're sitting on " + bottom.getName() + ", holding her arms in place.";
+            return Formatter.format("You're sitting on {other:name-do}, holding "
+                            + "{other:possessive} arms in place.", top, bottom);
         } else {
             return String.format("%s is pinning %s down, leaving %s helpless.",
                             top.subject(), bottom.nameDirectObject(), bottom.directObject());

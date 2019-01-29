@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.State;
 import nightgames.characters.Trait;
 import nightgames.combat.Encounter;
+import nightgames.global.Formatter;
 import nightgames.global.Match;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
@@ -71,23 +72,33 @@ public class Spiderweb extends Trap {
     @Override
     public void capitalize(Character attacker, Character victim, Encounter enc) {
         if (attacker.human()) {
-            GUI.gui.message(
-                            victim.getName() + " is naked and helpless in the giant rope web. You approach slowly, taking in the lovely view of her body. You trail your fingers "
-                                            + "down her front, settling between her legs to tease her sensitive pussy lips. She moans and squirms, but is completely unable to do anything in her own defense. "
-                                            + "You are going to make her cum, that's just a given. If you weren't such a nice guy, you would leave her in that trap afterward to be everyone else's prey "
-                                            + "instead of helping her down. You kiss and lick her neck, turning her on further. Her entrance is wet enough that you can easily work two fingers into her "
-                                            + "and begin pumping. You gradually lick your way down her body, lingering at her nipples and bellybutton, until you find yourself eye level with her groin. "
-                                            + "You can see her clitoris, swollen with arousal, practically begging to be touched. You trap the sensitive bud between your lips and attack it with your tongue. "
-                                            + "The intense stimulation, coupled with your fingers inside her, quickly brings her to orgasm. While she's trying to regain her strength, you untie the ropes "
-                                            + "binding her hands and feet and ease her out of the web.");
+            GUI.gui.message(Formatter.format(" is naked and helpless in the giant rope web. You approach slowly, taking in the lovely view of {other:possessive} body. You trail your fingers "
+                                            + "down {other:possessive} front, settling between {other:possessive} legs to tease {other:possessive} sensitive pussy lips. "
+                                            + "{self:PRONOUN} moans and squirms, but is completely unable to do anything in {other:possessive} own defense. "
+                                            + "You are going to make {other:possessive} cum, that's just a given. If you weren't such a nice guy,"
+                                            + " you would leave {other:direct-object} in that trap afterward to be everyone else's prey "
+                                            + "instead of helping {other:direct-object} down. You kiss and lick {other:possessive} neck, turning {other:direct-object} on further. "
+                                            + "{other:POSSESSIVE} entrance is wet enough that you can easily work two fingers into {other:direct-object} "
+                                            + "and begin pumping. You gradually lick your way down {other:possessive} body, lingering at {other:possessive} "
+                                            + "nipples and bellybutton, until you find yourself eye level with {other:possessive} groin. "
+                                            + "You can see {other:possessive} clitoris, swollen with arousal, practically begging to be touched. "
+                                            + "You trap the sensitive bud between your lips and attack it with your tongue. "
+                                            + "The intense stimulation, coupled with your fingers inside {other:direct-object}, quickly brings {other:direct-object} to orgasm. "
+                                            + "While {other:pronoun}'s trying to regain {other:possessive} strength, you untie the ropes "
+                                            + "binding {other:possessive} hands and feet and ease {other:direct-object} out of the web.", attacker, victim));
         } else if (victim.human()) {
-            GUI.gui.message("You're trying to figure out a way to free yourself, when you see " + attacker.getName()
-                            + " approach. You groan in resignation. There's no way you're "
-                            + "going to get free before she finishes you off. She smiles as she enjoys your vulnerable state. She grabs your dangling penis and puts it in her mouth, licking "
-                            + "and sucking it until it's completely hard. Then the teasing starts. She strokes you, rubs you, and licks the head of your dick. She uses every technique to "
-                            + "pleasure you, but stops just short of letting you ejaculate. It's maddening. Finally you have to swallow your pride and beg to cum. She pumps you dick in earnest "
-                            + "now and fondles your balls. When you cum, you shoot your load onto her face and chest. You hang in the rope web, literally and figuratively drained. "
-                            + attacker.getName() + " " + "gratiously unties you and helps you down.");
+            GUI.gui.message(Formatter.format("You're trying to figure out a way to free yourself, when you see {self:name-do} approach."
+                            + " You groan in resignation. There's no way you're going to get free before "
+                            + "{self:pronoun} finishes you off. {self:PRONOUN} smiles as {self:pronoun} enjoys"
+                            + " your vulnerable state. {self:PRONOUN} grabs your dangling penis and puts it in"
+                            + " {self:possessive} mouth, licking and sucking it until it's completely hard. "
+                            + "Then the teasing starts. {self:PRONOUN} strokes you, rubs you, and licks the "
+                            + "head of your dick. {self:PRONOUN} uses every technique to pleasure you, but "
+                            + "stops just short of letting you ejaculate. It's maddening. Finally you have to "
+                            + "swallow your pride and beg to cum. {self:PRONOUN} pumps you dick in earnest "
+                            + "now and fondles your balls. When you cum, you shoot your load onto {self:possessive}"
+                            + " face and chest. You hang in the rope web, literally and figuratively drained. "
+                            + "{self:PRONOUN} graciously unties you and helps you down.", attacker, victim));
         }
         if (victim.getOutfit().getBottomOfSlot(ClothingSlot.bottom) != null) {
             attacker.gain(victim.getTrophy());

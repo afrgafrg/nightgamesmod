@@ -5,6 +5,7 @@ import nightgames.characters.Character;
 import nightgames.characters.Trait;
 import nightgames.combat.Combat;
 import nightgames.combat.Encounter;
+import nightgames.global.Formatter;
 import nightgames.gui.GUI;
 import nightgames.items.Item;
 import nightgames.status.Flatfooted;
@@ -41,12 +42,14 @@ public class DissolvingTrap extends Trap {
                 }
             } else if (target.location().humanPresent()) {
                 if (target.reallyNude()) {
-                    GUI.gui.message(target.getName()
-                                    + " is caught in your clothes dissolving trap, but she was already naked. Oh well.");
+                    GUI.gui.message(Formatter.format("{self:subject} is caught in your clothes "
+                                    + "dissolving trap, but {self:pronoun} was already naked. "
+                                    + "Oh well.", target, null));
                 } else {
-                    GUI.gui.message(
-                                    target.getName() + " is caught in your trap and is showered in dissolving solution. In seconds, her clothes vanish off her body, leaving her "
-                                                    + "completely nude.");
+                    GUI.gui.message(Formatter.format(" is caught in your trap and is showered"
+                                    + " in dissolving solution. In seconds, {self:possessive}"
+                                    + " clothes vanish off {self:possessive} body, leaving"
+                                    + " {self:direct-object} completely nude.", target, null));
                 }
             }
             target.nudify();

@@ -153,7 +153,7 @@ public class HeldPaizuri extends AbstractFacingStance {
         Character opponent = getPartner(c, struggler);
         pleasureStruggle(c, struggler, opponent,
                         "{self:SUBJECT-ACTION:try} to remove {self:possessive} cock from between {other:name-possessive} impressive cleavage, but {other:pronoun-action:have} other ideas. "
-                      + "Using {other:possessive} hands to press her soft breasts together, the impish {other:girl} follows {self:possessive} attempts to escape and {other:action:manage} "
+                      + "Using {other:possessive} hands to press {other:possessive} soft breasts together, the impish {other:girl} follows {self:possessive} attempts to escape and {other:action:manage} "
                       + "to titfuck {self:direct-object} even as {self:pronoun-action:struggle}.");
         super.struggle(c, struggler);
     }

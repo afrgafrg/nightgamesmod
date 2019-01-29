@@ -70,7 +70,7 @@ public class LickNipples extends Skill {
     public String deal(Combat c, int damage, Result modifier, Character target) {
         if (modifier == Result.miss) {
             return Formatter.format("You go after {other:name-possessive} nipples, "
-                            + "but {other:pronoun{ pushes you away. (Maybe try getting closer?)",
+                            + "but {other:pronoun} pushes you away. (Maybe try getting closer?)",
                             getSelf(), target);
         } else {
             return Formatter.format("You slowly circle your tongue around each of "

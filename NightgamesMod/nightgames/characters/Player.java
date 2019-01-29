@@ -255,21 +255,25 @@ public class Player extends Character {
         String arousal;
         String stamina;
         if (opponent.state == State.webbed) {
-            gui.message("She is naked and helpless.<br/>");
+            gui.message(Formatter.format("{other:PRONOUN} is naked and helpless.<br/>", 
+                            this, opponent));
             return;
         }
         if (get(Attribute.Perception) >= 6) {
-            gui.message("She is level " + opponent.getLevel());
+            gui.message(Formatter.format("{other:PRONOUN} is level " + opponent.getLevel(),
+                            this, opponent));
         }
         if (get(Attribute.Perception) >= 8) {
-            gui.message("Her Power is " + opponent.get(Attribute.Power) + ", her Cunning is "
-                            + opponent.get(Attribute.Cunning) + ", and her Seduction is "
-                            + opponent.get(Attribute.Seduction));
+            gui.message(Formatter.format("{other:POSSESSIVE} Power is " 
+                            + opponent.get(Attribute.Power) + ", {other:possessive} Cunning is "
+                            + opponent.get(Attribute.Cunning) + ", and {other:possessive} Seduction is "
+                            + opponent.get(Attribute.Seduction),
+                            this, opponent));
         }
         if (opponent.mostlyNude() || opponent.state == State.shower) {
-            gui.message("She is completely naked.");
+            gui.message(Formatter.format("{other:PRONOUN} is completely naked.", this, opponent));
         } else {
-            gui.message("She is dressed and ready to fight.");
+            gui.message(Formatter.format("{other:PRONOUN} is dressed and ready to fight.", this, opponent));
         }
         if (get(Attribute.Perception) >= 4) {
             if (opponent.getArousal()
@@ -287,14 +291,17 @@ public class Player extends Character {
             } else {
                 stamina = "eager";
             }
-            gui.message("She looks " + stamina + " and " + arousal + ".");
+            gui.message(Formatter.format("{self:PRONOUN} looks %s and %s.", 
+                            this, opponent, stamina, arousal));
         }
     }
 
     @Override
     public Encs spy(Character opponent, Encounter enc) {
-        gui.message("You spot <b>" + opponent.nameDirectObject()
-                        + "</b> but she hasn't seen you yet. You could probably catch her off guard, or you could remain hidden and hope she doesn't notice you.");
+        gui.message(Formatter.format("You spot <b>{other:name-do}</b> but {other:pronoun}"
+                        + " hasn't seen you yet. You could probably catch {other:direct-object}"
+                        + " off guard, or you could remain hidden and hope {other:pronoun}"
+                        + " doesn't notice you.", this, opponent));
         assessOpponent(opponent);
         gui.message("<br/>");
 
@@ -571,19 +578,21 @@ public class Player extends Character {
     @Override
     public Encs showerSceneResponse(Character target, Encounter encounter) {
         if (target.location().name.equals("Showers")) {
-            gui.message("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
-                            + "of your opponents. You peek inside and sure enough, <b>" + target.subject()
-                            + "</b> is taking a shower and looking quite vulnerable. Do you take advantage "
-                            + "of her carelessness?");
+            gui.message(Formatter.format("You hear running water coming from the first floor showers. There shouldn't be any residents on this floor right now, so it's likely one "
+                            + "of your opponents. You peek inside and sure enough, <b>{other:subject}</b> "
+                            + "is taking a shower and looking quite vulnerable. Do you take advantage "
+                            + "of {other:possessive} carelessness?", this, target));
         } else if (target.location().name.equals("Pool")) {
-            gui.message("You stumble upon <b>" + target.nameDirectObject()
-                            + "</b> skinny dipping in the pool. She hasn't noticed you yet. It would be pretty easy to catch her off-guard.");
+            gui.message(Formatter.format("You stumble upon <b>{other:name-do}</b> skinny dipping in the pool. "
+                            + "{other:PRONOUN} hasn't noticed you yet. It would be pretty easy"
+                            + " to catch {other:direct-object} off-guard.", this, target));
         }
         assessOpponent(target);
         gui.message("<br/>");
 
         List<LabeledValue<Encs>> choices = new ArrayList<>();
-        choices.add(new LabeledValue<>(Encs.showerattack, "Surprise Her"));
+        choices.add(new LabeledValue<>(Encs.showerattack, "Surprise " 
+                        + Formatter.capitalizeFirstLetter(target.directObject())));
         if (!target.mostlyNude()) {
             choices.add(new LabeledValue<>(Encs.stealclothes, "Steal Clothes"));
         }
@@ -693,11 +702,18 @@ public class Player extends Character {
                             Formatter.capitalizeFirstLetter(target.pronoun()), target.possessiveAdjective(), target.getName(),
                             target.possessiveAdjective()));
         } else {
-            c.write(target.nameOrPossessivePronoun()
-                            + " arms are firmly pinned, so she tries to kick you ineffectually. You catch her ankles and slowly begin kissing and licking your way "
-                            + "up her legs while gently, but firmly, forcing them apart. By the time you reach her inner thighs, she's given up trying to resist. Since you no "
-                            + "longer need to hold her legs, you can focus on her flooded pussy. You pump two fingers in and out of her while licking and sucking her clit. In no "
-                            + "time at all, she's trembling and moaning in orgasm.");
+            c.write(Formatter.format(
+                            "{other:name-possessive} arms are firmly pinned, so {other:pronoun}"
+                            + " tries to kick you ineffectually. You catch {other:possessive}"
+                            + " ankles and slowly begin kissing and licking your way "
+                            + "up {other:possessive} legs while gently, but firmly, forcing them"
+                            + " apart. By the time you reach {other:possessive} inner thighs, "
+                            + "{other:pronoun}'s given up trying to resist. Since you no "
+                            + "longer need to hold {other:possessive} legs, you can focus on "
+                            + "{other:possessive} flooded pussy. You pump two fingers in "
+                            + "and out of {other:direct-object} while licking and sucking "
+                            + "{other:possessive} clit. In no time at all, {other:pronoun}'s"
+                            + " trembling and moaning in orgasm.", this, target));
         }
         gainAttraction(target, 1);
         target.gainAttraction(this, 1);
@@ -733,18 +749,21 @@ public class Player extends Character {
     public void counterattack(Character target, Tactics type, Combat c) {
         switch (type) {
             case damage:
-                c.write(this, "You dodge " + target.getName()
-                                + "'s slow attack and hit her sensitive tit to stagger her.");
+                c.write(this, Formatter.format("You dodge {other:name-possessive} slow attack "
+                                + "and hit {other:possessive} sensitive tit to "
+                                + "stagger {other:direct-object}.", this, target));
                 target.pain(c, target, 4 + Math.min(Random.random(get(Attribute.Power)), 20));
                 break;
             case pleasure:
                 if (!target.crotchAvailable() || !target.hasPussy()) {
-                    c.write(this, "You pull " + target.getName()
-                                    + " off balance and lick her sensitive ear. She trembles as you nibble on her earlobe.");
+                    c.write(this, Formatter.format("You pull {other:name-do} off balance and "
+                                    + "lick {other:possessive} sensitive ear. {other:PRONOUN}"
+                                    + " trembles as you nibble on {other:possessive} earlobe.", 
+                                    this, target));
                     target.body.pleasure(this, body.getRandom("tongue"), target.body.getRandom("ears"),
                                     4 + Math.min(Random.random(get(Attribute.Seduction)), 20), c);
                 } else {
-                    c.write(this, "You pull " + target.getName() + " to you and rub your thigh against her girl parts.");
+                    c.write(this, Formatter.format("You pull " + target.getName() + " to you and rub your thigh against her girl parts.", this, target));
                     target.body.pleasure(this, body.getRandom("feet"), target.body.getRandomPussy(),
                                     4 + Math.min(Random.random(get(Attribute.Seduction)), 20), c);
                 }
@@ -786,11 +805,16 @@ public class Player extends Character {
             case positioning:
                 if (c.getStance()
                      .dom(this)) {
-                    c.write(this, "You outmanuever " + target.getName() + " and you exhausted her from the struggle.");
+                    c.write(this, Formatter.format("You outmanuever {other:name-do} and you "
+                                    + "exhausted {other:direct-object} from the struggle.", 
+                                    this, target));
                     target.weaken(c, (int) this.modifyDamage(DamageType.stance, target, 15));
                 } else {
-                    c.write(this, target.getName()
-                                    + " loses her balance while grappling with you. Before she can fall to the floor, you catch her from behind and hold her up.");
+                    c.write(this, Formatter.format("{other:SUBJECT} loses {other:possessive}"
+                                    + " balance while grappling with you. Before "
+                                    + "{other:pronoun} can fall to the floor, you catch "
+                                    + "{other:direct-object} from behind and hold"
+                                    + " {other:direct-object} up.", this, target));
                     c.setStance(new Behind(this, target));
                 }
                 break;
@@ -807,8 +831,9 @@ public class Player extends Character {
         if (opponent.has(Trait.pheromones) && opponent.getArousal()
                                                       .percent() >= 20
                         && opponent.rollPheromones(c)) {
-            c.write(opponent, "<br/>Whenever you're near " + opponent.getName()
-                            + ", you feel your body heat up. Something in her scent is making you extremely horny.");
+            c.write(opponent, Formatter.format("<br/>Whenever you're near {other:name-do}, "
+                            + "you feel your body heat up. Something in {other:possessive} scent "
+                            + "is making you extremely horny.", this, opponent));
             add(c, Pheromones.getWith(opponent, this, opponent.getPheromonePower(), 10));
         }
         if (opponent.has(Trait.sadist) && !is(Stsflag.masochism)) {

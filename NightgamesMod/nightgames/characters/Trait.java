@@ -137,10 +137,13 @@ public enum Trait {
         public void describe(StringBuilder b, Character c, Trait t) {
             if (!c.human()) {
                 if (c.breastsAvailable()) {
-                    b.append("You occasionally see milk dribbling down her breasts. Is she lactating?");
+                    b.append(Formatter.format("You occasionally see milk dribbling down "
+                                    + "{self:possessive} breasts. Is {self:pronoun}"
+                                    + " lactating?", c, null));
                 } else {
-                    b.append("You notice a damp spot on her " + c.getOutfit().getTopOfSlot(ClothingSlot.top).getName()
-                                    + ".");
+                    b.append(Formatter.format("You notice a damp spot on {self:possessive} "
+                                    + c.getOutfit().getTopOfSlot(ClothingSlot.top).getName()
+                                    + ".", c, null));
                 }
             } else {
                 b.append("Your nipples ache from the milk building up in your mammaries.");

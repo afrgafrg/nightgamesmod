@@ -77,7 +77,7 @@ public class DivineMod extends PartMod {
             c.write(self, Formatter.format(
                             "<b>As soon as you penetrate {self:name-do}, you realize it was a bad idea. While it looks innocuous enough, {self:possessive} %s "
                                             + "feels like pure ecstasy. You're not sure why you thought fucking a bonafide sex goddess was a good idea. "
-                                            + "{self:SUBJECT} isn't even moving yet, but warm walls of flesh knead your cock ceaselessly while her perfectly trained %s muscles constrict and "
+                                            + "{self:SUBJECT} isn't even moving yet, but warm walls of flesh knead your cock ceaselessly while {self:possessive} perfectly trained %s muscles constrict and "
                                             + "relax around your dick, bringing you waves of pleasure.</b>",
                             self, opponent, part.getType(), part.adjective()));
         }

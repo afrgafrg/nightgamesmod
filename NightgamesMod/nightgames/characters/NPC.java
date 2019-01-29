@@ -102,52 +102,52 @@ public class NPC extends Character {
             return visible;
         }
         if (per >= 9) {
-            visible = visible + "Her arousal is at " + arousal.percent() + "%<br/>";
+            visible += "{self:POSSESSIVE} arousal is at " + arousal.percent() + "%<br/>";
         }
         if (per >= 8) {
-            visible = visible + "Her stamina is at " + stamina.percent() + "%<br/>";
+            visible += "{self:POSSESSIVE} stamina is at " + stamina.percent() + "%<br/>";
         }
         if (per >= 9) {
-            visible = visible + "Her willpower is at " + willpower.percent() + "%<br/>";
+            visible += "{self:POSSESSIVE} willpower is at " + willpower.percent() + "%<br/>";
         }
         if (per >= 7) {
-            visible = visible + "She looks " + mood.name() + "<br/>";
+            visible += "{self:PRONOUN} looks " + mood.name() + "<br/>";
         }
         if (per >= 7 && per < 9) {
             if (arousal.percent() >= 75) {
                 visible = visible
-                                + "She's dripping with arousal and breathing heavily. She's at least 3/4 of the way to orgasm<br/>";
+                                + "{self:PRONOUN}'s dripping with arousal and breathing heavily. {self:PRONOUN}'s at least 3/4 of the way to orgasm<br/>";
             } else if (arousal.percent() >= 50) {
-                visible = visible + "She's showing signs of arousal. She's at least halfway to orgasm<br/>";
+                visible = visible + "{self:PRONOUN}'s showing signs of arousal. {self:PRONOUN}'s at least halfway to orgasm<br/>";
             } else if (arousal.percent() >= 25) {
-                visible = visible + "She's starting to look noticeably arousal, maybe a quarter of her limit<br/>";
+                visible = visible + "{self:PRONOUN}'s starting to look noticeably arousal, maybe a quarter of {self:possessive} limit<br/>";
             }
             if (willpower.percent() <= 75) {
-                visible = visible + "She still seems ready to fight.<br/>";
+                visible = visible + "{self:PRONOUN} still seems ready to fight.<br/>";
             } else if (willpower.percent() <= 50) {
-                visible = visible + "She seems a bit unsettled, but she still has some spirit left in her.<br/>";
+                visible = visible + "{self:PRONOUN} seems a bit unsettled, but {self:pronoun} still has some spirit left in {self:direct-object}.<br/>";
             } else if (willpower.percent() <= 25) {
-                visible = visible + "Her eyes seem glazed over and ready to give in.<br/>";
+                visible = visible + "{self:POSSESSIVE} eyes seem glazed over and ready to give in.<br/>";
             }
         }
         if (per >= 6 && per < 8) {
             if (stamina.percent() <= 33) {
-                visible = visible + "She looks a bit unsteady on her feet<br/>";
+                visible = visible + "{self:PRONOUN} looks a bit unsteady on {self:possessive} feet<br/>";
             } else if (stamina.percent() <= 66) {
-                visible = visible + "She's starting to look tired<br/>";
+                visible = visible + "{self:PRONOUN}'s starting to look tired<br/>";
             }
         }
         if (per >= 3 && per < 7) {
             if (arousal.percent() >= 50) {
-                visible = visible + "She's showing clear sign of arousal. You're definitely getting to her.<br/>";
+                visible = visible + "{self:PRONOUN}'s showing clear sign of arousal. You're definitely getting to {self:direct-object}.<br/>";
             }
             if (willpower.percent() <= 50) {
-                visible = visible + "She seems a bit distracted and unable to look you in the eye.<br/>";
+                visible = visible + "{self:PRONOUN} seems a bit distracted and unable to look you in the eye.<br/>";
             }
         }
         if (per >= 4 && per < 6) {
             if (stamina.percent() <= 50) {
-                visible = visible + "She looks pretty tired<br/>";
+                visible = visible + "{self:PRONOUN} looks pretty tired<br/>";
             }
         }
 
@@ -160,7 +160,7 @@ public class NPC extends Character {
             visible += "</i><br/>";
         }
         
-        return visible;
+        return Formatter.format(visible, this, null);
     }
 
     @Override
@@ -693,24 +693,29 @@ public class NPC extends Character {
     public void counterattack(Character target, Tactics type, Combat c) {
         switch (type) {
             case damage:
-                c.write(this, getName() + " avoids your clumsy attack and swings her fist into your nuts.");
+                c.write(this, Formatter.format("{self:SUBJECT} avoids your clumsy attack and "
+                                + "swings {self:possessive} fist into your nuts.", this, target));
                 target.pain(c, target, 4 + Math.min(Random.random(get(Attribute.Power)), 20));
                 break;
             case pleasure:
                 if (target.hasDick()) {
                     if (target.crotchAvailable()) {
-                        c.write(this, getName() + " catches you by the penis and rubs your sensitive glans.");
+                        c.write(this, Formatter.format("{self:SUBJECT} catches you by the penis and "
+                                        + "rubs your sensitive glans.", this, target));
                         target.body.pleasure(this, body.getRandom("hands"), target.body.getRandom("cock"),
                                         4 + Math.min(Random.random(get(Attribute.Seduction)), 20), c);
                     } else {
-                        c.write(this, getName() + " catches you as you approach and grinds her knee into the tent in your "
-                                        + target.getOutfit().getTopOfSlot(ClothingSlot.bottom) +".");
+                        c.write(this, Formatter.format("{self:SUBJECT} catches you as you approach "
+                                        + "and grinds {self:possessive} knee into the tent in your "
+                                        + target.getOutfit().getTopOfSlot(ClothingSlot.bottom) +".",
+                                        this, target));
                         target.body.pleasure(this, body.getRandom("legs"), target.body.getRandom("cock"),
                                         4 + Math.min(Random.random(get(Attribute.Seduction)), 20), c);
                     }
                 } else {
-                    c.write(this, getName()
-                                    + " pulls you off balance and licks your sensitive ear. You tremble as she nibbles on your earlobe.");
+                    c.write(this, Formatter.format("{self:SUBJECT} pulls you off balance and licks your sensitive ear. "
+                                    + "You tremble as {self:pronoun} nibbles on your earlobe.",
+                                    this, target));
                     target.body.pleasure(this, body.getRandom("tongue"), target.body.getRandom("ears"),
                                     4 + Math.min(Random.random(get(Attribute.Seduction)), 20), c);
                 }
@@ -739,9 +744,9 @@ public class NPC extends Character {
             case stripping:
                 Clothing clothes = target.stripRandom(c);
                 if (clothes != null) {
-                    c.write(this, getName()
-                                    + " manages to catch you groping her clothing, and in a swift motion strips off your "
-                                    + clothes.getName() + ".");
+                    c.write(this, Formatter.format("{self:SUBJECT} manages to catch you groping {self:possessive}"
+                                    + " clothing, and in a swift motion strips off your "
+                                    + clothes.getName() + ".", this, target));
                 } else {
                     c.write(this, getName()
                                     + " manages to dodge your groping hands and gives a retaliating slap in return.");
